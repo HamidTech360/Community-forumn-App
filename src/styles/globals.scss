@@ -17,11 +17,14 @@ a {
 }
 .nav_bar {
   width: 100%;
-  z-index: 99;
-  background-color: #ffffff;
-
+  background-color: none !important;
+  .vector1 {
+    position: absolute;
+    left: 0;
+    z-index: -5;
+  }
   @media screen and (min-width: 1024px) {
-    max-height: 15vh;
+    max-height: 10vh;
   }
   @media screen and (max-width: 768px) {
     .navbar-collapse {
@@ -45,15 +48,13 @@ nav {
   box-sizing: border-box;
 }
 
-.body {
-  min-height: 100vh;
-  margin-top: 15vh;
-  // @media screen and (min-width: 1024px) {
-
-  // }
+.text-primary {
+  font-weight: bold !important;
+  color: var(--bs-primary) !important;
 }
-
 .footer {
+  position: absolute;
+  bottom: auto;
   width: 100%;
   background: #052b29;
   color: #ffffff;
@@ -79,7 +80,7 @@ section {
 
   margin-bottom: 1rem;
   box-shadow: 0px 8.21687px 8.21687px rgba(0, 0, 0, 0.1);
-  min-height: 440.42px;
+
   @media screen and (max-width: 768px) {
     width: 280px;
   }
@@ -107,4 +108,22 @@ textarea {
 .contact-icon {
   color: #052b29;
   font-weight: bold;
+}
+
+.active a {
+  color: #207681 !important;
+}
+
+.desktop-only {
+  @media screen and (max-width: 767px) {
+    display: none;
+  }
+}
+
+.outline-primary {
+  color: var(--bs-primary);
+  border: 1px solid var(--bs-primary);
+  background-color: #ffffff;
+  padding: 0.5rem;
+  border-radius: 10px;
 }

@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-key */
+import Head from "next/head";
 import React from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import IconWithText from "../components/Atoms/IconWithText";
@@ -27,6 +28,9 @@ const Contact = () => {
   ];
   return (
     <>
+      <Head>
+        <title>Get in Touch</title>
+      </Head>
       <Banner title="Contact us" image="/images/contact.png" />
       <Container className="pt-5">
         <Row>

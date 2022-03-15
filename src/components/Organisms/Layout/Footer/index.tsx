@@ -5,7 +5,7 @@ import Logo from "../../../Atoms/Logo";
 
 const Footer = () => {
   return (
-    <div className="footer mt-5">
+    <div className="footer ">
       <Container>
         <Row className=" px-3">
           <Col md={3} xs={6}>
