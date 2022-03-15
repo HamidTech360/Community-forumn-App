@@ -8,18 +8,20 @@ interface ICard {
   title: string;
   image: string;
   author: string;
-  body: string;
+  body?: string;
 }
 const Card = ({ image, title, author, body }: ICard) => {
   return (
-    <BCard border="none">
-      <BCard.Img src={image} alt={title} />
+    <>
+      <BCard className="card">
+        <BCard.Img src={image} alt={title} />
 
-      <div className="text p-3">
-        <h3>{title}</h3>
-        {body}
-      </div>
-    </BCard>
+        <div className="text p-3">
+          <h3>{title}</h3>
+          {body}
+        </div>
+      </BCard>
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-key */
+import Head from "next/head";
 import React from "react";
 import { Accordion, Container } from "react-bootstrap";
 import Banner from "../components/Molecules/Banner";
@@ -6,6 +7,9 @@ import Banner from "../components/Molecules/Banner";
 const faq = () => {
   return (
     <>
+      <Head>
+        <title>Frequently Asked</title>
+      </Head>
       <Banner title="Faq" image="/images/faq.png" />
       <Container className="mt-5">
         <Accordion defaultActiveKey={["0"]} alwaysOpen flush>

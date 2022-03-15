@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-key */
+import Head from "next/head";
 import React from "react";
 import { Container } from "react-bootstrap";
 import Typography from "../components/Atoms/Typography";
@@ -21,6 +23,9 @@ const about = () => {
   ];
   return (
     <>
+      <Head>
+        <title>About</title>
+      </Head>
       <Banner title="about" image="/images/about.png" />
       <Container className="d-flex flex-column align-items-center gap-5 pt-5">
         {aboutItems.map((item, key) => (

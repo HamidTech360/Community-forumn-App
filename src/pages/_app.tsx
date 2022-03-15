@@ -7,13 +7,13 @@ import Footer from "../components/Organisms/Layout/Footer";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <>
+    <div>
       <Header />
       <div className="body">
         <Component {...pageProps} />
       </div>
       <Footer />
-    </>
+    </div>
   );
 }
 

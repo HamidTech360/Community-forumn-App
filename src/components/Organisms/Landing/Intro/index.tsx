@@ -10,11 +10,6 @@ const Intro = () => {
         <Row
           className={` ${styles.main} d-flex justify-content-center align-items-center`}
         >
-          <Image
-            src="/assets/ellipse-intro-top.png"
-            className={styles.vector1}
-            alt=""
-          />
           <Col md={6} className={styles.text}>
             <Container>
               <p className={styles.text_primary}>
