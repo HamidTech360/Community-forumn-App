@@ -5,6 +5,7 @@ import { Button, Container, Nav, Navbar, NavbarBrand } from "react-bootstrap";
 import Logo from "../../../Atoms/Logo";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Head from "next/head";
 const links = [
   { name: "Gist", link: "/gist" },
   { name: "Explore", link: "/explore" },
@@ -19,6 +20,9 @@ const Header = () => {
   const disabled = ["/login", "/register"];
   return (
     <Navbar collapseOnSelect className="nav_bar" expand="lg">
+      <Head>
+        <meta name="robots" content="noindex" />
+      </Head>
       <img src="/assets/ellipse-intro-top.png" className={"vector1"} alt="" />
       <Container>
         <Link href="/" passHref>
