@@ -1,6 +1,5 @@
-/* eslint-disable react/jsx-key */
 import React from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import styles from "../../../../styles/Landing.module.scss";
 import Card from "../../../Molecules/Card";
 import EndlessCarousel from "../../../Molecules/Carousel";
@@ -31,7 +30,7 @@ const posts = [
     body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum varius aliquam habitasse gravida. Tincidunt sollicitudin leo quis id in amet, auctor.",
   },
 ];
-const Articles = () => {
+const Articles = ({ articles }: { articles: Record<string, any> }) => {
   return (
     <section className={styles.articles}>
       <Container>
@@ -46,13 +45,13 @@ const Articles = () => {
         </div>
         <div className={`gap-5 ${styles.cards}`}>
           <EndlessCarousel>
-            {posts.map((post, key) => (
+            {articles?.map((post: any, key: number) => (
               <Card
                 key={`article-${key}`}
-                image={post.image}
+                image={post.featuredImage.node.mediaItemUrl}
                 title={post.title}
-                body={post.body}
-                author={post.author}
+                body={post.excerpt}
+                author={post.author.node.name}
               />
             ))}
           </EndlessCarousel>

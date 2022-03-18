@@ -1,11 +1,10 @@
-/* eslint-disable react/jsx-key */
 import React from "react";
 import { Col, Container, Image, Row } from "react-bootstrap";
 import Logo from "../../../Atoms/Logo";
 
 const Footer = () => {
   return (
-    <div className="footer ">
+    <div className="footer mt-5">
       <Container>
         <Row className=" px-3">
           <Col md={3} xs={6}>

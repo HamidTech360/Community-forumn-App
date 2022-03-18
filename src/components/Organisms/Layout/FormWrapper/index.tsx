@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/jsx-key */
+
 import React, { ReactNode } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import Image from "next/image";

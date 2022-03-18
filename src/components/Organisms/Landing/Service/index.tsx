@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import React from "react";
 import { Col, Container, Image, Row } from "react-bootstrap";
 import styles from "../../../../styles/Landing.module.scss";
@@ -7,9 +6,9 @@ const Services = () => {
   return (
     <section className={`${styles.services} align-items-center`}>
       <Container>
-        <Row className="d-flex align-items-center justify-content-center">
+        <Row className={`align-items-center ${styles.row}`}>
           <Col md={6}>
-            <div className={styles.masonry}>
+            <div className={`m-4 ${styles.masonry}`}>
               {masonry.map((number) => (
                 <Image
                   src={`/images/masonry${number}.png`}
