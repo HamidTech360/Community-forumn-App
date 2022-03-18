@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-key */
-
 import React from "react";
 import { Col, Row, Image, Button, Container } from "react-bootstrap";
 import styles from "../../../../styles/Landing.module.scss";

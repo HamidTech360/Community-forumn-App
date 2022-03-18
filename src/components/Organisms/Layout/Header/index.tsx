@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/jsx-key */
+
 import React, { useEffect } from "react";
 import { Button, Container, Nav, Navbar, NavbarBrand } from "react-bootstrap";
 import Logo from "../../../Atoms/Logo";
