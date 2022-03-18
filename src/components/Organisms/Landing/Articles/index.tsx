@@ -1,9 +1,6 @@
-import { gql } from "@apollo/client";
-import axios from "axios";
-import React, { useEffect } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import React from "react";
+import { Button, Container } from "react-bootstrap";
 import styles from "../../../../styles/Landing.module.scss";
-import { client } from "../../../../utils/api";
 import Card from "../../../Molecules/Card";
 import EndlessCarousel from "../../../Molecules/Carousel";
 
