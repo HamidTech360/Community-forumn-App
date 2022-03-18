@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import React from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import Typography from "../components/Atoms/Typography";

@@ -1,5 +1,4 @@
 .gist {
-  background: #e5e5e5;
   h1 {
     line-height: 47.73px;
     font-size: 2.5rem;
@@ -7,4 +6,8 @@
   h2 {
     font-size: 1.5625rem;
   }
+}
+
+.cards ul li > div {
+  border: none;
 }

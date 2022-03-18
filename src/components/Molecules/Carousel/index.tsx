@@ -24,13 +24,20 @@ const responsive = {
   },
 };
 
-const EndlessCarousel = ({ children }: { children: ReactNode }) => {
+const EndlessCarousel = ({
+  children,
+  gap,
+}: {
+  children: ReactNode;
+  gap?: string;
+}) => {
   return (
     <Carousel
+      pauseOnHover
+      centerMode
       responsive={responsive}
       infinite={true}
-      centerMode
-      itemClass="carousel_item mx-4"
+      itemClass="carousel_item mx-2"
     >
       {children}
     </Carousel>

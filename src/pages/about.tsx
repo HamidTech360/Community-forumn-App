@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import Head from "next/head";
 import React from "react";
 import { Container } from "react-bootstrap";
