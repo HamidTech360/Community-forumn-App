@@ -1,5 +1,4 @@
-/* eslint-disable react/jsx-key */
-import type { NextPage } from "next";
+import { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { Container } from "react-bootstrap";
@@ -10,7 +9,7 @@ import Services from "../components/Organisms/Landing/Service";
 import Footer from "../components/Organisms/Layout/Footer";
 import styles from "../styles/Landing.module.scss";
 
-const Home: NextPage = () => {
+const Home = ({ articles }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <>
       <Head>
@@ -26,11 +25,54 @@ const Home: NextPage = () => {
         <>
           <Intro />
           <Services />
-          <Articles />
+          <Articles articles={articles} />
         </>
       </main>
     </>
   );
 };
+
+export async function getStaticProps() {
+  const res = await fetch("https://setlinn.com/graphql", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `{
+        posts {
+          nodes {
+            author {
+              node {
+                name
+              }
+            }
+            title
+            excerpt
+            featuredImage {
+              node {
+                mediaItemUrl
+              }
+            }
+          }
+        }
+      }
+      `,
+    }),
+  });
+
+  const {
+    data: {
+      posts: { nodes },
+    },
+  } = await res.json();
+
+  return {
+    props: {
+      articles: nodes,
+      revalidate: 1,
+    },
+  };
+}
 
 export default Home;
