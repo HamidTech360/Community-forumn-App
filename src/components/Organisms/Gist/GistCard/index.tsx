@@ -40,10 +40,12 @@ const GistCard = ({
               roundedCircle
             />
           </Col>
-          <Col xs={7} md={7}>
+          <Col xs={6} md={7}>
             <small>Started by {gist?._embedded?.user[0].name}</small>
             <br />
-            <h4 className="text-primary">{gist?.title.raw}</h4>
+            <h5 className="text-primary">
+              {gist?.title.raw.replace("&amp;", "&")}
+            </h5>
           </Col>
           <Col xs={3}>
             <small className="d-flex gap-1">

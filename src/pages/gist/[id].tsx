@@ -1,6 +1,7 @@
 import Head from "next/head";
 import React, { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
+import Comment from "../../components/Organisms/App/Comment";
 import Contributors from "../../components/Organisms/Gist/Contributors";
 import GistCard from "../../components/Organisms/Gist/GistCard";
 const Gist = ({
@@ -23,16 +24,21 @@ const Gist = ({
   return (
     <Container>
       <Head>
-        <title>{gist?.title.raw}</title>
+        <title>{gist?.title.raw.replace("&amp;", "&")}</title>
       </Head>
 
       <Row>
-        <Col md={4}>
+        <Col md={4} className="desktop-only">
           <Contributors contributors={contributors} />
         </Col>
         <Col md={8}>
           <GistCard gist={gist} primary />
           <h5 className="px-2 m-2">Comments({replies?.length || "0"})</h5>
+          <div className="mt-2">
+            {replies?.map((reply, key) => (
+              <Comment comment={reply} key={`comment-${key}`} />
+            ))}
+          </div>
         </Col>
       </Row>
     </Container>
@@ -71,32 +77,35 @@ export const getStaticProps = async ({
     )
   ).json();
 
-  let replies = await (
+  let replies: Record<string, any>[] = await (
     await fetch(
       `${process.env.REST}/buddyboss/v1/reply?parent=${params.id}&per_page=10&_embed=user&_fields=_links,_embedded,link,id,date,content`
     )
   ).json();
 
-  let contributors = [];
-  contributors.push({
-    name: gist._embedded.user[0].name,
-    avatar: gist?._embedded?.user[0]?.avatar_urls.full,
+  let contributors = [
+    {
+      name: gist._embedded.user[0].name,
+      avatar: gist?._embedded?.user[0]?.avatar_urls.full,
+    },
+  ];
+
+  replies.forEach((reply) => {
+    const newReply = {
+      name: reply?._embedded?.user[0].name,
+      avatar: reply?._embedded?.user[0].avatar_urls.full,
+    };
+
+    if (!contributors.find(({ name }) => name === newReply.name)) {
+      contributors.push(newReply);
+    }
   });
-  console.log(contributors);
-  contributors.push(
-    ...replies.map((reply: Record<string, any>) => {
-      return {
-        name: reply?._embedded?.user[0].name,
-        avatar: reply?._embedded?.user[0].avatar_urls.full,
-      };
-    })
-  );
 
   return {
     props: {
-      gist: gist,
-      replies: replies,
-      contributors: contributors,
+      gist,
+      replies,
+      contributors,
     },
   };
 };
