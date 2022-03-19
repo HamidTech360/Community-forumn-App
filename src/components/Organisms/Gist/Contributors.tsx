@@ -21,7 +21,7 @@ const Contributors = ({
         </span>
       </Card.Title>
       {contributors?.map((item, key) => (
-        <div className="d-flex align-items-center justify-content-start gap-2">
+        <div className="d-flex align-items-center justify-content-start gap-2 m-2">
           <Image
             src={item.avatar}
             fluid
