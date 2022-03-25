@@ -68,9 +68,10 @@ nav {
   width: 100%;
   background: #052b29;
   color: #ffffff;
-  padding: 3rem 0;
+  padding: 1.5rem 0;
   h3 {
     font-weight: 700;
+    font-size: 1.4rem;
   }
   a {
     display: block;
@@ -142,4 +143,20 @@ textarea {
   position: absolute;
   bottom: 1rem;
   right: 1rem;
+}
+
+.text-primary {
+  color: #0b5351 !important;
+}
+
+.nav-tabs li button.active {
+  background-color: #0b5351 !important;
+  color: #ffffff !important;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+}
+.nav-tabs li button {
+  color: var(--bs-secondary) !important;
+
+  border-radius: 5px;
 }

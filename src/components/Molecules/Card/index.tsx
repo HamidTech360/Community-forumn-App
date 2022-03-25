@@ -17,7 +17,8 @@ const Card = ({ image, title, author, body, size }: ICard) => {
             size === "small"
               ? "0"
               : "0px 8.21687px 8.21687px rgba(0, 0, 0, 0.1)",
-          width: size === "small" ? "261px" : "inherit",
+
+          width: "100%",
           minHeight: "400px",
         }}
       >
@@ -32,10 +33,14 @@ const Card = ({ image, title, author, body, size }: ICard) => {
         />
 
         <div className="text p-3">
-          <h4 className="text-primary" style={{ textTransform: "capitalize" }}>
+          <h5 className="text-primary" style={{ textTransform: "capitalize" }}>
             {title.toLowerCase()}
-          </h4>
-          <span className="text-muted">by &nbsp;{author}</span>
+          </h5>
+          <span className="text-muted">
+            <small style={{ marginTop: "-2rem", fontSize: "0.8rem" }}>
+              by &nbsp;{author}
+            </small>{" "}
+          </span>
           <div
             dangerouslySetInnerHTML={{ __html: body }}
             style={{
@@ -43,6 +48,7 @@ const Card = ({ image, title, author, body, size }: ICard) => {
               lineHeight: "1.5rem",
               overflow: "hidden",
               color: "#8E8E8E",
+              fontSize: "0.9rem",
             }}
           />
         </div>
