@@ -12,10 +12,17 @@ import {
 } from "react-bootstrap";
 import Card from "../../components/Molecules/Card";
 import styles from "../../styles/explore.module.scss";
-const Explore = ({ categories }: { categories: Record<string, any>[] }) => {
-  const [key, setKey] = useState(categories[0].categoryId);
+const Explore = ({
+  categories,
+  users,
+}: {
+  categories: Record<string, any>[];
+  users: Record<string, any>[];
+}) => {
+  const [key, setKey] = useState<string>("all");
   const [posts, setPosts] = useState<Record<string, any>[]>([]);
   useEffect(() => {
+    console.log(users);
     document.body.style.backgroundColor = "#f6f6f6";
 
     return () => {
@@ -31,7 +38,8 @@ const Explore = ({ categories }: { categories: Record<string, any>[] }) => {
       },
       body: JSON.stringify({
         query: ` {
-              posts(where: {categoryId: ${key}}) {
+          
+              posts ${key !== "all" ? `(where: {categoryId: ${key}})` : ``} {
                 
                   nodes {
                     author {
@@ -73,7 +81,7 @@ const Explore = ({ categories }: { categories: Record<string, any>[] }) => {
         <Container>
           <Row>
             <Col md={6}>
-              <div className={styles.text}>
+              <div className={` ${styles.text}`}>
                 <h1 className={`${styles.textPrimary} text-primary`}>
                   Read, Write, Connect
                 </h1>
@@ -106,11 +114,13 @@ const Explore = ({ categories }: { categories: Record<string, any>[] }) => {
           </h1>
           <div className={styles.topics}>
             <Tabs
-              onSelect={(k) => setKey(k)}
+              onSelect={(k) => setKey(k!)}
               activeKey={key}
               id="uncontrolled-tab-example"
               className="justify-content-center d-flex gap-2"
+              defaultActiveKey={"all"}
             >
+              <Tab title="All" eventKey="all" key="all" />
               {categories.map((category) => (
                 <Tab
                   eventKey={category.categoryId}
@@ -130,24 +140,44 @@ const Explore = ({ categories }: { categories: Record<string, any>[] }) => {
                   />
                 </Col>
               ))}
-              {!posts.length && (
-                <Alert variant="primary">No posts under this category </Alert>
-              )}
+              {!posts.length && <p>No posts under this category </p>}
             </Row>
           </div>
         </Container>
       </section>
       <section className={styles.write}>
-        <h1 className="d-flex justify-content-center">
-          Top writers you should follow
-        </h1>
+        <Container>
+          <h1 className="d-flex justify-content-center">
+            Top writers you should follow
+          </h1>
+          <Row>
+            {users.map((user, key) => (
+              <Col md={6} lg={4} sm={12} key={`author-${key}`} className="mt-4">
+                <div className="d-flex gap-3 align-items-center justify-content-evenly">
+                  <Image
+                    width={50}
+                    height={50}
+                    src={user.avatar_urls["96"]}
+                    roundedCircle
+                    alt={user.name}
+                  />
+
+                  <span className="mt-1">{user.name}</span>
+
+                  <Button variant="outline-primary">Follow</Button>
+                </div>
+                <hr />
+              </Col>
+            ))}
+          </Row>
+        </Container>
       </section>
     </div>
   );
 };
 
 export const getStaticProps = async () => {
-  const res = await fetch("https://setlinn.com/graphql", {
+  const res = await fetch(process.env.GRAPHQL!, {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -172,9 +202,12 @@ export const getStaticProps = async () => {
     },
   } = await res.json();
 
+  const users = await (await fetch(`${process.env.REST!}/wp/v2/users`)).json();
+
   return {
     props: {
       categories,
+      users,
     },
     revalidate: 1,
   };
