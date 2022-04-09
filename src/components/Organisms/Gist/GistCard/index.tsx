@@ -32,7 +32,7 @@ const GistCard = ({
         }}
       >
         <Row className="d-flex align-items-center">
-          <Col xs={2} md={1} className="px-2">
+          <Col xs={2} md={1} className="pl-2">
             <Image
               src={gist?._embedded?.user[0].avatar_urls.full}
               width={50}
@@ -41,7 +41,7 @@ const GistCard = ({
               roundedCircle
             />
           </Col>
-          <Col xs={7} md={8} className="px-4">
+          <Col xs={7} md={8} className="pr-2">
             <small>Started by {gist?._embedded?.user[0].name}</small>
             <br />
             <h5 className="text-primary">

@@ -6,6 +6,19 @@ body {
   margin: 0;
 }
 
+.text-center {
+  text-align: center;
+}
+.radius-10 {
+  border-radius: 10px;
+}
+.radius-20 {
+  border-radius: 20px;
+}
+
+.bg-white {
+  background-color: white;
+}
 body {
   overflow-x: hidden;
   font-family: "Source Sans Pro", sans-serif !important;
@@ -18,6 +31,13 @@ a {
 
 .btn-primary {
   color: white !important;
+}
+.navbar {
+  .dropdown-toggle {
+    &:after {
+      display: none;
+    }
+  }
 }
 .nav_bar {
   background-color: none !important;
@@ -56,6 +76,10 @@ nav {
 
 * {
   box-sizing: border-box;
+}
+
+.bold {
+  font-weight: bold;
 }
 
 .text-primary {
