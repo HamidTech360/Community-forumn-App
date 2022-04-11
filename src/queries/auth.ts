@@ -9,6 +9,9 @@ export const GET_USER = gql`
       lastName
       email
       capabilities
+      avatar {
+        url
+      }
     }
   }
 `;

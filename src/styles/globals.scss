@@ -29,6 +29,13 @@ a {
   transition: ease-in 0.3s;
 }
 
+.padding-top {
+  padding-top: 6vh;
+
+  @media screen and (min-width: 768px) {
+    padding-top: 8vh;
+  }
+}
 .btn-primary {
   color: white !important;
 }
@@ -183,4 +190,8 @@ textarea {
   color: var(--bs-secondary) !important;
 
   border-radius: 5px;
+}
+
+.notifications .nav-link {
+  padding: 0;
 }
