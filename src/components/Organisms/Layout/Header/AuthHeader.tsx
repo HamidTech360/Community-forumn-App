@@ -24,6 +24,7 @@ const AuthHeader = () => {
     <Navbar
       className="bg-white"
       style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
+      fixed="top"
     >
       <Container className="d-flex justify-content-between">
         <Navbar.Brand>
@@ -41,8 +42,8 @@ const AuthHeader = () => {
                 <span>
                   <Image
                     src={`/assets/icons/${link.icon}.svg`}
-                    width={10}
-                    height={10}
+                    width={15}
+                    height={15}
                     alt=""
                   />
                 </span>
@@ -51,13 +52,13 @@ const AuthHeader = () => {
             </Link>
           ))}
         </Nav>
-        <div className="notifications d-flex gap-1 justify-content-center">
+        <div className="notifications d-flex  gap-2">
           <NavDropdown
             title={
               <Button
                 style={{
-                  width: 40,
-                  height: 40,
+                  width: 35,
+                  height: 35,
                   borderRadius: "100%",
                   backgroundColor: "#EAFEFD",
                   border: "none",
@@ -73,8 +74,8 @@ const AuthHeader = () => {
             title={
               <Button
                 style={{
-                  width: 40,
-                  height: 40,
+                  width: 35,
+                  height: 35,
                   borderRadius: "100%",
                   backgroundColor: "#EAFEFD",
                   border: "none",
@@ -91,7 +92,7 @@ const AuthHeader = () => {
           title={
             <>
               <Image
-                src="/images/formbg.png"
+                src={user?.avatar.url}
                 alt=""
                 width={40}
                 height={40}

@@ -14,7 +14,7 @@ export default function AuthContent({ children }: { children: ReactNode }) {
   }, [loggedIn, loading, router]);
 
   if (loggedIn) {
-    return <>{children}</>;
+    return <div className="padding-top">{children}</div>;
   }
 
   return <p>Loading...</p>;

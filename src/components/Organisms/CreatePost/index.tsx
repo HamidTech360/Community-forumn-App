@@ -5,11 +5,11 @@ import useAuth from "../../../hooks/useAuth";
 const CreatePost = () => {
   const { user } = useAuth();
   return (
-    <Card className="p-2" style={{ border: "none" }}>
-      <div className="d-flex gap-2 align-items-center bg-white radius-10">
+    <Card className="p-2 py-4" style={{ border: "none" }}>
+      <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
         <>
           <Image
-            src="/images/formbg.png"
+            src={user?.avatar.url}
             width={50}
             height={50}
             alt=""

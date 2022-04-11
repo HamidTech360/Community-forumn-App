@@ -9,6 +9,9 @@ export interface User {
   lastName: string;
   email: string;
   capabilities: string[];
+  avatar: {
+    url: string;
+  };
 }
 
 interface AuthData {

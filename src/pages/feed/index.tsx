@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import AuthContent from "../../components/Auth/AuthContent";
+import PostCard from "../../components/Organisms/App/PostCard";
 import UserCard from "../../components/Organisms/App/UserCard";
 import CreatePost from "../../components/Organisms/CreatePost";
 import useAuth from "../../hooks/useAuth";
+import styles from "./feed.module.scss";
 const Feed = () => {
   const { user } = useAuth();
   useEffect(() => {
@@ -16,17 +18,33 @@ const Feed = () => {
   return (
     <AuthContent>
       <Container>
-        <Row className="py-3">
-          <Col md={3}>
+        <div className={`padding-top ${styles.feed} gap-3`}>
+          <div
+            className="position-fixed d-none d-md-block"
+            style={{ width: 250 }}
+          >
             <UserCard user={user!} />
-          </Col>
-          <Col md={6}>
-            <main>
-              <CreatePost />
-            </main>
-          </Col>
-          <Col md={3}></Col>
-        </Row>
+          </div>
+
+          <main className={styles.posts}>
+            <CreatePost />
+            <PostCard post={{ name: "" }} />
+            <PostCard post={{ name: "" }} />
+            <PostCard post={{ name: "" }} />
+            <PostCard post={{ name: "" }} />
+            <PostCard post={{ name: "" }} />
+            <PostCard post={{ name: "" }} />
+            <PostCard post={{ name: "" }} />
+            <PostCard post={{ name: "" }} />
+            <PostCard post={{ name: "" }} />
+            <PostCard post={{ name: "" }} />
+            <PostCard post={{ name: "" }} />
+            <PostCard post={{ name: "" }} />
+          </main>
+          <div>
+            <UserCard user={user!} />
+          </div>
+        </div>
       </Container>
     </AuthContent>
   );
