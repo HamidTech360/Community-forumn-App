@@ -34,7 +34,7 @@ const GistCard = ({
         <Row className="d-flex align-items-center">
           <Col xs={2} md={1} className="px-2">
             <Image
-              src={gist?._embedded?.user[0].avatar_urls.full}
+              src={gist?._embedded?.user[0]?.avatar_urls.full}
               width={50}
               height={50}
               alt="Avatar"
