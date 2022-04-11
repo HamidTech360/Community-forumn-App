@@ -23,7 +23,7 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
             </div>
           </Col>
           <Col md={6} className={styles.form}>
-            <div className="mb-4">
+            <div className="mt-5">
               <h1>{pathname === "/login" ? "Welcome Back" : "Get Started"}</h1>
               <p>
                 Please enter your details to{" "}

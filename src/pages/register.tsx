@@ -24,10 +24,7 @@ const register = () => {
               <Form.Label> Enter Password</Form.Label>
               <Form.Control placeholder="Enter password" type="password" />
             </Form.Group>
-            <Form.Group>
-              <Form.Label> Confirm Password</Form.Label>
-              <Form.Control placeholder="Confirm password" type="password" />
-            </Form.Group>
+
             <Form.Text>
               <Form.Check
                 type="checkbox"
