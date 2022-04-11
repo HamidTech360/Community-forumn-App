@@ -98,9 +98,14 @@
 
 .vector2 {
   position: absolute;
-  bottom: 0;
+  bottom: -80%;
 
-  transform: translateY(68%) translateX(50%);
+  width: 30vw;
   right: 0;
   z-index: -1;
+
+  @media screen and (max-width: 769px) {
+    width: 250px;
+    bottom: -20%;
+  }
 }

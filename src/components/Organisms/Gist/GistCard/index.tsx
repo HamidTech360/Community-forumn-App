@@ -31,19 +31,22 @@ const GistCard = ({
           borderRadius: "10px",
         }}
       >
-        <Row>
-          <Col xs={3} md={2}>
+        <Row className="d-flex align-items-center">
+          <Col xs={2} md={1} className="px-2">
             <Image
               src={gist?._embedded?.user[0].avatar_urls.full}
-              fluid
+              width={50}
+              height={50}
               alt="Avatar"
               roundedCircle
             />
           </Col>
-          <Col xs={7} md={7}>
+          <Col xs={7} md={8} className="px-4">
             <small>Started by {gist?._embedded?.user[0].name}</small>
             <br />
-            <h4 className="text-primary">{gist?.title.raw}</h4>
+            <h5 className="text-primary">
+              {gist?.title.raw.replace("&amp;", "&")}
+            </h5>
           </Col>
           <Col xs={3}>
             <small className="d-flex gap-1">
@@ -54,6 +57,7 @@ const GistCard = ({
         <Card.Body
           dangerouslySetInnerHTML={{ __html: gist?.content.raw }}
           style={{
+            marginTop: "-1rem",
             lineHeight: "1.3rem",
             height: primary ? "inherit" : "7.4rem",
             overflow: "hidden",
