@@ -10,7 +10,7 @@ const Comment = ({ comment }: Record<string, any>) => {
     >
       <div className="d-flex align-items-center justify-content-start gap-2 mt-1">
         <Image
-          src={comment?._embedded.user[0].avatar_urls?.full}
+          src={comment?._embedded?.user[0]?.avatar_urls?.full}
           alt="User avatar"
           width={50}
           height={50}
@@ -19,7 +19,7 @@ const Comment = ({ comment }: Record<string, any>) => {
         />
         <div>
           <h6 style={{ fontWeight: "bold" }}>
-            {comment._embedded.user[0]?.name}
+            {comment?._embedded?.user[0]?.name}
           </h6>
           <small>
             <Age time={comment?.date} />

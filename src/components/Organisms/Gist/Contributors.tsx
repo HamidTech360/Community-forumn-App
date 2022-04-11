@@ -23,15 +23,15 @@ const Contributors = ({
       {contributors?.map((item, key) => (
         <div className="d-flex align-items-center justify-content-start gap-2 m-2">
           <Image
-            src={item.avatar}
+            src={item?.avatar}
             fluid
-            alt={item.name}
+            alt={item?.name}
             roundedCircle
             width={50}
             height={50}
           />
 
-          <h6>{item.name}</h6>
+          <h6>{item?.name}</h6>
         </div>
       ))}
     </Card>

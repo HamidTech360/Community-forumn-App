@@ -35,7 +35,7 @@ const Gist = ({
               <Card
                 key={`article-${key}`}
                 id={post?.id}
-                image={post?.bbp_media[0].attachment_data.thumb}
+                image={post?.bbp_media![0].attachment_data.thumb}
                 title={post?.title}
                 author={post?._embedded?.user[0].name}
               />
