@@ -31,20 +31,15 @@ const Gist = ({
         <h2>Popular Gists</h2>
         <div className={` ${styles.cards}`}>
           <EndlessCarousel gap="mx-auto">
-            {gists &&
-              gists?.map((post, key) => (
-                <Card
-                  key={`article-${key}`}
-                  id={post.id}
-                  image={
-                    post.bbp_media
-                      ? post.bbp_media[0]!.attachment_data.thumb
-                      : "/images/formbg.png"
-                  }
-                  title={post.title}
-                  author={post?._embedded?.user[0].name}
-                />
-              ))}
+            {gists?.map((post, key) => (
+              <Card
+                key={`article-${key}`}
+                id={post?.id}
+                image={post?.bbp_media![0].attachment_data.thumb}
+                title={post?.title}
+                author={post?._embedded?.user[0].name}
+              />
+            ))}
           </EndlessCarousel>
         </div>
         <Row className="mt-5">
