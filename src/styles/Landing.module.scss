@@ -13,6 +13,11 @@
       bottom: -20%;
     }
   }
+  .vector1 {
+    position: fixed;
+    top: -10%;
+    z-index: 0;
+  }
 }
 .main {
   min-height: 90vh;

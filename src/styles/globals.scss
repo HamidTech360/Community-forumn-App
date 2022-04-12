@@ -52,7 +52,7 @@ a {
   }
 }
 .nav_bar {
-  background-color: none !important;
+  backdrop-filter: blur(3px);
   .vector1 {
     position: absolute;
     left: 0;
@@ -68,6 +68,7 @@ a {
     .vector1 {
       left: 0;
       width: 90%;
+      z-index: -1;
     }
     .navbar-collapse {
       text-align: center;

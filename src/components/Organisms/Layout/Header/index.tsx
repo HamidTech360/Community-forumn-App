@@ -36,11 +36,7 @@ const Header = () => {
           <Head>
             <meta name="robots" content="noindex" />
           </Head>
-          <img
-            src="/assets/ellipse-intro-top.png"
-            className={"vector1"}
-            alt=""
-          />
+
           <Container>
             <Link href="/" passHref>
               <Navbar.Brand>
