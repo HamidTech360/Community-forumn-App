@@ -4,6 +4,11 @@ import styles from "../../../../styles/Landing.module.scss";
 const Intro = () => {
   return (
     <div className={styles.main_container}>
+      <Image
+        src="/assets/ellipse-intro-top.png"
+        className={styles.vector1}
+        alt=""
+      />
       <Container>
         <Row
           className={` ${styles.main} d-flex justify-content-center align-items-center`}
