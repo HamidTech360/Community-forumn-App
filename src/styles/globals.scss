@@ -23,6 +23,10 @@ body {
   overflow-x: hidden;
   font-family: "Source Sans Pro", sans-serif !important;
 }
+
+.body {
+  padding-top: 10vh;
+}
 a {
   color: inherit !important;
   text-decoration: none !important;
@@ -30,12 +34,13 @@ a {
 }
 
 .padding-top {
-  padding-top: 6vh;
+  padding-top: 8vh;
 
   @media screen and (min-width: 768px) {
     padding-top: 8vh;
   }
 }
+
 .btn-primary {
   color: white !important;
 }

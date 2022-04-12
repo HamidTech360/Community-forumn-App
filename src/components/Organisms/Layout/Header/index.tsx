@@ -31,6 +31,7 @@ const Header = () => {
           className="nav_bar"
           expand="lg"
           bg={disabled.includes(activePage) ? "light" : ""}
+          fixed="top"
         >
           <Head>
             <meta name="robots" content="noindex" />
