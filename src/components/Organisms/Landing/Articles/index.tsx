@@ -39,7 +39,7 @@ const Articles = ({ articles }: { articles: Record<string, any> }) => {
           <Button variant="primary" size="lg">
             Explore
           </Button>
-          <Button variant="outline-primary" size="lg">
+          <Button variant="outline" size="lg">
             Gist
           </Button>
         </div>
@@ -48,7 +48,9 @@ const Articles = ({ articles }: { articles: Record<string, any> }) => {
             {articles?.map((post: any, key: number) => (
               <Card
                 key={`article-${key}`}
-                image={post.featuredImage.node.mediaItemUrl}
+                image={
+                  post.featuredImage?.node.mediaItemUrl || "/images/formbg.png"
+                }
                 title={post.title}
                 body={post.excerpt}
                 author={post.author.node.name}

@@ -91,13 +91,14 @@ export const getStaticProps = async ({
   ];
 
   replies.forEach((reply) => {
-    const newReply = {
+    const newReply = JSON.stringify({
       name: reply?._embedded?.user[0].name,
-      avatar: reply?._embedded?.user[0].avatar_urls.full,
-    };
+      avatar:
+        reply?._embedded?.user[0]?.avatar_urls?.full || "/images/formbg.png",
+    });
 
-    if (!contributors.find(({ name }) => name === newReply.name)) {
-      contributors.push(newReply);
+    if (!contributors.find(({ name }) => name === JSON.parse(newReply).name)) {
+      contributors.push(JSON.parse(newReply));
     }
   });
 

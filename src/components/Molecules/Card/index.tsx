@@ -19,7 +19,7 @@ const Card = ({ image, title, author, body, size }: ICard) => {
               : "0px 8.21687px 8.21687px rgba(0, 0, 0, 0.1)",
 
           width: "100%",
-          minHeight: "400px",
+          minHeight: "380px",
         }}
       >
         <BCard.Img
@@ -33,9 +33,9 @@ const Card = ({ image, title, author, body, size }: ICard) => {
         />
 
         <div className="text p-3">
-          <h5 className="text-primary" style={{ textTransform: "capitalize" }}>
+          <h6 className="text-primary" style={{ textTransform: "capitalize" }}>
             {title.toLowerCase()}
-          </h5>
+          </h6>
           <span className="text-muted">
             <small style={{ marginTop: "-2rem", fontSize: "0.8rem" }}>
               by &nbsp;{author}
@@ -53,7 +53,7 @@ const Card = ({ image, title, author, body, size }: ICard) => {
           />
         </div>
         <span className="d-flex justify-content-end text-primary absolute-bottom">
-          ...Read More &nbsp;<i className="bi bi-chevron-double-right"></i>
+          Read More &nbsp;<i className="bi bi-chevron-double-right"></i>
         </span>
       </BCard>
     </>
