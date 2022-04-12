@@ -6,9 +6,26 @@ body {
   margin: 0;
 }
 
+.text-center {
+  text-align: center;
+}
+.radius-10 {
+  border-radius: 10px;
+}
+.radius-20 {
+  border-radius: 20px;
+}
+
+.bg-white {
+  background-color: white;
+}
 body {
   overflow-x: hidden;
   font-family: "Source Sans Pro", sans-serif !important;
+}
+
+.body {
+  padding-top: 10vh;
 }
 a {
   color: inherit !important;
@@ -16,8 +33,23 @@ a {
   transition: ease-in 0.3s;
 }
 
+.padding-top {
+  padding-top: 8vh;
+
+  @media screen and (min-width: 768px) {
+    padding-top: 8vh;
+  }
+}
+
 .btn-primary {
   color: white !important;
+}
+.navbar {
+  .dropdown-toggle {
+    &:after {
+      display: none;
+    }
+  }
 }
 .nav_bar {
   background-color: none !important;
@@ -56,6 +88,10 @@ nav {
 
 * {
   box-sizing: border-box;
+}
+
+.bold {
+  font-weight: bold;
 }
 
 .text-primary {
@@ -159,4 +195,8 @@ textarea {
   color: var(--bs-secondary) !important;
 
   border-radius: 5px;
+}
+
+.notifications .nav-link {
+  padding: 0;
 }
