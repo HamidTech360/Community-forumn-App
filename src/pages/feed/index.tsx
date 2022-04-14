@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import axios from "axios";
+import React, { useCallback, useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import AuthContent from "../../components/Auth/AuthContent";
 import PostCard from "../../components/Organisms/App/PostCard";
@@ -8,9 +9,20 @@ import useAuth from "../../hooks/useAuth";
 import styles from "./feed.module.scss";
 const Feed = () => {
   const { user } = useAuth();
+  const [posts, setPosts] = useState<Record<string, any>[]>();
+  const fetchData = useCallback(async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_REST}/buddyboss/v1/activity?_fields=user_id,name,content,date,user_avatar,bp_media_ids,title,%20type`
+      );
+      setPosts(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
-
+    fetchData();
     return () => {
       document.body.style.backgroundColor = "initial";
     };
@@ -28,18 +40,9 @@ const Feed = () => {
 
           <main className={styles.posts}>
             <CreatePost />
-            <PostCard post={{ name: "" }} />
-            <PostCard post={{ name: "" }} />
-            <PostCard post={{ name: "" }} />
-            <PostCard post={{ name: "" }} />
-            <PostCard post={{ name: "" }} />
-            <PostCard post={{ name: "" }} />
-            <PostCard post={{ name: "" }} />
-            <PostCard post={{ name: "" }} />
-            <PostCard post={{ name: "" }} />
-            <PostCard post={{ name: "" }} />
-            <PostCard post={{ name: "" }} />
-            <PostCard post={{ name: "" }} />
+            {posts?.map((post, key) => (
+              <PostCard post={post} key={`activity-post-${key}`} />
+            ))}
           </main>
           <div>
             <UserCard user={user!} />
