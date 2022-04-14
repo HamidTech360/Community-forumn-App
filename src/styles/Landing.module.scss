@@ -15,8 +15,13 @@
   }
   .vector1 {
     position: fixed;
-    top: -10%;
+    top: -5%;
     z-index: 0;
+    width: 25%;
+    @media screen and(max-width:768px) {
+      display: none;
+      overflow: hidden;
+    }
   }
 }
 .main {
