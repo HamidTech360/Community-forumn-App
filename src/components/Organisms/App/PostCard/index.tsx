@@ -23,10 +23,11 @@ const PostCard = ({ post }: { post: Record<string, any> }) => {
   ];
   return (
     <>
+      {console.log(post)}
       <Card className="my-3" style={{ border: "none" }}>
         <Card.Title className="position-relative mx-2 d-flex justify-content-start gap-2 p-2 border-bottom">
           <Image
-            src={post.user_avatar.full}
+            src={post?.user_avatar?.full}
             width={45}
             height={45}
             alt=""
@@ -35,10 +36,10 @@ const PostCard = ({ post }: { post: Record<string, any> }) => {
           <div className="d-flex flex-column">
             <small
               style={{ fontSize: "0.8rem" }}
-              dangerouslySetInnerHTML={{ __html: post.title }}
+              dangerouslySetInnerHTML={{ __html: post?.title }}
             />
             <span style={{ fontSize: "0.9rem" }}>
-              <Age time={post.date} />
+              <Age time={post?.date} />
             </span>
             <Button
               variant="light"
@@ -50,7 +51,11 @@ const PostCard = ({ post }: { post: Record<string, any> }) => {
           </div>
         </Card.Title>
         <Card.Body
-          dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+          dangerouslySetInnerHTML={{
+            __html:
+              post.content_stripped?.slice(0, 300) +
+              `&nbsp; ... <a  href=${`/post/${post.id}`}>View post</a>`,
+          }}
         />
 
         <Card.Footer className="mx-2 d-flex justify-content-between bg-white">
@@ -65,20 +70,11 @@ const PostCard = ({ post }: { post: Record<string, any> }) => {
                 width={20}
                 height={20}
               />
-              {item.name}
+              <span className="d-none d-md-block">{item.name}</span>
             </Button>
           ))}
         </Card.Footer>
       </Card>
-      <style jsx>
-        {`
-          small a {
-            color: var(--bs-secondary) !important;
-            font-weight: bold !important;
-            display: none !important;
-          }
-        `}
-      </style>
     </>
   );
 };
