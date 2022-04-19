@@ -25,19 +25,17 @@ body {
 }
 
 .body {
-  padding-top: 10vh;
+  padding-top: 6vmax;
+  min-height: 70vh;
+
+  @media screen and (max-width: 768px) {
+    padding-top: 12vmax;
+  }
 }
 a {
+  color: inherit;
   text-decoration: none !important;
   transition: ease-in 0.3s;
-}
-
-.padding-top {
-  padding-top: 8vh;
-
-  @media screen and (min-width: 768px) {
-    padding-top: 8vh;
-  }
 }
 
 .btn-primary {
@@ -52,6 +50,10 @@ a {
 }
 .nav_bar {
   backdrop-filter: blur(3px);
+
+  a {
+    color: inherit !important;
+  }
   .vector1 {
     position: absolute;
     left: 0;
@@ -197,6 +199,16 @@ textarea {
   border-radius: 5px;
 }
 
+.mobi-nav {
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
+}
 .notifications .nav-link {
   padding: 0;
+}
+
+.dropdown-menu {
+  padding: 0.5rem;
+  border: none;
 }
