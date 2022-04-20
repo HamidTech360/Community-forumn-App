@@ -32,10 +32,18 @@ body {
     padding-top: 12vmax;
   }
 }
+
 a {
+  text-decoration: none;
+}
+nav a {
   color: inherit;
   text-decoration: none !important;
   transition: ease-in 0.3s;
+}
+
+.footer a {
+  color: white;
 }
 
 .btn-primary {

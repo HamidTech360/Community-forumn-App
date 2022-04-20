@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { Button, Card, Image } from "react-bootstrap";
 import Age from "../../../Atoms/Age";
@@ -54,7 +55,9 @@ const PostCard = ({ post }: { post: Record<string, any> }) => {
           dangerouslySetInnerHTML={{
             __html:
               post.content_stripped?.slice(0, 300) +
-              `&nbsp; ... <a  href=${`/post/${post.id}`}>View post</a>`,
+              `&nbsp; ... ${(
+                <Link href={`/feed/${post.id}`}>View post</Link>
+              )}`,
           }}
         />
 

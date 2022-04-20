@@ -1,3 +1,4 @@
+import { useMutation } from "@apollo/client";
 import Link from "next/link";
 import React from "react";
 import {
@@ -10,7 +11,9 @@ import {
   Button,
 } from "react-bootstrap";
 import useAuth from "../../../../hooks/useAuth";
+import { GET_USER, LOG_OUT } from "../../../../queries/auth";
 import Logo from "../../../Atoms/Logo";
+import Loader from "../Loader/Loader";
 
 const AuthHeader = () => {
   const links = [
@@ -19,9 +22,20 @@ const AuthHeader = () => {
     { icon: "gist", name: "Gist" },
     { icon: "groups", name: "Groups" },
   ];
+
+  const [logOut, { called, loading, error, data }] = useMutation(LOG_OUT, {
+    refetchQueries: [{ query: GET_USER }],
+  });
+  const loggedOut = Boolean(data?.logout?.status);
+
+  const handleLogOut = async () => {
+    await logOut();
+  };
+
   const { user } = useAuth();
   return (
     <>
+      {!called || (loading && <Loader />)}
       <Navbar
         className="bg-white"
         style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
@@ -92,7 +106,6 @@ const AuthHeader = () => {
           </div>
           <NavDropdown
             className="d-none d-md-block "
-           
             title={
               <>
                 <Image
@@ -114,13 +127,15 @@ const AuthHeader = () => {
                 height={20}
                 roundedCircle
               />
-              <span className="mx-2">{user?.firstName}&nbsp; {user?.lastName}</span>{" "}
+              <span className="mx-2">
+                {user?.firstName}&nbsp; {user?.lastName}
+              </span>{" "}
             </NavDropdown.Header>
             <NavDropdown.Divider />
             <NavDropdown.Item>Dark mode</NavDropdown.Item>
             <NavDropdown.Item>Account Settings</NavDropdown.Item>
             <NavDropdown.Item>Support</NavDropdown.Item>
-            <NavDropdown.Item>Logout</NavDropdown.Item>
+            <NavDropdown.Item onClick={handleLogOut}>Logout</NavDropdown.Item>
           </NavDropdown>
         </Container>
       </Navbar>
