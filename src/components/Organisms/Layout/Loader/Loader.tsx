@@ -4,7 +4,7 @@ import { Spinner } from "react-bootstrap";
 const Loader = () => {
   return (
     <div
-      className="m-2 p-2 d-flex justify-content-center"
+      className="m-2 p-2 d-flex justify-content-center align-items-center"
       style={{
         minHeight: "100vh",
         position: "fixed",

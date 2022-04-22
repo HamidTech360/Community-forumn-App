@@ -1,6 +1,6 @@
 .feed {
   display: grid;
-  grid-template-columns: 80% 20%;
+  grid-template-columns: 100%;
   @media screen and (max-width: 768px) {
     grid-template-columns: 100%;
   }
