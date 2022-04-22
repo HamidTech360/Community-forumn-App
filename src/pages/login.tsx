@@ -8,6 +8,7 @@ import { useMutation } from "@apollo/client";
 import { GET_USER, LOG_IN } from "../queries/auth";
 import useAuth, { AuthProvider } from "../hooks/useAuth";
 import { useRouter } from "next/router";
+import Link from "next/link";
 const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -81,7 +82,7 @@ const Login = () => {
               />
             </Form.Group>
             <Form.Text className="d-flex justify-content-end text-primary">
-              Forgot password?
+              <Link href="./forgotPassword">Forgot password?</Link>
             </Form.Text>
             <Button variant="primary" className="d-flex mx-auto" type="submit">
               Log In

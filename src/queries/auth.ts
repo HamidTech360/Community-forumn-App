@@ -47,3 +47,21 @@ export const REGISTER_USER = gql`
     }
   }
 `;
+
+export const LOG_OUT = gql`
+  mutation logOut {
+    logout(input: {}) {
+      status
+    }
+  }
+`;
+
+export const SEND_PASSWORD_RESET_EMAIL = gql`
+  mutation sendPasswordResetEmail($username: String!) {
+    sendPasswordResetEmail(input: { username: $username }) {
+      user {
+        id
+      }
+    }
+  }
+`;
