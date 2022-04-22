@@ -6,7 +6,7 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
   return (
     <Card
       className="bg-white radius-10 p-3 user-card position-relative"
-      style={{ border: "none" }}
+      style={{ border: "none", height: "30vh" }}
     >
       <div
         className="d-flex justify-content-center  "
