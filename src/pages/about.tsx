@@ -3,7 +3,6 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import Typography from "../components/Atoms/Typography";
 import Banner from "../components/Molecules/Banner";
-import Footer from "../components/Organisms/Layout/Footer";
 
 const about = () => {
   const aboutItems = [
