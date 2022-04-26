@@ -22,6 +22,7 @@
     "react-multi-carousel": "^2.8.0",
     "react-timeago": "^6.2.1",
     "sass": "^1.49.9",
+    "swr": "^1.3.0",
     "time-age": "^1.1.0"
   },
   "devDependencies": {

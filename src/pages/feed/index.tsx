@@ -1,8 +1,6 @@
-import axios from "axios";
 import Head from "next/head";
-import React, { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Col, Container, Image, Row, Spinner } from "react-bootstrap";
-import InfiniteScroll from "react-infinite-scroll-component";
 import AuthContent from "../../components/Auth/AuthContent";
 import Discussions from "../../components/Organisms/App/Discussions/Discussions";
 import PostCard from "../../components/Organisms/App/PostCard";
@@ -11,52 +9,62 @@ import CreatePost from "../../components/Organisms/CreatePost";
 import Modal from "../../components/Organisms/Layout/Modal/Modal";
 import useAuth from "../../hooks/useAuth";
 import { useModalWithData } from "../../hooks/useModalWithData";
+import { fetcher, usePagination } from "../../hooks/usePagination";
 import styles from "./feed.module.scss";
+
 const Feed = () => {
   const { user } = useAuth();
-  const [posts, setPosts] = useState<Record<string, any>[]>();
-  const [pages, setPages] = useState(0);
-  const [start, setStart] = useState(1);
-  const fetchData = async () => {
-    try {
-      const { data, headers } = await axios.get(
-        `${process.env.NEXT_PUBLIC_REST}/buddyboss/v1/activity?_fields=content_stripped,user_id,name,content,date,user_avatar,bp_media_ids,title,id,type&per_page=10&page=${start}`
-      );
-      setPosts(data);
-      setPages(Number(headers["x-wp-totalpages"]));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchMore = async () => {
-    try {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_REST}/buddyboss/v1/activity?_fields=content_stripped,user_id,name,content,date,user_avatar,bp_media_ids,title,id,type&per_page=10&page=${start}`
-      );
-      setPosts(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  const { posts, setPage, hasMore, isFetchingMore } = usePagination();
   const { modalOpen, setModalOpen, setSelected, selected } = useModalWithData();
+  const [scrollInitialised, setScrollInitialised] = useState(false);
+
+  const checkScroll = () => {
+    if (window.scrollY > 100) {
+      setScrollInitialised(true);
+    }
+  };
+
   useEffect(() => {
-    (async () => {
-      document.body.style.backgroundColor = "#f6f6f6";
-      await fetchData();
-      return () => {
-        document.body.style.backgroundColor = "initial";
-      };
-    })();
-  });
+    document.body.style.backgroundColor = "#f6f6f6";
+    window.addEventListener("scroll", checkScroll);
+
+    return () => {
+      document.body.style.backgroundColor = "initial";
+      window.removeEventListener("scroll", checkScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const scrollArea = document.querySelector("#intersection");
+    const cards = document.querySelectorAll(".card");
+    const targetItem = cards?.item(cards.length - 3);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setPage((prevPage) => prevPage + 1);
+          }
+        });
+      },
+      { root: scrollArea, rootMargin: "0px", threshold: 1.0 }
+    );
+
+    if (targetItem) observer.observe(targetItem);
+
+    return () => {
+      if (targetItem) observer.unobserve(targetItem);
+      observer.disconnect();
+    };
+  }, [posts, scrollInitialised, setPage]);
+
   return (
     <AuthContent>
       <Head>
         <title>Feed</title>
       </Head>
       <Container>
-        <div className={`padding-top ${styles.feed}`}>
+        <div className={`padding-top mt-3 ${styles.feed}`}>
           <>
             <div
               style={{ width: 250 }}
@@ -69,39 +77,60 @@ const Feed = () => {
 
           <main className={styles.posts} id="posts">
             <CreatePost />
-            <InfiniteScroll
+            <div
+              id="instersection"
+              style={{
+                height: "30vh",
+                width: "100%",
+                position: "fixed",
+                bottom: 0,
+              }}
+            ></div>
+            {/* <InfiniteScroll
               dataLength={Number(posts?.length)} //This is important field to render the next data
               next={fetchData}
               hasMore={true}
               initialScrollY={0}
               loader={
                 <div className="m-2 p-2 d-flex justify-content-center">
-                  <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Loading...</span>
+                <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
                   </Spinner>
-                </div>
-              }
-              endMessage={
-                <p style={{ textAlign: "center" }}>
+                  </div>
+                }
+                endMessage={
+                  <p style={{ textAlign: "center" }}>
                   <b>Yay! You have seen it all</b>
-                </p>
-              }
-            >
-              {posts?.map((post, key) => (
-                <PostCard
-                  post={post}
-                  key={`activity-post-${key}`}
-                  onClick={() => {
-                    setModalOpen(true);
-                    setSelected(post);
-                  }}
-                />
-              ))}
-            </InfiniteScroll>
+                  </p>
+                }
+              > */}
+            {posts?.map((post) => (
+              <PostCard
+                post={post}
+                key={`activity-post-${post.id}`}
+                onClick={() => {
+                  setModalOpen(true);
+                  setSelected(post);
+                }}
+              />
+            ))}
+            {isFetchingMore && (
+              <div className="m-2 p-2 d-flex justify-content-center">
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              </div>
+            )}
+            {!hasMore && (
+              <p style={{ textAlign: "center" }}>
+                <b>Yay! You have seen it all</b>
+              </p>
+            )}
+            {/* </InfiniteScroll> */}
           </main>
           <div
-            style={{ width: 250 }}
-            className="position-fixed d-none d-xl-flex  end-0 me-5 vh-100 "
+            style={{ width: 270 }}
+            className="position-fixed d-none d-xl-flex  end-0 me-5  vh-100 "
           >
             <Discussions />
           </div>
@@ -111,7 +140,7 @@ const Feed = () => {
           close={() => setModalOpen(false)}
           body={
             <Row className="p-4 d-flex align-items-center">
-              <Col lg={6}>
+              <Col lg={6} className="d-none d-lg-block">
                 <Image
                   style={{ borderRadius: 0 }}
                   src={"/images/formbg.png"}
@@ -120,7 +149,7 @@ const Feed = () => {
                 />
               </Col>
 
-              <Col lg={6}>
+              <Col lg={6} sm={12}>
                 <PostCard post={selected} />
               </Col>
             </Row>
@@ -129,12 +158,6 @@ const Feed = () => {
       </Container>
     </AuthContent>
   );
-};
-
-export const getStaticProps = async () => {
-  return {
-    props: {},
-  };
 };
 
 export default Feed;
