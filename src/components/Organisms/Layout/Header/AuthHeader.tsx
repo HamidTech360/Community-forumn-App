@@ -106,6 +106,7 @@ const AuthHeader = () => {
           </div>
           <NavDropdown
             className="d-none d-md-block "
+            style={{ color: "black" }}
             title={
               <>
                 <Image
