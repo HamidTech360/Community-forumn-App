@@ -17,6 +17,10 @@ const Discussions = () => {
       style={{ border: "none", overflowY: "scroll", height: "50vh" }}
       className="p-2 mb-4"
     >
+      <Card.Header className="d-flex justify-content-between gap-2 align-items-center bg-white">
+        <span className="bold">Active discussions</span>
+        <small className="text-bold text-primary">See more</small>
+      </Card.Header>
       <Card.Body>
         {gists &&
           gists?.map((gist) => (

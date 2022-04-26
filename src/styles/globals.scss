@@ -225,7 +225,11 @@ textarea {
   padding-top: 5vh;
 
   @media screen and (min-width: 1024px) {
-    padding-top: 0vh;
+    padding-top: 7vh;
+  }
+
+  @media screen and (min-width: 1800px) {
+    padding-top: 0;
   }
   @media screen and (max-width: 768px) {
     margin-top: -1rem;
@@ -233,7 +237,21 @@ textarea {
   }
 }
 
-.modal-dialog {
-  width: 90vw !important;
-  height: 70vh !important;
+@media screen and (max-width: 768px) {
+  .modal-dialog {
+    max-width: unset !important;
+  }
+
+  .modal-content {
+    position: absolute;
+    margin-top: -2rem;
+    top: 0;
+    min-height: 100vh;
+    width: 100%;
+  }
+}
+.dropdown-toggle {
+  &:after {
+    display: none !important;
+  }
 }
