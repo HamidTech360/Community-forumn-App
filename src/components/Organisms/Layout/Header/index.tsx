@@ -22,6 +22,13 @@ const Header = () => {
   const activePage = router.pathname;
   const { loggedIn, user } = useAuth();
 
+  const disabled = [
+    "/login",
+    "/register",
+    "/success-reset",
+    "/reset-password",
+    "/interests",
+  ];
   useEffect(() => {
     const navbar = window.document.querySelector(".nav_bar");
     window.onscroll = () => {
@@ -37,7 +44,6 @@ const Header = () => {
     };
   });
 
-  const disabled = ["/login", "/register"];
   return (
     <>
       {loggedIn ? (
