@@ -9,7 +9,7 @@ import Services from "../components/Organisms/Landing/Service";
 import Footer from "../components/Organisms/Layout/Footer";
 import styles from "../styles/Landing.module.scss";
 
-const Home = ({ articles }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const Home = () => {
   return (
     <>
       <Head>
@@ -25,54 +25,10 @@ const Home = ({ articles }: InferGetStaticPropsType<typeof getStaticProps>) => {
         <>
           <Intro />
           <Services />
-          <Articles articles={articles} />
         </>
       </main>
     </>
   );
 };
-
-export async function getStaticProps() {
-  const res = await fetch("https://setlinn.com/graphql", {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({
-      query: `{
-        posts {
-          nodes {
-            author {
-              node {
-                name
-              }
-            }
-            title
-            excerpt
-            featuredImage {
-              node {
-                mediaItemUrl
-              }
-            }
-          }
-        }
-      }
-      `,
-    }),
-  });
-
-  const {
-    data: {
-      posts: { nodes },
-    },
-  } = await res.json();
-
-  return {
-    props: {
-      articles: nodes,
-      revalidate: 1,
-    },
-  };
-}
 
 export default Home;
