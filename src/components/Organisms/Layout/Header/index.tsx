@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
-import React, { useEffect } from "react";
+import React, { ReactPropTypes, useEffect } from "react";
 import { Button, Container, Nav, Navbar, Form } from "react-bootstrap";
 import Logo from "../../../Atoms/Logo";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import useAuth from "../../../../hooks/useAuth";
 import AuthHeader from "./AuthHeader";
+import { propTypes } from "react-bootstrap/esm/Image";
 const links = [
   { name: "Gist", link: "/gist" },
   { name: "Explore", link: "/explore" },
@@ -15,6 +16,7 @@ const links = [
   { name: "Contact Us", link: "/contact" },
   { name: "FAQ", link: "/faq" },
 ];
+
 const Header = () => {
   const router = useRouter();
   const activePage = router.pathname;
@@ -27,6 +29,21 @@ const Header = () => {
     "/reset-password",
     "/interests",
   ];
+  useEffect(() => {
+    const navbar = window.document.querySelector(".nav_bar");
+    window.onscroll = () => {
+      if (window.scrollY > 100) {
+        !navbar.classList.contains("bg-light")
+          ? navbar.classList.add("bg-light")
+          : null;
+      } else {
+        navbar.classList.contains("bg-light")
+          ? navbar.classList.remove("bg-light")
+          : null;
+      }
+    };
+  });
+
   return (
     <>
       {loggedIn ? (
