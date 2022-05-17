@@ -20,7 +20,13 @@ const Header = () => {
   const activePage = router.pathname;
   const { loggedIn, user } = useAuth();
 
-  const disabled = ["/login", "/register"];
+  const disabled = [
+    "/login",
+    "/register",
+    "/success-reset",
+    "/reset-password",
+    "/interests",
+  ];
   return (
     <>
       {loggedIn ? (
