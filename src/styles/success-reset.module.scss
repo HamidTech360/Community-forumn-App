@@ -5,6 +5,32 @@
     padding-top: 6rem;
     padding: 10rem auto;
 
+    .vector1 {
+        position: fixed;
+        top: -5%;
+        left: 0;
+        z-index: 0;
+        width: 25%;
+        @media screen and(max-width:768px) {
+          display: none;
+          overflow: hidden;
+        }
+      }
+
+      .vector2 {
+        position: absolute;
+        width: 30vw;
+        // transform: rotate(90deg);
+        bottom: -40%;
+        right: 0;
+        z-index: -1 !important;
+    
+        @media screen and (max-width: 769px) {
+          width: 250px;
+          bottom: -20%;
+        }
+      }
+
     .page{
         margin: auto;
        
