@@ -1,14 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 
 import React, { ReactPropTypes, useEffect } from "react";
-import { Button, Container, Nav, Navbar, Form } from "react-bootstrap";
-import Logo from "../../../Atoms/Logo";
+import { Button, Container, Nav, Navbar } from "react-bootstrap";
+import Logo from "@/components/Atoms/Logo";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import useAuth from "../../../../hooks/useAuth";
+
 import AuthHeader from "./AuthHeader";
-import { propTypes } from "react-bootstrap/esm/Image";
+
+import useUser from "@/hooks/useUser";
 const links = [
   { name: "Gist", link: "/gist" },
   { name: "Explore", link: "/explore" },
@@ -20,7 +21,7 @@ const links = [
 const Header = () => {
   const router = useRouter();
   const activePage = router.pathname;
-  const { loggedIn, user } = useAuth();
+  const { isAuthenticated, user } = useUser();
 
   const disabled = [
     "/login",
@@ -31,22 +32,25 @@ const Header = () => {
   ];
   useEffect(() => {
     const navbar = window.document.querySelector(".nav_bar");
-    window.onscroll = () => {
-      if (window.scrollY > 100) {
-        !navbar.classList.contains("bg-light")
-          ? navbar.classList.add("bg-light")
-          : null;
-      } else {
-        navbar.classList.contains("bg-light")
-          ? navbar.classList.remove("bg-light")
-          : null;
-      }
-    };
+
+    if (navbar) {
+      window.onscroll = () => {
+        if (window.scrollY > 100) {
+          !navbar.classList.contains("bg-light")
+            ? navbar.classList.add("bg-light")
+            : null;
+        } else {
+          navbar.classList.contains("bg-light")
+            ? navbar.classList.remove("bg-light")
+            : null;
+        }
+      };
+    }
   });
 
   return (
     <>
-      {loggedIn ? (
+      {isAuthenticated ? (
         <AuthHeader />
       ) : (
         <Navbar

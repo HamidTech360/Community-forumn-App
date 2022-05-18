@@ -14,7 +14,7 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
       >
         <Image
           className="user-img"
-          src={user.avatar.url}
+          src={user?.avatar?.url || "/images/formbg.png"}
           alt=""
           width={70}
           height={70}
@@ -23,7 +23,7 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
       </div>
 
       <p className="text-center bold" style={{ marginTop: "-2rem" }}>
-        {user.firstName}&nbsp; {user.lastName}
+        {user?.firstName}&nbsp; {user?.lastName}
       </p>
       <p className="d-flex justify-content-between">
         <div className="d-flex flex-column align-items-center">
@@ -36,7 +36,7 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
         </div>
       </p>
       <p className="text-center text-primary">
-        <Link href={`/profile/${user.databaseId}`}>View Profile</Link>
+        <Link href={`/profile/${user?.id}`}>View Profile</Link>
       </p>
     </Card>
   );

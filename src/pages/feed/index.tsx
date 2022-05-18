@@ -1,21 +1,21 @@
+import useUser from "@/hooks/useUser";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Col, Container, Image, Row, Spinner } from "react-bootstrap";
-import AuthContent from "../../components/Auth/AuthContent";
-import Discussions from "../../components/Organisms/App/Discussions/Discussions";
-import PostCard from "../../components/Organisms/App/PostCard";
-import UserCard from "../../components/Organisms/App/UserCard";
-import CreatePost from "../../components/Organisms/CreatePost";
-import Modal from "../../components/Organisms/Layout/Modal/Modal";
-import useAuth from "../../hooks/useAuth";
-import { useModalWithData } from "../../hooks/useModalWithData";
-import { fetcher, usePagination } from "../../hooks/usePagination";
+import AuthContent from "@/components/Auth/AuthContent";
+import Discussions from "@/components/Organisms/App/Discussions/Discussions";
+import PostCard from "@/components/Organisms/App/PostCard";
+import UserCard from "@/components/Organisms/App/UserCard";
+import CreatePost from "@/components/Organisms/CreatePost";
+import Modal from "@/components/Organisms/Layout/Modal/Modal";
+
+import { usePagination } from "@/hooks/usePagination";
 import styles from "./feed.module.scss";
 
 const Feed = () => {
-  const { user } = useAuth();
+  const { user } = useUser();
   const { posts, setPage, hasMore, isFetchingMore } = usePagination();
-  const { modalOpen, setModalOpen, setSelected, selected } = useModalWithData();
+
   const [scrollInitialised, setScrollInitialised] = useState(false);
 
   const checkScroll = () => {
@@ -105,14 +105,7 @@ const Feed = () => {
                 }
               > */}
             {posts?.map((post) => (
-              <PostCard
-                post={post}
-                key={`activity-post-${post.id}`}
-                onClick={() => {
-                  setModalOpen(true);
-                  setSelected(post);
-                }}
-              />
+              <PostCard post={post} key={`activity-post-${post.id}`} />
             ))}
             {isFetchingMore && (
               <div className="m-2 p-2 d-flex justify-content-center">
@@ -135,26 +128,6 @@ const Feed = () => {
             <Discussions />
           </div>
         </div>
-        <Modal
-          show={modalOpen}
-          close={() => setModalOpen(false)}
-          body={
-            <Row className="p-4 d-flex align-items-center">
-              <Col lg={6} className="d-none d-lg-block">
-                <Image
-                  style={{ borderRadius: 0 }}
-                  src={"/images/formbg.png"}
-                  fluid
-                  alt={selected.title}
-                />
-              </Col>
-
-              <Col lg={6} sm={12}>
-                <PostCard post={selected} />
-              </Col>
-            </Row>
-          }
-        />
       </Container>
     </AuthContent>
   );
