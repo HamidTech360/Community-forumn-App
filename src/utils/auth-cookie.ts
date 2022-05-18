@@ -21,7 +21,7 @@ export function setTokenCookie(res: NextApiResponse, token: string) {
 export function removeTokenCookie(res: NextApiResponse) {
   const cookie = serialize(TOKEN_NAME, "", {
     maxAge: -1,
-    path: "/api/refresh-token",
+    path: "/api/auth/refresh-token",
   });
 
   res.setHeader("Set-Cookie", cookie);

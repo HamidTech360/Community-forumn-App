@@ -1,87 +1,70 @@
 import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 
-interface IDues {
-  year: string;
-  amount: string;
-  reference: Record<string, string | number>;
+interface IAddress {
+  phone?: string;
+  country?: string;
+  location?: Record<string, string | number>;
+  city?: string;
 }
 
 export interface IUserSchema extends Document {
   gender?: string;
-  phone?: string;
   firstName: string;
   lastName: string;
   email: string;
-  hall?: string;
-  username: string;
+  username?: string;
   password: string;
   otherNames: string;
-  level: number;
-  dues: Array<IDues>;
-  campus: string;
   isAdmin: boolean;
+  address: IAddress;
 }
 
 const userSchema = new Schema<IUserSchema>({
   firstName: {
     type: String,
-    required: true
+    required: true,
   },
   lastName: {
     type: String,
-    required: true
+    required: true,
   },
   otherNames: {
-    type: String
+    type: String,
   },
-  hall: {
-    type: String
-  },
+
   password: {
     type: String,
     min: 8,
-    required: true
+    required: true,
   },
   email: {
     type: String,
     unique: true,
-    required: true
-  },
-  level: {
-    type: Number,
-    required: true
+    required: true,
   },
   gender: {
-    type: String
+    type: String,
   },
-  phone: { type: String },
-  dues: [
-    {
-      type: new Schema({
-        year: {
-          type: String,
-          default: `${new Date().getFullYear()} - ${
-            new Date().getFullYear() + 1
-          }`
-        },
-        amount: {
-          type: Number,
-          default: 0
-        },
-
-        reference: {
-          type: Schema.Types.Mixed
-        }
-      })
-    }
-  ],
+  address: {
+    type: new Schema({
+      city: {
+        type: String,
+      },
+      country: {
+        type: Number,
+        default: 0,
+      },
+      location: {
+        type: Schema.Types.Mixed,
+      },
+    }),
+  },
   isAdmin: {
     type: Boolean,
     required: true,
-    default: false
+    default: false,
   },
-  campus: { type: String, required: true }
 });
 
 userSchema.pre("save", async function (next) {
