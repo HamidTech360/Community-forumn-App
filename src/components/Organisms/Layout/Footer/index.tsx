@@ -1,13 +1,14 @@
+import useUser from "@/hooks/useUser";
 import React from "react";
 import { Col, Container, Image, Row } from "react-bootstrap";
 import useAuth from "../../../../hooks/useAuth";
 import Logo from "../../../Atoms/Logo";
 
 const Footer = () => {
-  const { loggedIn, user } = useAuth();
+  const { isAuthenticated } = useUser();
   return (
     <>
-      {!loggedIn && (
+      {!isAuthenticated && (
         <div className="footer mt-5">
           <Container>
             <Row className="px-3">

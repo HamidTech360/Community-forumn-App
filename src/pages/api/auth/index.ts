@@ -2,6 +2,7 @@
 import dbConnect from "@/lib/mongo";
 import User from "@/models/User";
 import { setTokenCookie } from "@/utils/auth-cookie";
+import getUserID from "@/utils/get-userID";
 import { generateAccessToken, generateRefreshToken } from "@/utils/token";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -19,7 +20,6 @@ export default async function handler(
       console.log(req.body);
 
       const { email, password, remember } = req.body;
-      await dbConnect();
 
       const user = await User.findOne({
         email,
@@ -48,6 +48,24 @@ export default async function handler(
     } catch (error) {
       console.log(error);
       res.status(500).json("Something went wrong");
+    }
+  } else if (req.method === "GET") {
+    try {
+      await dbConnect();
+
+      const token = req.headers.authorization?.split(" ")[1] || "";
+
+      const userID = getUserID(token);
+      if (!userID) return res.status(401).end("Unauthorized!");
+
+      const user = await User.findById(userID).select("-password");
+
+      if (!user) return res.status(400).end("User not found");
+
+      res.json(user);
+    } catch (error) {
+      console.log(error);
+      res.status(500).end("Something went wrong");
     }
   }
 }
