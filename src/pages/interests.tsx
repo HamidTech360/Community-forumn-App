@@ -24,6 +24,7 @@ const Interests = () => {
 
       selectedInterests.forEach((selectedInt) => {
         document.getElementById(selectedInt.id).classList.add("bg-success");
+        document.getElementById(selectedInt.id).classList.add("text-white");
       });
     }
   }, []);
@@ -37,6 +38,7 @@ const Interests = () => {
     if (document.getElementById(id).classList.contains("bg-success")) {
       //  Interest Already Selected. De-select Interest
       document.getElementById(id).classList.remove("bg-success");
+      document.getElementById(id).classList.remove("text-white");
       setSelectedInterests(() => {
         return selectedInterests.filter((value) => {
           return value.interestedIn !== interestedIn;
@@ -45,12 +47,15 @@ const Interests = () => {
     } else {
       //  Interest Not Selected. Select Interest
       document.getElementById(id).classList.add("bg-success");
+      document.getElementById(id).classList.add("text-white");
       setSelectedInterests(() => [...selectedInterests, { id, interestedIn }]);
     }
   };
 
   const axiosInterestSelected = (e) => {
     const interestSelected = selectedInterests;
+
+    // Send with axios
 
     console.log("interest selected", interestSelected);
   };
@@ -62,10 +67,9 @@ const Interests = () => {
         // style={bg_img}
       >
         <Card border="0">
-          <Card.Header className="border-0 fw-4 bg-body">
+          <Card.Header className="border-0 fw-4 bg-body mb-5">
             Select interests
-            <br />
-            <sub className="fs-6 text-secondary">
+            <sub className="fs-6 text-secondary d-block mt-3">
               Select maximum of three things that you plan to use Settlin to
               achieve
             </sub>
@@ -101,10 +105,7 @@ const Interests = () => {
           <Card.Footer className="border-0 bg-body">
             <div className="row justify-content-center align-items-center">
               <div className="col-4 d-grid">
-                <Button
-                  className="btn btn-lg btn-success"
-                  onClick={axiosInterestSelected}
-                >
+                <Button className="btn btn-lg" onClick={axiosInterestSelected}>
                   Continue
                 </Button>
               </div>
