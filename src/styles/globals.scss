@@ -195,6 +195,12 @@ textarea {
   color: #0b5351 !important;
 }
 
+.nav-item {
+  a {
+    color: inherit;
+  }
+}
+
 .nav-tabs li button.active {
   background-color: #0b5351 !important;
   color: #ffffff !important;

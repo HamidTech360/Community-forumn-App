@@ -10,7 +10,7 @@ import Modal from "../../components/Organisms/Layout/Modal/Modal";
 import useAuth from "../../hooks/useAuth";
 import { useModalWithData } from "../../hooks/useModalWithData";
 import { fetcher, usePagination } from "../../hooks/usePagination";
-import styles from "./feed.module.scss";
+import styles from "@/styles/feed.module.scss";
 
 const Feed = () => {
   const { user } = useAuth();
@@ -64,7 +64,7 @@ const Feed = () => {
         <title>Feed</title>
       </Head>
       <Container>
-        <div className={`padding-top mt-3 ${styles.feed}`}>
+        <div className={`padding-top mt-3 ${styles.wrapper}`}>
           <>
             <div
               style={{ width: 250 }}
@@ -135,26 +135,6 @@ const Feed = () => {
             <Discussions />
           </div>
         </div>
-        <Modal
-          show={modalOpen}
-          close={() => setModalOpen(false)}
-          body={
-            <Row className="p-4 d-flex align-items-center">
-              <Col lg={6} className="d-none d-lg-block">
-                <Image
-                  style={{ borderRadius: 0 }}
-                  src={"/images/formbg.png"}
-                  fluid
-                  alt={selected.title}
-                />
-              </Col>
-
-              <Col lg={6} sm={12}>
-                <PostCard post={selected} />
-              </Col>
-            </Row>
-          }
-        />
       </Container>
     </AuthContent>
   );
