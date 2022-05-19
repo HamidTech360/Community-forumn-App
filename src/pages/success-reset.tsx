@@ -1,5 +1,5 @@
 import React from "react";
-import { Image } from 'react-bootstrap'
+import { Image, Button } from 'react-bootstrap'
 import styles from "../styles/success-reset.module.scss";
 
 const SuccessReset = () => {
@@ -16,7 +16,7 @@ const SuccessReset = () => {
           <h1>Success!</h1>
           <p>Your new password has been created</p>
 
-          <button>Back To Login</button>
+          <Button>Back To Login</Button>
         </div>
           <Image
           src="/assets/ellipse-intro-right.png"
