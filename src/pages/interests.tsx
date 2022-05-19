@@ -24,7 +24,7 @@ const Interests = () => {
       console.log("selectedInterests:", selectedInterests);
 
       selectedInterests.forEach((selectedInt) => {
-        document.getElementById(selectedInt.id).classList.add("bg-success");
+        document.getElementById(selectedInt.id).classList.add("bg-primary");
         document.getElementById(selectedInt.id).classList.add("text-white");
       });
     }
@@ -36,9 +36,9 @@ const Interests = () => {
     const id = e.target.id;
     const interestedIn = e.target.textContent;
 
-    if (document.getElementById(id).classList.contains("bg-success")) {
+    if (document.getElementById(id).classList.contains("bg-primary")) {
       //  Interest Already Selected. De-select Interest
-      document.getElementById(id).classList.remove("bg-success");
+      document.getElementById(id).classList.remove("bg-primary");
       document.getElementById(id).classList.remove("text-white");
       setSelectedInterests(() => {
         return selectedInterests.filter((value) => {
@@ -47,7 +47,7 @@ const Interests = () => {
       });
     } else {
       //  Interest Not Selected. Select Interest
-      document.getElementById(id).classList.add("bg-success");
+      document.getElementById(id).classList.add("bg-primary");
       document.getElementById(id).classList.add("text-white");
       setSelectedInterests(() => [...selectedInterests, { id, interestedIn }]);
     }
@@ -81,7 +81,7 @@ const Interests = () => {
             />
             Select interests
             <p className="fs-6 text-secondary d-block mt-3">
-              Select maximum of three things that you plan to use Settlin to
+              Select a minimum of three things that you plan to use Settlin to
               achieve
             </p>
           </Card.Header>
@@ -93,13 +93,13 @@ const Interests = () => {
                 let initInterestsLength = initInterests.length;
                 let btnWidth =
                   index < initInterestsLength / 3
-                    ? "col-sm-5 col-md-4 col-lg-3 btn btn-outline-success list-group-item me-3 border-1 border-success rounded-3 mb-3"
+                    ? "col-sm-5 col-md-4 col-lg-3 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3"
                     : index > initInterestsLength / 3 &&
                       index <= initInterestsLength / Number(1.5)
-                    ? "col-sm-4 col-md-4 col-lg-3 btn btn-outline-success list-group-item me-3 border-1 border-success rounded-3 mb-3"
+                    ? "col-sm-4 col-md-4 col-lg-3 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3"
                     : index >= initInterestsLength / Number(1.5)
-                    ? "col-sm-4 col-md-3 col-lg-2 btn btn-outline-success list-group-item me-3 border-1 border-success rounded-3 mb-3"
-                    : "col-sm-4 col-md-2 col-lg-4 btn btn-outline-success list-group-item me-3 border-1 border-success rounded-3 mb-3";
+                    ? "col-sm-4 col-md-3 col-lg-2 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3"
+                    : "col-sm-4 col-md-2 col-lg-4 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3";
                 return (
                   <div
                     id={idIndex}
