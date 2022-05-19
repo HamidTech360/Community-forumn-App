@@ -71,7 +71,7 @@ const Interests = () => {
           >
             <Image
               src="/assets/ellipse-intro-top.png"
-              className="d-none d-md-block"
+              className="d-none d-lg-block"
               style={{
                 position: "fixed",
                 top: "-5%",
@@ -80,13 +80,13 @@ const Interests = () => {
               alt="ellipse-intro-top.png"
             />
             Select interests
-            <sub className="fs-6 text-secondary d-block mt-3">
+            <p className="fs-6 text-secondary d-block mt-3">
               Select maximum of three things that you plan to use Settlin to
               achieve
-            </sub>
+            </p>
           </Card.Header>
 
-          <Card.Body>
+          <Card.Body style={{ marginTop: "-2rem" }}>
             <div className="row justify-content-center align-items-center">
               {initInterests.map((interest, index) => {
                 let idIndex = `initInterests-${index}`;
@@ -116,16 +116,16 @@ const Interests = () => {
           <Card.Footer className="border-0 bg-body">
             <Image
               src="/assets/ellipse-intro-right.png"
-              className="d-none d-md-block"
+              className="d-none d-lg-block"
               style={{
                 position: "fixed",
-                bottom: "-70%",
+                bottom: "-82%",
                 right: "-5%",
               }}
               alt="ellipse-intro-right.png"
             />
             <div className="row justify-content-center align-items-center">
-              <div className="col-4 d-grid">
+              <div className="col-5 d-grid mt-5">
                 <Button className="btn btn-lg" onClick={axiosInterestSelected}>
                   Continue
                 </Button>
