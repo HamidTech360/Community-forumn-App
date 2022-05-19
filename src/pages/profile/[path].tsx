@@ -1,75 +1,63 @@
-import React from "react";
-import { Container, Spinner } from "react-bootstrap";
-import PostCard from "@/components/Organisms/App/PostCard";
-import CreatePost from "@/components/Organisms/CreatePost";
-import styles from "@/styles/feed.module.scss";
+import React, { useEffect, useState, ReactNode } from "react";
+import { Card, CardImg, Container, Nav, Spinner } from "react-bootstrap";
+import PostCard from "../../components/Organisms/App/PostCard";
+import CreatePost from "../../components/Organisms/CreatePost";
+import styles from "../../styles/feed.module.scss";
 import Head from "next/head";
-import UserCard from "@/components/Organisms/App/UserCard";
-import Discussions from "@/components/Organisms/App/Discussions/Discussions";
-import { usePagination } from "@/hooks/usePagination";
+import UserCard from "../../components/Organisms/App/UserCard";
+import Discussions from "../../components/Organisms/App/Discussions/Discussions";
+import { usePagination } from "../../hooks/usePagination";
+import { useRouter } from "next/router";
+import About from "../../components/Templates/Profile/About";
+import Timeline from "../../components/Templates/Profile/Timeline";
+import Friends from "../../components/Templates/Profile/Friends";
+import Media from "../../components/Templates/Profile/Media";
+import Bookmarks from "../../components/Templates/Profile/Bookmarks";
+import Link from "next/link";
+import ProfileCard from "../../components/Organisms/App/ProfileCard";
+interface IComponents {
+  about: ReactNode;
+  timeline: ReactNode;
+  bookmarks: ReactNode;
+  media: ReactNode;
+  friends: ReactNode;
+}
+const Components: IComponents = {
+  timeline: <Timeline />,
+  about: <About />,
+  media: <Media />,
+  friends: <Friends />,
+  bookmarks: <Bookmarks />,
+};
 const Profile = () => {
-    const { posts, setPage, hasMore, isFetchingMore } = usePagination();
+  const { posts, setPage, hasMore, isFetchingMore } = usePagination();
+
+  const router = useRouter();
+
+  const { path } = router.query;
   return (
     <>
       <Head>
         <title>Profile</title>
       </Head>
       <Container>
-        <div className={`padding-top mt-3 ${styles.feed}`}>
+        <div className={`padding-top mt-3 ${styles.wrapper}`}>
           <>
             <div
               style={{ width: 250 }}
               className="position-fixed d-none d-md-flex flex-column gap-4 vh-100"
             >
-         
               <Discussions />
             </div>
           </>
 
-          <main className={styles.posts} id="posts">
-            <CreatePost />
-            <div
-              id="instersection"
-              style={{
-                height: "30vh",
-                width: "100%",
-                position: "fixed",
-                bottom: 0,
-              }}
-            ></div>
-
-            {posts?.map((post) => (
-              <PostCard
-                post={post}
-                key={`activity-post-${post.id}`}
-                onClick={() => {
-                  setModalOpen(true);
-                  setSelected(post);
-                }}
-              />
-            ))}
-            {isFetchingMore && (
-              <div className="m-2 p-2 d-flex justify-content-center">
-                <Spinner animation="border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              </div>
-            )}
-            {!hasMore && (
-              <p style={{ textAlign: "center" }}>
-                <b>Yay! You have seen it all</b>
-              </p>
-            )}
+          <main className={styles.profile}>
+            <ProfileCard />
+            {Components[path as unknown as string]}
           </main>
-          <div
-            style={{ width: 270 }}
-            className="position-fixed d-none d-xl-flex  end-0 me-5  vh-100 "
-          >
-            <Discussions />
-          </div>
         </div>
       </Container>
-    </AuthContent>
+    </>
   );
 };
 
