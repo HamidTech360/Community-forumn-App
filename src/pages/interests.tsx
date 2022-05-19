@@ -1,6 +1,7 @@
+import { url } from "inspector";
 import React, { useEffect, useState } from "react";
 
-import { Container, Card, Button } from "react-bootstrap";
+import { Container, Card, Button, Image } from "react-bootstrap";
 
 const Interests = () => {
   const [initInterests, setInitInterests] = useState([
@@ -62,12 +63,22 @@ const Interests = () => {
 
   return (
     <section>
-      <Container
-        className="mt-3 text-center h1"
-        // style={bg_img}
-      >
+      <Container className="mt-3 text-center h1">
         <Card border="0">
-          <Card.Header className="border-0 fw-4 bg-body mb-5">
+          <Card.Header
+            className="border-0 fw-4 mb-5 bg-body"
+            style={{ backgroundColor: "none" }}
+          >
+            <Image
+              src="/assets/ellipse-intro-top.png"
+              className="d-none d-md-block"
+              style={{
+                position: "fixed",
+                top: "-5%",
+                left: "-10%",
+              }}
+              alt="ellipse-intro-top.png"
+            />
             Select interests
             <sub className="fs-6 text-secondary d-block mt-3">
               Select maximum of three things that you plan to use Settlin to
@@ -103,6 +114,16 @@ const Interests = () => {
             </div>
           </Card.Body>
           <Card.Footer className="border-0 bg-body">
+            <Image
+              src="/assets/ellipse-intro-right.png"
+              className="d-none d-md-block"
+              style={{
+                position: "fixed",
+                bottom: "-70%",
+                right: "-5%",
+              }}
+              alt="ellipse-intro-right.png"
+            />
             <div className="row justify-content-center align-items-center">
               <div className="col-4 d-grid">
                 <Button className="btn btn-lg" onClick={axiosInterestSelected}>
@@ -118,11 +139,3 @@ const Interests = () => {
 };
 
 export default Interests;
-
-// const bg_img = {
-//   backgroundImage: "url(./assets/ellipse-intro-top.png)",
-//   backgroundRepeat: "no-repeat",
-//   backgroundAttachment: "fixed",
-//   // backgroundPosition: "left-top",
-//   backgroundPosition: "-2% -2%",
-// };
