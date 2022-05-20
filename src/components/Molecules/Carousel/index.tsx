@@ -28,7 +28,7 @@ const EndlessCarousel = ({
   children,
   gap,
 }: {
-  children: ReactNode;
+  children?: ReactNode;
   gap?: string;
 }) => {
   return (
