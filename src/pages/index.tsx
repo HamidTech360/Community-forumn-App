@@ -25,6 +25,7 @@ const Home = () => {
         <>
           <Intro />
           <Services />
+          <Articles />
         </>
       </main>
     </>
