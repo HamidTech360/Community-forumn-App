@@ -1,0 +1,30 @@
+.friendBody{
+    padding: 2rem 0 1rem 1rem;
+    background: #FFFFFF;
+    border-right: 1px solid rgb(216, 213, 213);
+    // border-radius: 10px;
+
+
+    .card{
+        margin: 0rem auto;
+
+
+        .title{
+            margin-top: 1rem;
+            margin-left: -6rem;
+
+            @media all and (max-width : 1200px){
+                margin-left: 0;
+            }
+
+             .name {
+                font-weight: 600;
+                font-size: 1.35rem;
+                margin-bottom: 0.8rem;
+                font-family: var(--bs-font-sans-serif);
+            }
+        }
+
+       
+    }
+}
