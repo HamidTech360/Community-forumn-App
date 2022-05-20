@@ -1,0 +1,34 @@
+.mediaImages {
+  width: 100%;
+  margin: auto;
+  margin-top: 20px;
+}
+.imageGrid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: auto;
+}
+.imageGridItem {
+  height: 240px;
+  width: 190px;
+  background-color: grey;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+.image {
+  height: inherit;
+  width: inherit;
+}
+
+@media screen and (max-width: 768px) {
+  .imageGridItem {
+    height: 150px;
+    width: 100px;
+    margin-right: 10px;
+  }
+  .imageGrid {
+    padding-left: 14px;
+  }
+}
