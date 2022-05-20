@@ -28,6 +28,10 @@ const Header = () => {
     "/success-reset",
     "/reset-password",
     "/interests",
+    "/profile/timeline",
+    "/profile/about",
+    "/profile/media",
+    "/profile/friends",
   ];
   useEffect(() => {
     const navbar = window.document.querySelector(".nav_bar");

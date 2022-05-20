@@ -1,11 +1,12 @@
-.feed {
+.wrapper {
   display: grid;
   grid-template-columns: 100%;
   @media screen and (max-width: 768px) {
     grid-template-columns: 100%;
   }
 
-  .posts {
+  .posts,
+  .profile {
     margin-left: 270px;
 
     @media screen and (max-width: 768px) {
