@@ -22,7 +22,6 @@ interface FriendsListProp {
 const FriendsData = (props: FriendsListProp) => {
     
     const { friends } = props.friendsList;
-    console.log(friends)
 
   return (
       <>
