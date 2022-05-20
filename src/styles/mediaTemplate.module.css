@@ -1,0 +1,30 @@
+.mediaImages{
+    margin-top: 20px;
+}
+.imageGrid{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: auto;
+}
+.imageGridItem{
+    height: 240px;
+    width: 190px;
+    background-color: grey;
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+.image{
+    height: inherit;
+    width: inherit;
+}
+
+@media screen and (max-width:768px) {
+    .imageGridItem{
+        height: 150px;
+        width: 100px;
+    }
+    .imageGrid{
+        padding-left: 20px;
+    }
+}
