@@ -1,4 +1,3 @@
-import { url } from "inspector";
 import React, { useEffect, useState } from "react";
 
 import { Container, Card, Button, Image } from "react-bootstrap";
@@ -19,7 +18,7 @@ const Interests = () => {
   const [selectedInterests, setSelectedInterests] = useState([]);
 
   useEffect(() => {
-    // Display User Selected Interest In Btn On Load
+    // Display User Selected Interest In Btn On Component Load
     if (selectedInterests.length >= 1) {
       console.log("selectedInterests:", selectedInterests);
 
@@ -30,6 +29,7 @@ const Interests = () => {
     }
   }, []);
 
+  // Select Interest BTN Function
   const interestSelected = (e) => {
     e.preventDefault();
 
@@ -53,12 +53,17 @@ const Interests = () => {
     }
   };
 
+  // Send Selected Interest To Required Component/Server
   const axiosInterestSelected = (e) => {
     const interestSelected = selectedInterests;
 
-    // Send with axios
+    if (interestSelected.length < 3) {
+      return alert("You Have To Select 3 or More Interest");
+    } else {
+      // Send with axios
 
-    console.log("interest selected", interestSelected);
+      console.log("interest selected", interestSelected);
+    }
   };
 
   return (
