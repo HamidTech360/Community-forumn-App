@@ -27,10 +27,10 @@ const ProfileCard = () => {
   const { path } = useRouter().query;
 
   return (
-    <Card>
+    <Card className="mb-3">
       <CardImg
         src="/images/formbg.png"
-        height={200}
+        height={150}
         style={{ objectFit: "cover" }}
       />
       <Card.Body className="d-flex justify-content-center align-items-center flex-column ">
