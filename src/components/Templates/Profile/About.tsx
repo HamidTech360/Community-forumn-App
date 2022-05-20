@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 
-import { Container, Card, Button, Modal, Form, Image } from "react-bootstrap";
+import { Container, Card } from "react-bootstrap";
 
 const About = () => {
   const [activeTab, setActiveTab] = useState("bio");
-  const [showBio, setShowBio] = useState(false);
-  const [showInfo, setShowInfo] = useState(false);
-  const [textAreaValue, setTextAreaValue] = useState("");
   const [interests, setInterests] = useState([
     "Studying abroad",
     "Internship abroad",
@@ -14,20 +11,12 @@ const About = () => {
     "Housing in Ghana",
   ]);
 
-  // Bio
-  const handleCloseHideBio = () => setShowBio(false);
-  const handleCloseBio = (e) => {
-    document.getElementById("bioText").textContent = textAreaValue;
-    setShowBio(false);
+  const tabNav = (e) => {
+    // Change Active Tab
+    const pageTab = e.target.id;
+
+    setActiveTab(pageTab);
   };
-  const handleShowBio = () => setShowBio(true);
-  // Info
-  const handleCloseHideInfo = () => setShowBio(false);
-  const handleCloseInfo = (e) => {
-    document.getElementById("bioText").textContent = textAreaValue;
-    setShowBio(false);
-  };
-  const handleShowInfo = () => setShowBio(true);
 
   const Components = {
     // ............................. Bio Tab .............................
@@ -35,11 +24,7 @@ const About = () => {
       <Container>
         <div className="row">
           <h5 className="col-10">Bio</h5>
-          <h5
-            className="col-2 btn"
-            style={{ marginTop: "-.5rem" }}
-            onClick={handleShowBio}
-          >
+          <h5 className="col-2 btn" style={{ marginTop: "-.5rem" }}>
             <i className="bi bi-pencil-square"></i>
           </h5>
         </div>
@@ -61,42 +46,6 @@ const About = () => {
             </ul>
           </div>
         </div>
-
-        {/* Modal For Bio */}
-        <Modal
-          show={showBio}
-          onHide={handleCloseHideBio}
-          backdrop="static"
-          keyboard={false}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Enter your Bio</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
-              >
-                <Form.Label>Bio:</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  placeholder='Install "https://www.tiny.cloud/" Plugin for better formatting'
-                  onChange={(e) => setTextAreaValue(e.target.value)}
-                />
-              </Form.Group>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseHideBio}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={handleCloseBio}>
-              Save Changes
-            </Button>
-          </Modal.Footer>
-        </Modal>
       </Container>
     ),
 
@@ -110,11 +59,7 @@ const About = () => {
           <h6 className="col-10" id="personalInfoText">
             <i className="bi bi-person-fill"> Select Gender</i>
           </h6>
-          <h5
-            className="col-2 btn"
-            style={{ marginTop: "-.5rem" }}
-            onClick={handleShowBio}
-          >
+          <h5 className="col-2 btn" style={{ marginTop: "-.5rem" }}>
             <i className="bi bi-pencil-square"></i>
           </h5>
           <p className="text-muted ms-4" style={{ marginTop: "-.8rem" }}>
@@ -126,11 +71,7 @@ const About = () => {
           <h6 className="col-10" id="personalInfoText">
             <i className="bi bi-calendar-event-fill"> Select DOB</i>
           </h6>
-          <h5
-            className="col-2 btn"
-            style={{ marginTop: "-.5rem" }}
-            onClick={handleShowBio}
-          >
+          <h5 className="col-2 btn" style={{ marginTop: "-.5rem" }}>
             <i className="bi bi-pencil-square"></i>
           </h5>
           <p className="text-muted ms-4" style={{ marginTop: "-.8rem" }}>
@@ -156,11 +97,7 @@ const About = () => {
           <h6 className="col-10" id="personalInfoText">
             <i className="bi bi-telephone-fill"> Input Mobil No.</i>
           </h6>
-          <h5
-            className="col-2 btn"
-            style={{ marginTop: "-.5rem" }}
-            onClick={handleShowBio}
-          >
+          <h5 className="col-2 btn" style={{ marginTop: "-.5rem" }}>
             <i className="bi bi-pencil-square"></i>
           </h5>
           <p className="text-muted ms-4" style={{ marginTop: "-.8rem" }}>
@@ -207,54 +144,11 @@ const About = () => {
             </i>
           </h6>
         </div>
-
-        {/* Modal */}
-        {/* <Modal
-          show={showBio}
-          onHide={handleCloseHideBio}
-          backdrop="static"
-          keyboard={false}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Enter your Bio</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
-              >
-                <Form.Label>Bio:</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  placeholder='Install "https://www.tiny.cloud/" Plugin for better formatting'
-                  onChange={(e) => setTextAreaValue(e.target.value)}
-                />
-              </Form.Group>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseHideBio}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={handleCloseBio}>
-              Save Changes
-            </Button>
-          </Modal.Footer>
-        </Modal> */}
       </Container>
     ),
 
     // ............................. >Education History Tab .............................
     educationHistory: <p>Education history page</p>,
-  };
-
-  const tabNav = (e) => {
-    // Change Active Tab
-    const pageTab = e.target.id;
-
-    setActiveTab(pageTab);
   };
 
   return (
