@@ -1,9 +1,18 @@
-import React, {useState} from "react";
-import { Button, Container, Form, Image } from "react-bootstrap";
-
+import React, {useState, useRef} from "react";
+import { Button, Container, Form, Image, InputGroup } from "react-bootstrap";
+import {BiHide, BiShow} from 'react-icons/bi'
 
 const ResetPassword = () => {
+  const showPrependStyles = {
+    backgroundColor:'whitesmoke', 
+    border:'0px',
+    cursor:'pointer'
+  }
+  const [showPassword, setShowPassword] = useState(false)
+  const [showCPassword, setShowCPassword] = useState(false)
 
+  const passwordRef = useRef()
+  const c_passwordRef = useRef()
   const [formData, setFormData] = useState({
     password:'',
     c_password:''
@@ -17,6 +26,24 @@ const ResetPassword = () => {
     }));
   
   };
+
+  const handleShowPassword = (ref:any)=>{
+    ref.current.type="text"
+    if(ref.current.name=="password"){
+        setShowPassword(true)
+    }else if(ref.current.name=="c_password"){
+      setShowCPassword(true)
+    }
+  }
+
+  const handleHidePassword = (ref:any)=>{
+    ref.current.type="password"
+    if(ref.current.name=="password"){
+      setShowPassword(false)
+    }else if(ref.current.name=="c_password"){
+      setShowCPassword(false)
+    }
+  }
   return (
     <Container
       style={{ minHeight: "60vh" }}
@@ -29,7 +56,7 @@ const ResetPassword = () => {
       >
         <div>
           <h2 className="text-center ">Forgot Password?</h2>
-          <p style={{ lineHeight: "1.5" }}>
+          <p style={{ lineHeight: "1.5" }} className="text-center">
             Please enter a new password of your choice. Your new password should be at least 5 characters long.
           </p>
         </div>
@@ -44,22 +71,41 @@ const ResetPassword = () => {
         >
           <Form.Group style={{marginBottom:'30px'}}>
             <Form.Label>New Password</Form.Label>
+           <InputGroup>
             <Form.Control
-              name="password"
-              placeholder="Enter new password"
-              type="password"
-              onChange={handleChange}
-            />
+                name="password"
+                placeholder="Enter new password"
+                type="password"
+                onChange={handleChange}
+                ref={passwordRef}
+              />
+              
+              <InputGroup.Text style={showPrependStyles}>
+                 {showPassword? 
+                 <BiShow size={23} onClick={()=>handleHidePassword(passwordRef)} />:
+                 <BiHide size={23} onClick={()=>handleShowPassword(passwordRef)} />
+                 }
+              </InputGroup.Text>
+           </InputGroup>
           </Form.Group>
 
           <Form.Group>
             <Form.Label>Comfirm Password</Form.Label>
-            <Form.Control
-              type="password"
-              name="c_password"
-              placeholder="Re-enter new password"
-              onChange={handleChange}
-            />
+            <InputGroup>
+              <Form.Control
+                type="password"
+                name="c_password"
+                placeholder="Re-enter new password"
+                onChange={handleChange}
+                ref={c_passwordRef}
+              />
+              <InputGroup.Text style={showPrependStyles}>
+                 {showCPassword?
+                 <BiShow size={23} onClick={()=>handleHidePassword(c_passwordRef)} />:
+                 <BiHide size={23} onClick={()=>handleShowPassword(c_passwordRef)} />
+                 }
+              </InputGroup.Text>
+            </InputGroup>
           </Form.Group>
 
           <div className="d-flex justify-content-center mt-4">
