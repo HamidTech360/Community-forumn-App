@@ -3,6 +3,10 @@
     background: #FFFFFF;
     border-right: 1px solid rgb(216, 213, 213);
 
+    @media all and (max-width: 1000px){
+        border-right: none;
+    }
+
 
     .card{
         margin: 0rem auto;
