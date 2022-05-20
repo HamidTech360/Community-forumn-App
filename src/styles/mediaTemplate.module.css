@@ -23,6 +23,7 @@
     .imageGridItem{
         height: 150px;
         width: 100px;
+        margin-right: 14px;
     }
     .imageGrid{
         padding-left: 20px;
