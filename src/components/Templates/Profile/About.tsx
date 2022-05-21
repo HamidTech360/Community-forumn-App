@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 
 import { Container, Card } from "react-bootstrap";
 
@@ -11,10 +11,28 @@ const About = () => {
     "Housing in Ghana",
   ]);
 
+  useEffect(() => {
+    // Set Active Tabs Visibility To Bio
+    tabVisibility("bio");
+  }, []);
+
+  const tabVisibility = (pageTab) => {
+    // Set Tabs Visibility
+    document.getElementById(pageTab).classList.add("text-primary");
+    for (const key in Components) {
+      if (key !== pageTab) {
+        document.getElementById(key).classList.remove("text-primary");
+      }
+    }
+  };
+
   const tabNav = (e) => {
     // Change Active Tab
     const pageTab = e.target.id;
 
+    // Set Active Tabs Visibility
+    tabVisibility(pageTab);
+    // Display Active Tab
     setActiveTab(pageTab);
   };
 
@@ -153,11 +171,11 @@ const About = () => {
 
   return (
     <section>
-      <Container>
+      <Container className="shadow-sm">
         <Card className="border-0">
           <div className="row g-2" style={{ marginTop: "-2rem" }}>
             <div className="col-md-12 col-lg-3">
-              <Card.Body className="bg-light">
+              <Card.Body className="bg-light shadow" style={{ height: "100%" }}>
                 <nav className="text-secondary">
                   <a
                     className="nav-link active btn text-start text-secondary"
@@ -185,7 +203,11 @@ const About = () => {
               </Card.Body>
             </div>
             <div className="col-md-12 col-lg-9">
-              <Card.Body id="profileMainSide" className="bg-light">
+              <Card.Body
+                id="profileMainSide"
+                className="bg-light shadow"
+                style={{ height: "100%" }}
+              >
                 {Components[activeTab]}
               </Card.Body>
             </div>
