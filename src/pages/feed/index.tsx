@@ -10,7 +10,7 @@ import Modal from "../../components/Organisms/Layout/Modal/Modal";
 import useAuth from "../../hooks/useAuth";
 import { useModalWithData } from "../../hooks/useModalWithData";
 import { fetcher, usePagination } from "../../hooks/usePagination";
-import styles from "@/styles/feed.module.scss";
+import styles from "/styles/feed.module.scss";
 
 const Feed = () => {
   const { user } = useAuth();
