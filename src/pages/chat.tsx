@@ -17,7 +17,7 @@ const Chat = () => {
   // const [selectedMessage, setSelectedMessage] = useState("");
   // const [chatTimeline, setChatTimeline] = useState("");
   const [selectedMessageToChatTimeline, setSelectedMessageToChatTimeline] =
-    useState("");
+    useState();
   const [initMessages, setInitMessages] = useState([
     {
       name: "Arwen Undomiel",
@@ -437,7 +437,7 @@ const Chat = () => {
     });
 
     // If Same Message is selected twice, then the displayed message would be removed from message UI
-    if (selectedMessageToChatTimeline === data[0]) {
+    if (selectedMessageToChatTimeline === data[0].message) {
       // setSelectedMessage("");
       // setChatTimeline("");
       setSelectedMessageToChatTimeline("");
@@ -447,7 +447,7 @@ const Chat = () => {
 
       // setSelectedMessage(data[0]);
       // setChatTimeline(data[0]);
-      setSelectedMessageToChatTimeline(data[0]);
+      setSelectedMessageToChatTimeline(data[0].message);
     }
   };
   //   Leave below event for Event Bobbling
