@@ -24,9 +24,9 @@ const Settings = () => {
         <Card style={{ border: "1px solid #e0e0e0" }}>
           <Card.Body>
             <Row>
-              <Col xs={4} lg={3}>
+              <Col xs={12} md={3}>
                 <h5 className="ms-3 bold">Settings</h5>
-                <Nav className="d-flex flex-column text-capitalize">
+                <Nav className="d-flex  flex-md-column justify-content-around text-capitalize">
                   {names.map((name, index) => (
                     <Nav.Link
                       className="text-secondary tab-item"
@@ -36,12 +36,12 @@ const Settings = () => {
                       <span className="pe-3">
                         <i className={`bi ${tabs[name].icon}`}></i>
                       </span>
-                      {name}
+                      <span className="d-none d-md-inline">{name}</span>
                     </Nav.Link>
                   ))}
                 </Nav>
               </Col>
-              <Col xs={8} lg={9}>
+              <Col xs={12} md={9}>
                 {tabs[current].component}
               </Col>
             </Row>
