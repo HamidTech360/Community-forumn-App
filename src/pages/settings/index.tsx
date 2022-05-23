@@ -25,6 +25,7 @@ const Settings = () => {
           <Card.Body>
             <Row>
               <Col xs={4} lg={3}>
+                <h5 className="ms-3 bold">Settings</h5>
                 <Nav className="d-flex flex-column text-capitalize">
                   {names.map((name, index) => (
                     <Nav.Link
