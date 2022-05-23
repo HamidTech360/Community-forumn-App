@@ -48,12 +48,10 @@ const Articles = ({ articles }: { articles?: Record<string, any> }) => {
             {posts?.map((post: any, key: number) => (
               <Card
                 key={`article-${key}`}
-                image={
-                  post.featuredImage?.node.mediaItemUrl || "/images/formbg.png"
-                }
+                image={post.image || "/images/formbg.png"}
                 title={post.title}
-                body={post.excerpt}
-                author={post.author.node.name}
+                body={post.body}
+                author={post.author}
               />
             ))}
           </EndlessCarousel>
