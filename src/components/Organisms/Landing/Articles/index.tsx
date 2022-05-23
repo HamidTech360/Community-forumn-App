@@ -30,7 +30,7 @@ const posts = [
     body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum varius aliquam habitasse gravida. Tincidunt sollicitudin leo quis id in amet, auctor.",
   },
 ];
-const Articles = ({ articles }: { articles: Record<string, any> }) => {
+const Articles = ({ articles }: { articles?: Record<string, any> }) => {
   return (
     <section className={styles.articles}>
       <Container>
@@ -45,7 +45,7 @@ const Articles = ({ articles }: { articles: Record<string, any> }) => {
         </div>
         <div className={`gap-5 ${styles.cards}`}>
           <EndlessCarousel>
-            {articles?.map((post: any, key: number) => (
+            {posts?.map((post: any, key: number) => (
               <Card
                 key={`article-${key}`}
                 image={
