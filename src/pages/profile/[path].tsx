@@ -35,6 +35,14 @@ const Profile = () => {
   const router = useRouter();
 
   const { path } = router.query;
+
+  useEffect(() => {
+    document.body.style.backgroundColor = "#f6f6f6";
+
+    return () => {
+      document.body.style.backgroundColor = "initial";
+    };
+  }, []);
   return (
     <>
       <Head>
@@ -53,6 +61,7 @@ const Profile = () => {
 
           <main className={styles.profile}>
             <ProfileCard />
+
             {Components[path as unknown as string]}
           </main>
         </div>

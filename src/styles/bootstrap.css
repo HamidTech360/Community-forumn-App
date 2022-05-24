@@ -19,7 +19,7 @@
   --bs-cyan: #0dcaf0;
   --bs-white: #fff;
   --bs-gray: #6c757d;
-  --bs-light: #A6A6A6;
+  --bs-light: #a6a6a6;
   --bs-gray-dark: #343a40;
   --bs-gray-100: #f8f9fa;
   --bs-gray-200: #e9ecef;
@@ -3037,7 +3037,8 @@ textarea.form-control.is-invalid {
   box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
 }
 
-.was-validated .form-check-input:invalid,
+
+.was-validated .form-check-input:invalid, .form-check-input-reverse:valid,
 .form-check-input.is-invalid {
   border-color: #dc3545;
 }
@@ -3116,8 +3117,9 @@ fieldset:disabled .btn {
   background-color: #207681;
   border-color: #207681;
 }
-.btn-primary:hover {
-  color: #fff;
+.btn-primary:hover,
+.tab-item:hover {
+  color: #fff !important;
   background-color: #069197;
   border-color: #069197;
 }
