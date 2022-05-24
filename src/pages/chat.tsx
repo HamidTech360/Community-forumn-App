@@ -1,438 +1,41 @@
 import React, { useState } from "react";
-import {
-  Accordion,
-  Button,
-  Card,
-  Col,
-  Container,
-  Fade,
-  Image,
-  Row,
-} from "react-bootstrap";
-import { Prev } from "react-bootstrap/esm/PageItem";
+import { Card, Container, Fade, Image, Row } from "react-bootstrap";
+import ChatBubble from "../components/Chat/ChatBubble";
+import { dummyData } from "../components/Chat/dummyData";
 
 const Chat = () => {
   const [open, setOpen] = useState(true);
-  // const [chatingWith, setChatingWith] = useState("");
-  // const [selectedMessage, setSelectedMessage] = useState("");
-  // const [chatTimeline, setChatTimeline] = useState("");
   const [selectUserToChatTimeline, setSelectUserToChatTimeline] = useState("");
-  const [initMessages, setInitMessages] = useState([
-    {
-      name: "Arwen Undomiel",
-      id: "1",
-      faceImage: "/images/girl-reading.png",
-      message: [
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "self",
-          read: true,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "recipient",
-          read: false,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-      ],
-      unreadMessage: "9",
-      online: true,
-    },
-    {
-      name: "Bilbo Baggins",
-      id: "2",
-      faceImage: "/images/girl-reading1.png",
-      dateTime: new Date().toLocaleString(),
-      message: [
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "recipient",
-          read: true,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "recipient",
-          read: true,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: true,
-        },
-        {
-          message:
-            "Please note that popular names listed below are not necessarily consistently popular in every year.",
-          sender: "self",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-      ],
-      unreadMessage: "",
-      online: true,
-    },
-    {
-      name: "Barliman Butterbur",
-      id: "3",
-      faceImage: "/images/formbg.png",
-      dateTime: new Date().toLocaleString(),
-      message: [
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "self",
-          read: true,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "recipient",
-          read: false,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-        {
-          message:
-            "Lists of given names organized by letter, gender, language and more.",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-      ],
-      unreadMessage: "",
-      online: false,
-    },
-    {
-      name: "Elbereth Githoniel",
-      id: "4",
-      faceImage: "/images/masonry1.png",
-      dateTime: new Date().toLocaleString(),
-      message: [
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "self",
-          read: true,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "recipient",
-          read: false,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-        {
-          message:
-            "Here we list out such baby girl names that have been popular forever.",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-      ],
-      unreadMessage: "2",
-      online: false,
-    },
-    {
-      name: "Elrond Halfelven",
-      id: "5",
-      faceImage: "/images/masonry2.png",
-      dateTime: new Date().toLocaleString(),
-      message: [
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "recipient",
-          read: true,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "self",
-          read: false,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
-          sender: "sellf",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-        {
-          message:
-            "Name lists allow you to explore baby names by styles and themes, gather inspiration, and discover names you may not otherwise have thought of.",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-      ],
-      unreadMessage: "8",
-      online: true,
-    },
-    {
-      name: "Frodo Baggins",
-      id: "6",
-      faceImage: "/images/masonry3.png",
-      dateTime: new Date().toLocaleString(),
-      message: [
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "self",
-          read: true,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "recipient",
-          read: false,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-        {
-          message: "Top 1,000 Baby Boy Names of 2020",
-          sender: "self",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-      ],
-      unreadMessage: "1",
-      online: false,
-    },
-    {
-      name: "Meriadoc Brandybuck",
-      id: "7",
-      faceImage: "/images/masonry4.png",
-      dateTime: new Date().toLocaleString(),
-      message: [
-        {
-          message:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero soluta perferendis numquam perspiciatis dolor nisi?",
-          sender: "recipient",
-          read: true,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message: "Lorem ipsum dolor sit amet.",
-          sender: "self",
-          read: false,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus iste distinctio, obcaecati iure ab, dolorem non assumenda cum esse, reprehenderit fugiat cumque.",
-          sender: "self",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-        {
-          message:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aut? ",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-      ],
-      unreadMessage: "",
-      online: true,
-    },
-    {
-      name: "Samwise Gamgee",
-      id: "8",
-      faceImage: "/images/about.png",
-      dateTime: new Date().toLocaleString(),
-      message: [
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "self",
-          read: true,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "recipient",
-          read: "self",
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-        {
-          message: "Hello World.",
-          sender: "self",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-      ],
-      unreadMessage: "3",
-      online: false,
-    },
-    {
-      name: "Aragorn",
-      id: "9",
-      faceImage: "/images/article.png",
-      dateTime: new Date().toLocaleString(),
-      message: [
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "self",
-          read: true,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "recipient",
-          read: false,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
-          sender: "self",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-        {
-          message:
-            "The SSA top 20 baby names of 2021 are sure to dazzle, giving any parent the cream of the crop to choose from.",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-      ],
-      unreadMessage: "",
-      online: false,
-    },
-    {
-      name: "Eowyn",
-      id: "10",
-      faceImage: "/images/google.png",
-      dateTime: new Date().toLocaleString(),
-      message: [
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "self",
-          read: true,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "self",
-          read: false,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-        {
-          message:
-            "1,000 Baby Boy Names to Inspire You. There's so much to do when preparing for the birth of your baby boy, and finding the perfect name is probably right near the top of the list.",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-      ],
-      unreadMessage: "",
-      online: true,
-    },
-    {
-      name: "Fangorn",
-      id: "11",
-      faceImage: "/images/linkedin.png",
-      dateTime: new Date().toLocaleString(),
-      message: [
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "self",
-          read: true,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
-          sender: "self",
-          read: false,
-          dateTime: new Date().toLocaleString(),
-        },
-        {
-          message:
-            "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-        {
-          message: "List of Boy Names (A-Z)",
-          sender: "recipient",
-          dateTime: new Date().toLocaleString(),
-          read: false,
-        },
-      ],
-      unreadMessage: "",
-      online: true,
-    },
-  ]);
+  const [initMessages, setInitMessages] = useState(dummyData);
 
   const [messages, setMessages] = useState(initMessages);
 
-  const startChatingWith = (e) => {
+  const backToSideMessages = (e) => {
+    if (window.innerWidth < 768) {
+      document.querySelector("#mainDisplay").classList.add("d-none");
+      document.querySelector("#mainSidebar").classList.remove("d-none");
+    }
+  };
+
+  const startChat = () => {
+    console.log("startChat");
+    setSelectUserToChatTimeline("");
+  };
+
+  const startChattingWith = (e) => {
+    // Mid Point Display (using Bootstrap d-md-block)
+    if (window.innerWidth < 768) {
+      document.querySelector("#mainDisplay").classList.remove("d-none");
+      document.querySelector("#mainSidebar").classList.add("d-none");
+    } else if (window.innerWidth >= 768) {
+      document.querySelector("#mainDisplay").classList.remove("d-none");
+      document.querySelector("#mainSidebar").classList.remove("d-none");
+    }
+
     // get data of custom attribute
     const id = e.target.dataset.nameid;
 
-    // Get currennt user
+    // Get current user
     const user = messages.filter((message) => {
       return message.id === id && message;
     });
@@ -447,7 +50,7 @@ const Chat = () => {
     }
   };
   //   Leave below event for Event Bobbling
-  const startChatingWithChild = (e) => {};
+  const startChattingWithChild = (e) => {};
 
   const searchMessages = (e) => {
     let currentMessages = [...initMessages];
@@ -458,47 +61,18 @@ const Chat = () => {
     setMessages(currentMessages);
   };
 
-  const chatBubble = (message, index) => {
-    const self = `bg-primary text-light mb-5 p-3 ms-auto`;
-    const self2 = `ms-auto`;
-    const recipient = `bg-secondary text-light mb-5 p-3`;
-    const messagingStyle = message.sender === "self" ? self : recipient;
-    const messagingStyle2 = message.sender === "self" && self2;
-
-    return (
-      <div key={index}>
-        <div
-          style={{
-            width: "28%",
-            height: "auto",
-          }}
-          className={messagingStyle2}
-        >
-          {message.dateTime}
-        </div>
-        <div
-          className={messagingStyle}
-          style={{
-            width: "40%",
-            height: "auto",
-            borderRadius: "35px 15px 35px 35px",
-          }}
-        >
-          {message.message}
-        </div>
-      </div>
-    );
-  };
-
-  const sendMessageToRecepient = (e) => {
+  const sendMessageToRecipient = (e) => {
     const text = document.getElementById("writeMessage").value;
     if (text !== "") {
       if (selectUserToChatTimeline === "") {
-        // Compose Chat & Type in recipient Name
+        /*
+         ** No Previous Chat Is Selected On Sidebar
+         ** Compose Chat & Manually Type in recipient Name
+         */
         let sendTo = document.getElementById("sendTo").value;
 
-        if (sendTo !== "" && text !== "") {
-          let sendToReceipients = sendTo.split(",");
+        if (sendTo !== "") {
+          let sendToRecipients = sendTo.split(",");
           let chatValue = {
             message: text,
             sender: "self",
@@ -506,37 +80,38 @@ const Chat = () => {
             dateTime: new Date().toLocaleString(),
           };
 
-          let included = [];
-          let notIncluded = [];
-          let trimedSendToReceipients = sendToReceipients.map((receipient) => {
-            // return receipient.trim().toLowerCase();
-            return receipient.trim();
+          let previousChatWithUser = [];
+          let noPreviousChatWithUser = [];
+          let trimmedSendToRecipients = sendToRecipients.map((recipient) => {
+            return recipient.trim();
           });
           let allUsers = [];
 
+          // Check if recipient had previous chat
           initMessages.forEach((user) => {
-            // let trimedUser = user.name.trim().toLowerCase();
-            let trimedUser = user.name.trim();
-            allUsers.push(trimedUser);
-            if (trimedSendToReceipients.includes(trimedUser)) {
-              included.push(user);
+            let trimmedUser = user.name.trim();
+            allUsers.push(trimmedUser);
+            if (trimmedSendToRecipients.includes(trimmedUser)) {
+              // User Had Previous Chat
+              previousChatWithUser.push(user);
             }
           });
 
-          trimedSendToReceipients.forEach((user) => {
+          // New User Chat
+          trimmedSendToRecipients.forEach((user) => {
             if (!allUsers.includes(user)) {
-              // console.log(`${user} NOT INCLUDED`);
-              notIncluded.push(user);
+              noPreviousChatWithUser.push(user);
             }
           });
 
+          // .... Recurring Chat ....
           let tempInitMessages = [];
           let tempInitName = [];
-          included.forEach((user) => {
-            // Update Current Recepient with new Chat
+          previousChatWithUser.forEach((user) => {
+            // Update Previous Chat Array/Timeline of Recipient with new Chat
             user.message.push(chatValue);
 
-            // Update initMessages with the updated current Recepient
+            // Update initMessages with the updated current Recipient
             tempInitMessages.push(user);
             tempInitName.push(user.name);
           });
@@ -552,12 +127,13 @@ const Chat = () => {
           setInitMessages(tempInitMessages);
           setMessages(tempInitMessages);
 
+          // ....... For New Users Chat .......
           let tempNewUserInitMessages = [];
-          notIncluded.forEach((user, index) => {
+          noPreviousChatWithUser.forEach((user, index) => {
             // Create a new Message for user
             let newUser = {
               name: user,
-              id: new Date() + index,
+              id: `${new Date()}${index}`,
               faceImage: "https://source.unsplash.com/random",
               message: [
                 {
@@ -570,9 +146,10 @@ const Chat = () => {
               unreadMessage: "",
               online: true,
             };
-            // Update initMessages with the updated current Recepient
+            // Update Temp Message with the updated current Recipient Message
             tempNewUserInitMessages.push(newUser);
           });
+          // Last name in the list should come first
           tempNewUserInitMessages.reverse();
           tempNewUserInitMessages = [
             ...tempNewUserInitMessages,
@@ -589,21 +166,26 @@ const Chat = () => {
           document.getElementById("sendTo").value = "";
         }
       } else {
-        // Compose Chat for recipient choosen at sidebar
+        /*
+         ** Has Previous Chat With User
+         ** Compose Chat for Recurring recipient chosen at sidebar
+         */
         const chatValue = {
           message: text,
           sender: "self",
           read: true,
           dateTime: new Date().toLocaleString(),
         };
-        let currentReceipiant = selectUserToChatTimeline;
-        // Update Current Recepient with new Chat
-        currentReceipiant.message.push(chatValue);
-        // Update initMessages with the updated current Recepient
+        let currentRecipient = selectUserToChatTimeline;
+        // Update Current Recipient with new Chat
+        currentRecipient.message.push(chatValue);
+        // Update initMessages with the updated current Recipient
         let tempInitMessages = [];
-        tempInitMessages.push(currentReceipiant);
+        // Add new chat to top
+        tempInitMessages.push(currentRecipient);
+        // Other chat to follow
         initMessages.forEach((user) => {
-          if (user.name !== currentReceipiant.name) {
+          if (user.name !== currentRecipient.name) {
             tempInitMessages.push(user);
           }
         });
@@ -621,7 +203,8 @@ const Chat = () => {
     <section>
       <Container>
         <div className="row shadow">
-          <div className="col-12 col-md-4 shadow">
+          {/* SideBar */}
+          <div id="mainSidebar" className="d-md-block col-12 col-md-4 shadow">
             <div className="row my-4 mx-1">
               <div className="col-9">
                 <h4>Messages</h4>
@@ -632,17 +215,17 @@ const Chat = () => {
                 aria-controls="toggleMessagingBody"
                 aria-expanded={open}
               >
-                <i className="bi bi-pencil-square me-2"></i>{" "}
+                <i className="bi bi-pencil-square me-2" onClick={startChat}></i>{" "}
                 {!open && (
                   <i
                     id="chevron-double-up"
-                    className="bi bi-chevron-double-up ms-auto"
+                    className="d-none d-md-inline bi bi-chevron-double-up ms-auto"
                   ></i>
                 )}
                 {open && (
                   <i
                     id="chevron-double-down"
-                    className="bi bi-chevron-double-down ms-auto"
+                    className="d-none d-md-inline bi bi-chevron-double-down ms-auto"
                   ></i>
                 )}
               </div>
@@ -678,17 +261,17 @@ const Chat = () => {
                             cursor: "pointer",
                           }}
                           data-nameid={message.id}
-                          onClick={startChatingWith}
+                          onClick={startChattingWith}
                         >
                           <div
                             className="row"
                             data-nameid={message.id}
-                            onClick={startChatingWithChild}
+                            onClick={startChattingWithChild}
                           >
                             <div
                               className="col-12 col-lg-3"
                               data-nameid={message.id}
-                              onClick={startChatingWithChild}
+                              onClick={startChattingWithChild}
                             >
                               <Image
                                 src={message.faceImage}
@@ -696,30 +279,30 @@ const Chat = () => {
                                 className="img-fluid"
                                 roundedCircle={true}
                                 data-nameid={message.id}
-                                onClick={startChatingWithChild}
+                                onClick={startChattingWithChild}
                               ></Image>
                             </div>
                             <div
                               className="col-11 col-lg-9 ms-auto p-0"
                               data-nameid={message.id}
-                              onClick={startChatingWithChild}
+                              onClick={startChattingWithChild}
                             >
                               <div
                                 className="col-11 d-flex"
                                 data-nameid={message.id}
-                                onClick={startChatingWithChild}
+                                onClick={startChattingWithChild}
                               >
                                 <div
                                   className="col-8 fs-5"
                                   data-nameid={message.id}
-                                  onClick={startChatingWithChild}
+                                  onClick={startChattingWithChild}
                                 >
                                   {message.name}
                                 </div>
                                 <div
                                   className="col-4 text-muted text-center"
                                   data-nameid={message.id}
-                                  onClick={startChatingWithChild}
+                                  onClick={startChattingWithChild}
                                 >
                                   {message.message[
                                     message.message.length - 1
@@ -729,12 +312,12 @@ const Chat = () => {
                               <div
                                 className="col-11 d-flex"
                                 data-nameid={message.id}
-                                onClick={startChatingWithChild}
+                                onClick={startChattingWithChild}
                               >
                                 <p
                                   className="col-10"
                                   data-nameid={message.id}
-                                  onClick={startChatingWithChild}
+                                  onClick={startChattingWithChild}
                                 >
                                   {message.message[
                                     message.message.length - 1
@@ -745,12 +328,12 @@ const Chat = () => {
                                 <h6
                                   className="col-2 text-center"
                                   data-nameid={message.id}
-                                  onClick={startChatingWithChild}
+                                  onClick={startChattingWithChild}
                                 >
                                   <span
                                     className="badge bg-primary rounded-pill fw-normal"
                                     data-nameid={message.id}
-                                    onClick={startChatingWithChild}
+                                    onClick={startChattingWithChild}
                                   >
                                     {message.unreadMessage}
                                   </span>
@@ -762,7 +345,7 @@ const Chat = () => {
                               className="mx-auto"
                               style={{ width: "75%", marginTop: "-.9rem" }}
                               data-nameid={message.id}
-                              onClick={startChatingWithChild}
+                              onClick={startChattingWithChild}
                             />
                           </div>
                         </Card.Body>
@@ -774,8 +357,10 @@ const Chat = () => {
             </div>
           </div>
 
+          {/* Main Display */}
           <div
-            className="col-12 col-md-8 shadow"
+            id="mainDisplay"
+            className="d-none d-md-block col-12 col-md-8 shadow"
             style={{
               height: "31.6em",
               overflowY: "scroll",
@@ -783,12 +368,35 @@ const Chat = () => {
             }}
           >
             <Card className="border-0 d-flex flex-column">
-              <Card.Header style={{ backgroundColor: "transparent" }}>
-                <h3 className="mt-2">{selectUserToChatTimeline.name}</h3>
+              <Card.Header className="sticky-top bg-light">
+                <div className="row">
+                  <h3 className="col-12 mt-2">
+                    {selectUserToChatTimeline !== "" && (
+                      <i
+                        className="bi bi-arrow-left me-2 d-inline d-md-none"
+                        onClick={backToSideMessages}
+                        style={{
+                          cursor: "pointer",
+                        }}
+                      ></i>
+                    )}
+                    {selectUserToChatTimeline.name}
+                  </h3>
+                </div>
                 {selectUserToChatTimeline === "" ? (
                   <div className="row">
                     <div className="col-12">
-                      <h3>New message</h3>
+                      <h3>
+                        {" "}
+                        <i
+                          className="bi bi-arrow-left me-2 d-inline d-md-none"
+                          onClick={backToSideMessages}
+                          style={{
+                            cursor: "pointer",
+                          }}
+                        ></i>
+                        New message
+                      </h3>
                     </div>
                     <div className="col-12 ">
                       <input
@@ -840,7 +448,7 @@ const Chat = () => {
                 {selectUserToChatTimeline !== "" && (
                   <>
                     {selectUserToChatTimeline.message.map((message, index) => {
-                      return chatBubble(message, index);
+                      return ChatBubble(message, index);
                     })}
                   </>
                 )}
@@ -864,7 +472,7 @@ const Chat = () => {
                     type="button"
                     className="btn btn-primary"
                     style={{ borderRadius: "15%" }}
-                    onClick={sendMessageToRecepient}
+                    onClick={sendMessageToRecipient}
                   >
                     Send
                   </button>
