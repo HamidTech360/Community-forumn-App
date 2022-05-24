@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useState } from "react";
 import { Card, Container, Fade, Image, Row } from "react-bootstrap";
 import ChatBubble from "../components/Chat/ChatBubble";
@@ -70,14 +71,17 @@ const Chat = () => {
   };
 
   const sendMessageToRecipient = (e) => {
-    const text = document.getElementById("writeMessage").value;
+    const text = (
+      document.getElementById("writeMessage") as HTMLTextAreaElement
+    ).value;
     if (text !== "") {
       if (selectUserToChatTimeline === "") {
         /*
          ** No Previous Chat Is Selected On Sidebar
          ** Compose Chat & Manually Type in recipient Name
          */
-        let sendTo = document.getElementById("sendTo").value;
+        let sendTo = (document.getElementById("sendTo") as HTMLInputElement)
+          .value;
 
         if (sendTo !== "") {
           let sendToRecipients = sendTo.split(",");
@@ -169,9 +173,13 @@ const Chat = () => {
           setMessages(tempNewUserInitMessages);
 
           // Clear Input Values
-          document.getElementById("writeMessage").value = "";
-          document.getElementById("searchMessages").value = "";
-          document.getElementById("sendTo").value = "";
+          (
+            document.getElementById("writeMessage") as HTMLTextAreaElement
+          ).value = "";
+          (
+            document.getElementById("searchMessages") as HTMLInputElement
+          ).value = "";
+          (document.getElementById("sendTo") as HTMLInputElement).value = "";
         }
       } else {
         /*
@@ -201,8 +209,10 @@ const Chat = () => {
         setInitMessages(tempInitMessages);
         setMessages(tempInitMessages);
         // Clear Input Values
-        document.getElementById("writeMessage").value = "";
-        document.getElementById("searchMessages").value = "";
+        (document.getElementById("writeMessage") as HTMLTextAreaElement).value =
+          "";
+        (document.getElementById("searchMessages") as HTMLInputElement).value =
+          "";
       }
     }
   };
