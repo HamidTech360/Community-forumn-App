@@ -13,11 +13,10 @@ import { Prev } from "react-bootstrap/esm/PageItem";
 
 const Chat = () => {
   const [open, setOpen] = useState(true);
-  const [chatingWith, setChatingWith] = useState("");
+  // const [chatingWith, setChatingWith] = useState("");
   // const [selectedMessage, setSelectedMessage] = useState("");
   // const [chatTimeline, setChatTimeline] = useState("");
-  const [selectedMessageToChatTimeline, setSelectedMessageToChatTimeline] =
-    useState("");
+  const [selectUserToChatTimeline, setSelectUserToChatTimeline] = useState("");
   const [initMessages, setInitMessages] = useState([
     {
       name: "Arwen Undomiel",
@@ -430,31 +429,28 @@ const Chat = () => {
   const [messages, setMessages] = useState(initMessages);
 
   const startChatingWith = (e) => {
+    // get data of custom attribute
     const id = e.target.dataset.nameid;
 
-    const data = messages.filter((message) => {
+    // Get currennt user
+    const user = messages.filter((message) => {
       return message.id === id && message;
     });
 
     // If Same Message is selected twice, then the displayed message would be removed from message UI
-    if (selectedMessageToChatTimeline === data[0]) {
-      // setSelectedMessage("");
-      // setChatTimeline("");
-      setSelectedMessageToChatTimeline("");
+    if (JSON.stringify(selectUserToChatTimeline) === JSON.stringify(user[0])) {
+      setSelectUserToChatTimeline("");
     } else {
-      // change unread message to "" because it is noe been read
-      data[0].unreadMessage = "";
-
-      // setSelectedMessage(data[0]);
-      // setChatTimeline(data[0]);
-      setSelectedMessageToChatTimeline(data[0]);
+      // change unread message to "" because it is now been read
+      user[0].unreadMessage = "";
+      setSelectUserToChatTimeline(user[0]);
     }
   };
   //   Leave below event for Event Bobbling
   const startChatingWithChild = (e) => {};
 
   const searchMessages = (e) => {
-    let currentMessages = initMessages;
+    let currentMessages = [...initMessages];
 
     currentMessages = currentMessages.filter((item) => {
       return item.name.toLowerCase().includes(e.target.value.toLowerCase());
@@ -462,17 +458,15 @@ const Chat = () => {
     setMessages(currentMessages);
   };
 
-  const chatBubble = (message) => {
+  const chatBubble = (message, index) => {
     const self = `bg-primary text-light mb-5 p-3 ms-auto`;
-    const recipient = `bg-secondary text-light mb-5 p-3`;
-
-    const messagingStyle = message.sender === "self" ? self : recipient;
-
     const self2 = `ms-auto`;
+    const recipient = `bg-secondary text-light mb-5 p-3`;
+    const messagingStyle = message.sender === "self" ? self : recipient;
     const messagingStyle2 = message.sender === "self" && self2;
 
     return (
-      <>
+      <div key={index}>
         <div
           style={{
             width: "28%",
@@ -492,45 +486,136 @@ const Chat = () => {
         >
           {message.message}
         </div>
-      </>
+      </div>
     );
   };
 
-  // const messageRecepient = (e) => {
-  //   const chatValue = {
-  //     message: document.getElementById("writeMessage").value,
-  //     sender: "self",
-  //     read: true,
-  //     dateTime: new Date().toLocaleString(),
-  //   };
+  const sendMessageToRecepient = (e) => {
+    const text = document.getElementById("writeMessage").value;
+    if (text !== "") {
+      if (selectUserToChatTimeline === "") {
+        // Compose Chat & Type in recipient Name
+        let sendTo = document.getElementById("sendTo").value;
 
-  //   let currentReceipiant = selectedMessageToChatTimeline;
-  //   // console.log("chatValue:", chatValue);
+        if (sendTo !== "" && text !== "") {
+          let sendToReceipients = sendTo.split(",");
+          let chatValue = {
+            message: text,
+            sender: "self",
+            read: true,
+            dateTime: new Date().toLocaleString(),
+          };
 
-  //   currentReceipiant.message.push(chatValue);
+          let included = [];
+          let notIncluded = [];
+          let trimedSendToReceipients = sendToReceipients.map((receipient) => {
+            // return receipient.trim().toLowerCase();
+            return receipient.trim();
+          });
+          let allUsers = [];
 
-  //   // initMessages.forEach((user) => {
-  //   //   if (user.name === currentReceipiant.name) {
-  //   //     console.log(user.name);
-  //   //   }
-  //   // });
+          initMessages.forEach((user) => {
+            // let trimedUser = user.name.trim().toLowerCase();
+            let trimedUser = user.name.trim();
+            allUsers.push(trimedUser);
+            if (trimedSendToReceipients.includes(trimedUser)) {
+              included.push(user);
+            }
+          });
 
-  //   setInitMessages((prev) => {
-  //     // console.log("prev:", prev);
-  //     prev.forEach((user) => {
-  //       if (user.name === currentReceipiant.name) {
-  //         // user = currentReceipiant
-  //         user.message.push(chatValue);
-  //         console.log("user", user);
-  //       }
-  //     });
-  //   });
-  //   // console.log("currentReceipiant:", currentReceipiant);
+          trimedSendToReceipients.forEach((user) => {
+            if (!allUsers.includes(user)) {
+              // console.log(`${user} NOT INCLUDED`);
+              notIncluded.push(user);
+            }
+          });
 
-  //   // console.log("initMessages B4:", initMessages);
-  //   // setInitMessages({...initMessages, initMessages.message.push(chatValue)})
-  //   // console.log("initMessages AFTER:", initMessages);
-  // };
+          let tempInitMessages = [];
+          let tempInitName = [];
+          included.forEach((user) => {
+            // Update Current Recepient with new Chat
+            user.message.push(chatValue);
+
+            // Update initMessages with the updated current Recepient
+            tempInitMessages.push(user);
+            tempInitName.push(user.name);
+          });
+          // Last name in the list should come first
+          tempInitMessages.reverse();
+          initMessages.forEach((init) => {
+            if (!tempInitName.includes(init.name)) {
+              tempInitMessages.push(init);
+            }
+          });
+
+          // Set State
+          setInitMessages(tempInitMessages);
+          setMessages(tempInitMessages);
+
+          let tempNewUserInitMessages = [];
+          notIncluded.forEach((user, index) => {
+            // Create a new Message for user
+            let newUser = {
+              name: user,
+              id: new Date() + index,
+              faceImage: "https://source.unsplash.com/random",
+              message: [
+                {
+                  message: text,
+                  sender: "self",
+                  read: true,
+                  dateTime: new Date().toLocaleString(),
+                },
+              ],
+              unreadMessage: "",
+              online: true,
+            };
+            // Update initMessages with the updated current Recepient
+            tempNewUserInitMessages.push(newUser);
+          });
+          tempNewUserInitMessages.reverse();
+          tempNewUserInitMessages = [
+            ...tempNewUserInitMessages,
+            ...tempInitMessages,
+          ];
+
+          // Set State
+          setInitMessages(tempNewUserInitMessages);
+          setMessages(tempNewUserInitMessages);
+
+          // Clear Input Values
+          document.getElementById("writeMessage").value = "";
+          document.getElementById("searchMessages").value = "";
+          document.getElementById("sendTo").value = "";
+        }
+      } else {
+        // Compose Chat for recipient choosen at sidebar
+        const chatValue = {
+          message: text,
+          sender: "self",
+          read: true,
+          dateTime: new Date().toLocaleString(),
+        };
+        let currentReceipiant = selectUserToChatTimeline;
+        // Update Current Recepient with new Chat
+        currentReceipiant.message.push(chatValue);
+        // Update initMessages with the updated current Recepient
+        let tempInitMessages = [];
+        tempInitMessages.push(currentReceipiant);
+        initMessages.forEach((user) => {
+          if (user.name !== currentReceipiant.name) {
+            tempInitMessages.push(user);
+          }
+        });
+        // Set State
+        setInitMessages(tempInitMessages);
+        setMessages(tempInitMessages);
+        // Clear Input Values
+        document.getElementById("writeMessage").value = "";
+        document.getElementById("searchMessages").value = "";
+      }
+    }
+  };
 
   return (
     <section>
@@ -572,6 +657,7 @@ const Chat = () => {
                   }}
                 >
                   <input
+                    id="searchMessages"
                     type="search"
                     className="form-control my-2 mb-3"
                     placeholder="&#128269; Search"
@@ -653,7 +739,8 @@ const Chat = () => {
                                   {message.message[
                                     message.message.length - 1
                                   ].message.substring(0, 26)}
-                                  ...
+                                  {message.message[message.message.length - 1]
+                                    .message.length > 26 && <span>...</span>}
                                 </p>
                                 <h6
                                   className="col-2 text-center"
@@ -697,21 +784,22 @@ const Chat = () => {
           >
             <Card className="border-0 d-flex flex-column">
               <Card.Header style={{ backgroundColor: "transparent" }}>
-                <h3 className="mt-2">{selectedMessageToChatTimeline.name}</h3>
-                {selectedMessageToChatTimeline === "" ? (
+                <h3 className="mt-2">{selectUserToChatTimeline.name}</h3>
+                {selectUserToChatTimeline === "" ? (
                   <div className="row">
                     <div className="col-12">
                       <h3>New message</h3>
                     </div>
                     <div className="col-12 ">
                       <input
+                        id="sendTo"
                         type="text"
                         className="form-control"
-                        placeholder="Type a name or multiple names"
+                        placeholder="Type a name or multiple names seperated by comma"
                       />
                     </div>
                   </div>
-                ) : selectedMessageToChatTimeline.online === false ? (
+                ) : selectUserToChatTimeline.online === false ? (
                   <div className="row">
                     <h1
                       className="col-sm-1"
@@ -730,7 +818,7 @@ const Chat = () => {
                       <span className="h6 text-muted">offline</span>
                     </div>
                   </div>
-                ) : selectedMessageToChatTimeline.online === true ? (
+                ) : selectUserToChatTimeline.online === true ? (
                   <div className="row">
                     <h1
                       className="col-1"
@@ -749,10 +837,10 @@ const Chat = () => {
                 ) : null}
               </Card.Header>
               <Card.Body>
-                {selectedMessageToChatTimeline !== "" && (
+                {selectUserToChatTimeline !== "" && (
                   <>
-                    {selectedMessageToChatTimeline.message.map((message) => {
-                      return chatBubble(message);
+                    {selectUserToChatTimeline.message.map((message, index) => {
+                      return chatBubble(message, index);
                     })}
                   </>
                 )}
@@ -776,7 +864,7 @@ const Chat = () => {
                     type="button"
                     className="btn btn-primary"
                     style={{ borderRadius: "15%" }}
-                    // onClick={messageRecepient}
+                    onClick={sendMessageToRecepient}
                   >
                     Send
                   </button>
