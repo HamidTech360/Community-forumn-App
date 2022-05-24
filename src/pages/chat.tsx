@@ -18,8 +18,16 @@ const Chat = () => {
   };
 
   const startChat = () => {
-    console.log("startChat");
     setSelectUserToChatTimeline("");
+
+    // Mid Point Display (using Bootstrap d-md-block)
+    if (window.innerWidth < 768) {
+      document.querySelector("#mainDisplay").classList.remove("d-none");
+      document.querySelector("#mainSidebar").classList.add("d-none");
+    } else if (window.innerWidth >= 768) {
+      document.querySelector("#mainDisplay").classList.remove("d-none");
+      document.querySelector("#mainSidebar").classList.remove("d-none");
+    }
   };
 
   const startChattingWith = (e) => {
@@ -206,16 +214,23 @@ const Chat = () => {
           {/* SideBar */}
           <div id="mainSidebar" className="d-md-block col-12 col-md-4 shadow">
             <div className="row my-4 mx-1">
-              <div className="col-9">
+              <div className="col-8">
                 <h4>Messages</h4>
               </div>
               <div
-                className="col-3 btn"
+                className="col-2 mt-2"
+                style={{
+                  cursor: "pointer",
+                }}
+              >
+                <i className="bi bi-pencil-square me-2" onClick={startChat}></i>{" "}
+              </div>
+              <div
+                className="col-2 btn"
                 onClick={() => setOpen(!open)}
                 aria-controls="toggleMessagingBody"
                 aria-expanded={open}
               >
-                <i className="bi bi-pencil-square me-2" onClick={startChat}></i>{" "}
                 {!open && (
                   <i
                     id="chevron-double-up"
@@ -229,7 +244,6 @@ const Chat = () => {
                   ></i>
                 )}
               </div>
-
               <Fade in={open}>
                 <div
                   id="toggleMessagingBody"
@@ -367,7 +381,10 @@ const Chat = () => {
               overflowX: "hidden",
             }}
           >
-            <Card className="border-0 d-flex flex-column">
+            <Card
+              className="border-0 d-flex flex-column"
+              style={{ height: "500px" }}
+            >
               <Card.Header className="sticky-top bg-light">
                 <div className="row">
                   <h3 className="col-12 mt-2">
@@ -457,7 +474,10 @@ const Chat = () => {
                 className="row mt-auto border-0"
                 style={{ backgroundColor: "transparent" }}
               >
-                <h2 className="col-lg-1 text-muted">
+                <h2
+                  className="col-lg-1 text-muted"
+                  style={{ cursor: "pointer" }}
+                >
                   <i className="bi bi-link-45deg"></i>
                 </h2>
                 <div className="col-lg-9 mb-3">
