@@ -2,11 +2,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactNode } from "react";
 import { Card, CardImg, Col, Image, Nav, Row } from "react-bootstrap";
-import About from "../../Templates/Profile/About";
+import About from "../../Templates/Groups/About";
 import Bookmarks from "../../Templates/Profile/Bookmarks";
-import Friends from "../../Templates/Profile/Friends";
-import Media from "../../Templates/Profile/Media";
-import Timeline from "../../Templates/Profile/Timeline";
+import Friends from "../../Templates/Groups/Friends";
+import Media from "../../Templates/Groups/Media";
+import Timeline from "../../Templates/Groups/Timeline";
 
 interface IComponents {
   about: ReactNode;
