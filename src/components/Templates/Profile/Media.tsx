@@ -1,6 +1,6 @@
 import React from "react";
 import { Image } from "react-bootstrap";
-import styles from "../../../styles/mediaTemplate.module.css";
+import styles from "@/styles/mediaTemplate.module.css";
 
 const Media = () => {
   const imageList = [
