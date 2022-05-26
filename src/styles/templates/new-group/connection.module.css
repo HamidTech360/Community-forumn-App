@@ -1,0 +1,60 @@
+.Conections{
+    padding-left: 70px;
+    padding-right: 70px;
+}
+.ConnectionHeader{
+    font-size: 24px;
+    font-weight: 400;
+    color: black;
+}
+.searchBox{
+    height: 60px !important;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.searchBox::placeholder{
+    font-size: 14px;
+}
+.profilePics{
+    height: 65px;
+    width: 65px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 1px solid whitesmoke;
+}
+.connectionLists{
+    margin-top: 60px;
+}
+.connectionItem{
+    margin-right: 10px;
+    margin-bottom: 20px;
+    /* border: 1px solid red; */
+    width: fit-content;
+    cursor: pointer;
+}
+.userName{
+    font-size: 17px;
+    font-weight: 500;
+    color: black;
+}
+.createBtn{
+    background-color: #207681;
+    margin-top: 30px;
+    font-weight: 700;
+    font-size: 16px;
+    min-width: 150px;
+}
+
+@media screen and (max-width:560px) {
+    .searchBox{
+        height: 40px;
+    }
+    .Conections{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .connectionItem{
+        margin-bottom: 27px;
+    }
+    
+}
