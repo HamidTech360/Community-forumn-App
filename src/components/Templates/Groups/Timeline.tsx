@@ -1,23 +1,16 @@
 import React from "react";
-import CreatePost from "./Cards/CreatePost";
-import PostCard from "./Cards/PostCard";
-import styles from '../../../styles/timeline.module.scss';
-
+import styles from "@/styles/timeline.module.scss";
+import Posts from "@/components/Templates/Profile/Timeline";
 
 const Timeline = () => {
-
   return (
     <>
-        <div>
-            <h5 className = {styles.head}>Posts</h5>
-            <CreatePost />  
-            <PostCard /> 
-            <CreatePost />  
-            <PostCard /> 
-
-        </div>
+      <div>
+        <h5 className={styles.head}>Posts</h5>
+        <Posts />
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default Timeline
+export default Timeline;

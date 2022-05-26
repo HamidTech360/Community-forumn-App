@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 
 import { Container, Card, Button, Image } from "react-bootstrap";
 
 const Interests = () => {
-  const [initInterests, setInitInterests] = useState([
+  const initInterests = [
     "Travel abroad",
     "Postgraduate degree",
     "Undergraduate degree",
@@ -13,7 +13,7 @@ const Interests = () => {
     "Find information",
     "Give information",
     "Consultation",
-  ]);
+  ];
 
   const [selectedInterests, setSelectedInterests] = useState([]);
 
@@ -27,10 +27,13 @@ const Interests = () => {
         document.getElementById(selectedInt.id).classList.add("text-white");
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Select Interest BTN Function
-  const interestSelected = (e) => {
+
+  //@ts-ignore
+  const interestSelected = (e: any) => {
     e.preventDefault();
 
     const id = e.target.id;
@@ -54,7 +57,8 @@ const Interests = () => {
   };
 
   // Send Selected Interest To Required Component/Server
-  const axiosInterestSelected = (e) => {
+
+  const axiosInterestSelected = () => {
     const interestSelected = selectedInterests;
 
     if (interestSelected.length < 3) {
