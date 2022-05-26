@@ -29,10 +29,10 @@ const CreatePost = () => {
                 <Card className= {styles.card}>
                     <Card.Title>
                         <Row className= {styles.row}>
-                        <Col xs={2} md={2}>
+                        <Col xs={2} md={3}>
                                 <Image src = '/images/timeline.png' alt = 'timeline ' className = {styles.img1}/>
                             </Col>
-                            <Col xs={8} md={9}>
+                            <Col xs={8} md={8} className= {styles.col}>
                                 <div>
                                     <h4>
                                         Job market for international professionals in Germany
