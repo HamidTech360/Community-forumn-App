@@ -32,3 +32,32 @@
 .radioActive{
     background-color: #0B5351;
 }
+.inviteContent{
+    font-size: 20px;
+    font-weight: 300;
+}
+.inviteOptions{
+    margin-top: 20px;
+}
+.inviteOption{
+    margin-bottom: 20px;
+}
+
+@media screen and (max-width:768px) {
+    .settings{
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .settingsHeader{
+        font-size: 22px;
+    }
+    .groupTypeHeader{
+        font-size: 18px;
+    }
+    .groupDescriptions{
+        font-size: 14px;
+    }
+    .inviteContent{
+        font-size: 18px;
+    }
+}

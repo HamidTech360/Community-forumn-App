@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { BsArrowLeft } from "react-icons/bs";
-import styles from "../../styles/new-group.module.css";
+import styles from "@/styles/new-group.module.css";
 import { Card, Badge } from "react-bootstrap";
 import FormField from "@/components/Templates/new-group/form";
 import Settings from "@/components/Templates/new-group/settings";
+import AddConnections from "@/components/Templates/new-group/connections";
 
 const CreateNewGroup = () => {
   const [tabs, setTabs] = useState([
@@ -20,7 +21,7 @@ const CreateNewGroup = () => {
     },
     {
       label: "Add members",
-      component: <div>Add Members</div>,
+      component: <AddConnections />,
       active: false,
     },
   ]);
