@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { BsArrowLeft } from "react-icons/bs";
-import styles from "../../styles/new-group.module.css";
+import styles from "@/styles/new-group.module.css";
 import { Card, Badge } from "react-bootstrap";
 import FormField from "@/components/Templates/new-group/form";
 import Settings from "@/components/Templates/new-group/settings";
@@ -12,7 +12,7 @@ const CreateNewGroup = () => {
     {
       label: "Details",
       component: <FormField />,
-      active: true
+      active: true,
     },
     {
       label: "Settings",
@@ -21,7 +21,7 @@ const CreateNewGroup = () => {
     },
     {
       label: "Add members",
-      component: <AddConnections/>,
+      component: <AddConnections />,
       active: false,
     },
   ]);
