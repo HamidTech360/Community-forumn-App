@@ -5,6 +5,7 @@ import styles from '../../styles/new-group.module.css'
 import { Card, Badge } from 'react-bootstrap';
 import FormField from '@/components/Templates/new-group/form';
 import Settings from '@/components/Templates/new-group/settings';
+import AddConnections from '@/components/Templates/new-group/connections';
 
 const CreateNewGroup = ()=>{
 
@@ -21,7 +22,7 @@ const CreateNewGroup = ()=>{
       },
       {
           label:'Add members',
-          component: <div>Add Members</div>,
+          component: <AddConnections/>,
           active:false
       }
     ]) 
@@ -62,7 +63,7 @@ const CreateNewGroup = ()=>{
                                 <Badge key={i} onClick={()=>handleSelectTabs(item, i)} className={`${styles.stepperBadge} ${item.active?styles.stepperBadgeActive:styles.stepperBadgePassive}`}>
                                     {i+1}
                                 </Badge>
-                                <span className={styles.stepperLabel}>{item.label}</span>
+                                <span className={styles.stepperLabel} style={{color:item.active?'#0B5351':'#A6A6A6'}}>{item.label}</span>
                                 {i==tabs.length-1?'':<button className={styles.stepperLine}></button>}
                             </div>
                            )}

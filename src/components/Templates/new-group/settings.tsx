@@ -34,6 +34,36 @@ const Settings = ()=>{
         },
     ])
 
+    const [inviteOptions, setInviteOptions] = useState([
+        {
+            label:'Admin Only',
+            active:false
+        },
+        {
+            label:'Admin and moderators',
+            active:false
+        },
+        {
+            label:'Everyone',
+            active:false
+        }
+    ])
+
+    const [postOptions, setPostOptions] = useState([
+        {
+            label:'Admin Only',
+            active:false
+        },
+        {
+            label:'Admin and moderators',
+            active:false
+        },
+        {
+            label:'Everyone',
+            active:false
+        }
+    ])
+
     const selectItem= (array,setArray, item, i)=>{
         const clone = [...array]
         clone.map(item=>item.active=false)
@@ -64,6 +94,39 @@ const Settings = ()=>{
 
             <div className={styles.settingsHeader} style={{marginTop:'40px'}}>Invites</div>
             <hr />
+            <div className={styles.inviteContent}>
+                <div className={styles.inviteQuestion}>Which members of this group are allowed to invite others?</div>
+                <div className={styles.inviteOptions}>
+                    {inviteOptions.map((item, i)=>
+                        <div className={styles.inviteOption}>
+                            <span className={styles.inviteOptionText}>{item.label}</span>
+                            <div 
+                                className={`${styles.radio} ${item.active?styles.radioActive:''}`}
+                                style={{marginTop:'0px'}} 
+                                onClick={()=>selectItem(inviteOptions, setInviteOptions, item, i)}  
+                            /> 
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <div className={styles.settingsHeader} style={{marginTop:'40px'}}>Posts</div>
+            <hr />
+            <div className={styles.inviteContent}>
+                <div className={styles.inviteQuestion}>Which members of this group are allowed to post into the activity feed?</div>
+                <div className={styles.inviteOptions}>
+                    {postOptions.map((item, i)=>
+                        <div className={styles.inviteOption}>
+                            <span className={styles.inviteOptionText}>{item.label}</span>
+                            <div 
+                                className={`${styles.radio} ${item.active?styles.radioActive:''}`}
+                                style={{marginTop:'0px'}} 
+                                onClick={()=>selectItem(postOptions, setPostOptions, item, i)}  
+                            /> 
+                        </div>
+                    )}
+                </div>
+            </div>
         
         </div>
     )
