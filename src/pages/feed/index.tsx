@@ -64,7 +64,7 @@ const Feed = () => {
         <title>Feed</title>
       </Head>
       <Container>
-        <div className={`padding-top mt-3 ${styles.feed}`}>
+        <div className={`padding-top mt-3 ${styles.wrapper}`}>
           <>
             <div
               style={{ width: 250 }}
@@ -105,7 +105,7 @@ const Feed = () => {
                 }
               > */}
             {posts?.map((post) => (
-              <PostCard post={post} key={`activity-post-${post.id}`} />
+              <PostCard post={post} key={`activity-post-${post.id}`} trimmed />
             ))}
             {isFetchingMore && (
               <div className="m-2 p-2 d-flex justify-content-center">

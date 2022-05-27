@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.notificationBox{
+    max-width: 580px;
+    margin: auto;
+    background-color: #FFFFFF;
+    min-height: 500px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.notificationBox{
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 50px;
+    padding-bottom: 40px;
+    color: black;
+}
+.notificationDay{
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+.notificationHeaderText{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 30.5141px;
+}
+.markAsRead{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13.0475px;
+    line-height: 16px;
+    cursor: pointer;
+    color: #006165;
+}
+.notificationListItem{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: no-wrap;
+    margin-top: 20px;
+}
+.notificationMessages{
+    border-bottom: 1px solid #E0E0E0;
+    padding-left: 20px;
+    padding-bottom: 10px;
+    padding-right: 20px;
+    font-size: 20px;
+    font-weight: 400;
+}
+.notificationDay{
+    font-size: 20px;
+    font-weight: 400;
+}
+.notificationTime{
+    font-weight: 300;
+    font-size: 17px;
+    margin-top: 10px;
+}
+
+@media screen and (max-width:680px) {
+    .notificationBox{
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+    .notificationHeaderText{
+        font-size: 25px;
+    }
+    .notificationMessages{
+        font-size: 17px;
+        padding-right: 10px !important;
+        padding-left: 10px;
+    }
+    .notificationDay{
+        font-size: 15px;
+    }
+    .markAsRead{
+        font-size: 12px;
+        float: right;
+        margin-top: 10px;
+    }
+}
+@media screen and (max-width:350px) {
+    .notificationHeaderText{
+        font-size: 20px;
+    }
+    .notificationMessages{
+        font-size: 15px;
+    }
+    .notificationDay{
+        font-size: 14px;
+    }
+}
+

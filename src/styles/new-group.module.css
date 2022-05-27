@@ -1,0 +1,157 @@
+.createGroupLayout{
+    display: flex;
+    flex-direction: row;    
+    margin-bottom: 70px;
+}
+.createGroupFlex{
+    margin: auto;
+    width: fit-content;
+    margin-top: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+.createGroupContent{
+    background-color: white;
+    min-height: 300px;
+    /* padding-left: 20px;
+    padding-right: 20px; */
+    padding-top: 40px;
+    padding-bottom: 60px;
+    max-width: 900px;
+}
+.ArrowBox{
+    height: fit-content;
+    background-color: white;
+    padding: 20px;
+    margin-right: 20px;
+}
+.createGroupHeader{
+  
+    font-style: normal;
+    font-weight: 500;
+    font-size: 40px;
+}
+.stepperBadge{
+    
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    display: flex;
+    font-size: 15px;
+    align-items: center;
+    justify-content: center;
+   
+    cursor: pointer;
+}
+.stepperBadgeActive{
+    background-color: #0B5351 !important;
+    color: white;
+}
+.stepperBadgePassive{
+    background-color:white !important;
+    border: 1px solid #A3A3A3;
+    color: #A6A6A6;
+}
+.steppersBox{
+    /* border: 1px solid red; */
+    flex-wrap: wrap;
+    /* min-width: 500px; */
+    padding-left: 50px;
+    padding-right: 50px;
+    width: fit-content;
+    margin: auto;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+}
+.stepperBoxItem{
+    display: flex;
+    flex-direction: row;
+    margin-right: 35px;
+    margin-bottom: 15px;
+}
+.stepperLabel{
+    font-size: 20px;
+    font-weight: 500;
+    margin-left: 20px;
+    margin-top: 10px;
+}
+.stepperLine{
+    border: 0px;
+    background-color: white;
+    border-bottom: 1px solid #A3A3A3;
+    width: 40px;
+    height: 1px;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+.createGroupElement{
+    /* max-width: 500px;
+   
+    margin: auto; */
+    margin-top: 50px;
+}
+
+@media screen and (max-width:990px) {
+    .stepperLabel{
+        font-size: 15px;
+    }
+    .stepperBoxItem{
+        margin-right: 20px;
+    }
+}
+
+@media screen and (max-width:885px) {
+    .createGroupHeader{
+        font-size: 25px;
+    }
+    .stepperLabel{
+        margin-left: 10px;
+    }
+    .stepperLine{
+        width: 30px;
+    }
+}
+
+@media screen and (max-width:768px) {
+    .createGroupContent{
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+@media screen and (max-width:720px) {
+    .createGroupLayout{
+        display: block;
+    }
+   .ArrowBox{
+       padding: 15px;
+       width: 100%;
+   }
+   .createGroupFlex{
+       padding-left: 15px;
+       padding-right: 15px;
+   }
+    .stepperLine{
+        margin-left: 5px;
+        margin-top: 15px;
+    }
+    .stepperBoxItem{
+        margin-right: 10px;
+    }
+    .steppersBox{
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .stepperLabel{
+        margin-top: 7px;
+        font-size: 14px;
+    }
+    .stepperBadge{
+        height: 30px;
+        width: 30px;
+    }
+}
+@media screen and (max-width:720px) {
+   
+}

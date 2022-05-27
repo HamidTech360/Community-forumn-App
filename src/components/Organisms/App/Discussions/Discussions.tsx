@@ -14,7 +14,7 @@ const Discussions = () => {
   }, []);
   return (
     <Card
-      style={{ border: "none", overflowY: "scroll", height: "50vh" }}
+      style={{ border: "none", overflowY: "scroll", height: "80vh" }}
       className="p-2 mb-4"
     >
       <Card.Header className="d-flex justify-content-between gap-2 align-items-center bg-white">

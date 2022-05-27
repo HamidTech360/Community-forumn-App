@@ -6,13 +6,7 @@ import EndlessCarousel from "../../components/Molecules/Carousel";
 import GistCard from "../../components/Organisms/Gist/GistCard";
 import styles from "../../styles/gist.module.scss";
 
-const Gist = ({
-  gists,
-  categories,
-}: {
-  gists: Record<string, any>[];
-  categories: Record<string, any>[];
-}) => {
+const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
 
@@ -55,8 +49,8 @@ const Gist = ({
               <h5>Browse categories</h5>
 
               <p style={{ listStyleType: "none" }}>
-                {categories.map((item, key) => (
-                  <li key={`category-${key}`}>{item.name}</li>
+                {[1, 2, 3, 4, 5].map((item, key) => (
+                  <li key={`category-${key}`}>Lorem, ipsum.</li>
                 ))}
               </p>
             </BCard>
@@ -79,43 +73,17 @@ const Gist = ({
 };
 
 export async function getStaticProps() {
-  const res = await fetch(process.env.GRAPHQL!, {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({
-      query: `{
-        
-
-
-          categories {
-            nodes {
-              name
-            }
-          }
-        
-      }
-      `,
-    }),
-  });
-
   const gistsFetch = await fetch(
     `${process.env.REST}/buddyboss/v1/topics?_embed=user&order=desc&orderby=ID
     &per_page=10`,
     { method: "GET" }
   );
   const gists = await gistsFetch.json();
-  const {
-    data: {
-      categories: { nodes: categories },
-    },
-  } = await res.json();
 
   return {
     props: {
       gists,
-      categories,
+
       revalidate: 1,
     },
   };

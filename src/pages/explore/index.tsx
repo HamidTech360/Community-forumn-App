@@ -31,45 +31,11 @@ const Explore = ({
   }, []);
 
   const fetchData = useCallback(async () => {
-    const res = await fetch("https://setlinn.com/graphql", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        query: ` {
-          
-              posts ${key !== "all" ? `(where: {categoryId: ${key}})` : ``} {
-                
-                  nodes {
-                    author {
-                      node {
-                        name
-                      }
-                    }
-                    excerpt
-                    id
-                    date
-                    featuredImage {
-                      node {
-                        mediaItemUrl
-                      }
-                    }
-                    title
-                  }
-                
-              }
-            }
-          `,
-      }),
-    });
-    const {
-      data: {
-        posts: { nodes },
-      },
-    } = await res.json();
+    const res = await fetch(`${process.env.REST}/wp/v2/posts?per_page=10`);
 
-    setPosts(nodes);
+    const posts = await res.json();
+
+    setPosts(posts);
   }, [key, posts]);
 
   useEffect(() => {
@@ -177,30 +143,10 @@ const Explore = ({
 };
 
 export const getStaticProps = async () => {
-  const res = await fetch(process.env.GRAPHQL!, {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({
-      query: `{
-        categories {
-          nodes {
-            id
-            name
-            categoryId
-          }
-        }
-      }
-      `,
-    }),
-  });
-
-  const {
-    data: {
-      categories: { nodes: categories },
-    },
-  } = await res.json();
+  const res = await fetch(
+    `${process.env.REST}/wp/v2/categories?per_page=10&_fields=id,name`
+  );
+  const categories = await res.json();
 
   const users = await (await fetch(`${process.env.REST!}/wp/v2/users`)).json();
 

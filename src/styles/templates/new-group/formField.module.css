@@ -1,0 +1,37 @@
+.formContainer{
+    max-width: 500px;
+    margin: auto;
+}
+.formGroup{
+    margin-bottom: 30px;
+}
+.formLabel{
+    font-size: 20px;
+    font-weight: 400;
+}
+.bigForm{
+    height: 150px;
+}
+.dragBox{
+    background-color: #EAFDFF;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.dragBoxText{
+    color: #0B5351;
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+
+@media screen and (max-width:768px) {
+    .formLabel{
+        font-size: 14px;
+    }
+    .bigForm{
+        height: 60px;
+    }
+}
