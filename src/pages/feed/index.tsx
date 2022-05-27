@@ -105,14 +105,7 @@ const Feed = () => {
                 }
               > */}
             {posts?.map((post) => (
-              <PostCard
-                post={post}
-                key={`activity-post-${post.id}`}
-                onClick={() => {
-                  setModalOpen(true);
-                  setSelected(post);
-                }}
-              />
+              <PostCard post={post} key={`activity-post-${post.id}`} trimmed />
             ))}
             {isFetchingMore && (
               <div className="m-2 p-2 d-flex justify-content-center">
