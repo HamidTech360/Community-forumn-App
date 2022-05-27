@@ -59,7 +59,10 @@ const Footer = () => {
           </Container>
         </div>
       ) : (
-        <footer className="mt-5 p-3" style={{ backgroundColor: "#ffffff" }}>
+        <footer
+          className="mt-5 p-3 position-relative"
+          style={{ backgroundColor: "#ffffff", zIndex: "9" }}
+        >
           <Container>
             <Nav className="d-flex justify-content-evenly text-primary">
               <Nav.Item>About us</Nav.Item>
