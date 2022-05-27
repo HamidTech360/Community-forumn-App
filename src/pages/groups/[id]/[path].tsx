@@ -15,6 +15,7 @@ import Media from "@/components/Templates/Groups/Media";
 import Bookmarks from "@/components/Templates/Profile/Bookmarks";
 import Link from "next/link";
 import GroupInfoCard from "@/components/Organisms/App/GroupInfoCard";
+import AuthContent from "@/components/Auth/AuthContent";
 interface IComponents {
   about: ReactNode;
   timeline: ReactNode;
@@ -44,7 +45,7 @@ const Group = () => {
     };
   }, []);
   return (
-    <>
+    <AuthContent>
       <Head>
         <title>Group</title>
       </Head>
@@ -66,7 +67,7 @@ const Group = () => {
           </main>
         </div>
       </Container>
-    </>
+    </AuthContent>
   );
 };
 

@@ -10,7 +10,7 @@ import CreatePost from "@/components/Organisms/CreatePost";
 import Modal from "@/components/Organisms/Layout/Modal/Modal";
 
 import { usePagination } from "@/hooks/usePagination";
-import styles from "./feed.module.scss";
+import styles from "@/styles/feed.module.scss";
 
 const Feed = () => {
   const { user } = useUser();
