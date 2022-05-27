@@ -33,24 +33,21 @@ const BlogPost = () => {
     <div className="container">
       <div className="row justify-content-center mt-4">
         <div
-          className="col-1 justify-content-left align-items-top"
+          className="col-12 col-md-1 justify-content-left align-items-top"
           style={{ cursor: "pointer" }}
         >
           <HiOutlineArrowLeft className="h3" />
         </div>
-        <div className="col-7">
+        <hr className="d-md-none" />
+        <div className="col-12 col-md-8">
           <div className="card mb-3 border-0">
-            <div className="card-Header">
+            <div className="card-Header text-center text-md-start">
               <h4 className="card-title text-primary">{blogPost.title}</h4>
               <div className="row">
-                <div className="col-md-3">
-                  <p>
-                    By <span>{blogPost.author}</span>
-                  </p>
-                </div>
-                <div className="col-md-3">
-                  <BsDot />
-                  <small className="text-secondary">
+                <div className="col-md-9">
+                  By <span>{blogPost.author}</span>
+                  <small className="text-secondary ms-5">
+                    <BsDot />
                     {blogPost.time.toLocaleTimeString("en-US", {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -80,7 +77,7 @@ const BlogPost = () => {
               </div>
               <Image
                 src={blogPost.blogImage}
-                className="img-fluid"
+                className="img-fluid shadow mt-2"
                 alt="Blog Post Image"
               ></Image>
             </div>
@@ -88,7 +85,7 @@ const BlogPost = () => {
             <section>
               <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
               <div className="row">
-                <div className="col-md-2">
+                <div className="col-2 col-md-2">
                   <Image
                     src={blogPost.authorImage}
                     className="img-fluid"
@@ -96,8 +93,8 @@ const BlogPost = () => {
                     alt="Author's Image"
                   ></Image>
                 </div>
-                <div className="col-md-10">
-                  <div className="form-floating">
+                <div className="col-7 col-md-10">
+                  <div className="form-floating shadow">
                     <textarea
                       id="articleTextarea"
                       className="form-control"
@@ -105,13 +102,15 @@ const BlogPost = () => {
                       style={{ height: "100px" }}
                     ></textarea>
                     <label htmlFor="articleTextarea">Comments</label>
-                    <button
-                      className="btn btn-sm btn-primary mt-2"
-                      onClick={addComment}
-                    >
-                      Add a comment
-                    </button>
                   </div>
+                </div>
+                <div className="col-3 col-md-2 ms-auto d-md-grid">
+                  <button
+                    className="btn btn-sm btn-primary mt-3 d-inline"
+                    onClick={addComment}
+                  >
+                    Send
+                  </button>
                 </div>
               </div>
             </section>
@@ -124,8 +123,8 @@ const BlogPost = () => {
                   {blogPost.comments.length > 1 &&
                     blogPost.comments.map((comment, index) => {
                       return (
-                        <div className="row mb-4" key={index}>
-                          <div className="col-md-2">
+                        <div className="row mb-4 shadow" key={index}>
+                          <div className="col-2">
                             <Image
                               src={comment.image}
                               className="img-fluid"
@@ -133,7 +132,7 @@ const BlogPost = () => {
                               alt="Author's Image"
                             ></Image>
                           </div>
-                          <div className="col-md-10">
+                          <div className="col-10">
                             <div className="row">
                               <div
                                 className="col-md-12 h6"
@@ -160,32 +159,30 @@ const BlogPost = () => {
                               <p>{comment.comment}</p>
                             </div>
                           </div>
-                          <div className="row justify-content-end mb-3">
-                            <div className="col-12 col-lg-2 text-muted mb-1">
-                              <div
-                                onClick={likeComment}
-                                style={{ cursor: "pointer" }}
-                              >
-                                like{" "}
-                                {comment.like.length > 0 && (
-                                  <span className="badge rounded-pill bg-primary">
-                                    {comment.like.length}
-                                  </span>
-                                )}
-                              </div>
+                          <div className="row justify-content-end mb-3 ms-auto">
+                            <div
+                              className="col-3 text-secondary mb-1 text-end"
+                              onClick={likeComment}
+                              style={{ cursor: "pointer" }}
+                            >
+                              like{" "}
+                              {comment.like.length > 0 && (
+                                <span className="badge rounded-pill bg-primary">
+                                  {comment.like.length}
+                                </span>
+                              )}
                             </div>
-                            <div className="col-12 col-lg-2 text-muted">
-                              <div
-                                onClick={replyComment}
-                                style={{ cursor: "pointer" }}
-                              >
-                                reply{" "}
-                                {comment.reply.length > 0 && (
-                                  <span className="badge rounded-pill bg-primary">
-                                    {comment.reply.length}
-                                  </span>
-                                )}
-                              </div>
+                            <div
+                              className="col-3 text-secondary"
+                              onClick={replyComment}
+                              style={{ cursor: "pointer" }}
+                            >
+                              reply{" "}
+                              {comment.reply.length > 0 && (
+                                <span className="badge rounded-pill bg-primary">
+                                  {comment.reply.length}
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
