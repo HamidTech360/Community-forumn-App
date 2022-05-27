@@ -1,14 +1,15 @@
 import Link from "next/link";
+import strip from "striptags";
 import React from "react";
 import { Button, Card, Dropdown, Image, NavDropdown } from "react-bootstrap";
 import Age from "../../../Atoms/Age";
 
 const PostCard = ({
   post,
-  onClick,
+  trimmed,
 }: {
   post: Record<string, any>;
-  onClick?: () => void;
+  trimmed?: Boolean;
 }) => {
   const postButton = [
     {
@@ -73,22 +74,22 @@ const PostCard = ({
         </div>
       </Card.Title>
       <Card.Body
-        onClick={onClick}
         style={{
           cursor: "pointer",
-          maxHeight: "80vh",
-          overflowY: !onClick ? "scroll" : "hidden",
         }}
       >
         <div
           className="post-content"
           dangerouslySetInnerHTML={{
-            __html: onClick
-              ? post.content_stripped?.slice(0, 500) + "..."
+            __html: trimmed
+              ? strip(
+                  post.content.rendered,
+                  "<p> <strong> <b> <a> <em> <i>"
+                )?.slice(0, 500) + "..."
               : post.content.rendered,
           }}
         />
-        {!onClick && (
+        {!trimmed && (
           <Image
             className="d-none d-sm-block d-lg-none"
             style={{ borderRadius: 0 }}

@@ -1,0 +1,53 @@
+.content {
+    border-left: 1px solid rgb(196, 194, 194);
+    padding-top: 1rem;
+    font-family: var(--bs-font-sans-serif);
+
+        h4, p{
+            font-weight: 600;
+            color: #000000;
+        }
+
+        p{
+            margin: 0.5rem 0;
+        }
+
+        @media screen and (max-width: 767px){
+            border: none;
+        }
+
+        .form1{
+            display: flex;
+            flex-direction:column;
+
+            div{
+                display: grid;
+                grid-template-columns: 90% 20%;
+                gap: auto;
+                text-align: start;
+                margin: 0.5rem 0;
+
+                    .name {
+                        font-size: 0.9rem;
+                        font-weight: 500;
+                        color: #000000;
+                    }
+
+                    .label [type='checkbox']{
+                        padding: 0;
+                        box-shadow: none !important;
+                        border: 1px solid rgb(196, 194, 194) !important;
+                        color: var(--bs-blue) !important;
+            
+                        &:focus{
+                            border: 1px solid rgb(196, 194, 194) !important;
+                            color: var(--bs-blue) !important;
+                        }
+                        &:checked{
+                            border: 1px solid rgb(196, 194, 194)!important;
+                        color: var(--bs-blue) !important;
+                        }
+                }
+            }
+        }
+}

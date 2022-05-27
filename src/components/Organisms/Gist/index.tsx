@@ -9,7 +9,7 @@ const Card = ({ image, title, author, id }: Record<string, any>) => {
       <BCard
         style={{
           width: "261px",
-          minHeight: "270px",
+          minHeight: "280px",
         }}
       >
         <BCard.Img
@@ -32,7 +32,7 @@ const Card = ({ image, title, author, id }: Record<string, any>) => {
           <span className="text-muted">by &nbsp;{author}</span>
         </div>
         <Link href={`/gist/${id}`} passHref>
-          <span className="d-flex justify-content-end text-primary absolute-bottom">
+          <span className="d-flex mt-2 justify-content-end text-primary absolute bottom-0">
             Read More &nbsp; <i className="bi bi-chevron-double-right"></i>
           </span>
         </Link>

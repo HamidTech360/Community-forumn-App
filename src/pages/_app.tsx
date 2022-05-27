@@ -9,15 +9,17 @@ import { AuthProvider } from "../hooks/useAuth";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ApolloProvider client={client}>
-      <AuthProvider>
-        <Header />
-        <div className="body">
-          <Component {...pageProps} />
-        </div>
-        <Footer />
-      </AuthProvider>
-    </ApolloProvider>
+    <>
+      <ApolloProvider client={client}>
+        <AuthProvider>
+          <Header />
+          <div className="body">
+            <Component {...pageProps} />
+          </div>
+          <Footer />
+        </AuthProvider>
+      </ApolloProvider>
+    </>
   );
 }
 
