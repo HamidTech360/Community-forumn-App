@@ -1,11 +1,15 @@
-let accessToken = "";
+import jwt from "jsonwebtoken";
 
-export const getAccessToken = () => accessToken;
+export interface IPayload {
+  sub: string;
+}
 
-export const setAccessToken = (token: string) => {
-  accessToken = token;
+export const generateAccessToken = (payload: IPayload) => {
+  return jwt.sign(payload, process.env.JWT_SECRET || "", { expiresIn: "10m" });
 };
 
-export const removeAccessToken = () => {
-  accessToken = "";
+export const generateRefreshToken = (payload: IPayload) => {
+  return jwt.sign(payload, process.env.REFRESH_SECRET || "", {
+    expiresIn: "7d",
+  });
 };

@@ -1,11 +1,11 @@
 import axios, { AxiosRequestConfig } from "axios";
 import jwtDecode from "jwt-decode";
-import { getAccessToken, setAccessToken } from "./token";
+import { getAccessToken, setAccessToken } from "../misc/token";
 
 export const getNewToken = async () => {
-  const expiredToken = sessionStorage.getItem("creds");
+  const expiredToken = sessionStorage.getItem("token");
 
-  const { data } = await axios.post("/api/users/refresh-token", {
+  const { data } = await axios.post("/api/auth/refresh-token", {
     token: expiredToken,
     headers: {
       withCredentials: true,

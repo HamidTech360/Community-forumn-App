@@ -1,13 +1,13 @@
-import { useMutation } from "@apollo/client";
+import { setAccessToken } from "@/misc/token";
+
+import axios, { AxiosError } from "axios";
 import Head from "next/head";
 import React, { useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import FormWrapper from "../components/Organisms/Layout/FormWrapper";
-import { REGISTER_USER } from "../queries/auth";
 
+import { useRouter } from "next/router";
 const Register = () => {
-  const [register, { data, loading, error }] = useMutation(REGISTER_USER);
-  const wasSignUpSuccessful = Boolean(data?.registerUser?.user?.databaseId);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -15,25 +15,27 @@ const Register = () => {
     password: "",
   });
   const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const values = {
-      username: formData.email,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      password: formData.password,
-    };
-    register({
-      variables: values,
-    }).catch((error) => {
-      console.log(error.message);
-      error.message.includes("already registered");
-      setMessage(`User with email ${formData.email} is already registered`);
-      error?.message.includes("password") &&
-        setMessage(`Please check password`);
-    });
+    try {
+      setSubmitting(true);
+      await axios.post("/api/auth/register", formData);
+
+      router.push("/login");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const serverError = error as AxiosError;
+        if (serverError.response) {
+          // setMessage(serverError.response.data.message);
+          console.log(serverError.response);
+        }
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -46,12 +48,12 @@ const Register = () => {
     <FormWrapper
       form={
         <div>
-          {wasSignUpSuccessful && (
+          {/* {wasSignUpSuccessful && (
             <Alert variant="success">
               Thanks! Check your email- an account confirmation link has been
               sent to you.
             </Alert>
-          )}
+          )} */}
           {message && <Alert variant="danger">{message}</Alert>}
           <Head>
             <title>Register</title>

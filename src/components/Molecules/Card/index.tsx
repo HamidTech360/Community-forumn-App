@@ -8,6 +8,7 @@ interface ICard {
   body: string;
   size?: string;
 }
+
 const Card = ({ image, title, author, body, size }: ICard) => {
   return (
     <>

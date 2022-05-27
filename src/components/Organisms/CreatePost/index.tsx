@@ -9,7 +9,7 @@ const CreatePost = () => {
       <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
         <>
           <Image
-            src={user?.avatar.url || "/images/formbg.png"}
+            src={user?.avatar?.url || "/images/formbg.png"}
             width={50}
             height={50}
             alt=""
