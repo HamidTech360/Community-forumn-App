@@ -6,8 +6,50 @@ import Image from "next/image";
 import styles from "../../../../styles/form.module.scss";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { GoogleLogin } from "react-google-login";
+import axios from "axios";
+import { setAccessToken } from "@/misc/token";
 const FormWrapper = ({ form }: { form: ReactNode }) => {
-  const { pathname } = useRouter();
+  const { pathname, push } = useRouter();
+
+  const responseGoogle = async (response: Record<string, any>) => {
+    if (response.accessToken) {
+      const { profileObj } = response;
+      try {
+        const { data } = await axios.post("/auth/oauth/google", profileObj);
+        if (data.refreshToken) {
+          sessionStorage.setItem("token", data.refreshToken);
+        }
+
+        setAccessToken(data.accessToken);
+        push("/feed");
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          // setMessage(error.response.data.message);
+          console.log(error);
+        }
+      }
+    }
+  };
+
+  const responseFacebook = async (response: Record<string, any>) => {
+    console.log(response);
+    if (response.accessToken) {
+      const { profileObj } = response;
+      try {
+        const { data } = await axios.post("/auth/oauth/facebook", profileObj);
+        if (data.refreshToken) {
+          sessionStorage.setItem("token", data.refreshToken);
+        }
+
+        setAccessToken(data.accessToken);
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          console.log(error);
+        }
+      }
+    }
+  };
   return (
     <>
       <Container>
@@ -43,21 +85,27 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
                   <Image
                     width={25}
                     height={25}
-                    src="/images/google.png"
-                    alt="google"
-                    quality={100}
-                  />
-                </Button>
-
-                <Button variant="outline-primary" size="sm">
-                  <Image
-                    width={25}
-                    height={25}
                     src="/images/facebook.png"
-                    alt="google"
+                    alt="facebook"
                     quality={100}
                   />
                 </Button>
+                <GoogleLogin
+                  clientId="250767377397-68p1knjngdur342c3qcs993994otnhar.apps.googleusercontent.com"
+                  render={(renderProps: Record<string, any>) => (
+                    <Button variant="outline-primary" size="sm">
+                      <Image
+                        width={25}
+                        height={25}
+                        src="/images/google.png"
+                        alt="google"
+                        quality={100}
+                      />
+                    </Button>
+                  )}
+                  onSuccess={responseGoogle}
+                  onFailure={responseGoogle}
+                />
                 <Button variant="outline-primary" size="sm">
                   <Image
                     width={25}

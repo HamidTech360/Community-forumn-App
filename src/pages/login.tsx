@@ -4,37 +4,51 @@ import Typography from "../components/Atoms/Typography";
 import FormWrapper from "../components/Organisms/Layout/FormWrapper";
 import styles from "../styles/form.module.scss";
 import Head from "next/head";
-import { useMutation } from "@apollo/client";
-import { GET_USER, LOG_IN } from "../queries/auth";
-import useAuth, { AuthProvider } from "../hooks/useAuth";
+
 import { useRouter } from "next/router";
 import Link from "next/link";
+import useUser from "@/hooks/useUser";
+import axios, { AxiosError } from "axios";
+import { setAccessToken } from "@/misc/token";
 const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const { loggedIn, loading, user } = useAuth();
+
+  const { user, authenticating, isAuthenticated } = useUser();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log(user);
-    if (!loading && loggedIn) {
-      router.push("/feed");
+    if (isAuthenticated && !authenticating) {
+      router.replace("/feed");
     }
-  }, [router, loading, loggedIn, user]);
+  }, [isAuthenticated, authenticating, router]);
   const [message, setMessage] = useState("");
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { email, password } = formData;
-    logIn({
-      variables: {
-        login: email,
-        password,
-      },
-    }).catch((error) => {
-      setMessage(error.message);
-    });
+    try {
+      setLoading(true);
+      const { data } = await axios.post("/api/auth", { ...formData });
+      if (data.refreshToken) {
+        sessionStorage.setItem("token", data.refreshToken);
+      }
+
+      setAccessToken(data.accessToken);
+      router.push("/feed");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const serverError = error as AxiosError;
+        if (serverError.response) {
+          // setMessage(serverError.response.data.message as unknown as string);
+          console.log(serverError.response);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,10 +57,6 @@ const Login = () => {
       [name]: value,
     }));
   };
-
-  const [logIn, { loading: logLoading, error }] = useMutation(LOG_IN, {
-    refetchQueries: [{ query: GET_USER }],
-  });
 
   return (
     <FormWrapper

@@ -15,6 +15,7 @@ import Media from "../../components/Templates/Profile/Media";
 import Bookmarks from "../../components/Templates/Profile/Bookmarks";
 import Link from "next/link";
 import ProfileCard from "../../components/Organisms/App/ProfileCard";
+import AuthContent from "@/components/Auth/AuthContent";
 interface IComponents {
   about: ReactNode;
   timeline: ReactNode;
@@ -44,7 +45,7 @@ const Profile = () => {
     };
   }, []);
   return (
-    <>
+    <AuthContent>
       <Head>
         <title>Profile</title>
       </Head>
@@ -66,7 +67,7 @@ const Profile = () => {
           </main>
         </div>
       </Container>
-    </>
+    </AuthContent>
   );
 };
 

@@ -1,21 +1,21 @@
+import useUser from "@/hooks/useUser";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Col, Container, Image, Row, Spinner } from "react-bootstrap";
-import AuthContent from "../../components/Auth/AuthContent";
-import Discussions from "../../components/Organisms/App/Discussions/Discussions";
-import PostCard from "../../components/Organisms/App/PostCard";
-import UserCard from "../../components/Organisms/App/UserCard";
-import CreatePost from "../../components/Organisms/CreatePost";
-import Modal from "../../components/Organisms/Layout/Modal/Modal";
-import useAuth from "../../hooks/useAuth";
-import { useModalWithData } from "../../hooks/useModalWithData";
-import { fetcher, usePagination } from "../../hooks/usePagination";
+import AuthContent from "@/components/Auth/AuthContent";
+import Discussions from "@/components/Organisms/App/Discussions/Discussions";
+import PostCard from "@/components/Organisms/App/PostCard";
+import UserCard from "@/components/Organisms/App/UserCard";
+import CreatePost from "@/components/Organisms/CreatePost";
+import Modal from "@/components/Organisms/Layout/Modal/Modal";
+
+import { usePagination } from "@/hooks/usePagination";
 import styles from "@/styles/feed.module.scss";
 
 const Feed = () => {
-  const { user } = useAuth();
+  const { user } = useUser();
   const { posts, setPage, hasMore, isFetchingMore } = usePagination();
-  const { modalOpen, setModalOpen, setSelected, selected } = useModalWithData();
+
   const [scrollInitialised, setScrollInitialised] = useState(false);
 
   const checkScroll = () => {
