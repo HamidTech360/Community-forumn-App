@@ -45,7 +45,7 @@ const FriendsData = (props: FriendsListProp) => {
                                         </div>
 
                                         <Badge bg= 'light'>
-                                            <Image src = {friend.menu} alt = 'dot'/>
+                                            <Image src = {friend.menu} alt = 'dot' className = {styles.dot}/>
                                         </Badge>
                                     </ListGroup.Item>
                                 </ListGroup>

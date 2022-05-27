@@ -3037,7 +3037,8 @@ textarea.form-control.is-invalid {
   box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
 }
 
-.was-validated .form-check-input:invalid,
+
+.was-validated .form-check-input:invalid, .form-check-input-reverse:valid,
 .form-check-input.is-invalid {
   border-color: #dc3545;
 }
@@ -7350,6 +7351,12 @@ fieldset:disabled .btn {
   flex-direction: column !important;
 }
 
+/* @media (max-width: 1000px){
+  .flex-column{
+
+  }
+} */
+
 .flex-row-reverse {
   flex-direction: row-reverse !important;
 }
@@ -7444,6 +7451,13 @@ fieldset:disabled .btn {
 
 .align-items-center {
   align-items: center !important;
+}
+
+@media(max-width: 500px){
+  .align-items-center {
+    font-size: small;
+    margin-top: 0.5rem;
+  }
 }
 
 .align-items-baseline {
@@ -7944,6 +7958,12 @@ fieldset:disabled .btn {
   font-size: calc(1.275rem + 0.3vw) !important;
 }
 
+@media screen and (max-width: 500px){
+  .fs-4{
+    font-size: smaller;
+  }
+}
+
 .fs-5 {
   font-size: 1.25rem !important;
 }
@@ -8008,6 +8028,12 @@ fieldset:disabled .btn {
   text-align: center !important;
 }
 
+@media(max-width: 500px){
+  .text-center{
+    font-size: small;
+  }
+}
+
 .text-decoration-none {
   text-decoration: none !important;
 }
@@ -8050,6 +8076,51 @@ fieldset:disabled .btn {
 .text-primary {
   --bs-text-opacity: 1;
   color: #0b5351 !important;
+}
+
+@media (max-width: 1000px){
+   .text-mute{
+    margin-left: 1.5rem;
+  }
+}
+
+@media (max-width: 600px){
+  .text-mute{
+   margin-left: -4rem;
+ }
+}
+
+@media (max-width: 500px){
+  .text-primary, .text-muted{
+    font-size: small;
+    margin-left: -1rem;
+  }
+}
+
+@media (max-width: 500px){
+  .text-mute{
+    font-size: small;
+    margin-left: -2rem;
+  }
+}
+
+@media (max-width: 300px){
+  .text-primary, .text-muted, .text-mute{
+    font-size: xx-small;
+  }
+}
+
+@media (max-width: 300px){
+  .text-mute{
+    margin-left: 0;
+  }
+}
+
+@media(max-width: 500px){
+  .pic{
+    width: 70px;
+    height: 70px;
+  }
 }
 
 .text-secondary {
