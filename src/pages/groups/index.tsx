@@ -39,7 +39,7 @@ const Groups = () => {
   }, []);
   return (
     <div className="mt-5">
-      <Container>
+      <Container className={styles.wrapper}>
         <Card
           style={{ maxWidth: "280px", border: "none" }}
           className="d-none d-lg-block p-3 position-fixed left-0"
@@ -51,8 +51,8 @@ const Groups = () => {
           </div>
           <Form.Control placeholder="search" />
         </Card>
-        <div style={{ marginLeft: "300px" }}>
-          <div className={`d-flex gap-3 mb-3`}>
+        <div className={styles.posts}>
+          <div className={`d-none d-md-flex gap-3 mb-3`}>
             {posts.map((post, index) => (
               <Card
                 key={`card-${index}`}

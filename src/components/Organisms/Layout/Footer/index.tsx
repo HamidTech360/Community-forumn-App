@@ -1,6 +1,6 @@
 import useUser from "@/hooks/useUser";
 import React from "react";
-import { Col, Container, Image, Row } from "react-bootstrap";
+import { Col, Container, Image, Nav, Row } from "react-bootstrap";
 import useAuth from "../../../../hooks/useAuth";
 import Logo from "../../../Atoms/Logo";
 
@@ -8,7 +8,7 @@ const Footer = () => {
   const { isAuthenticated } = useUser();
   return (
     <>
-      {!isAuthenticated && (
+      {!isAuthenticated ? (
         <div className="footer mt-5">
           <Container>
             <Row className="px-3">
@@ -58,6 +58,17 @@ const Footer = () => {
             </Row>
           </Container>
         </div>
+      ) : (
+        <footer className="mt-5 p-3" style={{ backgroundColor: "#ffffff" }}>
+          <Container>
+            <Nav className="d-flex justify-content-evenly text-primary">
+              <Nav.Item>About us</Nav.Item>
+              <Nav.Item>Privacy Policy</Nav.Item>
+              <Nav.Item>Contact Us</Nav.Item>
+              <Nav.Item>Terms of Service</Nav.Item>
+            </Nav>
+          </Container>
+        </footer>
       )}
     </>
   );
