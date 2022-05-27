@@ -3,7 +3,7 @@ import timeAge from "time-age";
 import { Button, Card, Col, Row, Image } from "react-bootstrap";
 import Link from "next/link";
 import Age from "../../../Atoms/Age";
-
+import striptags from "striptags";
 // interface IGist {
 //   gist: {
 //     author: {
@@ -55,7 +55,12 @@ const GistCard = ({
           </Col>
         </Row>
         <Card.Body
-          dangerouslySetInnerHTML={{ __html: gist?.content.raw }}
+          dangerouslySetInnerHTML={{
+            __html: striptags(
+              gist?.content.raw,
+              "<a> <b> <em> <p> <strong> <i>"
+            ).slice(0, 500),
+          }}
           style={{
             marginTop: "-1rem",
             lineHeight: "1.3rem",
