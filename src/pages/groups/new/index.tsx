@@ -6,6 +6,7 @@ import { Card, Badge } from "react-bootstrap";
 import FormField from "@/components/Templates/new-group/form";
 import Settings from "@/components/Templates/new-group/settings";
 import AddConnections from "@/components/Templates/new-group/connections";
+import AuthContent from "@/components/Auth/AuthContent";
 
 const CreateNewGroup = () => {
   const [tabs, setTabs] = useState([
@@ -42,7 +43,7 @@ const CreateNewGroup = () => {
   };
 
   return (
-    <>
+    <AuthContent>
       <Head>New Group</Head>
       <div className={styles.createGroupFlex}>
         <div className={styles.createGroupLayout}>
@@ -84,7 +85,7 @@ const CreateNewGroup = () => {
           </div>
         </div>
       </div>
-    </>
+    </AuthContent>
   );
 };
 
