@@ -1,3 +1,4 @@
+import UnAuthContent from "@/components/Auth/UnAuthContent";
 import { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import Image from "next/image";
@@ -11,7 +12,7 @@ import styles from "../styles/Landing.module.scss";
 
 const Home = () => {
   return (
-    <>
+    <UnAuthContent>
       <Head>
         <title>Settlin - Study and work abroad</title>
         <meta
@@ -28,7 +29,7 @@ const Home = () => {
           {/* <Articles /> */}
         </>
       </main>
-    </>
+    </UnAuthContent>
   );
 };
 
