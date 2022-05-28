@@ -14,7 +14,7 @@ export default function UnAuthContent({ children }: { children: ReactNode }) {
     }
   }, [isAuthenticated, authenticating, router]);
 
-  if (isAuthenticated) {
+  if (!isAuthenticated) {
     return <div>{children}</div>;
   }
 
