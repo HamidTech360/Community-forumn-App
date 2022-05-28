@@ -34,36 +34,13 @@ const Header = () => {
     "/profile/media",
     "/profile/friends",
   ];
-  useEffect(() => {
-    const navbar = window.document.querySelector(".nav_bar");
-
-    if (navbar) {
-      window.onscroll = () => {
-        if (window.scrollY > 100) {
-          !navbar.classList.contains("bg-light")
-            ? navbar.classList.add("bg-light")
-            : null;
-        } else {
-          navbar.classList.contains("bg-light")
-            ? navbar.classList.remove("bg-light")
-            : null;
-        }
-      };
-    }
-  });
 
   return (
     <>
       {isAuthenticated ? (
         <AuthHeader />
       ) : (
-        <Navbar
-          collapseOnSelect
-          className="nav_bar"
-          expand="lg"
-          bg={disabled.includes(activePage) ? "light" : ""}
-          fixed="top"
-        >
+        <Navbar collapseOnSelect className="nav_bar" expand="lg" fixed="top">
           <Head>
             <meta name="robots" content="noindex" />
           </Head>
@@ -89,14 +66,15 @@ const Header = () => {
                       <Link href={link.link}>{link.name}</Link>
                     </Nav.Item>
                   ))}
-                </Nav>
-                <Nav className="mr-auto gap-2 d-flex justify-content-end">
-                  <Nav.Item as={Link} href="/login">
-                    <Button variant="outline-primary">Sign In</Button>
-                  </Nav.Item>
-                  <Nav.Item as={Link} href="/register">
-                    <Button variant="primary">Register</Button>
-                  </Nav.Item>
+
+                  <div className="buttons d-flex align-items-center gap-3 justify-content-center">
+                    <Nav.Item as={Link} href="/login">
+                      <Button variant="outline-primary">Sign In</Button>
+                    </Nav.Item>
+                    <Nav.Item as={Link} href="/register">
+                      <Button variant="primary">Register</Button>
+                    </Nav.Item>
+                  </div>
                 </Nav>
               </Navbar.Collapse>
             )}
