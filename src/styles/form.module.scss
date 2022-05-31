@@ -25,6 +25,10 @@
     position: absolute;
     left: 10px;
     bottom: 80px;
+    @media screen and (max-width: 1199px) {
+      left: -15px;
+      width: 25%;
+    }
   }
   &::after {
     content: "";
@@ -33,6 +37,10 @@
     position: absolute;
     right: 10px;
     bottom: 80px;
+    @media screen and (max-width: 1199px) {
+      right: -15px;
+      width: 25%;
+    }
   }
 }
 .imgWrapper {
@@ -106,5 +114,22 @@
   @media screen and (max-width: 769px) {
     width: 250px;
     bottom: -20%;
+  }
+}
+
+.formWrapper {
+  margin-bottom: 11rem;
+
+  @media screen and (min-width: 360px) {
+    margin-bottom: 9rem;
+  }
+  @media screen and (min-width: 992px) {
+    margin-bottom: 4rem;
+  }
+  @media screen and (min-width: 990px) {
+    margin-bottom: 5rem;
+  }
+  @media screen and (min-width: 1200px) {
+    margin-bottom: 1rem;
   }
 }
