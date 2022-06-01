@@ -94,7 +94,11 @@ const Login = () => {
             <Form.Text className="d-flex justify-content-end text-primary">
               <Link href="./forgotPassword">Forgot password?</Link>
             </Form.Text>
-            <Button variant="primary" className="d-flex mx-auto" type="submit">
+            <Button
+              variant="primary"
+              className="d-flex mx-auto mt-3"
+              type="submit"
+            >
               Log In
             </Button>
           </Form>
