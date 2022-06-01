@@ -5,6 +5,10 @@ import { Card, Container, Fade, Image, Row } from "react-bootstrap";
 import ChatBubble from "../components/Chat/ChatBubble";
 import { dummyData } from "../components/Chat/dummyData";
 
+import {FiEdit} from 'react-icons/fi'
+import {BsChevronDoubleDown, BsChevronDoubleUp, BsLink45Deg} from 'react-icons/bs'
+import {RiSendPlaneFill} from 'react-icons/ri'
+
 const Chat = () => {
   const [open, setOpen] = useState(true);
   const [selectUserToChatTimeline, setSelectUserToChatTimeline] = useState("");
@@ -235,10 +239,7 @@ const Chat = () => {
                     cursor: "pointer",
                   }}
                 >
-                  <i
-                    className="bi bi-pencil-square me-2"
-                    onClick={startChat}
-                  ></i>{" "}
+                  <FiEdit size="20" /> {" "}
                 </div>
                 <div
                   className="col-2 btn"
@@ -247,16 +248,10 @@ const Chat = () => {
                   aria-expanded={open}
                 >
                   {!open && (
-                    <i
-                      id="chevron-double-up"
-                      className="d-none d-md-inline bi bi-chevron-double-up ms-auto"
-                    ></i>
+                   <BsChevronDoubleUp size={20} />
                   )}
                   {open && (
-                    <i
-                      id="chevron-double-down"
-                      className="d-none d-md-inline bi bi-chevron-double-down ms-auto"
-                    ></i>
+                    <BsChevronDoubleDown size={20} />
                   )}
                 </div>
                 <Fade in={open}>
@@ -495,13 +490,14 @@ const Chat = () => {
                     className="col-lg-1 text-muted"
                     style={{ cursor: "pointer" }}
                   >
-                    <i className="bi bi-link-45deg"></i>
+                    <BsLink45Deg/>
                   </h2>
                   <div className="col-lg-9 mb-3">
                     <textarea
                       id="writeMessage"
                       className="form-control"
                       placeholder=" &#128522; Write something..."
+                      rows={2}
                     ></textarea>
                   </div>
                   <div className="col-lg-2 d-grid">
@@ -511,7 +507,7 @@ const Chat = () => {
                       style={{ borderRadius: "15%" }}
                       onClick={sendMessageToRecipient}
                     >
-                      Send
+                      <RiSendPlaneFill size={25} />
                     </button>
                   </div>
                 </Card.Footer>
