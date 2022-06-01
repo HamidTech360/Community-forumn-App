@@ -64,8 +64,6 @@ const GistCard = ({
           style={{
             marginTop: "-1rem",
             lineHeight: "1.3rem",
-            height: primary ? "inherit" : "7.4rem",
-            overflow: "hidden",
           }}
         />
         {!primary && (

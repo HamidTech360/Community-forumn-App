@@ -68,7 +68,7 @@ const Feed = () => {
           <>
             <div
               style={{ width: 250 }}
-              className="position-fixed d-none d-md-flex flex-column gap-4 vh-100"
+              className="position-fixed d-none d-lg-flex flex-column gap-4 vh-100"
             >
               <UserCard user={user!} />
               <Discussions />
