@@ -111,15 +111,22 @@ const Register = () => {
                 label={
                   <p>
                     &nbsp; I hereby agree to the
-                    <span className="text-primary">
+                    <span className="text-primary ps-3 ps-sm-0">
                       &nbsp; terms & conditions
                     </span>{" "}
-                    and <span className="text-primary">privacy policy</span>{" "}
+                    and{" "}
+                    <span className="text-primary ps-3 ps-sm-1">
+                      privacy policy
+                    </span>{" "}
                   </p>
                 }
               />
             </Form.Text>
-            <Button type="submit" variant="primary" className="d-flex mx-auto">
+            <Button
+              type="submit"
+              variant="primary"
+              className="d-flex mx-auto mt-3"
+            >
               Register
             </Button>
           </Form>
