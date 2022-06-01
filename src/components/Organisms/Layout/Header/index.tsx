@@ -52,9 +52,8 @@ const Header = () => {
               </Navbar.Brand>
             </Link>
 
-            <Navbar.Toggle aria-controls="basic-navbar-nav">
-              <i className="bi bi-list"></i>
-            </Navbar.Toggle>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
             {!disabled.includes(activePage) && (
               <Navbar.Collapse id="basic-navbar-nav" className=" gap-4">
                 <Nav className="mx-auto  gap-5">

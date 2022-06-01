@@ -90,7 +90,9 @@ const AuthHeader = () => {
                 </Button>
               }
             >
-              hello
+              <NavDropdown.Item>
+                <Link href="/notifications">See all</Link>
+              </NavDropdown.Item>
             </NavDropdown>
           </div>
           <NavDropdown
@@ -123,7 +125,9 @@ const AuthHeader = () => {
             </NavDropdown.Header>
             <NavDropdown.Divider />
             <NavDropdown.Item>Dark mode</NavDropdown.Item>
-            <NavDropdown.Item>Account Settings</NavDropdown.Item>
+            <NavDropdown.Item>
+              <Link href="/settings"></Link>Account Settings
+            </NavDropdown.Item>
             <NavDropdown.Item>Support</NavDropdown.Item>
             {/* <NavDropdown.Item onClick={handleLogOut}>Logout</NavDropdown.Item> */}
           </NavDropdown>
