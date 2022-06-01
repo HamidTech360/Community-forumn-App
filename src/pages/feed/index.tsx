@@ -123,7 +123,7 @@ const Feed = () => {
           </main>
           <div
             style={{ width: 270 }}
-            className="position-fixed d-none d-xl-flex  end-0 me-5  vh-100 "
+            className="position-fixed d-none d-xxl-flex  end-0 me-5  vh-100 "
           >
             <Discussions />
           </div>
