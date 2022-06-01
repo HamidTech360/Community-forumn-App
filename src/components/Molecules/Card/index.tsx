@@ -32,30 +32,34 @@ const Card = ({ image, title, author, body, size }: ICard) => {
             objectFit: "cover",
           }}
         />
-
-        <div className="text p-3">
-          <h6 className="text-primary" style={{ textTransform: "capitalize" }}>
-            {title.toLowerCase()}
-          </h6>
-          <span className="text-muted">
-            <small style={{ marginTop: "-2rem", fontSize: "0.8rem" }}>
-              by &nbsp;{author}
-            </small>{" "}
+        <BCard.Body>
+          <div className="text p-3">
+            <h6
+              className="text-primary"
+              style={{ textTransform: "capitalize" }}
+            >
+              {title.toLowerCase()}
+            </h6>
+            <span className="text-muted">
+              <small style={{ marginTop: "-2rem", fontSize: "0.8rem" }}>
+                by &nbsp;{author}
+              </small>{" "}
+            </span>
+            <div
+              dangerouslySetInnerHTML={{ __html: body }}
+              style={{
+                height: "4.5rem",
+                lineHeight: "1.5rem",
+                overflow: "hidden",
+                color: "#8E8E8E",
+                fontSize: "0.9rem",
+              }}
+            />
+          </div>
+          <span className="d-flex justify-content-end text-primary absolute-bottom">
+            Read More &nbsp;<i className="bi bi-chevron-double-right"></i>
           </span>
-          <div
-            dangerouslySetInnerHTML={{ __html: body }}
-            style={{
-              height: "4.5rem",
-              lineHeight: "1.5rem",
-              overflow: "hidden",
-              color: "#8E8E8E",
-              fontSize: "0.9rem",
-            }}
-          />
-        </div>
-        <span className="d-flex justify-content-end text-primary absolute-bottom">
-          Read More &nbsp;<i className="bi bi-chevron-double-right"></i>
-        </span>
+        </BCard.Body>
       </BCard>
     </>
   );
