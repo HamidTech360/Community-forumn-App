@@ -112,6 +112,7 @@ const PostCard = ({
               alt=""
               width={20}
               height={20}
+              className = 'post-img'
             />
             <span className="d-none d-md-block">{item.name}</span>
           </Button>

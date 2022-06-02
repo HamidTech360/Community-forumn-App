@@ -7735,11 +7735,6 @@ fieldset:disabled .btn {
   margin-bottom: 0.5rem !important;
 }
 
-/* @media screen and (max-width: 1000px){
-  .mb-2{
-    margin-left: 1rem !important;
-  }
-} */
 .mb-3 {
   margin-bottom: 1rem !important;
   box-shadow: 0px 2px 15px rgba(33, 33, 52, 0.1);
@@ -7747,7 +7742,6 @@ fieldset:disabled .btn {
 
 .mb-4 {
   margin-bottom: 1.5rem !important;
-  box-shadow: 0px 2px 15px rgba(33, 33, 52, 0.1);
 }
 
 @media screen and (max-width:800px) {
@@ -7856,7 +7850,6 @@ fieldset:disabled .btn {
 .py-1 {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
-  box-shadow: 0px 2px 15px rgba(33, 33, 52, 0.2);
 }
 
 .py-2 {
@@ -8143,8 +8136,6 @@ fieldset:disabled .btn {
     margin-left: 1.5rem;
   }
 }
-
-
 
 @media (max-width: 500px){
   .text-primary, .text-muted{
@@ -9122,6 +9113,17 @@ fieldset:disabled .btn {
 
   .d-md-block {
     display: block !important;
+  }
+
+  @media screen and (max-width: 1000px){
+    .d-md-block{
+      font-size: small;
+    }
+
+    .post-img{
+      width: 15px;
+      height: 15px;
+    }
   }
 
   .d-md-grid {
