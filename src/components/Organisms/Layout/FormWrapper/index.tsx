@@ -64,9 +64,15 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
               <p>Get connected with information to study, work, live abroad</p>
             </div>
           </Col>
-          <Col md={6} className={`${styles.form} px-4 `}>
-            <div className="mt-5">
-              <h1>{pathname === "/login" ? "Welcome Back" : "Get Started"}</h1>
+          <Col md={6} className={`${styles.form} px-4 pt-5 `}>
+            <div>
+              <h1>
+                {pathname === "/login" ? (
+                  "Welcome Back"
+                ) : (
+                  <div className="mt-5 pt-5 mt-xl-0 pt-xl-0">Get Started</div>
+                )}
+              </h1>
               <p>
                 Please enter your details to{" "}
                 {pathname === "/login"
@@ -120,14 +126,14 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
                 {pathname === "/login" ? (
                   <p>
                     Don&apos;t have an account?{" "}
-                    <span className="text-primary">
+                    <span className="text-primary ms-1">
                       <Link href="/register">Sign up</Link>
                     </span>
                   </p>
                 ) : (
                   <p>
                     Already have an account?{" "}
-                    <span className="text-primary">
+                    <span className="text-primary ms-2">
                       <Link href="/login">Sign in</Link>
                     </span>
                   </p>
