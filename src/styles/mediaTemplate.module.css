@@ -24,11 +24,19 @@
 
 @media screen and (max-width: 768px) {
   .imageGridItem {
-    height: 150px;
+    height: 120px;
     width: 100px;
     margin-right: 10px;
   }
   .imageGrid {
     padding-left: 14px;
+  }
+}
+
+@media screen and (max-width: 379px) {
+  .imageGridItem {
+    height: 100px;
+    width: 80px;
+    margin-right: auto;
   }
 }

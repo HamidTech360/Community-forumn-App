@@ -2,6 +2,7 @@ import Link from "next/link";
 import strip from "striptags";
 import React from "react";
 import { Button, Card, Dropdown, Image, NavDropdown } from "react-bootstrap";
+import { HiDotsVertical } from 'react-icons/hi'
 import Age from "../../../Atoms/Age";
 
 const PostCard = ({
@@ -30,7 +31,7 @@ const PostCard = ({
     },
   ];
   return (
-    <Card id={post?.id} className="my-3 post-card" style={{ border: "none" }}>
+    <Card id={post?.id} className="my-3 post-card cards" style={{ border: "none" }}>
       <Card.Title className="position-relative mx-2 d-flex justify-content-start gap-2 p-2 border-bottom">
         <Image
           src={post?.user_avatar?.full}
@@ -51,8 +52,8 @@ const PostCard = ({
             className="position-absolute end-0"
             drop="down"
             title={
-              <Button variant="light" size="sm">
-                <i className="bi bi-three-dots-vertical" />
+              <Button variant="light" size="sm" className='dot-btn'>
+               <HiDotsVertical />
               </Button>
             }
           >
