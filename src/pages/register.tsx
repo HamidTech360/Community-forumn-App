@@ -6,6 +6,8 @@ import React, { useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import FormWrapper from "../components/Organisms/Layout/FormWrapper";
 
+import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+
 import { useRouter } from "next/router";
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +16,7 @@ const Register = () => {
     email: "",
     password: "",
   });
+  const [displayPassword, setDisplayPassword] = useState(false);
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
@@ -44,6 +47,7 @@ const Register = () => {
       [name]: value,
     }));
   };
+
   return (
     <FormWrapper
       form={
@@ -95,19 +99,42 @@ const Register = () => {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label> Enter Password</Form.Label>
-              <Form.Control
-                placeholder="Enter password"
-                type="password"
-                name="password"
-                required
-                onChange={handleChange}
-              />
+              <Form.Label> Password</Form.Label>
+              <div className="row">
+                <div className="col-12">
+                  <Form.Control
+                    placeholder="Enter password"
+                    type={displayPassword ? "text" : "password"}
+                    name="password"
+                    required
+                    onChange={handleChange}
+                  />
+                </div>
+                {/* ++++++++++++++++++++++++++++++++ */}
+                <div
+                  className="col-1 btn"
+                  style={{
+                    marginLeft: "-3.5rem",
+                    fontSize: "1.5rem",
+                    marginTop: "-.3rem",
+                  }}
+                  onClick={() => setDisplayPassword(!displayPassword)}
+                >
+                  <Form.Text>
+                    {displayPassword ? (
+                      <AiOutlineEye />
+                    ) : (
+                      <AiOutlineEyeInvisible />
+                    )}
+                  </Form.Text>
+                </div>
+              </div>
             </Form.Group>
 
             <Form.Text>
               <Form.Check
                 type="checkbox"
+                className="formCheckBox"
                 label={
                   <p>
                     &nbsp; I hereby agree to the

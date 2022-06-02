@@ -5,9 +5,13 @@ import { Card, Container, Fade, Image, Row } from "react-bootstrap";
 import ChatBubble from "../components/Chat/ChatBubble";
 import { dummyData } from "../components/Chat/dummyData";
 
-import {FiEdit} from 'react-icons/fi'
-import {BsChevronDoubleDown, BsChevronDoubleUp, BsLink45Deg} from 'react-icons/bs'
-import {RiSendPlaneFill} from 'react-icons/ri'
+import { FiEdit } from "react-icons/fi";
+import {
+  BsChevronDoubleDown,
+  BsChevronDoubleUp,
+  BsLink45Deg,
+} from "react-icons/bs";
+import { RiSendPlaneFill } from "react-icons/ri";
 
 const Chat = () => {
   const [open, setOpen] = useState(true);
@@ -239,7 +243,11 @@ const Chat = () => {
                     cursor: "pointer",
                   }}
                 >
-                  <FiEdit size="20" /> {" "}
+                  <FiEdit
+                    size="20"
+                    className="bi bi-pencil-square me-2"
+                    onClick={startChat}
+                  />{" "}
                 </div>
                 <div
                   className="col-2 btn"
@@ -248,10 +256,16 @@ const Chat = () => {
                   aria-expanded={open}
                 >
                   {!open && (
-                   <BsChevronDoubleUp size={20} />
+                    <BsChevronDoubleUp
+                      size={20}
+                      className="d-md-inline ms-auto"
+                    />
                   )}
                   {open && (
-                    <BsChevronDoubleDown size={20} />
+                    <BsChevronDoubleDown
+                      size={20}
+                      className="d-md-inline ms-auto"
+                    />
                   )}
                 </div>
                 <Fade in={open}>
@@ -490,7 +504,7 @@ const Chat = () => {
                     className="col-lg-1 text-muted"
                     style={{ cursor: "pointer" }}
                   >
-                    <BsLink45Deg/>
+                    <BsLink45Deg />
                   </h2>
                   <div className="col-lg-9 mb-3">
                     <textarea
