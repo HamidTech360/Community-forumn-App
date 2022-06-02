@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Col, Form, Image, Row } from "react-bootstrap";
 import useAuth from "../../../hooks/useAuth";
+import Editor from "../Editor";
 
 const CreatePost = () => {
   const { user } = useAuth();
