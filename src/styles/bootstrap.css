@@ -8147,7 +8147,6 @@ fieldset:disabled .btn {
 @media (max-width: 500px){
   .text-mute{
     font-size: small;
-    margin-left: -2rem;
   }
 }
 

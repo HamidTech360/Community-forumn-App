@@ -39,7 +39,7 @@ const Discussions = () => {
               </div>
               <div className="d-flex flex-column">
                 <small
-                  className="bold"
+                  className="bolden"
                   dangerouslySetInnerHTML={{ __html: gist.title.raw }}
                 />
                 <small className="text-muted">

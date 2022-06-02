@@ -124,9 +124,22 @@ nav {
   font-weight: bold;
 
   @media screen and (max-width: 1000px) {
-    // margin-left: 1.5rem;
+    margin-left: 1.5rem;
   }
   
+
+  @media screen and (max-width: 500px) {
+    font-weight: smaller;
+  }
+
+  @media screen and (max-width: 300px) {
+    font-size: 0.7rem;
+    margin-left: 0rem;
+  }
+}
+
+.bolden {
+  font-weight: bold;
 
   @media screen and (max-width: 500px) {
     font-weight: smaller;
@@ -165,13 +178,6 @@ nav {
   @media screen and (max-width: 1000px) {
     margin-left: 1rem;
   }
-
-  @media screen and (max-width: 500px){
-    margin-left: -2rem;
-  }
-
-
-
   
   .mb-btns{
     margin: 1rem 0.5rem;
