@@ -10,6 +10,9 @@ import Link from "next/link";
 import useUser from "@/hooks/useUser";
 import axios, { AxiosError } from "axios";
 import { setAccessToken } from "@/misc/token";
+
+import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+
 const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -19,6 +22,7 @@ const Login = () => {
 
   const { user, authenticating, isAuthenticated } = useUser();
   const [loading, setLoading] = useState(false);
+  const [displayPassword, setDisplayPassword] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated && !authenticating) {
@@ -70,11 +74,12 @@ const Login = () => {
           <Head>
             <title>Login</title>
           </Head>
+          {loading && <div className="spinner-grow" role="status"></div>}
           <Form onSubmit={handleSubmit}>
             <Form.Group>
-              <Form.Label> Email Address</Form.Label>
+              <Form.Label> Email</Form.Label>
               <Form.Control
-                placeholder="Enter email address"
+                placeholder="Enter email"
                 name="email"
                 type="email"
                 required
@@ -82,14 +87,36 @@ const Login = () => {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label> Enter Password</Form.Label>
-              <Form.Control
-                placeholder="Enter password"
-                name="password"
-                type="password"
-                required
-                onChange={handleChange}
-              />
+              <Form.Label> Password</Form.Label>
+              <div className="row">
+                <div className="col-12">
+                  <Form.Control
+                    placeholder="Enter password"
+                    name="password"
+                    type={displayPassword ? "text" : "password"}
+                    required
+                    onChange={handleChange}
+                  />
+                </div>
+                {/* ++++++++++++++++++++++++++++++++ */}
+                <div
+                  className="col-1 btn"
+                  style={{
+                    marginLeft: "-3.5rem",
+                    fontSize: "1.5rem",
+                    marginTop: "-.3rem",
+                  }}
+                  onClick={() => setDisplayPassword(!displayPassword)}
+                >
+                  <Form.Text>
+                    {displayPassword ? (
+                      <AiOutlineEye />
+                    ) : (
+                      <AiOutlineEyeInvisible />
+                    )}
+                  </Form.Text>
+                </div>
+              </div>
             </Form.Group>
             <Form.Text className="d-flex justify-content-end text-primary">
               <Link href="./forgotPassword">Forgot password?</Link>
