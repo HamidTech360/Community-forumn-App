@@ -263,7 +263,6 @@ nav {
 }
 .text-primary {
   font-weight: bold !important;
-  color: var(--bs-primary) !important;
 }
 .footer {
   position: absolute;
@@ -291,12 +290,26 @@ section {
 .carousel_item {
   width: 260px !important;
   border-radius: 8.21687px;
-
   margin-bottom: 1rem;
+  
 
   .card {
     width: 100%;
     border: none;
+
+    @media screen and(max-width:1000px){
+      width: 95% !important;
+      font-size: medium !important;
+    }
+  }
+
+  @media screen and(max-width:1000px){
+    width: 240px !important;
+    
+  }
+
+  @media screen and(max-width:500px){
+    width: 180px !important;
   }
 }
 
@@ -363,10 +376,6 @@ textarea {
   position: absolute;
   bottom: 1rem;
   right: 1rem;
-}
-
-.text-primary {
-  color: #0b5351 !important;
 }
 
 .nav-item {
