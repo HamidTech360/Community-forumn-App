@@ -245,11 +245,7 @@ const Chat = () => {
                     cursor: "pointer",
                   }}
                 >
-                  <FiEdit
-                    size="20"
-                    className="bi bi-pencil-square me-2"
-                    onClick={startChat}
-                  />{" "}
+                  <FiEdit size="20" className="me-2" onClick={startChat} />{" "}
                 </div>
                 <div
                   className="col-2 btn"
@@ -415,13 +411,13 @@ const Chat = () => {
                   <div className="row">
                     <h3 className="col-12 mt-2">
                       {selectUserToChatTimeline !== "" && (
-                        <i
-                          className="bi bi-arrow-left me-2 d-inline d-md-none"
+                        <BsArrowLeft
+                          className="me-2 d-inline d-md-none"
                           onClick={backToSideMessages}
                           style={{
                             cursor: "pointer",
                           }}
-                        ></i>
+                        />
                       )}
                       {selectUserToChatTimeline.name}
                     </h3>
@@ -432,7 +428,7 @@ const Chat = () => {
                         <h3>
                           {" "}
                           <BsArrowLeft
-                            className="bi bi-arrow-left me-2 d-inline d-md-none"
+                            className="me-2 d-inline d-md-none"
                             onClick={backToSideMessages}
                             style={{
                               cursor: "pointer",
