@@ -10,6 +10,8 @@ import {
   BsChevronDoubleDown,
   BsChevronDoubleUp,
   BsLink45Deg,
+  BsDot,
+  BsArrowLeft,
 } from "react-icons/bs";
 import { RiSendPlaneFill } from "react-icons/ri";
 
@@ -429,13 +431,13 @@ const Chat = () => {
                       <div className="col-12">
                         <h3>
                           {" "}
-                          <i
+                          <BsArrowLeft
                             className="bi bi-arrow-left me-2 d-inline d-md-none"
                             onClick={backToSideMessages}
                             style={{
                               cursor: "pointer",
                             }}
-                          ></i>
+                          />
                           New message
                         </h3>
                       </div>
@@ -455,13 +457,13 @@ const Chat = () => {
                         style={{
                           fontSize: "3rem",
                           margin: "-.9rem -.5rem",
-                          color: "white",
+                          color: "lightgray",
                           WebkitTextStroke: "",
                           WebkitTextStrokeColor: "black",
                           WebkitTextStrokeWidth: "1px",
                         }}
                       >
-                        <i className="bi bi-dot"></i>
+                        <BsDot style={{ marginTop: "-.7rem" }} />
                       </h1>
                       <div className="col-sm-2">
                         <span className="h6 text-muted">offline</span>
@@ -477,7 +479,7 @@ const Chat = () => {
                           color: "#4c959f",
                         }}
                       >
-                        <i className="bi bi-dot"></i>
+                        <BsDot style={{ marginTop: "-.7rem" }} />
                       </h1>
                       <div className="col-2">
                         <span className="h6 text-muted">online</span>
