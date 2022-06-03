@@ -42,8 +42,9 @@ const Login = () => {
       if (axios.isAxiosError(error)) {
         const serverError = error as AxiosError;
         if (serverError.response) {
-          // setMessage(serverError.response.data.message as unknown as string);
-          console.log(serverError.response);
+          setMessage(
+            (serverError.response.data as Record<string, any>).message
+          );
         }
       }
     } finally {
