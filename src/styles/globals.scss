@@ -126,9 +126,20 @@ nav {
   @media screen and (max-width: 1000px) {
     margin-left: 1.5rem;
   }
-  @media screen and (max-width: 600px) {
-    margin-left: -4rem;
+  
+
+  @media screen and (max-width: 500px) {
+    font-weight: smaller;
   }
+
+  @media screen and (max-width: 300px) {
+    font-size: 0.7rem;
+    margin-left: 0rem;
+  }
+}
+
+.bolden {
+  font-weight: bold;
 
   @media screen and (max-width: 500px) {
     font-weight: smaller;
@@ -140,38 +151,6 @@ nav {
     margin-left: 0rem;
   }
 }
-.select {
-  background-color: #207681;
-  width: fit-content;
-  padding: 0.5rem 2rem;
-  margin: 1rem 1rem 2rem;
-  font-size: large;
-  border-radius: 10px;
-  color: #ffffff !important;
-
-  @media screen and (max-width: 1000px) {
-    font-size: medium;
-    padding: 0.5rem 1.5rem;
-  }
-
-  @media screen and (max-width: 700px) {
-    font-size: small;
-    padding: 0.5rem 0.8rem;
-  }
-
-  @media screen and (max-width: 600px) {
-    margin-left: -4rem;
-  }
-  @media screen and (max-width: 500px) {
-    margin-left: -2rem;
-  }
-
-  @media screen and (max-width: 300px) {
-    font-size: x-small;
-    margin-left: 0;
-    padding: 0.3rem 0.6rem;
-  }
-}
 
 .image1 {
   @media screen and (max-width: 700px) {
@@ -181,51 +160,109 @@ nav {
     width: 8px;
   }
 }
-.select1 {
-  background-color: #ffffff;
-  color: #207681 !important;
-  margin: 1rem 0 2rem -11rem;
-  font-size: large;
-  padding: 0.5rem 2rem;
-  border-radius: 10px;
 
-  @media screen and (max-width: 1200px) {
-    margin: 1rem 0 2rem -6rem;
+.image2 {
+  width: 20px;
+  height: fit-content;
+
+  @media screen and (max-width: 700px) {
+    width: 12px;
   }
+  @media screen and (max-width: 300px) {
+    width: 8px;
+  }
+}
+
+.mb-div{
 
   @media screen and (max-width: 1000px) {
-    font-size: medium;
+    margin-left: 1rem;
+  }
+  
+  .mb-btns{
+    margin: 1rem 0.5rem;
     padding: 0.5rem 1.5rem;
-    margin: 1rem 0 2rem -2rem;
-  }
+  
+      @media screen and (max-width: 1000px) {
+        padding: 0.5rem 1.2rem;
+      }
+  
+      @media screen and (max-width: 700px) {
+        font-size: small;
+        margin: 1rem 0.4rem ;
+      }
+  
+      @media screen and (max-width: 430px) {
+        font-size: smaller;
+        margin: 1rem 0.3rem ;
+      } 
 
-  @media screen and (max-width: 800px) {
-    margin: 1rem 0 2rem -8rem;
-  }
-  @media screen and (max-width: 700px) {
-    font-size: small;
-    padding: 0.5rem 0.8rem;
-    margin: 1rem 0 2rem -1rem;
-  }
+      @media screen and (max-width: 360px) {
+        font-size: x-small;
+        margin: 0.8rem 0.3rem ;
 
-  @media screen and (max-width: 600px) {
-    margin: 1rem 0 2rem -8.5rem;
+      }
+      @media screen and (max-width: 360px) {
+        font-size: xx-small;
+        margin: 0.7rem 0.3rem ;
+      } 
   }
-  @media screen and (max-width: 500px) {
-    margin: 1rem 0 2rem -3.5rem;
-  }
-  @media screen and (max-width: 360px) {
-    margin: 1rem 0 2rem -2rem;
-  }
+}
+.dot-btn{
+  font-size: 2rem;
+  background: none;
+  margin-top: 2rem;
+  border: none;
+  
+    &:focus{
+      outline: none;
+      box-shadow: none;
+    }
 
-  @media screen and (max-width: 300px) {
-    font-size: x-small;
-    padding: 0.3rem 0.6rem;
+    @media screen and (max-width: 1200px){
+      margin-top: 4rem;
+      margin-left: 3rem;
+    }
+
+    @media screen and (max-width: 992px){
+      margin-top: 5rem;
+      margin-left: 5.5rem;
+      font-size: 1.7rem;
+    }
+
+    @media screen and (max-width: 500px){
+      margin-top: 4rem;
+      margin-left: 5rem;
+    }
+}
+
+.post-content{
+  p{
+    @media screen and (max-width: 1000px) {
+      font-size: small;
+    }
   }
+}
+
+.ham-menu{
+  font-size: 2rem;
+  border: none;
+  color: #207681;
+
+    &:focus{
+      outline: none;
+      box-shadow: none;
+    }
+
+    @media (max-width: 380px){
+      font-size: x-large;
+    }
+    @media (max-width: 260px){
+      font-size: larger;
+    }
 }
 .text-primary {
   font-weight: bold !important;
-  color: var(--bs-primary) !important;
 }
 .footer {
   position: absolute;
@@ -253,12 +290,26 @@ section {
 .carousel_item {
   width: 260px !important;
   border-radius: 8.21687px;
-
   margin-bottom: 1rem;
+  
 
   .card {
     width: 100%;
     border: none;
+
+    @media screen and(max-width:1000px){
+      width: 95% !important;
+      font-size: medium !important;
+    }
+  }
+
+  @media screen and(max-width:1000px){
+    width: 240px !important;
+    
+  }
+
+  @media screen and(max-width:500px){
+    width: 180px !important;
   }
 }
 
@@ -304,14 +355,27 @@ textarea {
   padding: 0;
 }
 
+.img2{
+  @media screen and (max-width: 600px) {
+      width: 0.5rem;
+
+  }
+  @media screen and (max-width: 300px) {
+      width: 0.2rem;
+      // margin-top: -6rem;
+
+  }
+}
+
+.cards{
+  border: none;
+  padding: 2rem;
+  box-shadow: 0px 2px 15px rgba(33, 33, 52, 0.2);
+}
 .absolute-bottom {
   position: absolute;
   bottom: 1rem;
   right: 1rem;
-}
-
-.text-primary {
-  color: #0b5351 !important;
 }
 
 .nav-item {

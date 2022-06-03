@@ -6,6 +6,8 @@ import React, { useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import FormWrapper from "../components/Organisms/Layout/FormWrapper";
 
+import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+
 import { useRouter } from "next/router";
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +16,7 @@ const Register = () => {
     email: "",
     password: "",
   });
+  const [displayPassword, setDisplayPassword] = useState(false);
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
@@ -45,6 +48,7 @@ const Register = () => {
       [name]: value,
     }));
   };
+
   return (
     <FormWrapper
       form={
@@ -59,6 +63,7 @@ const Register = () => {
           <Head>
             <title>Register</title>
           </Head>
+          {submitting && <div className="spinner-grow" role="status"></div>}
           <Form onSubmit={handleSubmit}>
             <Row>
               <Col md={6}>
@@ -96,31 +101,60 @@ const Register = () => {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label> Enter Password</Form.Label>
-              <Form.Control
-                placeholder="Enter password"
-                type="password"
-                name="password"
-                required
-                onChange={handleChange}
-              />
+              <Form.Label> Password</Form.Label>
+              <div className="row">
+                <div className="col-12">
+                  <Form.Control
+                    placeholder="Enter password"
+                    type={displayPassword ? "text" : "password"}
+                    name="password"
+                    required
+                    onChange={handleChange}
+                  />
+                </div>
+                <div
+                  className="col-1 btn"
+                  style={{
+                    marginLeft: "-3.5rem",
+                    fontSize: "1.5rem",
+                    marginTop: "-.3rem",
+                  }}
+                  onClick={() => setDisplayPassword(!displayPassword)}
+                >
+                  <Form.Text>
+                    {displayPassword ? (
+                      <AiOutlineEye />
+                    ) : (
+                      <AiOutlineEyeInvisible />
+                    )}
+                  </Form.Text>
+                </div>
+              </div>
             </Form.Group>
 
             <Form.Text>
               <Form.Check
                 type="checkbox"
+                className="formCheckBox"
                 label={
                   <p>
                     &nbsp; I hereby agree to the
-                    <span className="text-primary">
+                    <span className="text-primary ps-3 ps-sm-0">
                       &nbsp; terms & conditions
                     </span>{" "}
-                    and <span className="text-primary">privacy policy</span>{" "}
+                    and{" "}
+                    <span className="text-primary ps-3 ps-sm-1">
+                      privacy policy
+                    </span>{" "}
                   </p>
                 }
               />
             </Form.Text>
-            <Button type="submit" variant="primary" className="d-flex mx-auto">
+            <Button
+              type="submit"
+              variant="primary"
+              className="d-flex mx-auto mt-3"
+            >
               Register
             </Button>
           </Form>

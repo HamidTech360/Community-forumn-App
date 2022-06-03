@@ -30,8 +30,7 @@ const ProfileCard = () => {
     <Card className="mb-3">
       <CardImg
         src="/images/formbg.png"
-        height={150}
-        style={{ objectFit: "cover" }}
+        className="image2"
       />
       <Card.Body className="d-flex position-relative justify-content-center align-items-center flex-column ">
         <Image
@@ -41,12 +40,12 @@ const ProfileCard = () => {
           alt="avatar"
           className="top-0 position-absolute"
           style={{
-            transform: "translateY(-80%)",
+            transform: "translateY(-70%)",
           }}
           roundedCircle
         />
-        <text className=" mt-4 bold fs-5">Mike Dike</text>
-        <text className="text-muted">@MikeD</text>
+        <text className=" mt-4 bold text-center fs-7">Mike Dike</text>
+        <text className="text-muting">@MikeD</text>
         <text className="text-muted text-center">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
           illum quasi voluptatem explicabo, tempore enim!
