@@ -5,6 +5,16 @@ import { Card, Container, Fade, Image, Row } from "react-bootstrap";
 import ChatBubble from "../components/Chat/ChatBubble";
 import { dummyData } from "../components/Chat/dummyData";
 
+import { FiEdit } from "react-icons/fi";
+import {
+  BsChevronDoubleDown,
+  BsChevronDoubleUp,
+  BsLink45Deg,
+  BsDot,
+  BsArrowLeft,
+} from "react-icons/bs";
+import { RiSendPlaneFill } from "react-icons/ri";
+
 const Chat = () => {
   const [open, setOpen] = useState(true);
   const [selectUserToChatTimeline, setSelectUserToChatTimeline] = useState("");
@@ -235,10 +245,7 @@ const Chat = () => {
                     cursor: "pointer",
                   }}
                 >
-                  <i
-                    className="bi bi-pencil-square me-2"
-                    onClick={startChat}
-                  ></i>{" "}
+                  <FiEdit size="20" className="me-2" onClick={startChat} />{" "}
                 </div>
                 <div
                   className="col-2 btn"
@@ -247,16 +254,16 @@ const Chat = () => {
                   aria-expanded={open}
                 >
                   {!open && (
-                    <i
-                      id="chevron-double-up"
-                      className="d-none d-md-inline bi bi-chevron-double-up ms-auto"
-                    ></i>
+                    <BsChevronDoubleUp
+                      size={20}
+                      className="d-md-inline ms-auto"
+                    />
                   )}
                   {open && (
-                    <i
-                      id="chevron-double-down"
-                      className="d-none d-md-inline bi bi-chevron-double-down ms-auto"
-                    ></i>
+                    <BsChevronDoubleDown
+                      size={20}
+                      className="d-md-inline ms-auto"
+                    />
                   )}
                 </div>
                 <Fade in={open}>
@@ -404,13 +411,13 @@ const Chat = () => {
                   <div className="row">
                     <h3 className="col-12 mt-2">
                       {selectUserToChatTimeline !== "" && (
-                        <i
-                          className="bi bi-arrow-left me-2 d-inline d-md-none"
+                        <BsArrowLeft
+                          className="me-2 d-inline d-md-none"
                           onClick={backToSideMessages}
                           style={{
                             cursor: "pointer",
                           }}
-                        ></i>
+                        />
                       )}
                       {selectUserToChatTimeline.name}
                     </h3>
@@ -420,13 +427,13 @@ const Chat = () => {
                       <div className="col-12">
                         <h3>
                           {" "}
-                          <i
-                            className="bi bi-arrow-left me-2 d-inline d-md-none"
+                          <BsArrowLeft
+                            className="me-2 d-inline d-md-none"
                             onClick={backToSideMessages}
                             style={{
                               cursor: "pointer",
                             }}
-                          ></i>
+                          />
                           New message
                         </h3>
                       </div>
@@ -446,13 +453,13 @@ const Chat = () => {
                         style={{
                           fontSize: "3rem",
                           margin: "-.9rem -.5rem",
-                          color: "white",
+                          color: "lightgray",
                           WebkitTextStroke: "",
                           WebkitTextStrokeColor: "black",
                           WebkitTextStrokeWidth: "1px",
                         }}
                       >
-                        <i className="bi bi-dot"></i>
+                        <BsDot style={{ marginTop: "-.7rem" }} />
                       </h1>
                       <div className="col-sm-2">
                         <span className="h6 text-muted">offline</span>
@@ -468,7 +475,7 @@ const Chat = () => {
                           color: "#4c959f",
                         }}
                       >
-                        <i className="bi bi-dot"></i>
+                        <BsDot style={{ marginTop: "-.7rem" }} />
                       </h1>
                       <div className="col-2">
                         <span className="h6 text-muted">online</span>
@@ -495,13 +502,14 @@ const Chat = () => {
                     className="col-lg-1 text-muted"
                     style={{ cursor: "pointer" }}
                   >
-                    <i className="bi bi-link-45deg"></i>
+                    <BsLink45Deg />
                   </h2>
                   <div className="col-lg-9 mb-3">
                     <textarea
                       id="writeMessage"
                       className="form-control"
                       placeholder=" &#128522; Write something..."
+                      rows={2}
                     ></textarea>
                   </div>
                   <div className="col-lg-2 d-grid">
@@ -511,7 +519,7 @@ const Chat = () => {
                       style={{ borderRadius: "15%" }}
                       onClick={sendMessageToRecipient}
                     >
-                      Send
+                      <RiSendPlaneFill size={25} />
                     </button>
                   </div>
                 </Card.Footer>

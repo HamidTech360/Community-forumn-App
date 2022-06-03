@@ -6,7 +6,7 @@ import Logo from "@/components/Atoms/Logo";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";
-
+import { FiMenu } from'react-icons/fi'
 import AuthHeader from "./AuthHeader";
 
 import useUser from "@/hooks/useUser";
@@ -52,7 +52,9 @@ const Header = () => {
               </Navbar.Brand>
             </Link>
 
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Toggle aria-controls="basic-navbar-nav" className = 'ham-menu'>
+              <FiMenu color="#207681" />
+            </Navbar.Toggle>
 
             {!disabled.includes(activePage) && (
               <Navbar.Collapse id="basic-navbar-nav" className=" gap-4">

@@ -2,6 +2,13 @@ import React, { useEffect, useState } from "react";
 
 import { Container, Card } from "react-bootstrap";
 
+import { FiEdit } from "react-icons/fi";
+import {
+  BsPlusCircle,
+  BsFillCalendarEventFill,
+  BsFillPersonFill,
+} from "react-icons/bs";
+import { MdCall } from "react-icons/md";
 
 const About = () => {
   const [activeTab, setActiveTab] = useState("bio");
@@ -44,7 +51,7 @@ const About = () => {
         <div className="row">
           <h5 className="col-10">Bio</h5>
           <h5 className="col-2 btn" style={{ marginTop: "-.5rem" }}>
-            <i className="bi bi-pencil-square"></i>
+            <FiEdit size="15" />
           </h5>
         </div>
         <div className="row">
@@ -75,11 +82,11 @@ const About = () => {
           <h5 className="col-12">Personal info</h5>
         </div>
         <div className="row">
-          <h6 className="col-10" id="personalInfoText">
-            <i className="bi bi-person-fill"> Select Gender</i>
+          <h6 className="col-10" style={{ marginLeft: "-.5rem" }}>
+            <BsFillPersonFill size="19" /> <span> Select Gender</span>
           </h6>
           <h5 className="col-2 btn" style={{ marginTop: "-.5rem" }}>
-            <i className="bi bi-pencil-square"></i>
+            <FiEdit size="15" />
           </h5>
           <p className="text-muted ms-4" style={{ marginTop: "-.8rem" }}>
             Gender
@@ -87,11 +94,11 @@ const About = () => {
         </div>
 
         <div className="row">
-          <h6 className="col-10" id="personalInfoText">
-            <i className="bi bi-calendar-event-fill"> Select DOB</i>
+          <h6 className="col-10" style={{ marginLeft: "-.5rem" }}>
+            <BsFillCalendarEventFill size="17" /> <span> Select DOB</span>
           </h6>
           <h5 className="col-2 btn" style={{ marginTop: "-.5rem" }}>
-            <i className="bi bi-pencil-square"></i>
+            <FiEdit size="15" />
           </h5>
           <p className="text-muted ms-4" style={{ marginTop: "-.8rem" }}>
             Date of Birth
@@ -103,21 +110,18 @@ const About = () => {
         </div>
 
         <div className="row">
-          <h6 className="col-10 mb-4" id="personalInfoText">
-            <i
-              className="bi bi-plus-circle btn text-primary"
-              style={{ margin: "-1rem", fontSize: "14px" }}
-            >
-              {" "}
-              <span className=" fw-normal"> Add Address</span>
-            </i>
+          <h6 className="col-10 mb-4 fw-light" style={{ marginTop: "-1rem" }}>
+            <span className="btn text-primary">
+              <BsPlusCircle size="14" />
+              <span className=" fw-normal fst-italic"> Add Address</span>
+            </span>
           </h6>
 
-          <h6 className="col-10" id="personalInfoText">
-            <i className="bi bi-telephone-fill"> Input Mobil No.</i>
+          <h6 className="col-10" style={{ marginLeft: "-.5rem" }}>
+            <MdCall size="19" /> <span>Input Mobile No.</span>
           </h6>
           <h5 className="col-2 btn" style={{ marginTop: "-.5rem" }}>
-            <i className="bi bi-pencil-square"></i>
+            <FiEdit size="15" />
           </h5>
           <p className="text-muted ms-4" style={{ marginTop: "-.8rem" }}>
             Mobile
@@ -130,37 +134,25 @@ const About = () => {
         </div>
 
         <div className="row">
-          <h6 className="col-10" id="personalInfoText">
-            <i
-              className="bi bi-plus-circle btn text-primary"
-              style={{ margin: "-1rem", fontSize: "14px" }}
-            >
-              {" "}
-              <span className=" fw-normal"> Add Websites</span>
-            </i>
+          <h6 className="col-10 fw-light" style={{ marginTop: "-1rem" }}>
+            <span className="btn text-primary">
+              <BsPlusCircle size="14" />
+              <span className="fw-normal fst-italic"> Add Address</span>
+            </span>
           </h6>
 
-          <h6 className="col-10 fw-light" id="personalInfoText">
-            <i
-              className="bi bi-plus-circle btn text-primary fw-light"
-              style={{
-                margin: "-1rem",
-                fontSize: "14px",
-              }}
-            >
-              {" "}
-              <span className=" fw-normal"> Add YouTube</span>
-            </i>
+          <h6 className="col-10 fw-light" style={{ marginTop: "-1rem" }}>
+            <span className="btn text-primary">
+              <BsPlusCircle size="14" />
+              <span className=" fw-normal fst-italic"> Add YouTube</span>
+            </span>
           </h6>
 
-          <h6 className="col-10" id="personalInfoText">
-            <i
-              className="bi bi-plus-circle btn text-primary"
-              style={{ margin: "-1rem", fontSize: "14px" }}
-            >
-              {" "}
-              <span className=" fw-normal"> Add Instagram</span>
-            </i>
+          <h6 className="col-10 fw-light" style={{ marginTop: "-1rem" }}>
+            <span className="btn text-primary">
+              <BsPlusCircle size="14" />
+              <span className="fw-normal fst-italic"> Add Instagram</span>
+            </span>
           </h6>
         </div>
       </Container>
