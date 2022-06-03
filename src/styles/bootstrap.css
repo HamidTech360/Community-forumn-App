@@ -1465,6 +1465,14 @@ progress {
     width: 100%;
   }
 
+  .col-md-6 > h1 {
+    font-size: medium !important;
+  }
+
+  .col-md-6 > .text-muted {
+    font-size: large !important;
+  }
+
   .offset-lg-0 {
     margin-left: 0;
   }
@@ -3123,6 +3131,19 @@ fieldset:disabled .btn {
   background-color: #069197;
   border-color: #069197;
 }
+
+@media screen and (max-width: 900px) {
+  .mt-2 > .btn-primary {
+    font-size: small;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .mt-2 > .btn-primary {
+    font-size: x-small;
+  }
+}
+
 .btn-check:focus + .btn-primary,
 .btn-primary:focus {
   color: #fff;
@@ -4808,6 +4829,16 @@ fieldset:disabled .btn {
 .card-body {
   flex: 1 1 auto;
   padding: 1rem 1rem;
+}
+
+.card-body > p > b {
+  font-weight: 700;
+}
+
+@media screen and (max-width: 500px) {
+  .card-body > p {
+    font-size: small !important;
+  }
 }
 
 .card-title {
@@ -7411,6 +7442,22 @@ fieldset:disabled .btn {
   gap: 0.25rem !important;
 }
 
+@media screen and (max-width: 700px) {
+  .gap-3 > button {
+    font-size: medium;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .gap-1 {
+    font-size: xx-small;
+  }
+
+  .gap-3 > button {
+    font-size: small;
+  }
+}
+
 .gap-2 {
   gap: 0.5rem !important;
 }
@@ -7450,8 +7497,42 @@ fieldset:disabled .btn {
   justify-content: center !important;
 }
 
+.justify-content-center > h5 {
+  font-weight: bold;
+}
+
+@media screen and (max-width: 1000px) {
+  .justify-content-center > h5 {
+    font-size: large !important;
+  }
+
+  .justify-content-center > p > li {
+    font-size: medium !important;
+  }
+}
+
 .justify-content-between {
   justify-content: space-between !important;
+}
+
+@media screen and (max-width: 1000px) {
+  .justify-content-between > h2 {
+    font-size: x-large !important;
+  }
+
+  .outline-primary > option {
+    font-size: medium !important;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .justify-content-between > h2 {
+    font-size: large !important;
+  }
+
+  .outline-primary > option {
+    font-size: small !important;
+  }
 }
 
 .justify-content-around {
@@ -7595,6 +7676,12 @@ fieldset:disabled .btn {
 
 .m-auto {
   margin: auto !important;
+}
+
+@media screen and (max-width: 1000px) {
+  .m-auto {
+    margin: 0 0.5rem;
+  }
 }
 
 .mx-0 {
@@ -7883,6 +7970,18 @@ fieldset:disabled .btn {
   padding-top: 0.5rem !important;
 }
 
+@media screen and (max-width: 1000px) {
+  .pt-2 > h4 {
+    font-size: large !important;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .pt-2 > h4 {
+    font-size: medium !important;
+  }
+}
+
 .pt-3 {
   padding-top: 1rem !important;
 }
@@ -7957,6 +8056,26 @@ fieldset:disabled .btn {
 
 .ps-3 {
   padding-left: 1rem !important;
+}
+
+@media screen and (max-width: 1000px) {
+  .ps-3 > small {
+    font-size: small;
+  }
+
+  .ps-3 > h5 {
+    font-size: large;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .ps-3 > small {
+    font-size: xx-small;
+  }
+
+  .ps-3 > h5 {
+    font-size: small !important;
+  }
 }
 
 .ps-4 {
@@ -8139,7 +8258,6 @@ fieldset:disabled .btn {
   .text-primary,
   .text-muted {
     font-size: small;
-    margin-left: -1rem;
   }
 }
 
