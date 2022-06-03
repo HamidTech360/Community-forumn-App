@@ -35,7 +35,7 @@ const GroupInfoCard = () => {
       />
       <Card.Body>
         <Row>
-          <Col xs={4} md={2}>
+          <Col xs={2}  >
             <Image
               src="/images/article.png"
               className = 'pic'
@@ -46,7 +46,7 @@ const GroupInfoCard = () => {
               roundedCircle
             />
           </Col>
-          <Col xs={8} md={10} className="d-flex flex-column">
+          <Col xs={10}  className="d-flex flex-column">
             {" "}
             <text className="bold">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugit,
@@ -54,27 +54,16 @@ const GroupInfoCard = () => {
             </text>
             <small className="text-mute">Public Group</small>
 
-            <Row>
-              <Col>
-                <Dropdown>
-                  <Dropdown.Toggle id="dropdown-basic" className = 'select'>
-                    Joined  <Image src = '/images/Stroke-1.png' alt = 'down' className="image1"/>
-                  </Dropdown.Toggle>
+            <div className="mb-div mb-2">
+              <Button variant="primary" className = 'mb-btns'>
+                Joined  <Image src = '/images/Stroke-1.png' alt = 'down' className="image1"/>
+              </Button>{' '}
+              <Button variant="outline-primary"className = 'mb-btns'>
+                Invite <Image src= '/images/invite.png' alt = 'invite' className="image2"/>
+              </Button>
+            </div>
 
-                  <Dropdown.Menu>
-                    <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                    <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                    <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </Col>
-
-              <Col>
-                <Button className="select1">
-                  Invite <Image src= '/images/invite.png' alt = 'invite' className="image1"/>
-                </Button>
-              </Col>   
-            </Row>
+      
 
                    
           </Col>

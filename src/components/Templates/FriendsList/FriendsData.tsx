@@ -8,7 +8,6 @@ interface FriendsListProp {
   
   export type FriendsDataType = {
     friends : friendType[]
-    
   }
 
   type friendType = {
