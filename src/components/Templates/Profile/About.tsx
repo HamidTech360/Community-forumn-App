@@ -110,10 +110,7 @@ const About = () => {
         </div>
 
         <div className="row">
-          <h6
-            className="col-10 mb-4 fw-light"
-            style={{ margin: "-1rem 0 0 -1rem" }}
-          >
+          <h6 className="col-10 mb-4 fw-light" style={{ marginTop: "-1rem" }}>
             <span className="btn text-primary">
               <BsPlusCircle size="14" />
               <span className=" fw-normal fst-italic"> Add Address</span>
@@ -137,21 +134,21 @@ const About = () => {
         </div>
 
         <div className="row">
-          <h6 className="col-10 fw-light" style={{ margin: "-1rem 0 0 -1rem" }}>
+          <h6 className="col-10 fw-light" style={{ marginTop: "-1rem" }}>
             <span className="btn text-primary">
               <BsPlusCircle size="14" />
               <span className="fw-normal fst-italic"> Add Address</span>
             </span>
           </h6>
 
-          <h6 className="col-10 fw-light" style={{ margin: "-1rem 0 0 -1rem" }}>
+          <h6 className="col-10 fw-light" style={{ marginTop: "-1rem" }}>
             <span className="btn text-primary">
               <BsPlusCircle size="14" />
               <span className=" fw-normal fst-italic"> Add YouTube</span>
             </span>
           </h6>
 
-          <h6 className="col-10 fw-light" style={{ margin: "-1rem 0 0 -1rem" }}>
+          <h6 className="col-10 fw-light" style={{ marginTop: "-1rem" }}>
             <span className="btn text-primary">
               <BsPlusCircle size="14" />
               <span className="fw-normal fst-italic"> Add Instagram</span>

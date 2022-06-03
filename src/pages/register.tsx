@@ -62,6 +62,7 @@ const Register = () => {
           <Head>
             <title>Register</title>
           </Head>
+          {submitting && <div className="spinner-grow" role="status"></div>}
           <Form onSubmit={handleSubmit}>
             <Row>
               <Col md={6}>
@@ -110,7 +111,6 @@ const Register = () => {
                     onChange={handleChange}
                   />
                 </div>
-                {/* ++++++++++++++++++++++++++++++++ */}
                 <div
                   className="col-1 btn"
                   style={{
