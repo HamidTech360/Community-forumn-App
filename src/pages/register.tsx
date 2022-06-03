@@ -29,8 +29,9 @@ const Register = () => {
       if (axios.isAxiosError(error)) {
         const serverError = error as AxiosError;
         if (serverError.response) {
-          // setMessage(serverError.response.data.message);
-          console.log(serverError.response);
+          setMessage(
+            (serverError.response.data as Record<string, any>).message
+          );
         }
       }
     } finally {
