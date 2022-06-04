@@ -240,7 +240,7 @@ const Chat = () => {
                   <h4>Messages</h4>
                 </div>
                 <div
-                  className="col-2 mt-2"
+                  className="col-2 mt-2 ms-auto"
                   style={{
                     cursor: "pointer",
                   }}
@@ -248,7 +248,7 @@ const Chat = () => {
                   <FiEdit size="20" className="me-2" onClick={startChat} />{" "}
                 </div>
                 <div
-                  className="col-2 btn"
+                  className="col-2 btn d-none d-md-inline"
                   onClick={() => setOpen(!open)}
                   aria-controls="toggleMessagingBody"
                   aria-expanded={open}
@@ -256,13 +256,13 @@ const Chat = () => {
                   {!open && (
                     <BsChevronDoubleUp
                       size={20}
-                      className="d-md-inline ms-auto"
+                      className="d-none d-md-inline ms-auto"
                     />
                   )}
                   {open && (
                     <BsChevronDoubleDown
                       size={20}
-                      className="d-md-inline ms-auto"
+                      className="d-none d-md-inline ms-auto"
                     />
                   )}
                 </div>
@@ -305,7 +305,7 @@ const Chat = () => {
                               onClick={startChattingWithChild}
                             >
                               <div
-                                className="col-12 col-lg-3"
+                                className="col-3"
                                 data-nameid={message.id}
                                 onClick={startChattingWithChild}
                               >
@@ -319,7 +319,7 @@ const Chat = () => {
                                 ></Image>
                               </div>
                               <div
-                                className="col-11 col-lg-9 ms-auto p-0"
+                                className="col-9 ms-auto p-0"
                                 data-nameid={message.id}
                                 onClick={startChattingWithChild}
                               >
@@ -379,7 +379,7 @@ const Chat = () => {
 
                               <hr
                                 className="mx-auto"
-                                style={{ width: "75%", marginTop: "-.9rem" }}
+                                style={{ width: "75%", marginTop: ".2rem" }}
                                 data-nameid={message.id}
                                 onClick={startChattingWithChild}
                               />
@@ -442,26 +442,25 @@ const Chat = () => {
                           id="sendTo"
                           type="text"
                           className="form-control"
-                          placeholder="Type a name or multiple names seperated by comma"
+                          placeholder="Type a name or multiple names separated by comma"
                         />
                       </div>
                     </div>
                   ) : selectUserToChatTimeline.online === false ? (
                     <div className="row">
                       <h1
-                        className="col-sm-1"
+                        className="col-1"
                         style={{
                           fontSize: "3rem",
-                          margin: "-.9rem -.5rem",
-                          color: "lightgray",
-                          WebkitTextStroke: "",
-                          WebkitTextStrokeColor: "black",
-                          WebkitTextStrokeWidth: "1px",
+                          marginTop: "-1.2rem",
+                          color: "gray",
                         }}
                       >
-                        <BsDot style={{ marginTop: "-.7rem" }} />
+                        <span>
+                          <BsDot />
+                        </span>
                       </h1>
-                      <div className="col-sm-2">
+                      <div className="col-3">
                         <span className="h6 text-muted">offline</span>
                       </div>
                     </div>
@@ -471,13 +470,13 @@ const Chat = () => {
                         className="col-1"
                         style={{
                           fontSize: "3rem",
-                          margin: "-.9rem -.5rem",
+                          marginTop: "-1.2rem",
                           color: "#4c959f",
                         }}
                       >
-                        <BsDot style={{ marginTop: "-.7rem" }} />
+                        <BsDot />
                       </h1>
-                      <div className="col-2">
+                      <div className="col-3">
                         <span className="h6 text-muted">online</span>
                       </div>
                     </div>
