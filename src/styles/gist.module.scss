@@ -17,18 +17,18 @@
   }
 
   .wrapper{
-     border: none;
-     overflow-y: scroll;
-    min-height: 10vh;
-     position: static;
+      border: none;
+      overflow-y: scroll;
+      height: 30vh;
+      position: static;
   }
 }
 
 .cards {
-  overflow-y: scroll;
-  max-height: 100vh;
-  min-height: 20vh;
-   position: static;
+    overflow-y: scroll;
+    max-height: 100vh;
+    min-height: 20vh;
+    position: static;
 
   .ul{
       .li{
