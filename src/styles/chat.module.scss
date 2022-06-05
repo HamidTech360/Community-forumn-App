@@ -1,0 +1,26 @@
+.reduceMargin {
+  // @media screen and (max-width: 767px) {
+  @media screen and (max-width: 675px) {
+    margin-left: 0.3rem;
+  }
+
+  // @media screen and (min-width: 768px) {
+  @media screen and (min-width: 676px) {
+    margin-left: -1.5rem;
+  }
+  @media screen and (min-width: 768px) {
+    margin-left: -0.5rem;
+  }
+  @media screen and (min-width: 882px) {
+    margin-left: -0.5rem;
+  }
+  @media screen and (min-width: 976px) {
+    margin-left: -0.7rem;
+  }
+  @media screen and (min-width: 1222px) {
+    margin-left: -2.2rem;
+  }
+  @media screen and (min-width: 1600px) {
+    margin-left: -3.6rem;
+  }
+}
