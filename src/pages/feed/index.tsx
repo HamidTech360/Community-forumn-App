@@ -34,29 +34,6 @@ const Feed = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const scrollArea = document.querySelector("#intersection");
-    const cards = document.querySelectorAll(".card");
-    const targetItem = cards?.item(cards.length - 3);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setPage((prevPage) => prevPage + 1);
-          }
-        });
-      },
-      { root: scrollArea, rootMargin: "0px", threshold: 1.0 }
-    );
-
-    if (targetItem) observer.observe(targetItem);
-
-    return () => {
-      if (targetItem) observer.unobserve(targetItem);
-      observer.disconnect();
-    };
-  }, [posts, scrollInitialised, setPage]);
 
   return (
     <AuthContent>
