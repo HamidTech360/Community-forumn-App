@@ -31,9 +31,11 @@ const AuthHeader = () => {
         fixed="top"
       >
         <Container className="d-flex justify-content-between">
-          <Navbar.Brand>
-            <Logo />
-          </Navbar.Brand>
+          <Link href="/feed" passHref>
+            <Navbar.Brand>
+              <Logo />
+            </Navbar.Brand>
+          </Link>
           <Form.Control
             className="mx-2"
             type="search"
@@ -126,7 +128,7 @@ const AuthHeader = () => {
             <NavDropdown.Divider />
             <NavDropdown.Item>Dark mode</NavDropdown.Item>
             <NavDropdown.Item>
-              <Link href="/settings"></Link>Account Settings
+              <Link href="/settings">Account Settings</Link>
             </NavDropdown.Item>
             <NavDropdown.Item>Support</NavDropdown.Item>
             {/* <NavDropdown.Item onClick={handleLogOut}>Logout</NavDropdown.Item> */}

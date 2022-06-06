@@ -1,7 +1,16 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactNode } from "react";
-import { Button, Card, CardImg, Col, Dropdown, Image, Nav, Row } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  CardImg,
+  Col,
+  Dropdown,
+  Image,
+  Nav,
+  Row,
+} from "react-bootstrap";
 import About from "../../Templates/Groups/About";
 import Bookmarks from "../../Templates/Profile/Bookmarks";
 import Friends from "../../Templates/Groups/Friends";
@@ -35,10 +44,10 @@ const GroupInfoCard = () => {
       />
       <Card.Body>
         <Row>
-          <Col xs={2}  >
+          <Col xs={2}>
             <Image
               src="/images/article.png"
-              className = 'pic'
+              className="pic"
               width={80}
               height={80}
               alt=""
@@ -46,26 +55,31 @@ const GroupInfoCard = () => {
               roundedCircle
             />
           </Col>
-          <Col xs={10}  className="d-flex flex-column">
+          <Col xs={10} className="d-flex flex-column">
             {" "}
             <text className="bold">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugit,
               atque!
             </text>
             <small className="text-mute">Public Group</small>
-
             <div className="mb-div mb-2">
-              <Button variant="primary" className = 'mb-btns'>
-                Joined  <Image src = '/images/Stroke-1.png' alt = 'down' className="image1"/>
-              </Button>{' '}
-              <Button variant="outline-primary"className = 'mb-btns'>
-                Invite <Image src= '/images/invite.png' alt = 'invite' className="image2"/>
+              <Button variant="primary" className="mb-btns">
+                Joined{" "}
+                <Image
+                  src="/images/Stroke-1.png"
+                  alt="down"
+                  className="image1"
+                />
+              </Button>{" "}
+              <Button variant="outline-primary" className="mb-btns">
+                Invite{" "}
+                <Image
+                  src="/images/invite.png"
+                  alt="invite"
+                  className="image2"
+                />
               </Button>
             </div>
-
-      
-
-                   
           </Col>
         </Row>
       </Card.Body>

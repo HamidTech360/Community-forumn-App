@@ -34,6 +34,11 @@ export default async function handler(
         return res
           .status(400)
           .json({ message: "Password is incorrect", key: "password" });
+      } else if (user.status === "pending") {
+        console.log(user.status);
+        return res
+          .status(401)
+          .json({ message: "Please activate your account first" });
       } else {
         const accessToken = generateAccessToken({ sub: user._id });
         const refreshToken = generateRefreshToken({ sub: user._id });
