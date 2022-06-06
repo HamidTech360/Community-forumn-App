@@ -27,12 +27,21 @@ const Chat = () => {
   const [messages, setMessages] = useState(initMessages);
 
   const unreadChat = useRef();
+  const readChat = useRef();
 
   useEffect(() => {
     // Focus Unread Message
     if (unreadChat.current) {
       unreadChat.current.scrollIntoView({
         behavior: "smooth",
+        block: "nearest",
+        inline: "start",
+      });
+    }
+    // Focus read Message
+    if (readChat.current) {
+      readChat.current.scrollIntoView({
+        behavior: "auto",
         block: "nearest",
         inline: "start",
       });
@@ -172,9 +181,10 @@ const Chat = () => {
 
           // ....... For New Users Chat .......
           let tempNewUserInitMessages = [];
+          let newUser;
           noPreviousChatWithUser.forEach((user, index) => {
             // Create a new Message for user
-            let newUser = {
+            newUser = {
               name: user,
               id: `${new Date()}${index}`,
               faceImage: "https://source.unsplash.com/random",
@@ -202,6 +212,7 @@ const Chat = () => {
           // Set State
           setInitMessages(tempNewUserInitMessages);
           setMessages(tempNewUserInitMessages);
+          setSelectUserToChatTimeline([newUser, 0]);
 
           // Clear Input Values
           (
@@ -533,11 +544,24 @@ const Chat = () => {
                             </div>
                           );
                         } else {
-                          /*
-                           ** No need to Focus as focus has already been made above
-                           ** Maintain Read State
-                           */
-                          return ChatBubble(message, index);
+                          if (
+                            selectUserToChatTimeline[1] === 0 &&
+                            selectUserToChatTimeline[0].message.length ===
+                              index + 1
+                          ) {
+                            // No unread message
+                            return (
+                              <div ref={readChat}>
+                                {ChatBubble(message, index)}
+                              </div>
+                            );
+                          } else {
+                            /*
+                             ** No need to Focus as focus has already been made above
+                             ** Maintain Read State
+                             */
+                            return ChatBubble(message, index);
+                          }
                         }
                       }
                     )}
