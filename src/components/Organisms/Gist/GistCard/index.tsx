@@ -4,6 +4,7 @@ import { Button, Card, Col, Row, Image } from "react-bootstrap";
 import Link from "next/link";
 import Age from "../../../Atoms/Age";
 import striptags from "striptags";
+import { DirectiveLocation } from "graphql";
 // interface IGist {
 //   gist: {
 //     author: {
@@ -31,8 +32,8 @@ const GistCard = ({
           borderRadius: "10px",
         }}
       >
-        <Row className="d-flex align-items-center">
-          <Col xs={2}  className="ps-2">
+        <div className="d-flex flex-row gap-2">
+          <div className="ps-2">
             <Image
               src={gist?._embedded?.user[0]?.avatar_urls?.full}
               width={50}
@@ -40,20 +41,20 @@ const GistCard = ({
               alt="Avatar"
               roundedCircle
             />
-          </Col>
-          <Col xs={7}  className="ps-3">
+          </div>
+          <div>
             <small>Started by {gist?._embedded?.user[0].name}</small>
             <br />
             <h5 className="text-primary">
               {gist?.title.raw.replace("&amp;", "&")}
             </h5>
-          </Col>
-          <Col xs={3}>
+          </div>
+          <div className="ms-auto">
             <small className="d-flex gap-1">
               <Age time={gist?.date} /> <i className="bi bi-bookmark-dash" />
             </small>
-          </Col>
-        </Row>
+          </div>
+        </div>
         <Card.Body
           dangerouslySetInnerHTML={{
             __html: striptags(
