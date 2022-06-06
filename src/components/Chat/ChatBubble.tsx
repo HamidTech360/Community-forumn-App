@@ -8,7 +8,7 @@ function ChatBubble(message, index) {
   const messagingStyle2 = message.sender === "self" && self2;
 
   return (
-    <div key={index}>
+    <div key={index} style={{ fontSize: "14px" }}>
       <div
         style={{
           width: "28%",
@@ -22,6 +22,7 @@ function ChatBubble(message, index) {
         className={messagingStyle}
         style={{
           width: "40%",
+          letterSpacing: "1px",
           height: "auto",
           borderRadius: "35px 15px 35px 35px",
         }}
