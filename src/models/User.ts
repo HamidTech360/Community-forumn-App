@@ -18,6 +18,8 @@ export interface IUserSchema extends Document {
   otherNames: string;
   isAdmin: boolean;
   address: IAddress;
+  status: string;
+  confirmationCode: string;
 }
 
 const userSchema = new Schema<IUserSchema>({
@@ -60,10 +62,19 @@ const userSchema = new Schema<IUserSchema>({
       },
     }),
   },
+  status: {
+    type: String,
+    required: true,
+    default: "pending",
+  },
   isAdmin: {
     type: Boolean,
     required: true,
     default: false,
+  },
+  confirmationCode: {
+    type: String,
+    required: true,
   },
 });
 
