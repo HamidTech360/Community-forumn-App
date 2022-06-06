@@ -10,6 +10,12 @@ export default function AuthContent({ children }: { children: ReactNode }) {
   // Navigate unauthenticated users to Log In page.
   useEffect(() => {
     if (!authenticating && !isAuthenticated) {
+      // Save current page
+      sessionStorage.setItem(
+        "pageB4Login",
+        JSON.stringify(globalThis.history.state.as)
+      );
+
       router.push("/login");
     }
   }, [isAuthenticated, authenticating, router]);
