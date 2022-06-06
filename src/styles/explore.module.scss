@@ -4,8 +4,12 @@
   // display: grid;
   // place-items: center;
 
-  .text {
-    padding: 5rem 1rem;
+  @media screen and (max-width: 1000px) {
+     min-height: 40vh;
+  }
+
+  text {
+    padding: 5rem 1rem ;
 
     p{
       @media screen and (max-width: 900px) {
