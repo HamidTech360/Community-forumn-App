@@ -30,7 +30,7 @@ const ProfileCard = () => {
     <Card className="mb-3">
       <CardImg
         src="/images/formbg.png"
-        className="image2"
+        className="image3"
       />
       <Card.Body className="d-flex position-relative justify-content-center align-items-center flex-column ">
         <Image

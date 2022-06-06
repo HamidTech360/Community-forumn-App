@@ -4,6 +4,7 @@ import { Button, Card, Col, Row, Image } from "react-bootstrap";
 import Link from "next/link";
 import Age from "../../../Atoms/Age";
 import striptags from "striptags";
+import styles from '@/styles/gist.module.scss'
 // interface IGist {
 //   gist: {
 //     author: {
@@ -49,7 +50,7 @@ const GistCard = ({
             </h5>
           </Col>
           <Col xs={3}>
-            <small className="d-flex gap-1">
+            <small className= {`d-flex gap-1 ${styles.time}`}>
               <Age time={gist?.date} /> <i className="bi bi-bookmark-dash" />
             </small>
           </Col>
