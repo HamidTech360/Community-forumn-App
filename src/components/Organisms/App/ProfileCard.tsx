@@ -27,7 +27,7 @@ const ProfileCard = () => {
   const { path } = useRouter().query;
 
   return (
-    <Card className="mb-3">
+    <Card className="mt-2 mb-3">
       <CardImg
         src="/images/formbg.png"
         className="image3"
