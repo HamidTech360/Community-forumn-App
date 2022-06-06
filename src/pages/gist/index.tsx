@@ -43,8 +43,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         <Row className="mt-5">
           <Col md={4} className="desktop-only">
             <BCard
-              className="py-4 px-5 justify-content-center"
-              style={{ border: "none" }}
+              className={`py-4 px-5 justify-content-center ${styles.wrapper}`}
             >
               <h5>Browse categories</h5>
 

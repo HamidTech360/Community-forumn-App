@@ -1,8 +1,9 @@
+//@ts-nocheck
 import { setAccessToken } from "@/misc/token";
 
 import axios, { AxiosError } from "axios";
 import Head from "next/head";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import FormWrapper from "../components/Organisms/Layout/FormWrapper";
 
@@ -17,28 +18,48 @@ const Register = () => {
     password: "",
   });
   const [displayPassword, setDisplayPassword] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({ message: "", variant: "" });
   const [submitting, setSubmitting] = useState(false);
+  const [termsAndConditionsChecked, setTermsAndConditionsChecked] =
+    useState(false);
   const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      setSubmitting(true);
-      await axios.post("/api/auth/register", formData);
+    if (termsAndConditionsChecked) {
+      try {
+        setSubmitting(true);
+        await axios.post("/api/auth/register", formData);
 
-      router.push("/login");
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const serverError = error as AxiosError;
-        if (serverError.response) {
-          setMessage(
-            (serverError.response.data as Record<string, any>).message
-          );
+        setMessage({
+          message:
+            "Success! Check your email- an account confirmation link has been sent to you.",
+          variant: "success",
+        });
+        router.push("/login");
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          const serverError = error as AxiosError;
+          if (serverError.response) {
+            let returnedErrorMessage = serverError.response.data.error;
+            if (typeof returnedErrorMessage === "string") {
+              setMessage({ message: returnedErrorMessage, variant: "danger" });
+            } else {
+              setMessage({
+                message: "Check Your Network Connection",
+                variant: "danger",
+              });
+            }
+          }
         }
+      } finally {
+        setSubmitting(false);
       }
-    } finally {
-      setSubmitting(false);
+    } else {
+      setMessage({
+        message: "Read & Accept The Terms & Conditions To Proceed",
+        variant: "danger",
+      });
     }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,6 +69,21 @@ const Register = () => {
       [name]: value,
     }));
   };
+
+  const termsAndConditionsChecker = () => {
+    setTermsAndConditionsChecked(!termsAndConditionsChecked);
+  };
+
+  useEffect(() => {
+    // clear message
+    const messageTimeout =
+      message.message !== "" &&
+      setTimeout(() => setMessage({ message: "", variant: "" }), 3500);
+
+    return () => {
+      clearTimeout(messageTimeout);
+    };
+  }, [message]);
 
   return (
     <FormWrapper
@@ -59,18 +95,19 @@ const Register = () => {
               sent to you.
             </Alert>
           )} */}
-          {message && <Alert variant="danger">{message}</Alert>}
+          {message.message && (
+            <Alert variant={message.variant}>{message.message}</Alert>
+          )}
           <Head>
             <title>Register</title>
           </Head>
-          {submitting && <div className="spinner-grow" role="status"></div>}
           <Form onSubmit={handleSubmit}>
             <Row>
               <Col md={6}>
                 <Form.Group>
                   <Form.Label> First Name</Form.Label>
                   <Form.Control
-                    placeholder="Enter firstname"
+                    placeholder="Enter first name"
                     name="firstName"
                     onChange={handleChange}
                     required
@@ -81,7 +118,7 @@ const Register = () => {
                 <Form.Group>
                   <Form.Label> Last Name</Form.Label>
                   <Form.Control
-                    placeholder="Enter lastname"
+                    placeholder="Enter last name"
                     name="lastName"
                     onChange={handleChange}
                     required
@@ -136,8 +173,9 @@ const Register = () => {
               <Form.Check
                 type="checkbox"
                 className="formCheckBox"
+                onChange={termsAndConditionsChecker}
                 label={
-                  <p>
+                  <p className="pt-1">
                     &nbsp; I hereby agree to the
                     <span className="text-primary ps-3 ps-sm-0">
                       &nbsp; terms & conditions
@@ -155,7 +193,13 @@ const Register = () => {
               variant="primary"
               className="d-flex mx-auto mt-3"
             >
-              Register
+              Register{" "}
+              {submitting && (
+                <div
+                  className="spinner-grow spinner-grow-sm text-light"
+                  role="status"
+                ></div>
+              )}
             </Button>
           </Form>
         </div>

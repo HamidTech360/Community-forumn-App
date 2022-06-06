@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useEffect, useState } from "react";
 import { Alert, Button, Container, Form } from "react-bootstrap";
 import Typography from "../components/Atoms/Typography";
@@ -29,7 +30,19 @@ const Login = () => {
       router.replace("/feed");
     }
   }, [isAuthenticated, authenticating, router]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({ message: "", variant: "" });
+
+  useEffect(() => {
+    // clear message
+    const messageTimeout =
+      message.message !== "" &&
+      setTimeout(() => setMessage({ message: "", variant: "" }), 3500);
+
+    return () => {
+      clearTimeout(messageTimeout);
+    };
+  }, [message]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { email, password } = formData;
@@ -41,14 +54,34 @@ const Login = () => {
       }
 
       setAccessToken(data.accessToken);
-      router.push("/feed");
+      setMessage({
+        message: "Success",
+        variant: "success",
+      });
+
+      let push2Page = JSON.parse(sessionStorage.getItem("pageB4Login"))
+        ? JSON.parse(sessionStorage.getItem("pageB4Login"))
+        : "/feed";
+      sessionStorage.removeItem("pageB4Login");
+
+      router.push(push2Page);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const serverError = error as AxiosError;
         if (serverError.response) {
-          setMessage(
-            (serverError.response.data as Record<string, any>).message
-          );
+          // setMessage(serverError.response.data.message as unknown as string);
+          let returnedErrorKey = serverError.response.data.key;
+          if (returnedErrorKey === "email" || returnedErrorKey === "password") {
+            setMessage({
+              message: "Username or Password Incorrect",
+              variant: "danger",
+            });
+          } else if (serverError.response.data === "Something went wrong") {
+            setMessage({
+              message: "Check Your Network Connection",
+              variant: "danger",
+            });
+          }
         }
       }
     } finally {
@@ -67,15 +100,17 @@ const Login = () => {
     <FormWrapper
       form={
         <div>
-          {message && (
-            <Alert variant="danger" style={{ textTransform: "capitalize" }}>
-              {message.replace("_", " ")}
+          {message.message && (
+            <Alert
+              variant={message.variant}
+              style={{ textTransform: "capitalize" }}
+            >
+              {message.message.replace("_", " ")}
             </Alert>
           )}
           <Head>
             <title>Login</title>
           </Head>
-          {loading && <div className="spinner-grow" role="status"></div>}
           <Form onSubmit={handleSubmit}>
             <Form.Group>
               <Form.Label> Email</Form.Label>
@@ -127,7 +162,13 @@ const Login = () => {
               className="d-flex mx-auto mt-3"
               type="submit"
             >
-              Log In
+              Log In{" "}
+              {loading && (
+                <div
+                  className="spinner-grow spinner-grow-sm text-light"
+                  role="status"
+                ></div>
+              )}
             </Button>
           </Form>
         </div>
