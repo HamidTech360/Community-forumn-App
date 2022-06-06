@@ -8,18 +8,19 @@ import Gist from "@/models/gist";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
   if (req.method === "POST") {
+    //get token from headers
     const token = req.headers.authorization?.split(" ")[1] || "";
 
     const userID = getUserID(token);
     if (!userID) return res.status(401).end("Unauthorized!");
     try {
-      const { title, post, country, category } = req.body;
+      const { title, post, country, categories } = req.body;
 
       const gist = await Gist.create({
         title,
         post,
         country,
-        category,
+        categories,
         user: userID,
       });
       res.status(201).json({ message: "Gist created", gist });

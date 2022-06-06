@@ -3,8 +3,10 @@ import dbConnect from "@/lib/mongo";
 import getUserID from "@/utils/get-userID";
 import Gist from "@/models/gist";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  //get gist id as params
   const gistID = req.query.id;
   await dbConnect();
+  //check authorization for token
   const token = req.headers.authorization?.split(" ")[1] || "";
 
   const userID = getUserID(token);
@@ -12,9 +14,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "DELETE") {
     try {
-      const gist = await Gist.findByIdAndDelete(gistID).catch((error) =>
-        console.log(error)
-      );
+      //find gist with gistID and delete
+      await Gist.findByIdAndDelete(gistID).catch((error) => console.log(error));
 
       res.status(201).json({ message: "Gist deleted" });
     } catch (error) {
@@ -23,13 +24,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   } else if (req.method === "PUT") {
     const { title, post, country, categories } = req.body;
-    const gist = await Gist.findByIdAndUpdate(gistID, {
+    //find gist with GistID and update
+    await Gist.findByIdAndUpdate(gistID, {
       title,
       post,
       country,
       categories,
     });
-    res.status(200).json({ message: "Gist deleted" });
+    res.status(200).json({ message: "Gist updated" });
   }
 };
 

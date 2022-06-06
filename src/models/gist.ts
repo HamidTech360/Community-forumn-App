@@ -1,36 +1,43 @@
-import mongoose from "mongoose";
+import mongoose, { SchemaTypes } from "mongoose";
+import User from "./User";
 
-export interface IGistSchema extends mongoose.Document  {
-    userId:string,
-    title:string,
-    country:string,
-    category:string,
-    post:string
+export interface IGistSchema extends mongoose.Document {
+  user: string;
+  title: string;
+  country: string;
+  comments: string;
+  categories: string;
+  post: string;
 }
 
-const gistSchema = new mongoose.Schema<IGistSchema>({
-    userId:{
-        type:String,
-        required:true
+const gistSchema = new mongoose.Schema<IGistSchema>(
+  {
+    user: {
+      type: SchemaTypes.ObjectId,
+      required: true,
+      ref: User,
     },
-    title:{
-        type:String,
-        required:true
+    title: {
+      type: String,
+      required: true,
     },
-    country:{
-        type:String,
-        required:true
+    country: {
+      type: String,
+      required: true,
     },
-    category:{
-        type:String,
-        required:true
+    categories: {
+      type: String,
+      required: true,
     },
-    post:{
-        type:String,
-        required:true
-    }
-}, {timestamps:true})
+    post: {
+      type: String,
+      required: true,
+    },
+    comments: [],
+  },
+  { timestamps: true }
+);
 
-const Gist =  mongoose.model("Gist", gistSchema);
+const Gist = mongoose.models.Gist || mongoose.model("Gist", gistSchema);
 
-export default Gist
+export default Gist;
