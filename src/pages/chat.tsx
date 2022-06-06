@@ -118,12 +118,12 @@ const Chat = () => {
       if (JSON.stringify(selectUserToChatTimeline[0]) === "{}") {
         /*
          ** No Previous Chat Is Selected On Sidebar
-         ** Compose Chat & Manually Type in recipient Name
+         ** Compose Chat By Manually Typing in recipient Name
          */
         let sendTo = (document.getElementById("sendTo") as HTMLInputElement)
           .value;
 
-        if (sendTo !== "") {
+        if (sendTo.trim() !== "") {
           let sendToRecipients = sendTo.split(",");
           let chatValue = {
             message: text,
@@ -156,63 +156,80 @@ const Chat = () => {
             }
           });
 
-          // .... Recurring Chat ....
+          // .... Recurring User Chat ....
           let tempInitMessages = [];
-          let tempInitName = [];
-          previousChatWithUser.forEach((user) => {
-            // Update Previous Chat Array/Timeline of Recipient with new Chat
-            user.message.push(chatValue);
+          if (previousChatWithUser.length > 0) {
+            let tempInitName = [];
+            let displayCurrentUserInTimeline = {};
+            previousChatWithUser.forEach((user) => {
+              // Update Previous Chat Array/Timeline of Recipient with new Chat
+              user.message.push(chatValue);
 
-            // Update initMessages with the updated current Recipient
-            tempInitMessages.push(user);
-            tempInitName.push(user.name);
-          });
-          // Last name in the list should come first
-          tempInitMessages.reverse();
-          initMessages.forEach((init) => {
-            if (!tempInitName.includes(init.name)) {
-              tempInitMessages.push(init);
-            }
-          });
+              // Update UnreadMessage Count By 1 If Any So As Not To Be Diminished By New Chat
+              if (user.unreadMessage > 0) {
+                user.unreadMessage = user.unreadMessage + 1;
+              }
+              // Store Updated User
+              displayCurrentUserInTimeline = user;
 
-          // Set State
-          setInitMessages(tempInitMessages);
-          setMessages(tempInitMessages);
+              // Update initMessages with the updated current Recipient
+              tempInitMessages.push(user);
+              tempInitName.push(user.name);
+            });
+            // Last name in the list should come first
+            tempInitMessages.reverse();
+            initMessages.forEach((init) => {
+              if (!tempInitName.includes(init.name)) {
+                tempInitMessages.push(init);
+              }
+            });
+
+            // Set State
+            setInitMessages(tempInitMessages);
+            setMessages(tempInitMessages);
+            setSelectUserToChatTimeline([displayCurrentUserInTimeline, 0]);
+          }
 
           // ....... For New Users Chat .......
-          let tempNewUserInitMessages = [];
-          let newUser;
-          noPreviousChatWithUser.forEach((user, index) => {
-            // Create a new Message for user
-            newUser = {
-              name: user,
-              id: `${new Date()}${index}`,
-              faceImage: "https://source.unsplash.com/random",
-              message: [
-                {
-                  message: text,
-                  sender: "self",
-                  read: true,
-                  dateTime: new Date().toLocaleString(),
-                },
-              ],
-              unreadMessage: 0,
-              online: true,
-            };
-            // Update Temp Message with the updated current Recipient Message
-            tempNewUserInitMessages.push(newUser);
-          });
-          // Last name in the list should come first
-          tempNewUserInitMessages.reverse();
-          tempNewUserInitMessages = [
-            ...tempNewUserInitMessages,
-            ...tempInitMessages,
-          ];
+          if (noPreviousChatWithUser.length > 0) {
+            let tempNewUserInitMessages = [];
+            let newUser;
+            noPreviousChatWithUser.forEach((user, index) => {
+              // Create a new Message for user
+              newUser = {
+                name: user,
+                id: `${new Date()}${index}`,
+                faceImage: "https://source.unsplash.com/random",
+                message: [
+                  {
+                    message: text,
+                    sender: "self",
+                    read: true,
+                    dateTime: new Date().toLocaleString(),
+                  },
+                ],
+                unreadMessage: 0,
+                online: true,
+              };
+              // Update Temp Message with the updated current Recipient Message
+              tempNewUserInitMessages.push(newUser);
+            });
+            // Last name in the list should come first
+            tempNewUserInitMessages.reverse();
 
-          // Set State
-          setInitMessages(tempNewUserInitMessages);
-          setMessages(tempNewUserInitMessages);
-          setSelectUserToChatTimeline([newUser, 0]);
+            // Enable previousChatWithUser message to also move to top when available
+            let sudoTempInitMessages =
+              tempInitMessages.length > 0 ? tempInitMessages : initMessages;
+            tempNewUserInitMessages = [
+              ...tempNewUserInitMessages,
+              ...sudoTempInitMessages,
+            ];
+
+            // Set State
+            setInitMessages(tempNewUserInitMessages);
+            setMessages(tempNewUserInitMessages);
+            setSelectUserToChatTimeline([tempNewUserInitMessages[0], 0]);
+          }
 
           // Clear Input Values
           (
@@ -225,8 +242,8 @@ const Chat = () => {
         }
       } else {
         /*
-         ** Has Previous Chat With User
-         ** Compose Chat for Recurring recipient chosen at sidebar
+         ** Previous Chat With User Selected
+         ** Compose Chat for Recurring recipient chosen from sidebar
          */
         const chatValue = {
           message: text,
@@ -247,9 +264,11 @@ const Chat = () => {
             tempInitMessages.push(user);
           }
         });
+
         // Set State
         setInitMessages(tempInitMessages);
         setMessages(tempInitMessages);
+
         // Clear Input Values
         (document.getElementById("writeMessage") as HTMLTextAreaElement).value =
           "";
@@ -336,13 +355,14 @@ const Chat = () => {
                           >
                             <div
                               className="col-3"
+                              style={{ width: "75px" }}
                               data-nameid={message.id}
                               onClick={startChattingWithChild}
                             >
                               <Image
                                 src={message.faceImage}
                                 alt="image"
-                                className="img-fluid"
+                                className="img-fluid img-thumbnail"
                                 roundedCircle={true}
                                 data-nameid={message.id}
                                 onClick={startChattingWithChild}
@@ -369,10 +389,11 @@ const Chat = () => {
                                   className="col-4 text-muted text-center"
                                   data-nameid={message.id}
                                   onClick={startChattingWithChild}
+                                  style={{ fontSize: "11px" }}
                                 >
                                   {message.message[
                                     message.message.length - 1
-                                  ].dateTime.substring(11)}
+                                  ].dateTime.substring(10)}
                                 </div>
                               </div>
                               <div
@@ -410,7 +431,7 @@ const Chat = () => {
 
                             <hr
                               className="mx-auto"
-                              style={{ width: "75%", marginTop: ".2rem" }}
+                              style={{ width: "55%", marginTop: "-.7rem" }}
                               data-nameid={message.id}
                               onClick={startChattingWithChild}
                             />
