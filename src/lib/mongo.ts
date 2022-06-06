@@ -6,12 +6,14 @@ async function dbConnect() {
     return;
   }
   try {
+    //console.log(process.env.NODE_ENV);
+    
     const conn = await mongoose.connect(
       (process.env.NODE_ENV || process.env.VERCEL_ENV) === "production"
         ? process.env.ATLAS_URI || ""
         : process.env.MONGO_URL || ""
     );
-    // console.log("MongoDB connected: " + conn.connection.host);
+     console.log("MongoDB connected: " + conn.connection.host);
   } catch (error) {
     console.log(error);
   }
