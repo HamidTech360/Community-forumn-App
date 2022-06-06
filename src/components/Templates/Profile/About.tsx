@@ -159,7 +159,7 @@ const About = () => {
     ),
 
     // ............................. >Education History Tab .............................
-    educationHistory: <p>Education history page</p>,
+    // educationHistory: <p>Education history page</p>,
   };
 
   return (
@@ -185,13 +185,13 @@ const About = () => {
                   >
                     Basic Info
                   </a>
-                  <a
+                  {/* <a
                     className="nav-link btn text-start text-secondary"
                     id="educationHistory"
                     onClick={tabNav}
                   >
                     Education history
-                  </a>
+                  </a> */}
                 </nav>
               </Card.Body>
             </div>

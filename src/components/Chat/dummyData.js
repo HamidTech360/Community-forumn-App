@@ -25,8 +25,50 @@ export const dummyData = [
         dateTime: new Date().toLocaleString(),
         read: false,
       },
+      {
+        message:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
+        sender: "self",
+        read: true,
+        dateTime: new Date().toLocaleString(),
+      },
+      {
+        message:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
+        sender: "recipient",
+        read: false,
+        dateTime: new Date().toLocaleString(),
+      },
+      {
+        message:
+          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
+        sender: "recipient",
+        dateTime: new Date().toLocaleString(),
+        read: false,
+      },
+      {
+        message:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
+        sender: "self",
+        read: true,
+        dateTime: new Date().toLocaleString(),
+      },
+      {
+        message:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
+        sender: "recipient",
+        read: false,
+        dateTime: new Date().toLocaleString(),
+      },
+      {
+        message:
+          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
+        sender: "recipient",
+        dateTime: new Date().toLocaleString(),
+        read: false,
+      },
     ],
-    unreadMessage: "9",
+    unreadMessage: 9,
     online: true,
   },
   {
@@ -64,7 +106,7 @@ export const dummyData = [
         read: false,
       },
     ],
-    unreadMessage: "",
+    unreadMessage: 0,
     online: true,
   },
   {
@@ -102,7 +144,7 @@ export const dummyData = [
         read: false,
       },
     ],
-    unreadMessage: "",
+    unreadMessage: 3,
     online: false,
   },
   {
@@ -140,7 +182,7 @@ export const dummyData = [
         read: false,
       },
     ],
-    unreadMessage: "2",
+    unreadMessage: 2,
     online: false,
   },
   {
@@ -177,8 +219,64 @@ export const dummyData = [
         dateTime: new Date().toLocaleString(),
         read: false,
       },
+      {
+        message:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
+        sender: "recipient",
+        read: true,
+        dateTime: new Date().toLocaleString(),
+      },
+      {
+        message:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
+        sender: "self",
+        read: false,
+        dateTime: new Date().toLocaleString(),
+      },
+      {
+        message:
+          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
+        sender: "sellf",
+        dateTime: new Date().toLocaleString(),
+        read: false,
+      },
+      {
+        message:
+          "Name lists allow you to explore baby names by styles and themes, gather inspiration, and discover names you may not otherwise have thought of.",
+        sender: "recipient",
+        dateTime: new Date().toLocaleString(),
+        read: false,
+      },
+      {
+        message:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
+        sender: "recipient",
+        read: true,
+        dateTime: new Date().toLocaleString(),
+      },
+      {
+        message:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus, dolore!",
+        sender: "self",
+        read: false,
+        dateTime: new Date().toLocaleString(),
+      },
+      {
+        message:
+          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
+        sender: "sellf",
+        dateTime: new Date().toLocaleString(),
+        read: false,
+      },
+      {
+        message:
+          "Name lists allow you to explore baby names by styles and themes, gather inspiration, and discover names you may not otherwise have thought of.",
+        sender: "recipient",
+        dateTime: new Date().toLocaleString(),
+        read: false,
+      },
     ],
-    unreadMessage: "8",
+    unreadMessage: 8,
     online: true,
   },
   {
@@ -215,7 +313,7 @@ export const dummyData = [
         read: false,
       },
     ],
-    unreadMessage: "1",
+    unreadMessage: 1,
     online: false,
   },
   {
@@ -252,7 +350,7 @@ export const dummyData = [
         read: false,
       },
     ],
-    unreadMessage: "",
+    unreadMessage: 0,
     online: true,
   },
   {
@@ -288,8 +386,21 @@ export const dummyData = [
         dateTime: new Date().toLocaleString(),
         read: false,
       },
+      {
+        message:
+          "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolores consequuntur culpa alias aspernatur expedita ut delectus placeat qui, illo distinctio. Repellendus, ipsa reiciendis.",
+        sender: "recipient",
+        dateTime: new Date().toLocaleString(),
+        read: false,
+      },
+      {
+        message: "Hello World.",
+        sender: "self",
+        dateTime: new Date().toLocaleString(),
+        read: false,
+      },
     ],
-    unreadMessage: "3",
+    unreadMessage: 3,
     online: false,
   },
   {
@@ -327,7 +438,7 @@ export const dummyData = [
         read: false,
       },
     ],
-    unreadMessage: "",
+    unreadMessage: 0,
     online: false,
   },
   {
@@ -365,7 +476,7 @@ export const dummyData = [
         read: false,
       },
     ],
-    unreadMessage: "",
+    unreadMessage: 0,
     online: true,
   },
   {
@@ -402,7 +513,7 @@ export const dummyData = [
         read: false,
       },
     ],
-    unreadMessage: "",
+    unreadMessage: 0,
     online: true,
   },
 ];
