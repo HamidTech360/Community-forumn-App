@@ -4,7 +4,8 @@ import { Button, Card, Col, Row, Image } from "react-bootstrap";
 import Link from "next/link";
 import Age from "../../../Atoms/Age";
 import striptags from "striptags";
-import styles from '@/styles/gist.module.scss'
+import { DirectiveLocation } from "graphql";
+import styles from "@/styles/gist.module.scss"
 // interface IGist {
 //   gist: {
 //     author: {
@@ -32,29 +33,30 @@ const GistCard = ({
           borderRadius: "10px",
         }}
       >
-        <Row className="d-flex align-items-center">
-          <Col xs={2}  className="ps-2">
+        <div className="d-flex flex-row gap-2">
+          <div className="ps-2">
             <Image
               src={gist?._embedded?.user[0]?.avatar_urls?.full}
               width={50}
               height={50}
               alt="Avatar"
               roundedCircle
+              className= {styles.img}
             />
-          </Col>
-          <Col xs={7}  className="ps-3">
+          </div>
+          <div className={styles.div}>
             <small>Started by {gist?._embedded?.user[0].name}</small>
             <br />
-            <h5 className="text-primary">
+            <h5 className={`text-primary ${styles.title}`}>
               {gist?.title.raw.replace("&amp;", "&")}
             </h5>
-          </Col>
-          <Col xs={3}>
-            <small className= {`d-flex gap-1 ${styles.time}`}>
+          </div>
+          <div className="ms-auto">
+            <small className={`d-flex ${styles.time}`}>
               <Age time={gist?.date} /> <i className="bi bi-bookmark-dash" />
             </small>
-          </Col>
-        </Row>
+          </div>
+        </div>
         <Card.Body
           dangerouslySetInnerHTML={{
             __html: striptags(
