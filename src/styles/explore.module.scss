@@ -1,29 +1,26 @@
 .intro {
   min-height: 60vh;
   background-color: #f6f6f6;
-  // display: grid;
-  // place-items: center;
-
-  @media screen and (max-width: 1000px) {
+  
+  @media screen and (max-width: 1100px) {
      min-height: 40vh;
   }
 
-  @media screen and (max-width: 860px) {
-    min-height: 32vh;
+  @media screen and (max-width: 960px) {
+    min-height: 20vh;
 
  }
 
- @media screen and (max-width: 760px) {
-  min-height: 40vh;
+ @media screen and (max-width: 800px) {
+  min-height: 20vh;
 
 }
-  
-  @media screen and (max-width: 600px) {
+
+@media screen and (max-width: 600px) {
     margin: 0 1rem;
  }
 
   text {
-    padding: 5rem 1rem ;
 
     p{
       @media screen and (max-width: 900px) {
@@ -38,11 +35,20 @@
   .textPrimary {
     font-weight: 400 !important;
     max-width: 482px !important;
+    margin-top: 5rem;
     font-size: 3rem;
 
-    @media screen and (max-width: 900px) {
-      font-size: 2.7rem;
+    @media screen and (max-width: 960px) {
+      font-size: 2.5rem;
+      margin-top: 3rem;
+
     }
+
+    @media screen and (max-width: 800px) {
+      font-size: xx-large;
+      margin-top: 0;
+    }
+
 
     @media screen and (max-width: 600px){
       font-size: 2.6rem;
@@ -73,7 +79,6 @@
   
   .topics .card:nth-child(3n + 2) > div {
     margin-top: 2rem !important;
-    // display: none;
   }
 }
 
