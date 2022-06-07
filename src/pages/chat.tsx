@@ -355,14 +355,14 @@ const Chat = () => {
                           >
                             <div
                               className="col-3"
-                              style={{ width: "75px" }}
                               data-nameid={message.id}
                               onClick={startChattingWithChild}
                             >
                               <Image
                                 src={message.faceImage}
                                 alt="image"
-                                className="img-fluid img-thumbnail"
+                                width={60}
+                                height={60}
                                 roundedCircle={true}
                                 data-nameid={message.id}
                                 onClick={startChattingWithChild}
