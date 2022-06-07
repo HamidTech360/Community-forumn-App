@@ -169,7 +169,7 @@ const About = () => {
           <div className="row g-2" style={{ marginTop: "-2rem" }}>
             <div className="col-md-12 col-lg-3">
               <Card.Body className="bg-light shadow" style={{ height: "100%" }}>
-                <nav className="text-secondary">
+                <nav className="text-secondary d-flex d-md-block">
                   <a
                     className="nav-link active btn text-start text-secondary"
                     aria-current="page"

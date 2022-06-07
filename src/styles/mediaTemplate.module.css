@@ -1,42 +1,102 @@
-.mediaImages {
-  width: 100%;
-  margin: auto;
-  margin-top: 20px;
-}
-.imageGrid {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: auto;
-}
-.imageGridItem {
-  height: 240px;
-  width: 190px;
-  background-color: grey;
-  margin-right: 10px;
-  margin-bottom: 20px;
-}
-.image {
-  height: inherit;
-  width: inherit;
-}
-
-@media screen and (max-width: 768px) {
-  .imageGridItem {
-    height: 120px;
-    width: 100px;
-    margin-right: 10px;
-  }
-  .imageGrid {
-    padding-left: 14px;
+@media screen and (max-width: 285px) {
+  .image {
+    width: 190px;
+    height: 160px;
   }
 }
-
-@media screen and (max-width: 379px) {
-  .imageGridItem {
-    height: 100px;
-    width: 80px;
-    margin-right: auto;
+@media screen and (min-width: 286px) {
+  .image {
+    width: 230px;
+    height: 200px;
+  }
+}
+@media screen and (min-width: 319px) {
+  .image {
+    width: 260px;
+    height: 210px;
+  }
+}
+@media screen and (min-width: 352px) {
+  .image {
+    width: 280px;
+    height: 270px;
+  }
+}
+@media screen and (min-width: 367px) {
+  .image {
+    width: 290px;
+    height: 260px;
+  }
+}
+@media screen and (min-width: 372px) {
+  .image {
+    width: 300px;
+    height: 250px;
+  }
+}
+@media screen and (min-width: 400px) {
+  .image {
+    width: 330px;
+    height: 280px;
+  }
+}
+@media screen and (min-width: 425px) {
+  .image {
+    width: 350px;
+    height: 300px;
+  }
+}
+@media screen and (min-width: 450px) {
+  .image {
+    width: 380px;
+    height: 330px;
+  }
+}
+@media screen and (min-width: 469px) {
+  .image {
+    width: 400px;
+    height: 350px;
+  }
+}
+@media screen and (min-width: 500px) {
+  .image {
+    width: 430px;
+    height: 380px;
+  }
+}
+@media screen and (min-width: 525px) {
+  .image {
+    width: 450px;
+    height: 400px;
+  }
+}
+@media screen and (min-width: 550px) {
+  .image {
+    width: 470px;
+    height: 420px;
+  }
+}
+@media screen and (min-width: 576px) {
+  .image {
+    width: 200px;
+    height: 250px;
+  }
+}
+@media screen and (min-width: 769px) {
+  .image {
+    width: 120px;
+    height: 170px;
+  }
+}
+@media screen and (min-width: 992px) {
+  .image {
+    width: 130px;
+    height: 180px;
+  }
+}
+@media screen and (min-width: 1199px) {
+  .image {
+    width: 160px;
+    height: 210px;
   }
 }
