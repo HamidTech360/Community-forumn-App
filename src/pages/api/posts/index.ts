@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "@/lib/mongo";
 import getUserID from "@/utils/get-userID";
+import {validatePost} from '../../../validators/post'
 
 import Post from "@/models/post";
 
@@ -9,14 +10,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method == "POST") {
     const token = req.headers.authorization?.split(" ")[1] || "";
-    const userID = getUserID(token);
-    if (!userID) return res.status(401).send("Unauthorized!");
+    const userId = getUserID(token);
+    console.log(`The user ID is ${userId}`);
+    if (!userId) return res.status(401).send("Unauthorized!");
 
-    console.log(userID);
-    console.log("Got to this point");
+    
 
     try {
-      const { userId, postTitle, postBody } = req.body;
+      const {  postTitle, postBody } = req.body;
+      const {error} = validatePost(req.body)
+      if(error) return res.status(400).send(error.details[0].message)
       const newPost = await Post.create({
         userId,
         postTitle,
