@@ -63,7 +63,15 @@ const Profile = () => {
           <main className={styles.profile}>
             <ProfileCard />
 
-            {Components[path as unknown as string]}
+            {path !== "about" &&
+            path !== "timeline" &&
+            path !== "bookmarks" &&
+            path !== "media" &&
+            path !== "friends"
+              ? Components["timeline"]
+              : Components[path as unknown as string]}
+
+            {/* {Components[path as unknown as string]} */}
           </main>
         </div>
       </Container>

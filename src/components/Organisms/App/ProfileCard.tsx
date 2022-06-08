@@ -41,6 +41,7 @@ const ProfileCard = () => {
           className="top-0 position-absolute"
           style={{
             transform: "translateY(-70%)",
+            border: "2px solid black",
           }}
           roundedCircle
         />
