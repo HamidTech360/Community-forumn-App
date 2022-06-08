@@ -5,7 +5,7 @@ export interface IPayload {
 }
 
 export const generateAccessToken = (payload: IPayload) => {
-  return jwt.sign(payload, process.env.JWT_SECRET || "", { expiresIn: "10m" });
+  return jwt.sign(payload, process.env.JWT_SECRET || "", { expiresIn: "50m" });
 };
 
 export const generateRefreshToken = (payload: IPayload) => {
