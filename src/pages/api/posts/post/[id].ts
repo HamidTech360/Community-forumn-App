@@ -3,6 +3,7 @@ import Post from '@/models/post';
 import dbConnect from "@/lib/mongo";
 import getUserID from "@/utils/get-userID";
 import { NextApiRequest, NextApiResponse } from "next";
+import { validatePost } from '@/validators/post';
 
 const handler = async (req:NextApiRequest, res:NextApiResponse)=>{
     await dbConnect()
@@ -25,6 +26,8 @@ const handler = async (req:NextApiRequest, res:NextApiResponse)=>{
         }
     }else if (req.method === "PUT"){
         const {postTitle, postBody} = req.body
+        const {error} = validatePost(req.body)
+        if(error) return res.status(401).send(error.details[0].message)
         try{
             await Post.findByIdAndUpdate(postId, {
                 postTitle, postBody
