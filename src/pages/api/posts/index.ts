@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "@/lib/mongo";
 import getUserID from "@/utils/get-userID";
+import {validatePost} from '../../../validators/post'
 
 import Post from "@/models/post";
 
@@ -17,6 +18,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
       const {  postTitle, postBody } = req.body;
+      const {error} = validatePost(req.body)
+      if(error) return res.status(400).send(error.details[0].message)
       const newPost = await Post.create({
         userId,
         postTitle,
