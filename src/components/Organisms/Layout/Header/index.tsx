@@ -1,12 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 
-import React, { ReactPropTypes, useEffect } from "react";
+import React, { ReactPropTypes, useEffect, useState } from "react";
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import Logo from "@/components/Atoms/Logo";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import { FiMenu } from'react-icons/fi'
+import { FiMenu } from'react-icons/fi';
+import {AiOutlineClose} from 'react-icons/ai';
 import AuthHeader from "./AuthHeader";
 
 import useUser from "@/hooks/useUser";
@@ -22,6 +23,12 @@ const Header = () => {
   const router = useRouter();
   const activePage = router.pathname;
   const { isAuthenticated, user } = useUser();
+  const [ isMobile, setIsMobile ] = useState(false)
+
+  const handleClick = () => {
+    setIsMobile(!isMobile)
+} 
+
 
   const disabled = [
     "/login",
@@ -52,12 +59,12 @@ const Header = () => {
               </Navbar.Brand>
             </Link>
 
-            <Navbar.Toggle aria-controls="basic-navbar-nav" className = 'ham-menu'>
-              <FiMenu color="#207681" />
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" className = 'ham-menu' onClick={handleClick}>
+                    {isMobile ? <AiOutlineClose color="#207681"/> :  <FiMenu color="#207681" />}
             </Navbar.Toggle>
 
             {!disabled.includes(activePage) && (
-              <Navbar.Collapse id="basic-navbar-nav" className=" gap-4">
+              <Navbar.Collapse id="responsive-navbar-nav" className=" gap-4">
                 <Nav className="mx-auto  gap-5">
                   {links.map((link, index) => (
                     <Nav.Item

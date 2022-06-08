@@ -662,8 +662,8 @@ progress {
 .container-md,
 .container-sm {
   width: 100%;
-  padding-right: var(--bs-gutter-x, 0.75rem);
-  padding-left: var(--bs-gutter-x, 0.75rem);
+  /* padding-right: var(--bs-gutter-x, 0.75rem); */
+  /* padding-left: var(--bs-gutter-x, 0.75rem); */
   margin-right: auto;
   margin-left: auto;
 }
@@ -671,14 +671,14 @@ progress {
 @media (min-width: 576px) {
   .container-sm,
   .container {
-    max-width: 540px;
+    max-width: 90%;
   }
 }
 @media (min-width: 768px) {
   .container-md,
   .container-sm,
   .container {
-    max-width: 720px;
+    max-width: 90%;
   }
 }
 @media (min-width: 992px) {
@@ -686,7 +686,7 @@ progress {
   .container-md,
   .container-sm,
   .container {
-    max-width: 960px;
+    max-width: 90%;
   }
 }
 @media (min-width: 1200px) {
@@ -705,7 +705,7 @@ progress {
   .container-md,
   .container-sm,
   .container {
-    max-width: 1320px;
+    max-width: 90%;
   }
 }
 .row {
@@ -7474,13 +7474,13 @@ fieldset:disabled .btn {
   gap: 3rem !important;
 }
 
-.image2 {
+.image3 {
   object-fit: cover;
   height: 170px;
 }
 
 @media screen and (max-width: 1024px) {
-  .image2 {
+  .image3 {
     height: 150px;
   }
 }
@@ -7872,6 +7872,7 @@ fieldset:disabled .btn {
 .ms-auto {
   margin-left: auto !important;
 }
+
 
 .p-0 {
   padding: 0 !important;

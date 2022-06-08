@@ -9,7 +9,7 @@ const Footer = () => {
   return (
     <>
       {!isAuthenticated ? (
-        <div className="footer mt-5">
+        <div className="footer mt-5 fixed-bottom">
           <Container>
             <Row className="px-3">
               <Col md={3} xs={6}>
@@ -60,7 +60,7 @@ const Footer = () => {
         </div>
       ) : (
         <footer
-          className="mt-5 p-3 position-relative"
+          className="mt-5 p-3 position-relative fixed-bottom shadow"
           style={{ backgroundColor: "#ffffff", zIndex: "9" }}
         >
           <Container>
