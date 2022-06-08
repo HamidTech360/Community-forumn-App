@@ -9,14 +9,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method == "POST") {
     const token = req.headers.authorization?.split(" ")[1] || "";
-    const userID = getUserID(token);
-    if (!userID) return res.status(401).send("Unauthorized!");
+    const userId = getUserID(token);
+    console.log(`The user ID is ${userId}`);
+    if (!userId) return res.status(401).send("Unauthorized!");
 
-    console.log(userID);
-    console.log("Got to this point");
+    
 
     try {
-      const { userId, postTitle, postBody } = req.body;
+      const {  postTitle, postBody } = req.body;
       const newPost = await Post.create({
         userId,
         postTitle,
