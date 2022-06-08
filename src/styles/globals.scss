@@ -285,6 +285,11 @@ nav {
 
 section {
   padding: 2rem 0;
+
+  @media screen and (max-width: 994px){
+    padding: 1rem 0;
+
+  }
 }
 
 .carousel_item {

@@ -15,9 +15,12 @@ const Discussions = () => {
   return (
     <Card
       style={{ border: "none", overflowY: "scroll", height: "80vh" }}
-      className="p-2 mb-4"
+      className="pb-5 mb-4"
     >
-      <Card.Header className="d-flex justify-content-between gap-2 align-items-center bg-white">
+      <Card.Header
+        className="d-flex justify-content-between gap-2 align-items-center bg-white shadow-sm sticky-top"
+        style={{ fontSize: "14px" }}
+      >
         <span className="bold">Active discussions</span>
         <small className="text-bold text-primary">See more</small>
       </Card.Header>
