@@ -5,13 +5,11 @@ const getUserID = (token: string) => {
 
   try {
     const payload: any = verify(token, process.env.JWT_SECRET || "");
-    console.log(`payload is ${payload.sub}`);
-    if(!payload.sub) throw new Error ('Invalid token supplied')
-    
     return payload.sub;
   } catch (error) {
     if (error instanceof Error) {
-      return error.message;
+      console.log(error.message);     
+      return null;
     }
   }
 };
