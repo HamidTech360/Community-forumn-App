@@ -46,7 +46,7 @@ const Media = () => {
             src={`/images/${
               i + 1 >= 1 && i + 1 <= 4 ? `masonry${i + 1}.png` : item.image
             }`}
-            className={`${styles.image}`}
+            className={`${styles.image} shadow`}
             height={100}
             width={130}
             alt="placeholder"
