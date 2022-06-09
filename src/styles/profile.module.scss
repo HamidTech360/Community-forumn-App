@@ -1,0 +1,24 @@
+.div{
+    
+    @media screen and (max-width: 599px) {
+        width: 90%;
+        line-height: 1rem;
+    }
+
+}
+.dropdown {
+
+    .item{
+        @media screen and(max-width: 800px){
+            font-size: small;
+        }
+
+        @media screen and(max-width: 700px){
+            font-size: smaller;
+        }
+
+        @media screen and(max-width: 500px){
+            font-size: x-small;
+        }
+    }
+}

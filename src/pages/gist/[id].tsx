@@ -4,6 +4,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import Comment from "../../components/Organisms/App/Comment";
 import Contributors from "../../components/Organisms/Gist/Contributors";
 import GistCard from "../../components/Organisms/Gist/GistCard";
+import styles from '@/styles/gist.module.scss';
 const Gist = ({
   gist,
   replies,
@@ -33,7 +34,7 @@ const Gist = ({
         </Col>
         <Col md={8}>
           <GistCard gist={gist} primary />
-          <h5 className="px-2 m-2">Comments({replies?.length || "0"})</h5>
+          <h5 className={`px-2 m-2 ${styles.comment}`}>Comments({replies?.length || "0"})</h5>
           <div className="mt-2">
             {replies?.map((reply, key) => (
               <Comment comment={reply} key={`comment-${key}`} />
