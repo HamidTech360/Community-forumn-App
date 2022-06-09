@@ -41,29 +41,35 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
           </EndlessCarousel>
         </div>
         <Row className="mt-5">
-          <Col md={4} className="desktop-only">
-            <BCard
-              className={`py-4 px-5 justify-content-center ${styles.wrapper}`}
-            >
-              <h5>Browse categories</h5>
+          <Col md={3} className="desktop-only">
+            <BCard className={`pt-1 px-1 shadow-sm ${styles.wrapper}`}>
+              <BCard.Header className="shadow-sm border-0">
+                <h5>Browse categories</h5>
+              </BCard.Header>
 
-              <p style={{ listStyleType: "none" }}>
-                {[1, 2, 3, 4, 5].map((item, key) => (
-                  <li key={`category-${key}`}>Lorem, ipsum.</li>
-                ))}
-              </p>
+              <BCard.Body className="mt-3 shadow">
+                <p style={{ listStyleType: "none" }}>
+                  {[1, 2, 3, 4, 5].map((item, key) => (
+                    <li key={`category-${key}`}>Lorem, ipsum - {key}.</li>
+                  ))}
+                </p>
+              </BCard.Body>
             </BCard>
           </Col>
-          <Col md={8} className={styles.cards}>
-            <div className="d-flex justify-content-between">
-              <h2>New Gists</h2>
-              <select className="outline-primary">
-                <option>Canada</option>
-              </select>
-            </div>
-            {gists.map((post, key) => (
-              <GistCard gist={post} key={`gist-${key}`} />
-            ))}
+          <Col md={9} className={styles.cards}>
+            <BCard.Header className="shadow-sm border-0">
+              <div className="d-flex justify-content-between">
+                <h2>New Gists</h2>
+                <select className="outline-primary">
+                  <option>Canada</option>
+                </select>
+              </div>
+            </BCard.Header>
+            <BCard.Body className={styles.cardBody}>
+              {gists.map((post, key) => (
+                <GistCard gist={post} key={`gist-${key}`} />
+              ))}
+            </BCard.Body>
           </Col>
         </Row>
       </Container>

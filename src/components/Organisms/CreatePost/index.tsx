@@ -24,7 +24,7 @@ const CreatePost = () => {
               style={{ width: "100%" }}
               placeholder={`Hey ${
                 user?.firstName.split(" ")[0]
-              }, wanna say something?`}
+              }! wanna say something?`}
             />
           </Form>
         </>
