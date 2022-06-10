@@ -8,6 +8,7 @@ import {
   NavDropdown,
   Image,
   Button,
+  Badge,
 } from "react-bootstrap";
 import useUser from "@/hooks/useUser";
 
@@ -60,9 +61,9 @@ const AuthHeader = () => {
             ))}
           </Nav>
           <div className="notifications d-flex  gap-2">
-            <NavDropdown
-              title={
-                <Button
+          <Link href="/chat">
+          <Button
+                className="position-relative"
                   style={{
                     width: 35,
                     height: 35,
@@ -72,14 +73,15 @@ const AuthHeader = () => {
                   }}
                 >
                   <Image src="/assets/icons/message.svg" alt="" fluid />
+                  <Badge bg="danger" className="position-absolute end-0 top-0">3</Badge>
                 </Button>
-              }
-            >
-              hello
-            </NavDropdown>
-            <NavDropdown
-              title={
-                <Button
+          </Link>
+               
+              
+     
+     <Link href="/notifications">
+     <Button
+                className="position-relative"
                   style={{
                     width: 35,
                     height: 35,
@@ -88,14 +90,15 @@ const AuthHeader = () => {
                     border: "none",
                   }}
                 >
+                  
                   <Image src="/assets/icons/notification.svg" alt="" fluid />
+                  <Badge bg="warning" className="position-absolute end-0 top-0">3</Badge>
                 </Button>
-              }
-            >
-              <NavDropdown.Item>
-                <Link href="/notifications">See all</Link>
-              </NavDropdown.Item>
-            </NavDropdown>
+     </Link>
+          
+              
+              
+          
           </div>
           <NavDropdown
             className="d-none d-md-block "
