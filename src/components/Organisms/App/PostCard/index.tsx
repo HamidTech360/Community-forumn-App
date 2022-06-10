@@ -7,6 +7,7 @@ import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
 import { BsFolderFill, BsXCircleFill } from "react-icons/bs";
 
 import Age from "../../../Atoms/Age";
+import styles from '@/styles/profile.module.scss'
 
 const PostCard = ({
   post,
@@ -54,17 +55,18 @@ const PostCard = ({
           roundedCircle
         />
         <div className="d-flex flex-column">
-          <small
-            style={{ fontSize: "0.8rem" }}
-            dangerouslySetInnerHTML={{ __html: post?.title }}
-          />
-          <span
-            style={{ fontSize: "0.7rem", color: "gray", marginTop: ".5rem" }}
-          >
-            <Age time={post?.date} />
-          </span>
+          <div className = { styles.div}>
+            <small
+              style={{ fontSize: "0.8rem" }}
+              dangerouslySetInnerHTML={{ __html: post?.title }}
+            />
+            <span style={{ fontSize: "0.9rem" }}>
+               <Age time={post?.date} />
+            </span>
+          </div>
+
           <NavDropdown
-            className="position-absolute end-0"
+            className={`position-absolute end-0 ${ styles.dropdown}`}
             drop="down"
             title={
               <Button variant="light" size="sm" className="dot-btn">
@@ -78,7 +80,7 @@ const PostCard = ({
             <NavDropdown.Item>
               <BsFolderFill /> &nbsp; Open Post
             </NavDropdown.Item>
-            <NavDropdown.Item>
+            <NavDropdown.Item className = {styles.item}>
               {" "}
               <RiFlagFill /> &nbsp; Report post
             </NavDropdown.Item>

@@ -36,7 +36,7 @@ const Media = () => {
     },
   ];
   return (
-    <div className="row d-flex justify-content-start justify-content-sm-evenly">
+    <div className={`row d-flex justify-content-start justify-content-sm-evenly ${styles.media}`}>
       {imageList.map((item, i) => (
         <div
           key={i}
