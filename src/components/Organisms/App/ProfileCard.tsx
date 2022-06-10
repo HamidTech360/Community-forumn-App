@@ -30,8 +30,7 @@ const ProfileCard = () => {
     <Card className="mt-2 mb-3">
       <CardImg
         src="/images/formbg.png"
-        height={200}
-        style={{ objectFit: "cover" }}
+        className="image3"
       />
       <Card.Body className="d-flex position-relative justify-content-center align-items-center flex-column ">
         <Image
@@ -42,6 +41,7 @@ const ProfileCard = () => {
           className="top-0 position-absolute"
           style={{
             transform: "translateY(-70%)",
+            border: "2px solid black",
           }}
           roundedCircle
         />

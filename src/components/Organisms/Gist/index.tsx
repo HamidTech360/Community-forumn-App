@@ -3,13 +3,15 @@ import PropTypes from "prop-types";
 import { Card as BCard } from "react-bootstrap";
 import Link from "next/link";
 
+import { BsChevronDoubleRight } from "react-icons/bs";
+
 const Card = ({ image, title, author, id }: Record<string, any>) => {
   return (
     <>
       <BCard
         style={{
           width: "261px",
-          minHeight: "280px",
+          height: "300px",
         }}
       >
         <BCard.Img
@@ -17,7 +19,6 @@ const Card = ({ image, title, author, id }: Record<string, any>) => {
           alt={title.raw}
           style={{
             height: "130px",
-
             objectFit: "cover",
           }}
         />
@@ -25,15 +26,23 @@ const Card = ({ image, title, author, id }: Record<string, any>) => {
         <div className="text px-3 pt-2">
           <h4
             className="text-primary"
-            style={{ textTransform: "capitalize", fontSize: "1.2rem" }}
+            style={{ textTransform: "capitalize", fontSize: "1rem" }}
           >
             {title.raw.replace("&amp;", "&")}
           </h4>
-          <span className="text-muted">by &nbsp;{author}</span>
+          <span
+            className="text-muted"
+            style={{ fontSize: ".8rem", marginTop: "-5rem" }}
+          >
+            by &nbsp;{author}
+          </span>
         </div>
         <Link href={`/gist/${id}`} passHref>
-          <span className="d-flex mt-2 justify-content-end text-primary absolute bottom-0">
-            Read More &nbsp; <i className="bi bi-chevron-double-right"></i>
+          <span
+            className="d-flex btn mt-auto mb-4 me-2 justify-content-end text-primary absolute bottom-0"
+            style={{ fontSize: ".9rem" }}
+          >
+            Read More &nbsp; <BsChevronDoubleRight className="mt-1" />
           </span>
         </Link>
       </BCard>

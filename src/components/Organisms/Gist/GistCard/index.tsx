@@ -1,9 +1,12 @@
 import React from "react";
 import timeAge from "time-age";
 import { Button, Card, Col, Row, Image } from "react-bootstrap";
+import { BsBookmarkDash } from "react-icons/bs";
 import Link from "next/link";
 import Age from "../../../Atoms/Age";
 import striptags from "striptags";
+import { DirectiveLocation } from "graphql";
+import styles from "@/styles/gist.module.scss";
 // interface IGist {
 //   gist: {
 //     author: {
@@ -23,58 +26,61 @@ const GistCard = ({
   primary?: boolean;
 }) => {
   return (
-    <div>
-      <Card
-        className="mt-4 p-3"
-        style={{
-          border: "none",
-          borderRadius: "10px",
+    <Card
+      className="mt-4 p-3 shadow-sm"
+      style={{
+        border: "none",
+        borderRadius: "10px",
+        marginLeft: "-.4rem",
+        marginRight: "-.2rem",
+      }}
+    >
+      <div className="row d-flex flex-row mb-0 mb-md-2">
+        <div className="col-1 me-3 pt-2 pt-md-3 align-items-center">
+          <Image
+            src={gist?._embedded?.user[0]?.avatar_urls?.full}
+            width={50}
+            height={50}
+            alt="Avatar"
+            roundedCircle
+            className={styles.img}
+          />
+        </div>
+        <div className={`col-9 col-sm-10 col-md-7 ${styles.div}`}>
+          <small className="text-secondary">
+            Started by {gist?._embedded?.user[0].name}
+          </small>
+          <br />
+          <h5 className={`text-primary mt-1 ${styles.title}`}>
+            {gist?.title.raw.replace("&amp;", "&")}
+          </h5>
+        </div>
+        <div className="col-12 col-md-3 ms-5 ms-md-auto mb-2 text-muted">
+          <small className={`d-flex ${styles.time}`}>
+            <Age time={gist?.date} /> <BsBookmarkDash className="ms-2" />
+          </small>
+        </div>
+      </div>
+      <Card.Body
+        dangerouslySetInnerHTML={{
+          __html: striptags(
+            gist?.content.raw,
+            "<a> <b> <em> <p> <strong> <i>"
+          ).slice(0, 500),
         }}
-      >
-        <Row className="d-flex align-items-center">
-          <Col xs={2}  className="ps-2">
-            <Image
-              src={gist?._embedded?.user[0]?.avatar_urls?.full}
-              width={50}
-              height={50}
-              alt="Avatar"
-              roundedCircle
-            />
-          </Col>
-          <Col xs={7}  className="ps-3">
-            <small>Started by {gist?._embedded?.user[0].name}</small>
-            <br />
-            <h5 className="text-primary">
-              {gist?.title.raw.replace("&amp;", "&")}
-            </h5>
-          </Col>
-          <Col xs={3}>
-            <small className="d-flex gap-1">
-              <Age time={gist?.date} /> <i className="bi bi-bookmark-dash" />
-            </small>
-          </Col>
-        </Row>
-        <Card.Body
-          dangerouslySetInnerHTML={{
-            __html: striptags(
-              gist?.content.raw,
-              "<a> <b> <em> <p> <strong> <i>"
-            ).slice(0, 500),
-          }}
-          style={{
-            marginTop: "-1rem",
-            lineHeight: "1.3rem",
-          }}
-        />
-        {!primary && (
-          <div className="d-flex ml-auto justify-content-end mt-2">
-            <Link href={`/gist/${gist.id}`} passHref>
-              <Button variant="primary">Join conversation</Button>
-            </Link>
-          </div>
-        )}
-      </Card>
-    </div>
+        style={{
+          marginTop: "-1rem",
+          lineHeight: "1.3rem",
+        }}
+      />
+      {!primary && (
+        <div className="d-flex justify-content-end mt-2">
+          <Link href={`/gist/${gist.id}`} passHref>
+            <Button variant="primary">Join conversation</Button>
+          </Link>
+        </div>
+      )}
+    </Card>
   );
 };
 

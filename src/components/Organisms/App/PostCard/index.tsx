@@ -2,8 +2,12 @@ import Link from "next/link";
 import strip from "striptags";
 import React from "react";
 import { Button, Card, Dropdown, Image, NavDropdown } from "react-bootstrap";
-import { HiDotsVertical } from 'react-icons/hi'
+import { HiDotsVertical } from "react-icons/hi";
+import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
+import { BsFolderFill, BsXCircleFill } from "react-icons/bs";
+
 import Age from "../../../Atoms/Age";
+import styles from '@/styles/profile.module.scss'
 
 const PostCard = ({
   post,
@@ -31,8 +35,18 @@ const PostCard = ({
     },
   ];
   return (
-    <Card id={post?.id} className="my-3 post-card cards" style={{ border: "none" }}>
-      <Card.Title className="position-relative mx-2 d-flex justify-content-start gap-2 p-2 border-bottom">
+    <Card
+      id={post?.id}
+      className="my-3 cards"
+      style={{
+        border: "none",
+        // padding: "-3rem",
+      }}
+    >
+      <Card.Title
+        className="position-relative d-flex justify-content-start gap-2 pb-2 border-bottom"
+        style={{ marginLeft: "-1rem" }}
+      >
         <Image
           src={post?.user_avatar?.full}
           width={45}
@@ -41,34 +55,37 @@ const PostCard = ({
           roundedCircle
         />
         <div className="d-flex flex-column">
-          <small
-            style={{ fontSize: "0.8rem" }}
-            dangerouslySetInnerHTML={{ __html: post?.title }}
-          />
-          <span style={{ fontSize: "0.9rem" }}>
-            <Age time={post?.date} />
-          </span>
+          <div className = { styles.div}>
+            <small
+              style={{ fontSize: "0.8rem" }}
+              dangerouslySetInnerHTML={{ __html: post?.title }}
+            />
+            <span style={{ fontSize: "0.9rem" }}>
+               <Age time={post?.date} />
+            </span>
+          </div>
+
           <NavDropdown
-            className="position-absolute end-0"
+            className={`position-absolute end-0 ${ styles.dropdown}`}
             drop="down"
             title={
-              <Button variant="light" size="sm" className='dot-btn'>
-               <HiDotsVertical />
+              <Button variant="light" size="sm" className="dot-btn">
+                <HiDotsVertical />
               </Button>
             }
           >
             <NavDropdown.Item>
-              <i className="bi bi-clipboard-fill" /> &nbsp; Copy post link
+              <RiClipboardFill /> &nbsp; Copy post link
             </NavDropdown.Item>
             <NavDropdown.Item>
-              <i className="bi bi-folder-fill" /> &nbsp; Open Post
+              <BsFolderFill /> &nbsp; Open Post
             </NavDropdown.Item>
-            <NavDropdown.Item>
+            <NavDropdown.Item className = {styles.item}>
               {" "}
-              <i className="bi bi-flag-fill" /> &nbsp; Report post
+              <RiFlagFill /> &nbsp; Report post
             </NavDropdown.Item>
             <NavDropdown.Item>
-              <i className="bi bi-x-circle-fill" /> &nbsp; Unfollow &nbsp;
+              <BsXCircleFill /> &nbsp; Unfollow &nbsp;
               {post.name.split(" ")[0]}
             </NavDropdown.Item>
           </NavDropdown>
@@ -77,6 +94,8 @@ const PostCard = ({
       <Card.Body
         style={{
           cursor: "pointer",
+          marginLeft: "-1.8rem",
+          marginRight: "-1.8rem",
         }}
       >
         <div
@@ -112,7 +131,7 @@ const PostCard = ({
               alt=""
               width={20}
               height={20}
-              className = 'post-img'
+              // className="post-img"
             />
             <span className="d-none d-md-block">{item.name}</span>
           </Button>

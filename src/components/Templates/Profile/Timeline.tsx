@@ -5,11 +5,11 @@ import PostCard from "../../Organisms/App/PostCard";
 import CreatePost from "../../Organisms/CreatePost";
 
 const Timeline = () => {
-  const [scrollInitialised, setScrollInitialised] = useState(false);
+  const [scrollInitialized, setScrollInitialized] = useState(false);
   const { posts, setPage, hasMore, isFetchingMore } = usePagination();
   const checkScroll = () => {
     if (window.scrollY > 100) {
-      setScrollInitialised(true);
+      setScrollInitialized(true);
     }
   };
 
@@ -43,15 +43,15 @@ const Timeline = () => {
       if (targetItem) observer.unobserve(targetItem);
       observer.disconnect();
     };
-  }, [posts, scrollInitialised, setPage]);
+  }, [posts, scrollInitialized, setPage]);
 
   return (
     <div>
       <CreatePost />
       <div
-        id="instersection"
+        id="intersection"
         style={{
-          height: "30vh",
+          height: "10vh",
           width: "100%",
           position: "fixed",
           bottom: 0,

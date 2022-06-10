@@ -13,8 +13,9 @@ function ChatBubble(message, index) {
         style={{
           width: "28%",
           height: "auto",
+          fontSize: "11px",
         }}
-        className={messagingStyle2}
+        className={`${messagingStyle2} text-secondary`}
       >
         {message.dateTime}
       </div>
