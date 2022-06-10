@@ -74,6 +74,7 @@
 
 }
 .time{
+  
   @media screen and (max-width:800px){
     font-size:smaller;
   }
@@ -87,4 +88,17 @@
   }
 }
 
+.comment{
+  @media screen and (max-width: 1000px){
+    font-size: large;
+  }
+
+  @media screen and (max-width: 600px){
+    font-size: medium;
+  }
+
+  @media screen and (max-width: 400px){
+    font-size: small;
+  }
+}
 

@@ -3826,7 +3826,7 @@ fieldset:disabled .btn {
   position: absolute;
   z-index: 1000;
   display: none;
-  min-width: 10rem;
+  /* min-width: 10rem; */
   padding: 0.5rem 0;
   margin: 0;
   font-size: 1rem;
@@ -4061,6 +4061,18 @@ fieldset:disabled .btn {
 
 .dropdown-menu.show {
   display: block;
+}
+
+@media screen and (max-width: 500px){
+  .dropdown-menu.show{
+    max-width: 7rem !important;
+  }
+}
+
+@media screen and (max-width: 400px){
+  .dropdown-menu.show{
+    max-width: 7.5rem !important;
+  }
 }
 
 .dropdown-header {
@@ -4836,6 +4848,9 @@ fieldset:disabled .btn {
 }
 
 @media screen and (max-width: 500px) {
+  .card-body{
+    padding: 1rem 0.5rem;
+  }
   .card-body > p {
     font-size: small !important;
   }
@@ -4848,6 +4863,29 @@ fieldset:disabled .btn {
 .card-subtitle {
   margin-top: -0.25rem;
   margin-bottom: 0;
+}
+
+@media screen and (max-width: 800px){
+  .card-title{
+    margin:  auto -1rem !important;
+  }
+
+  .card-title{
+    margin: auto !important;
+  }
+
+  .card-subtitle.h6{
+    margin-top: 0.7rem;
+  }
+}
+@media screen and (max-width: 500px){
+  .card-title{
+    margin: 1rem -1rem !important;
+  }
+
+  .card-subtitle.h6{
+    margin-top: 0.2rem;
+  }
 }
 
 .card-text:last-child {
@@ -5184,7 +5222,7 @@ fieldset:disabled .btn {
 
 .badge {
   display: inline-block;
-  padding: 0.35em 0.65em;
+  padding: 0.45em 0.65em;
   font-size: 0.75em;
   font-weight: 700;
   line-height: 1;
