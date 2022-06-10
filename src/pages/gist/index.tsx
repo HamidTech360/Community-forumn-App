@@ -16,14 +16,14 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   }, []);
 
   return (
-    <section className={styles.gist}>
+    <section className={styles.gist} style={{ marginBottom: "-2.4rem" }}>
       <Head>
         <title>Gists</title>
       </Head>
       <h1 className="d-flex justify-content-center align-center">Gist</h1>
       <Container>
         <h2>Popular Gists</h2>
-        <div className={` ${styles.cards}`}>
+        <div>
           <EndlessCarousel gap="mx-auto">
             {gists?.map((post, key) => (
               <Card
@@ -42,12 +42,15 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         </div>
         <Row className="mt-5">
           <Col md={3} className="desktop-only">
-            <BCard className={`pt-1 px-1 shadow-sm ${styles.wrapper}`}>
+            <BCard
+              className={`pt-1 px-1 shadow-sm ${styles.wrapper}`}
+              style={{ position: "sticky", top: "5rem" }}
+            >
               <BCard.Header className="shadow-sm border-0">
                 <h5>Browse categories</h5>
               </BCard.Header>
 
-              <BCard.Body className="mt-3 shadow">
+              <BCard.Body className="mt-3">
                 <p style={{ listStyleType: "none" }}>
                   {[1, 2, 3, 4, 5].map((item, key) => (
                     <li key={`category-${key}`}>Lorem, ipsum - {key}.</li>
@@ -56,7 +59,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
               </BCard.Body>
             </BCard>
           </Col>
-          <Col md={9} className={styles.cards}>
+          <Col md={9}>
             <BCard.Header className="shadow-sm border-0">
               <div className="d-flex justify-content-between">
                 <h2>New Gists</h2>

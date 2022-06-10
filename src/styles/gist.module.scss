@@ -17,28 +17,15 @@
 
   .wrapper {
     border: none;
-    height: 100vh;
     justify-content: start !important;
     position: static;
   }
 }
 
-.cards {
-  max-height: 100vh;
-  min-height: 20vh;
-  position: static;
-
-  .cardBody {
-    overflow-y: scroll;
-    height: 94vh;
-    position: static;
-  }
-
-  .ul {
-    .li {
-      .div {
-        border: none;
-      }
+.ul {
+  .li {
+    .div {
+      border: none;
     }
   }
 }
