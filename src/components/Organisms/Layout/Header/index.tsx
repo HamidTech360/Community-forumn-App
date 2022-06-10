@@ -75,7 +75,9 @@ const Header = () => {
                     </Nav.Item>
                   ))}
 
-                  <div className="buttons d-flex align-items-center gap-3 justify-content-center">
+                  
+                </Nav>
+                <div className="buttons ms-auto d-flex mt-lg-3 align-items-center gap-3 justify-content-center">
                     <Nav.Item as={Link} href="/login">
                       <Button variant="outline-primary">Sign In</Button>
                     </Nav.Item>
@@ -83,7 +85,6 @@ const Header = () => {
                       <Button variant="primary">Register</Button>
                     </Nav.Item>
                   </div>
-                </Nav>
               </Navbar.Collapse>
             )}
           </Container>
