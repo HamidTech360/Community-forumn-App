@@ -1,7 +1,7 @@
 import useUser from "@/hooks/useUser";
 import React from "react";
 import { Col, Container, Image, Nav, Row } from "react-bootstrap";
-import useAuth from "../../../../hooks/useAuth";
+
 import Logo from "../../../Atoms/Logo";
 
 const Footer = () => {

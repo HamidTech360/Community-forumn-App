@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { Button, Container, Form, Image } from "react-bootstrap";
-import { SEND_PASSWORD_RESET_EMAIL } from "../queries/auth";
+
 const ForgotPassword = () => {
   
   //to review

@@ -6,7 +6,7 @@ import {store} from "@/redux/store"
 import Header from "../components/Organisms/Layout/Header";
 import Footer from "../components/Organisms/Layout/Footer";
 
-import client from "../utils/apollo-client";
+
 
 
 function MyApp({ Component, pageProps }: AppProps) {
