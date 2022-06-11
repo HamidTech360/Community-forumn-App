@@ -282,8 +282,8 @@ const Chat = () => {
 
   return (
     <AuthContent>
-      <Container fluid style={{ marginBottom: "-3rem" }}>
-        <div className="row shadow">
+      <Container className="mt-5"  >
+        <div className="row shadow" style={{  minHeight: "80vh" }}>
           {/* SideBar */}
           <div ref={mainSidebar} className="d-md-block col-12 col-md-4 shadow">
             <div className="row my-4 mx-1">
@@ -321,7 +321,7 @@ const Chat = () => {
                 <div
                   id="toggleMessagingBody"
                   style={{
-                    height: "28.3rem",
+                    height: "80vh",
                     overflowY: "scroll",
                     overflowX: "hidden",
                   }}
