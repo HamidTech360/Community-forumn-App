@@ -20,6 +20,7 @@ export interface IUserSchema extends Document {
   address: IAddress;
   status: string;
   confirmationCode: string;
+  deleted:Boolean
 }
 
 const userSchema = new Schema<IUserSchema>({
@@ -76,6 +77,10 @@ const userSchema = new Schema<IUserSchema>({
     type: String,
     required: true,
   },
+  deleted:{
+    type:Boolean,
+    default:false
+  }
 });
 
 userSchema.pre("save", async function (next) {

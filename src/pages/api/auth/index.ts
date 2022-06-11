@@ -30,7 +30,10 @@ export default async function handler(
           message: `User with email ${email} does not exist`,
           key: "email",
         });
-      } else if (!(await user.matchPassword(password))) {
+      } else if(user.deleted==true){
+          return res.status(400).json({message:'User account has been deleted'})
+      }
+      else if (!(await user.matchPassword(password))) {
         return res
           .status(400)
           .json({ message: "Password is incorrect", key: "password" });
@@ -68,6 +71,7 @@ export default async function handler(
       const user = await User.findById(userID).select("-password");
 
       if (!user) return res.status(400).end("User not found");
+      if(user.deleted==true) return res.status(400).send('User has been deleted')
 
       res.json(user);
     } catch (error) {
