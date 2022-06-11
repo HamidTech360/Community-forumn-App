@@ -28,6 +28,8 @@ const Chat = () => {
 
   const unreadChat = useRef();
   const readChat = useRef();
+  const mainDisplay = useRef();
+  const mainSidebar = useRef();
 
   useEffect(() => {
     // Focus Unread Message
@@ -50,8 +52,8 @@ const Chat = () => {
 
   const backToSideMessages = (e) => {
     if (window.innerWidth < 768) {
-      document.querySelector("#mainDisplay").classList.add("d-none");
-      document.querySelector("#mainSidebar").classList.remove("d-none");
+      mainDisplay.current.classList.add("d-none");
+      mainSidebar.current.classList.remove("d-none");
     }
   };
 
@@ -60,22 +62,22 @@ const Chat = () => {
 
     // Mid Point Display (using Bootstrap d-md-block)
     if (window.innerWidth < 768) {
-      document.querySelector("#mainDisplay").classList.remove("d-none");
-      document.querySelector("#mainSidebar").classList.add("d-none");
+      mainDisplay.current.classList.remove("d-none");
+      mainSidebar.current.classList.add("d-none");
     } else if (window.innerWidth >= 768) {
-      document.querySelector("#mainDisplay").classList.remove("d-none");
-      document.querySelector("#mainSidebar").classList.remove("d-none");
+      mainDisplay.current.classList.remove("d-none");
+      mainSidebar.current.classList.remove("d-none");
     }
   };
 
   const startChattingWith = (e) => {
     // Mid Point Display (using Bootstrap d-md-block)
     if (window.innerWidth < 768) {
-      document.querySelector("#mainDisplay").classList.remove("d-none");
-      document.querySelector("#mainSidebar").classList.add("d-none");
+      mainDisplay.current.classList.remove("d-none");
+      mainSidebar.current.classList.add("d-none");
     } else if (window.innerWidth >= 768) {
-      document.querySelector("#mainDisplay").classList.remove("d-none");
-      document.querySelector("#mainSidebar").classList.remove("d-none");
+      mainDisplay.current.classList.remove("d-none");
+      mainSidebar.current.classList.remove("d-none");
     }
 
     // get data of custom attribute
@@ -283,7 +285,7 @@ const Chat = () => {
       <Container fluid style={{ marginBottom: "-3rem" }}>
         <div className="row shadow">
           {/* SideBar */}
-          <div id="mainSidebar" className="d-md-block col-12 col-md-4 shadow">
+          <div ref={mainSidebar} className="d-md-block col-12 col-md-4 shadow">
             <div className="row my-4 mx-1">
               <div className="col-8">
                 <h4>Messages</h4>
@@ -447,7 +449,7 @@ const Chat = () => {
 
           {/* Main Display */}
           <div
-            id="mainDisplay"
+            ref={mainDisplay}
             className="d-none d-md-block col-12 col-md-8 shadow"
             style={{
               height: "33.8em",
