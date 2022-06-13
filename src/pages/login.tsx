@@ -77,15 +77,14 @@ const Login = () => {
       if (axios.isAxiosError(error)) {
         const serverError = error as AxiosError;
         if (serverError.response) {
-          console.log(serverError.response.data);
           // setMessage(serverError.response.data.message as unknown as string);
           let returnedErrorKey = serverError.response.data.key;
-         if (serverError.response.data === "Something went wrong") {
+          if (serverError.response.data === "Something went wrong") {
             setMessage({
               message: "Check Your Network Connection",
               variant: "danger",
             });
-          }else{
+          } else {
             setMessage({
               message: serverError.response.data.message,
               variant: "danger",

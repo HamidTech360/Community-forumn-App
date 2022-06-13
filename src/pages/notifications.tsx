@@ -2,9 +2,12 @@
 import AuthContent from "@/components/Auth/AuthContent";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
-import { GoPrimitiveDot } from "react-icons/go";
 import styles from "../styles/notifications.module.css";
 import { dummyData } from "@/components/notifications/dummyData";
+import NotificationRender from "@/components/notifications/notificationRender";
+
+import { useDispatch } from "@/redux/store";
+import { notificationsOffcanvas } from "@/reduxFeatures/app/appSlice";
 
 import { BsThreeDots } from "react-icons/bs";
 import { GiCheckMark } from "react-icons/gi";
@@ -14,30 +17,21 @@ import { TiDeviceDesktop } from "react-icons/ti";
 import {
   Button,
   ButtonGroup,
-  ButtonToolbar,
   Card,
   OverlayTrigger,
   Popover,
   ToggleButton,
 } from "react-bootstrap";
-import { stat } from "fs";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
 const Notifications = () => {
   const notifications = dummyData;
 
-  const [checked, setChecked] = useState(false);
   const [radioValue, setRadioValue] = useState("1");
-  const [newAndEarlierStatusState, setNewAndEarlierStatusState] = useState({
-    new: false,
-    earlier: false,
-  });
-  // const [newAndEarlierStatusState, setNewAndEarlierStatusState] = useState({
-  //   new: null,
-  //   earlier: null,
-  // });
   let router = useRouter(null);
+
+  const dispatch = useDispatch();
 
   const radios = [
     { name: "All", value: "1" },
@@ -56,7 +50,6 @@ const Notifications = () => {
     const today = new Date().toGMTString();
     let todaysDateStr = "";
     let receivedDateStr = "";
-    let output = "";
 
     function convertDate(inputFormat) {
       function pad(s) {
@@ -70,42 +63,11 @@ const Notifications = () => {
 
     todaysDateStr = convertDate(today);
     receivedDateStr = convertDate(receivedDate);
+  };
 
-    let status = "";
-    if (todaysDateStr === receivedDateStr) {
-      status = "New";
-      // let outPut2 = "";
-      if (!newAndEarlierStatusState.new) {
-        console.log(
-          "todaysDateStr === receivedDateStr:",
-          todaysDateStr === receivedDateStr
-        );
-        setNewAndEarlierStatusState({
-          ...newAndEarlierStatusState,
-          new: status,
-        });
-        output = status;
-        // outPut2 = status;
-        // return status;
-      }
-      // output = outPut2;
-    } else if (todaysDateStr !== receivedDateStr) {
-      status = "Earlier";
-      if (!newAndEarlierStatusState.earlier) {
-        // console.log(
-        //   "todaysDateStr !== receivedDateStr:",
-        //   todaysDateStr !== receivedDateStr
-        // );
-        setNewAndEarlierStatusState({
-          ...newAndEarlierStatusState,
-          earlier: status,
-        });
-        output = status;
-        // return status;
-      }
-    }
-    // console.log("output;", output);
-    // return output;
+  const closeNotificationOffcanvas = () => {
+    dispatch(notificationsOffcanvas(false));
+    router.push("/notifications");
   };
 
   const popover = (
@@ -119,7 +81,11 @@ const Notifications = () => {
             <FiSettings /> Notification settings
           </Button>
           {router.asPath !== "/notifications" && (
-            <Button variant="outline-primary" style={{ textAlign: "start" }}>
+            <Button
+              variant="outline-primary"
+              style={{ textAlign: "start" }}
+              onClick={closeNotificationOffcanvas}
+            >
               <TiDeviceDesktop /> Open Notifications
             </Button>
           )}
@@ -135,7 +101,6 @@ const Notifications = () => {
       </Head>
 
       <div
-        // className="row justify-content-center mt-md-5 mb-5 mb-lg-0 pb-3 pb-lg-0"
         className={`${
           router.asPath === "/notifications"
             ? "row justify-content-center mt-md-5 mb-5 mb-lg-0 pb-3 pb-lg-0"
@@ -172,26 +137,23 @@ const Notifications = () => {
                 <div className={styles.notificationDay}>
                   <ButtonGroup>
                     {radios.map((radio, idx) => (
-                      <>
-                        <ToggleButton
-                          className={`${styles.markAsRead}`}
-                          style={{
-                            borderRadius: "10%",
-                            border: "none",
-                          }}
-                          key={idx}
-                          id={`radio-${idx}`}
-                          type="radio"
-                          variant="outline-success"
-                          name="radio"
-                          value={radio.value}
-                          checked={radioValue === radio.value}
-                          onChange={(e) => setRadioValue(e.currentTarget.value)}
-                        >
-                          {radio.name}
-                        </ToggleButton>
-                        <span className="me-3"></span>
-                      </>
+                      <ToggleButton
+                        key={idx}
+                        className={`${styles.markAsRead} me-3`}
+                        style={{
+                          borderRadius: "10%",
+                          border: "none",
+                        }}
+                        id={`radio-${idx}`}
+                        type="radio"
+                        variant="outline-success"
+                        name="radio"
+                        value={radio.value}
+                        checked={radioValue === radio.value}
+                        onChange={(e) => setRadioValue(e.currentTarget.value)}
+                      >
+                        {radio.name}
+                      </ToggleButton>
                     ))}
                   </ButtonGroup>
                 </div>
@@ -201,41 +163,23 @@ const Notifications = () => {
                 <div className="d-flex">
                   <h5>New</h5>
                   {router.asPath !== "/notifications" && (
-                    <h6 className="ms-auto">
-                      <Link href="/notifications" passHref>
-                        See all
-                      </Link>
+                    <h6
+                      className="ms-auto btn"
+                      style={{ color: "blue", marginTop: "-.6rem" }}
+                      onClick={closeNotificationOffcanvas}
+                    >
+                      See all
                     </h6>
                   )}
                 </div>
-                {notifications.map((item, i) => (
-                  <>
-                    <h5>{newAndEarlierStatus(item.date)}</h5>
-                    {/* {newAndEarlierStatusState[1] === 1 &&
-                    newAndEarlierStatusState[0]} */}
-                    <div className={styles.notificationListItem}>
-                      <div className={styles.notificationDot}>
-                        {" "}
-                        <GoPrimitiveDot
-                          size={30}
-                          className="text-primary"
-                        />{" "}
-                      </div>
-                      <Card.Text>
-                        <div className={`${styles.notificationMessages} lh-1`}>
-                          {item.message}
-                          <div className={styles.notificationTime}>
-                            <small
-                              className="text-muted"
-                              style={{ fontSize: "11px" }}
-                            >
-                              <div className="mt-3"> {item.date} </div>
-                            </small>{" "}
-                          </div>
-                        </div>
-                      </Card.Text>
-                    </div>
-                  </>
+                {notifications.map((notification, index) => (
+                  <div key={index}>
+                    {radioValue === "1" ? (
+                      <NotificationRender notification={notification} />
+                    ) : radioValue === "2" && !notification.read ? (
+                      <NotificationRender notification={notification} />
+                    ) : null}
+                  </div>
                 ))}
               </div>
             </Card.Body>

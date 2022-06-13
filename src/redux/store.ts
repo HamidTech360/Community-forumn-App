@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authStateReducer from "../reduxFeatures/authState/authStateSlice";
+import appReducer from "@/reduxFeatures/app/appSlice";
+import authStateReducer from "@/reduxFeatures/authState/authStateSlice";
 
 import {
   useDispatch as useDispatchBase,
@@ -11,6 +12,7 @@ import {
  */
 export const store = configureStore({
   reducer: {
+    app: appReducer,
     authState: authStateReducer,
   },
 });

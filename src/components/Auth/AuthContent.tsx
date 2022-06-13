@@ -22,8 +22,10 @@ export default function AuthContent({ children }: { children: ReactNode }) {
   }, [isAuthenticated, authenticating, router]);
 
   if (isAuthenticated) {
-    // Set isAuthenticated in redux state to true
-    dispatch(userAuthenticated(true));
+    // Set isAuthenticated in redux state to true only on Login
+    if (router.asPath === "/login") {
+      dispatch(userAuthenticated(true));
+    }
 
     // Don't Display Register Page While logged-in
     if (router.asPath === "/register") {

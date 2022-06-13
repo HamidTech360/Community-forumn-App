@@ -290,10 +290,7 @@ const Chat = () => {
           {/* SideBar */}
           <div ref={mainSidebar} className="d-md-block col-12 col-md-4 shadow">
             <div className="row">
-              <div
-                className="d-flex py-3"
-                style={{ backgroundColor: "lightgray" }}
-              >
+              <div className="d-flex py-3">
                 <div className="col-8">
                   <h4>Messages</h4>
                 </div>
@@ -349,7 +346,7 @@ const Chat = () => {
                     className="border-0 navbar-nav"
                     style={{ margin: "-.5rem" }}
                   >
-                    {messages.map((message) => {
+                    {messages.map((message, index) => {
                       return (
                         <Card.Body
                           key={message.id}
@@ -462,19 +459,12 @@ const Chat = () => {
           <div
             ref={mainDisplay}
             className="d-none d-md-block col-12 col-md-8 shadow"
-            style={{
-              height: "33.8em",
-            }}
           >
             <Card
               className="border-0 d-flex flex-column"
-              style={{ height: "540px" }}
-              // style={{ height: "79vh" }}
+              style={{ height: "79vh" }}
             >
-              <Card.Header
-                className=""
-                style={{ backgroundColor: "lightgray" }}
-              >
+              <Card.Header>
                 <div className="row">
                   <h3 className="col-12 mt-2">
                     {JSON.stringify(selectUserToChatTimeline[0]) !== "{}" && (
@@ -589,7 +579,7 @@ const Chat = () => {
                           ) {
                             // No unread message
                             return (
-                              <div ref={readChat}>
+                              <div key={index} ref={readChat}>
                                 {ChatBubble(message, index)}
                               </div>
                             );
@@ -598,7 +588,11 @@ const Chat = () => {
                              ** No need to Focus as focus has already been made above
                              ** Maintain Read State
                              */
-                            return ChatBubble(message, index);
+                            return (
+                              <div key={index}>
+                                {ChatBubble(message, index)}
+                              </div>
+                            );
                           }
                         }
                       }

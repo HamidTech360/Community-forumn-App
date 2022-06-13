@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
-import React, { ReactPropTypes, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import Logo from "@/components/Atoms/Logo";
 import Link from "next/link";
