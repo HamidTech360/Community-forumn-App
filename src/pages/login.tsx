@@ -69,16 +69,17 @@ const Login = () => {
       if (axios.isAxiosError(error)) {
         const serverError = error as AxiosError;
         if (serverError.response) {
+          console.log(serverError.response.data);
           // setMessage(serverError.response.data.message as unknown as string);
           let returnedErrorKey = serverError.response.data.key;
-          if (returnedErrorKey === "email" || returnedErrorKey === "password") {
-            setMessage({
-              message: "Username or Password Incorrect",
-              variant: "danger",
-            });
-          } else if (serverError.response.data === "Something went wrong") {
+         if (serverError.response.data === "Something went wrong") {
             setMessage({
               message: "Check Your Network Connection",
+              variant: "danger",
+            });
+          }else{
+            setMessage({
+              message: serverError.response.data.message,
               variant: "danger",
             });
           }
