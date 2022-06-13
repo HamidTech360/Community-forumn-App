@@ -37,7 +37,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   } else if (req.method === "GET") {
     try {
-      const posts = await Post.find();
+      const posts = await Post
+      .find()
+      .or([{deleted:false}, {deleted:null}])
+
       res.status(200).json({
         status: "success",
         message: "All posts retrieved",

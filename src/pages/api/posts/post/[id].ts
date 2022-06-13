@@ -15,7 +15,11 @@ const handler = async (req:NextApiRequest, res:NextApiResponse)=>{
 
     if(req.method === "DELETE"){
         try{
-            await Post.findByIdAndDelete(postId)
+            await Post.update({_id:postId}, {
+                $set:{
+                    deleted:true
+                }
+            })
             res.json({
                 status:'success',
                 message:'Post deleted successfully'
