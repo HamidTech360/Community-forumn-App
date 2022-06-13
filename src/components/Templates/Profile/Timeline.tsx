@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Spinner } from "react-bootstrap";
 import { usePagination } from "../../../hooks/usePagination";
 import PostCard from "../../Organisms/App/PostCard";
@@ -7,6 +7,8 @@ import CreatePost from "../../Organisms/CreatePost";
 const Timeline = () => {
   const [scrollInitialized, setScrollInitialized] = useState(false);
   const { posts, setPage, hasMore, isFetchingMore } = usePagination();
+  const intersection = useRef();
+
   const checkScroll = () => {
     if (window.scrollY > 100) {
       setScrollInitialized(true);
@@ -22,7 +24,7 @@ const Timeline = () => {
   }, []);
 
   useEffect(() => {
-    const scrollArea = document.querySelector("#intersection");
+    const scrollArea = intersection.current;
     const cards = document.querySelectorAll(".card");
     const targetItem = cards?.item(cards.length - 3);
 
@@ -49,7 +51,7 @@ const Timeline = () => {
     <div>
       <CreatePost />
       <div
-        id="intersection"
+        ref={intersection}
         style={{
           height: "10vh",
           width: "100%",
