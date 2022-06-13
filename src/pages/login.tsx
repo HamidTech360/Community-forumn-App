@@ -14,6 +14,9 @@ import { setAccessToken } from "@/misc/token";
 
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 
+import { useDispatch } from "@/redux/store";
+import { userAuthenticated } from "@/reduxFeatures/authState/authStateSlice";
+
 const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -24,6 +27,8 @@ const Login = () => {
   const { user, authenticating, isAuthenticated } = useUser();
   const [loading, setLoading] = useState(false);
   const [displayPassword, setDisplayPassword] = useState(false);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isAuthenticated && !authenticating) {
@@ -58,6 +63,9 @@ const Login = () => {
         message: "Success",
         variant: "success",
       });
+
+      // Set isAuthenticated in redux state to true
+      dispatch(userAuthenticated(true));
 
       let push2Page = JSON.parse(sessionStorage.getItem("pageB4Login"))
         ? JSON.parse(sessionStorage.getItem("pageB4Login"))

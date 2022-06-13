@@ -282,58 +282,69 @@ const Chat = () => {
 
   return (
     <AuthContent>
-      <Container className="mt-5"  >
-        <div className="row shadow" style={{  minHeight: "80vh" }}>
+      <Container
+        className="mt-3"
+        style={{ marginTop: "-1.7rem", marginBottom: "-2.7rem" }}
+      >
+        <div className="row shadow" style={{ minHeight: "80vh" }}>
           {/* SideBar */}
           <div ref={mainSidebar} className="d-md-block col-12 col-md-4 shadow">
-            <div className="row my-4 mx-1">
-              <div className="col-8">
-                <h4>Messages</h4>
-              </div>
+            <div className="row">
               <div
-                className="col-2 mt-2 ms-auto"
-                style={{
-                  cursor: "pointer",
-                }}
+                className="d-flex py-3"
+                style={{ backgroundColor: "lightgray" }}
               >
-                <FiEdit size="20" className="me-2" onClick={startChat} />{" "}
+                <div className="col-8">
+                  <h4>Messages</h4>
+                </div>
+                <div
+                  className="col-2 mt-2 ms-auto"
+                  style={{
+                    cursor: "pointer",
+                  }}
+                >
+                  <FiEdit size="20" className="me-2" onClick={startChat} />{" "}
+                </div>
+                <div
+                  className="col-2 btn d-none d-md-inline"
+                  onClick={() => setOpen(!open)}
+                  aria-controls="toggleMessagingBody"
+                  aria-expanded={open}
+                >
+                  {!open && (
+                    <BsChevronDoubleUp
+                      size={20}
+                      className="d-none d-md-inline ms-auto"
+                    />
+                  )}
+                  {open && (
+                    <BsChevronDoubleDown
+                      size={20}
+                      className="d-none d-md-inline ms-auto"
+                    />
+                  )}
+                </div>
               </div>
-              <div
-                className="col-2 btn d-none d-md-inline"
-                onClick={() => setOpen(!open)}
-                aria-controls="toggleMessagingBody"
-                aria-expanded={open}
-              >
-                {!open && (
-                  <BsChevronDoubleUp
-                    size={20}
-                    className="d-none d-md-inline ms-auto"
-                  />
-                )}
-                {open && (
-                  <BsChevronDoubleDown
-                    size={20}
-                    className="d-none d-md-inline ms-auto"
-                  />
-                )}
+              <div>
+                <input
+                  id="searchMessages"
+                  type="search"
+                  className="form-control my-2 mb-3 border"
+                  placeholder="&#128269; Search"
+                  aria-label="Search Message"
+                  onChange={searchMessages}
+                />
               </div>
               <Fade in={open}>
                 <div
                   id="toggleMessagingBody"
+                  className="pt-2"
                   style={{
-                    height: "80vh",
-                    overflowY: "scroll",
+                    height: "61vh",
+                    overflowY: "auto",
                     overflowX: "hidden",
                   }}
                 >
-                  <input
-                    id="searchMessages"
-                    type="search"
-                    className="form-control my-2 mb-3"
-                    placeholder="&#128269; Search"
-                    aria-label="Search Message"
-                    onChange={searchMessages}
-                  />
                   <Card
                     className="border-0 navbar-nav"
                     style={{ margin: "-.5rem" }}
@@ -351,12 +362,12 @@ const Chat = () => {
                           onClick={startChattingWith}
                         >
                           <div
-                            className="row"
+                            className="row pb-2"
                             data-nameid={message.id}
                             onClick={startChattingWithChild}
                           >
                             <div
-                              className="col-3"
+                              className="col-2"
                               data-nameid={message.id}
                               onClick={startChattingWithChild}
                             >
@@ -371,7 +382,7 @@ const Chat = () => {
                               ></Image>
                             </div>
                             <div
-                              className="col-9 ms-auto p-0"
+                              className="col-9 col-sm-10 col-md-8 col-lg-9 ms-auto p-0"
                               data-nameid={message.id}
                               onClick={startChattingWithChild}
                             >
@@ -458,8 +469,12 @@ const Chat = () => {
             <Card
               className="border-0 d-flex flex-column"
               style={{ height: "540px" }}
+              // style={{ height: "79vh" }}
             >
-              <Card.Header className="bg-light">
+              <Card.Header
+                className=""
+                style={{ backgroundColor: "lightgray" }}
+              >
                 <div className="row">
                   <h3 className="col-12 mt-2">
                     {JSON.stringify(selectUserToChatTimeline[0]) !== "{}" && (
@@ -493,7 +508,7 @@ const Chat = () => {
                       <input
                         id="sendTo"
                         type="text"
-                        className="form-control"
+                        className="form-control border"
                         placeholder="Type a name or multiple names separated by comma"
                       />
                     </div>
@@ -501,7 +516,7 @@ const Chat = () => {
                 ) : selectUserToChatTimeline[0].online === false ? (
                   <div className="row">
                     <h1
-                      className="col-1"
+                      className="col-1 me-2"
                       style={{
                         fontSize: "3rem",
                         marginTop: "-1.2rem",
@@ -519,7 +534,7 @@ const Chat = () => {
                 ) : selectUserToChatTimeline[0].online === true ? (
                   <div className="row">
                     <h1
-                      className="col-1"
+                      className="col-1 me-2"
                       style={{
                         fontSize: "3rem",
                         marginTop: "-1.2rem",
@@ -534,7 +549,7 @@ const Chat = () => {
                   </div>
                 ) : null}
               </Card.Header>
-              <Card.Body style={{ overflowY: "scroll", overflowX: "hidden" }}>
+              <Card.Body style={{ overflowY: "auto", overflowX: "hidden" }}>
                 {JSON.stringify(selectUserToChatTimeline[0]) !== "{}" && (
                   <>
                     {selectUserToChatTimeline[0].message.map(
@@ -592,7 +607,7 @@ const Chat = () => {
                 )}
               </Card.Body>
               <Card.Footer
-                className="row border-0"
+                className="row border-0 pb-5 pb-md-2"
                 style={{ backgroundColor: "transparent" }}
               >
                 <div className="col-1">
@@ -603,7 +618,7 @@ const Chat = () => {
                 <div className="col-9">
                   <textarea
                     id="writeMessage"
-                    className="form-control"
+                    className="form-control border"
                     placeholder=" &#128522; Write something..."
                     rows={2}
                   ></textarea>

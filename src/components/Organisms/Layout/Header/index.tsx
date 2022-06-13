@@ -6,11 +6,15 @@ import Logo from "@/components/Atoms/Logo";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import { FiMenu } from'react-icons/fi';
-import {AiOutlineClose} from 'react-icons/ai';
+import { FiMenu } from "react-icons/fi";
+import { AiOutlineClose } from "react-icons/ai";
 import AuthHeader from "./AuthHeader";
 
 import useUser from "@/hooks/useUser";
+
+import { useSelector } from "@/redux/store";
+import { selectAuthState } from "@/reduxFeatures/authState/authStateSlice";
+
 const links = [
   { name: "Gist", link: "/gist" },
   { name: "Explore", link: "/explore" },
@@ -23,12 +27,13 @@ const Header = () => {
   const router = useRouter();
   const activePage = router.pathname;
   const { isAuthenticated, user } = useUser();
-  const [ isMobile, setIsMobile ] = useState(false)
+  const [isMobile, setIsMobile] = useState(false);
+
+  const authState = useSelector(selectAuthState);
 
   const handleClick = () => {
-    setIsMobile(!isMobile)
-} 
-
+    setIsMobile(!isMobile);
+  };
 
   const disabled = [
     "/login",
@@ -44,7 +49,7 @@ const Header = () => {
 
   return (
     <>
-      {isAuthenticated ? (
+      {isAuthenticated || authState ? (
         <AuthHeader />
       ) : (
         <Navbar collapseOnSelect className="nav_bar" expand="lg" fixed="top">
@@ -59,8 +64,16 @@ const Header = () => {
               </Navbar.Brand>
             </Link>
 
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" className = 'ham-menu' onClick={handleClick}>
-                    {isMobile ? <AiOutlineClose color="#207681"/> :  <FiMenu color="#207681" />}
+            <Navbar.Toggle
+              aria-controls="responsive-navbar-nav"
+              className="ham-menu"
+              onClick={handleClick}
+            >
+              {isMobile ? (
+                <AiOutlineClose color="#207681" />
+              ) : (
+                <FiMenu color="#207681" />
+              )}
             </Navbar.Toggle>
 
             {!disabled.includes(activePage) && (
@@ -74,17 +87,15 @@ const Header = () => {
                       <Link href={link.link}>{link.name}</Link>
                     </Nav.Item>
                   ))}
-
-                  
                 </Nav>
                 <div className="buttons ms-auto d-flex mt-lg-3 align-items-center gap-3 justify-content-center">
-                    <Nav.Item as={Link} href="/login">
-                      <Button variant="outline-primary">Sign In</Button>
-                    </Nav.Item>
-                    <Nav.Item as={Link} href="/register">
-                      <Button variant="primary">Register</Button>
-                    </Nav.Item>
-                  </div>
+                  <Nav.Item as={Link} href="/login">
+                    <Button variant="outline-primary">Sign In</Button>
+                  </Nav.Item>
+                  <Nav.Item as={Link} href="/register">
+                    <Button variant="primary">Register</Button>
+                  </Nav.Item>
+                </div>
               </Navbar.Collapse>
             )}
           </Container>

@@ -6,6 +6,8 @@ function ChatBubble(message, index) {
   const recipient = `bg-secondary text-light mb-5 p-3`;
   const messagingStyle = message.sender === "self" ? self : recipient;
   const messagingStyle2 = message.sender === "self" && self2;
+  const borderRadiusBubble =
+    message.sender === "self" ? "35px 0 15px 35px" : "0 35px 35px 15px";
 
   return (
     <div key={index} style={{ fontSize: "14px" }}>
@@ -22,10 +24,10 @@ function ChatBubble(message, index) {
       <div
         className={messagingStyle}
         style={{
-          width: "40%",
+          width: "82%",
           letterSpacing: "1px",
           height: "auto",
-          borderRadius: "35px 15px 35px 35px",
+          borderRadius: borderRadiusBubble,
         }}
       >
         {message.message}

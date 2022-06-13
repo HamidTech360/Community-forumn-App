@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import {
   Container,
   Form,
@@ -9,11 +9,14 @@ import {
   Image,
   Button,
   Badge,
+  Offcanvas,
 } from "react-bootstrap";
 import useUser from "@/hooks/useUser";
+import Notifications from "@/pages/notifications";
 
 import Logo from "@/components/Atoms/Logo";
 import Loader from "@/components/Organisms/Layout/Loader/Loader";
+import { useRouter } from "next/router";
 
 const AuthHeader = () => {
   const links = [
@@ -24,6 +27,25 @@ const AuthHeader = () => {
   ];
 
   const { user } = useUser();
+  const router = useRouter();
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const notificationsDisplay = () => {
+    console.log("notificationsDisplay");
+    if (window.innerWidth >= 992) {
+      // Display Offcanvas
+      handleShow();
+    } else {
+      router.push("/notifications");
+    }
+  };
+
+  const notificationPath = () =>
+    router.asPath === "/notifications" ? true : false;
   return (
     <>
       <Navbar
@@ -61,9 +83,71 @@ const AuthHeader = () => {
             ))}
           </Nav>
           <div className="notifications d-flex  gap-2">
-          <Link href="/chat">
-          <Button
+            <Link href="/chat" passHref>
+              <Button
                 className="position-relative"
+                style={{
+                  width: 35,
+                  height: 35,
+                  borderRadius: "100%",
+                  backgroundColor: "#EAFEFD",
+                  border: "none",
+                }}
+              >
+                <Image src="/assets/icons/message.svg" alt="" fluid />
+                <Badge bg="danger" className="position-absolute end-0 top-0">
+                  3
+                </Badge>
+              </Button>
+            </Link>
+
+            <Offcanvas show={show} onHide={handleClose} placement={"end"}>
+              <Offcanvas.Body>
+                <Notifications />
+              </Offcanvas.Body>
+            </Offcanvas>
+
+            <Button
+              variant="primary position-relative"
+              style={{
+                width: 35,
+                height: 35,
+                borderRadius: "100%",
+                backgroundColor: "#EAFEFD",
+                border: "none",
+              }}
+              // onClick={handleShow}
+              onClick={notificationsDisplay}
+              disabled={notificationPath()}
+              // {`${router.asPath === 'notifications' && 'disabled'}`}
+            >
+              <Image src="/assets/icons/notification.svg" alt="" fluid />
+              <Badge bg="warning" className="position-absolute end-0 top-0">
+                3
+              </Badge>
+            </Button>
+
+            {/* {window.innerWidth >= 992 ? (
+              <Button
+                variant="primary position-relative"
+                style={{
+                  width: 35,
+                  height: 35,
+                  borderRadius: "100%",
+                  backgroundColor: "#EAFEFD",
+                  border: "none",
+                }}
+                onClick={handleShow}
+              >
+                <Image src="/assets/icons/notification.svg" alt="" fluid />
+                <Badge bg="warning" className="position-absolute end-0 top-0">
+                  33
+                </Badge>
+              </Button>
+            ) : (
+              <Link href="/notifications" passHref>
+                <Button
+                  className="position-relative"
                   style={{
                     width: 35,
                     height: 35,
@@ -72,33 +156,13 @@ const AuthHeader = () => {
                     border: "none",
                   }}
                 >
-                  <Image src="/assets/icons/message.svg" alt="" fluid />
-                  <Badge bg="danger" className="position-absolute end-0 top-0">3</Badge>
-                </Button>
-          </Link>
-               
-              
-     
-     <Link href="/notifications">
-     <Button
-                className="position-relative"
-                  style={{
-                    width: 35,
-                    height: 35,
-                    borderRadius: "100%",
-                    backgroundColor: "#EAFEFD",
-                    border: "none",
-                  }}
-                >
-                  
                   <Image src="/assets/icons/notification.svg" alt="" fluid />
-                  <Badge bg="warning" className="position-absolute end-0 top-0">3</Badge>
+                  <Badge bg="warning" className="position-absolute end-0 top-0">
+                    3
+                  </Badge>
                 </Button>
-     </Link>
-          
-              
-              
-          
+              </Link>
+            )}  */}
           </div>
           <NavDropdown
             className="d-none d-md-block "
@@ -131,7 +195,9 @@ const AuthHeader = () => {
             <NavDropdown.Divider />
             <NavDropdown.Item>Dark mode</NavDropdown.Item>
             <NavDropdown.Item>
-              <Link href="/settings">Account Settings</Link>
+              <Link href="/settings" passHref>
+                Account Settings
+              </Link>
             </NavDropdown.Item>
             <NavDropdown.Item>Support</NavDropdown.Item>
             {/* <NavDropdown.Item onClick={handleLogOut}>Logout</NavDropdown.Item> */}
