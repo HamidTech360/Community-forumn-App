@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { setAccessToken } from "@/misc/token";
-
+import AuthContent from "@/components/Auth/AuthContent";
 import axios, { AxiosError } from "axios";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
@@ -86,125 +86,127 @@ const Register = () => {
   }, [message]);
 
   return (
-    <FormWrapper
-      form={
-        <div>
-          {/* {wasSignUpSuccessful && (
+    <AuthContent>
+      <FormWrapper
+        form={
+          <div>
+            {/* {wasSignUpSuccessful && (
             <Alert variant="success">
               Thanks! Check your email- an account confirmation link has been
               sent to you.
             </Alert>
           )} */}
-          {message.message && (
-            <Alert variant={message.variant}>{message.message}</Alert>
-          )}
-          <Head>
-            <title>Register</title>
-          </Head>
-          <Form onSubmit={handleSubmit}>
-            <Row>
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label> First Name</Form.Label>
-                  <Form.Control
-                    placeholder="Enter first name"
-                    name="firstName"
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label> Last Name</Form.Label>
-                  <Form.Control
-                    placeholder="Enter last name"
-                    name="lastName"
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
+            {message.message && (
+              <Alert variant={message.variant}>{message.message}</Alert>
+            )}
+            <Head>
+              <title>Register</title>
+            </Head>
+            <Form onSubmit={handleSubmit}>
+              <Row>
+                <Col md={6}>
+                  <Form.Group>
+                    <Form.Label> First Name</Form.Label>
+                    <Form.Control
+                      placeholder="Enter first name"
+                      name="firstName"
+                      onChange={handleChange}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group>
+                    <Form.Label> Last Name</Form.Label>
+                    <Form.Control
+                      placeholder="Enter last name"
+                      name="lastName"
+                      onChange={handleChange}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
 
-            <Form.Group>
-              <Form.Label> Email</Form.Label>
-              <Form.Control
-                placeholder="Enter email"
-                type="email"
-                name="email"
-                required
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label> Password</Form.Label>
-              <div className="row">
-                <div className="col-12">
-                  <Form.Control
-                    placeholder="Enter password"
-                    type={displayPassword ? "text" : "password"}
-                    name="password"
-                    required
-                    onChange={handleChange}
-                  />
+              <Form.Group>
+                <Form.Label> Email</Form.Label>
+                <Form.Control
+                  placeholder="Enter email"
+                  type="email"
+                  name="email"
+                  required
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label> Password</Form.Label>
+                <div className="row">
+                  <div className="col-12">
+                    <Form.Control
+                      placeholder="Enter password"
+                      type={displayPassword ? "text" : "password"}
+                      name="password"
+                      required
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div
+                    className="col-1 btn"
+                    style={{
+                      marginLeft: "-3.5rem",
+                      fontSize: "1.5rem",
+                      marginTop: "-.3rem",
+                    }}
+                    onClick={() => setDisplayPassword(!displayPassword)}
+                  >
+                    <Form.Text>
+                      {displayPassword ? (
+                        <AiOutlineEye />
+                      ) : (
+                        <AiOutlineEyeInvisible />
+                      )}
+                    </Form.Text>
+                  </div>
                 </div>
-                <div
-                  className="col-1 btn"
-                  style={{
-                    marginLeft: "-3.5rem",
-                    fontSize: "1.5rem",
-                    marginTop: "-.3rem",
-                  }}
-                  onClick={() => setDisplayPassword(!displayPassword)}
-                >
-                  <Form.Text>
-                    {displayPassword ? (
-                      <AiOutlineEye />
-                    ) : (
-                      <AiOutlineEyeInvisible />
-                    )}
-                  </Form.Text>
-                </div>
-              </div>
-            </Form.Group>
+              </Form.Group>
 
-            <Form.Text>
-              <Form.Check
-                type="checkbox"
-                className="formCheckBox"
-                onChange={termsAndConditionsChecker}
-                label={
-                  <p className="pt-1">
-                    &nbsp; I hereby agree to the
-                    <span className="text-primary ps-3 ps-sm-0">
-                      &nbsp; terms & conditions
-                    </span>{" "}
-                    and{" "}
-                    <span className="text-primary ps-3 ps-sm-1">
-                      privacy policy
-                    </span>{" "}
-                  </p>
-                }
-              />
-            </Form.Text>
-            <Button
-              type="submit"
-              variant="primary"
-              className="d-flex mx-auto mt-3"
-            >
-              Register{" "}
-              {submitting && (
-                <div
-                  className="spinner-grow spinner-grow-sm text-light"
-                  role="status"
-                ></div>
-              )}
-            </Button>
-          </Form>
-        </div>
-      }
-    />
+              <Form.Text>
+                <Form.Check
+                  type="checkbox"
+                  className="formCheckBox"
+                  onChange={termsAndConditionsChecker}
+                  label={
+                    <p className="pt-1">
+                      &nbsp; I hereby agree to the
+                      <span className="text-primary ps-3 ps-sm-0">
+                        &nbsp; terms & conditions
+                      </span>{" "}
+                      and{" "}
+                      <span className="text-primary ps-3 ps-sm-1">
+                        privacy policy
+                      </span>{" "}
+                    </p>
+                  }
+                />
+              </Form.Text>
+              <Button
+                type="submit"
+                variant="primary"
+                className="d-flex mx-auto mt-3"
+              >
+                Register{" "}
+                {submitting && (
+                  <div
+                    className="spinner-grow spinner-grow-sm text-light"
+                    role="status"
+                  ></div>
+                )}
+              </Button>
+            </Form>
+          </div>
+        }
+      />
+    </AuthContent>
   );
 };
 

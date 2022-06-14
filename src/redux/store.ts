@@ -1,17 +1,19 @@
-
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
+import appReducer from "@/reduxFeatures/app/appSlice";
+import authStateReducer from "@/reduxFeatures/authState/authStateSlice";
 
 import {
   useDispatch as useDispatchBase,
   useSelector as useSelectorBase,
-} from 'react-redux';
+} from "react-redux";
 
 /**
  * Creates a store and includes all the slices as reducers.
  */
 export const store = configureStore({
   reducer: {
-    
+    app: appReducer,
+    authState: authStateReducer,
   },
 });
 
