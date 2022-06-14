@@ -1,17 +1,19 @@
 import React from "react";
 
-function ChatBubble(message, index) {
-  const self = `bg-primary text-light mb-5 p-3 ms-auto`;
+function ChatBubble(message) {
+  const self = `bg-primary text-light mb-3 p-3 ms-auto`;
   const self2 = `ms-auto`;
-  const recipient = `bg-secondary text-light mb-5 p-3`;
+  const recipient = `bg-secondary text-light mb-3 p-3`;
   const messagingStyle = message.sender === "self" ? self : recipient;
   const messagingStyle2 = message.sender === "self" && self2;
+  const borderRadiusBubble =
+    message.sender === "self" ? "35px 0 15px 35px" : "0 35px 35px 15px";
 
   return (
-    <div key={index} style={{ fontSize: "14px" }}>
+    <div style={{ fontSize: "14px" }}>
       <div
         style={{
-          width: "28%",
+          width: "22%",
           height: "auto",
           fontSize: "11px",
         }}
@@ -22,10 +24,10 @@ function ChatBubble(message, index) {
       <div
         className={messagingStyle}
         style={{
-          width: "40%",
           letterSpacing: "1px",
+          maxWidth: "35%",
           height: "auto",
-          borderRadius: "35px 15px 35px 35px",
+          borderRadius: borderRadiusBubble,
         }}
       >
         {message.message}

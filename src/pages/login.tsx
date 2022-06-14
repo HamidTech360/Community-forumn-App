@@ -14,6 +14,9 @@ import { setAccessToken } from "@/misc/token";
 
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 
+import { useDispatch } from "@/redux/store";
+import { userAuthenticated } from "@/reduxFeatures/authState/authStateSlice";
+
 const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -24,6 +27,8 @@ const Login = () => {
   const { user, authenticating, isAuthenticated } = useUser();
   const [loading, setLoading] = useState(false);
   const [displayPassword, setDisplayPassword] = useState(false);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isAuthenticated && !authenticating) {
@@ -59,6 +64,9 @@ const Login = () => {
         variant: "success",
       });
 
+      // Set isAuthenticated in redux state to true
+      dispatch(userAuthenticated(true));
+
       let push2Page = JSON.parse(sessionStorage.getItem("pageB4Login"))
         ? JSON.parse(sessionStorage.getItem("pageB4Login"))
         : "/feed";
@@ -69,15 +77,14 @@ const Login = () => {
       if (axios.isAxiosError(error)) {
         const serverError = error as AxiosError;
         if (serverError.response) {
-          console.log(serverError.response.data);
           // setMessage(serverError.response.data.message as unknown as string);
           let returnedErrorKey = serverError.response.data.key;
-         if (serverError.response.data === "Something went wrong") {
+          if (serverError.response.data === "Something went wrong") {
             setMessage({
               message: "Check Your Network Connection",
               variant: "danger",
             });
-          }else{
+          } else {
             setMessage({
               message: serverError.response.data.message,
               variant: "danger",
