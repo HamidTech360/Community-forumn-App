@@ -1222,6 +1222,7 @@ progress {
     width: 50%;
   }
 
+  
   .col-md-7 {
     flex: 0 0 auto;
     width: 58.33333333%;
@@ -3125,6 +3126,8 @@ fieldset:disabled .btn {
   background-color: #207681;
   border-color: #207681;
 }
+
+
 .btn-primary:hover,
 .tab-item:hover {
   color: #fff !important;
@@ -3754,6 +3757,12 @@ fieldset:disabled .btn {
   border-radius: 0.3rem;
 }
 
+@media screen and (max-width: 300px){
+  .btn-lgs{
+    font-size: medium;
+  }
+}
+
 .btn-sm,
 .btn-group-sm > .btn {
   padding: 0.25rem 0.5rem;
@@ -4349,6 +4358,12 @@ fieldset:disabled .btn {
   text-decoration: none;
   white-space: nowrap;
 }
+
+@media screen and (max-width: 1100px){
+  .navbar-brand{
+    margin-right: 2rem;
+  }
+}
 .navbar-nav {
   display: flex;
   flex-direction: column;
@@ -4376,7 +4391,6 @@ fieldset:disabled .btn {
 }
 
 .navbar-toggler {
-  padding: 0.25rem 0.75rem;
   font-size: 1.25rem;
   line-height: 1;
   background-color: transparent;

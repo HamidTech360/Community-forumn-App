@@ -65,7 +65,7 @@ const Header = () => {
 
             {!disabled.includes(activePage) && (
               <Navbar.Collapse id="responsive-navbar-nav" className=" gap-4">
-                <Nav className="mx-auto  gap-5">
+                <Nav className="mx-auto blockquote nav-item ">
                   {links.map((link, index) => (
                     <Nav.Item
                       className={link.link === activePage ? `active` : ""}
@@ -77,7 +77,7 @@ const Header = () => {
 
                   
                 </Nav>
-                <div className="buttons ms-auto d-flex mt-lg-3 align-items-center gap-3 justify-content-center">
+                <div className="buttons ms-auto d-flex mt-lg-3 align-items-center gap-3 justify-content-center nav-btn">
                     <Nav.Item as={Link} href="/login">
                       <Button variant="outline-primary">Sign In</Button>
                     </Nav.Item>
