@@ -110,11 +110,11 @@ const AuthHeader = () => {
               onHide={handleClose}
               placement={"end"}
               style={{
-                position: "absolute",
+                position: "fixed",
                 top: "4.8rem",
                 borderRadius: "15px 0 0 0",
               }}
-              // scroll={true}
+              scroll={true}
               // backdrop={false}
             >
               <Offcanvas.Body>
