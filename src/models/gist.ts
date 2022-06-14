@@ -23,11 +23,9 @@ const gistSchema = new mongoose.Schema<IGistSchema>(
     },
     country: {
       type: String,
-      required: true,
     },
     categories: {
       type: String,
-      required: true,
     },
     post: {
       type: String,

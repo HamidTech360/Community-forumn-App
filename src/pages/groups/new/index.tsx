@@ -44,7 +44,9 @@ const CreateNewGroup = () => {
 
   return (
     <AuthContent>
-      <Head>New Group</Head>
+      <Head>
+        <title>New group</title>
+      </Head>
       <div className={styles.createGroupFlex}>
         <div className={styles.createGroupLayout}>
           <div className={styles.ArrowBox}>

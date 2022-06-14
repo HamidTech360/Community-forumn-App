@@ -5,15 +5,15 @@ import Typography from "../components/Atoms/Typography";
 import FormWrapper from "../components/Organisms/Layout/FormWrapper";
 import styles from "../styles/form.module.scss";
 import Head from "next/head";
-
+import { toast, ToastContainer } from 'react-toastify';
 import { useRouter } from "next/router";
 import Link from "next/link";
 import useUser from "@/hooks/useUser";
 import axios, { AxiosError } from "axios";
 import { setAccessToken } from "@/misc/token";
-
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 
+import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch } from "@/redux/store";
 import { userAuthenticated } from "@/reduxFeatures/authState/authStateSlice";
 
@@ -58,11 +58,11 @@ const Login = () => {
         sessionStorage.setItem("token", data.refreshToken);
       }
 
-      setAccessToken(data.accessToken);
-      setMessage({
-        message: "Success",
-        variant: "success",
-      });
+     setAccessToken(data.accessToken);
+     toast.success('Auhentication successful',{
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose:7000
+     })
 
       // Set isAuthenticated in redux state to true
       dispatch(userAuthenticated(true));
@@ -79,16 +79,16 @@ const Login = () => {
         if (serverError.response) {
           // setMessage(serverError.response.data.message as unknown as string);
           let returnedErrorKey = serverError.response.data.key;
-          if (serverError.response.data === "Something went wrong") {
-            setMessage({
-              message: "Check Your Network Connection",
-              variant: "danger",
-            });
-          } else {
-            setMessage({
-              message: serverError.response.data.message,
-              variant: "danger",
-            });
+         if (serverError.response.data === "Something went wrong") {
+            toast.error('Auhentication Failed',{
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose:7000
+            })
+         }else{
+            toast.error(serverError.response.data.message,{
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose:7000
+           })
           }
         }
       }
@@ -105,6 +105,8 @@ const Login = () => {
   };
 
   return (
+    <>
+    <ToastContainer/>
     <FormWrapper
       form={
         <div>
@@ -116,6 +118,7 @@ const Login = () => {
               {message.message.replace("_", " ")}
             </Alert>
           )}
+         
           <Head>
             <title>Login</title>
           </Head>
@@ -182,6 +185,7 @@ const Login = () => {
         </div>
       }
     />
+    </>
   );
 };
 
