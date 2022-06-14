@@ -73,7 +73,7 @@ const PostCard = ({
             </NavDropdown.Item>
             <NavDropdown.Item className = {styles.item}>
               <i className='bi bi-x-circle-fill' /> &nbsp; Unfollow &nbsp;
-              {post.name.split(" ")[0]}
+              {post.name.split(" ")[15]}
             </NavDropdown.Item>
           </NavDropdown>
         </div>
