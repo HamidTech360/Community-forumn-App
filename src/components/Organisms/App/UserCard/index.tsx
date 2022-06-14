@@ -5,7 +5,7 @@ import { Card, Image } from "react-bootstrap";
 const UserCard = ({ user }: { user: Record<string, any> }) => {
   return (
     <Card
-      className="bg-white radius-10 p-3 user-card position-relative"
+      className="bg-white radius-10 p-3 mt-4 user-card position-relative"
       style={{ border: "none", height: "30vh" }}
     >
       <div

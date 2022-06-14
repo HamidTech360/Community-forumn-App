@@ -1,28 +1,17 @@
-import { useMutation } from "@apollo/client";
+
 import Link from "next/link";
 import React, { useState } from "react";
 import { Button, Container, Form, Image } from "react-bootstrap";
-import { SEND_PASSWORD_RESET_EMAIL } from "../queries/auth";
+
 const ForgotPassword = () => {
-  const [sendPasswordResetEmail, { loading, error, data }] = useMutation(
-    SEND_PASSWORD_RESET_EMAIL
-  );
+  
   //to review
   const [isSent, setIsSent] = useState(false);
-  const wasEmailSent = Boolean(data);
+  const wasEmailSent = false;
 
   const [email, setEmail] = useState("");
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    await sendPasswordResetEmail({
-      variables: {
-        username: email,
-      },
-    }).catch((error) => {
-      console.error(error);
-    });
-    !error && setIsSent(true);
   };
 
   if (isSent) {

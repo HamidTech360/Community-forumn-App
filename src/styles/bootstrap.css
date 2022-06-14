@@ -662,8 +662,8 @@ progress {
 .container-md,
 .container-sm {
   width: 100%;
-  /* padding-right: var(--bs-gutter-x, 0.75rem); */
-  /* padding-left: var(--bs-gutter-x, 0.75rem); */
+  padding-right: var(--bs-gutter-x, 0.75rem);
+  padding-left: var(--bs-gutter-x, 0.75rem);
   margin-right: auto;
   margin-left: auto;
 }
@@ -7910,7 +7910,6 @@ fieldset:disabled .btn {
 .ms-auto {
   margin-left: auto !important;
 }
-
 
 .p-0 {
   padding: 0 !important;

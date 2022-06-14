@@ -1,7 +1,7 @@
 import useUser from "@/hooks/useUser";
 import React from "react";
 import { Col, Container, Image, Nav, Row } from "react-bootstrap";
-import useAuth from "../../../../hooks/useAuth";
+
 import Logo from "../../../Atoms/Logo";
 
 const Footer = () => {
@@ -60,7 +60,7 @@ const Footer = () => {
         </div>
       ) : (
         <footer
-          className="mt-5 p-3 position-relative fixed-bottom shadow"
+          className="d-none d-lg-block mt-5 p-3 position-relative fixed-bottom shadow"
           style={{ backgroundColor: "#ffffff", zIndex: "9" }}
         >
           <Container>

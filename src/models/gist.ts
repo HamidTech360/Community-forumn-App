@@ -1,11 +1,11 @@
-import mongoose, { SchemaTypes } from "mongoose";
+import mongoose, { Types, SchemaTypes } from "mongoose";
 import User from "./User";
 
 export interface IGistSchema extends mongoose.Document {
-  user: string;
+  user: Types.ObjectId;
   title: string;
   country: string;
-  comments: string;
+  comments: [];
   categories: string;
   post: string;
 }

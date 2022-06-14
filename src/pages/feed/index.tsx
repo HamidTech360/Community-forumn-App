@@ -34,14 +34,13 @@ const Feed = () => {
     };
   }, []);
 
-
   return (
     <AuthContent>
       <Head>
         <title>Feed</title>
       </Head>
       <Container>
-        <div className={`padding-top mt-3 ${styles.wrapper}`}>
+        <div className={`mt-3 ${styles.wrapper}`}>
           <>
             <div
               style={{ width: 250 }}
@@ -100,7 +99,7 @@ const Feed = () => {
           </main>
           <div
             style={{ width: 270 }}
-            className="position-fixed d-none d-xxl-flex  end-0 me-5  vh-100 "
+            className="position-fixed d-none d-xxxl-flex  end-0 me-5  vh-100 "
           >
             <Discussions />
           </div>
