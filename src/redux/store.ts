@@ -6,12 +6,16 @@ import {
   useSelector as useSelectorBase,
 } from 'react-redux';
 
+import postReducer from './post'
+import gistReducer from './gist'
+
 /**
  * Creates a store and includes all the slices as reducers.
  */
 export const store = configureStore({
   reducer: {
-    
+    post:postReducer,
+    gist:gistReducer
   },
 });
 

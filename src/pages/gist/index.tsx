@@ -1,13 +1,34 @@
 import Head from "next/head";
-import { useEffect } from "react";
-import { Col, Container, Card as BCard, Row } from "react-bootstrap";
+import { useEffect , useState} from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "@/redux/store";
+import { Col, Container, Card as BCard, Row, Modal , Form, Button, Alert} from "react-bootstrap";
 import Card from "../../components/Organisms/Gist";
 import EndlessCarousel from "../../components/Molecules/Carousel";
 import GistCard from "../../components/Organisms/Gist/GistCard";
+import {AiOutlinePlusCircle} from 'react-icons/ai'
+import { toast, ToastContainer } from 'react-toastify';
+import {FaTimes} from 'react-icons/fa'
 import styles from "../../styles/gist.module.scss";
+import formStyles from '../../styles/templates/new-group/formField.module.css'
+
+import axios from "axios";
+
+//redux actions
+import { uploadFailed, uploadStart, uploadSuccess } from "@/redux/gist";
 
 const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
+ 
   useEffect(() => {
+    toast.success('🦄 Wow so easy!', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
     document.body.style.backgroundColor = "#f6f6f6";
 
     return () => {
@@ -15,11 +36,62 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     };
   }, []);
 
+ 
+
+  const dispatch = useDispatch()
+  const state = useSelector(s=>s.gist)
+  
+  
+  const [showModal, setShowModal] = useState(false)
+  const [formData, setFormData] = useState({
+    title:'',
+    post:''
+  })
+  
+ 
+  useEffect(()=>{
+    
+    // if(state.isSuccess){
+    //   alert('upload was successful')
+    // }else if(state.error){
+    //   alert('action failed')
+    // }
+  },[state])
+  
+
+  const handleChange = (e)=>{
+    const clone = {...formData}
+    clone[e.currentTarget.name] = e.currentTarget.value
+    setFormData(clone)
+  
+  }
+
+  const handleSubmit = async (e)=>{
+    e.preventDefault()
+    dispatch(uploadStart({}))
+    
+    try{
+      const response = await axios.post(`/api/gists`, formData, {headers:{
+        authorization:`Bearer ${localStorage.getItem('accessToken')}`
+      }})
+      console.log(response.data);
+      dispatch(uploadSuccess(response.data))
+      console.log(state);
+      
+      
+    }catch(error){
+      console.log(error.response?.data);
+      dispatch(uploadFailed(error.response?.data))
+
+    }
+  }
+
   return (
     <section className={styles.gist} style={{ marginBottom: "-2.4rem" }}>
       <Head>
         <title>Gists</title>
       </Head>
+      
       <h1 className="d-flex justify-content-center align-center">Gist</h1>
       <Container>
         <h2>Popular Gists</h2>
@@ -62,7 +134,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
           <Col md={9}>
             <BCard.Header className="shadow-sm border-0">
               <div className="d-flex justify-content-between">
-                <h2>New Gists</h2>
+                {/* <h2>New Gists</h2> */}
+                <AiOutlinePlusCircle onClick={()=>setShowModal(true)} size={35} style={{cursor:'pointer'}} />
                 <select className="outline-primary">
                   <option>Canada</option>
                 </select>
@@ -76,6 +149,55 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
           </Col>
         </Row>
       </Container>
+
+
+        <Modal 
+            size="lg" 
+            show={showModal} 
+            className="modal"
+           
+          >
+          
+         <span className={styles.closeBtn} > <FaTimes style={{cursor:'pointer'}} size={35} onClick={()=>setShowModal(false)} /> </span>
+         <div className={styles.newGistModal}>
+             <Form onSubmit={(e)=>handleSubmit(e)}>
+                <Form.Group className={formStyles.formGroup}>
+                  <Form.Label className={formStyles.formLabel}> Gist Title</Form.Label>
+                  <Form.Control
+                    size="lg"
+                    name="title"
+                    type="text"
+                    required
+                    onChange={(e)=>handleChange(e)}
+                  />
+                </Form.Group>
+
+                <Form.Group className={formStyles.formGroup}>
+                  <Form.Control
+                    className={formStyles.bigForm}
+                    as="textarea"
+                    name="post"
+                    type="text"
+                    required
+                    placeholder="Write something"
+                    onChange={(e)=>handleChange(e)}
+                  />
+                </Form.Group>
+
+                
+                
+                <Button variant="primary" className="d-flex mx-auto" type="submit">
+                 
+                  {state.isLoading?'uploading...':'continue'} 
+                </Button>
+              </Form>
+
+              {state.isSuccess && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="success">Upload successfull</Alert>}
+              {state.error && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="danger">Upload failed</Alert>}
+          </div>
+          
+        </Modal>
+      
     </section>
   );
 };
