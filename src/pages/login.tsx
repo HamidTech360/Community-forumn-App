@@ -14,6 +14,8 @@ import { setAccessToken } from "@/misc/token";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch } from "@/redux/store";
+import { userAuthenticated } from "@/reduxFeatures/authState/authStateSlice";
 
 const Login = () => {
   const router = useRouter();
@@ -25,6 +27,8 @@ const Login = () => {
   const { user, authenticating, isAuthenticated } = useUser();
   const [loading, setLoading] = useState(false);
   const [displayPassword, setDisplayPassword] = useState(false);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isAuthenticated && !authenticating) {
@@ -60,6 +64,9 @@ const Login = () => {
         autoClose:7000
      })
 
+      // Set isAuthenticated in redux state to true
+      dispatch(userAuthenticated(true));
+
       let push2Page = JSON.parse(sessionStorage.getItem("pageB4Login"))
         ? JSON.parse(sessionStorage.getItem("pageB4Login"))
         : "/feed";
@@ -70,7 +77,6 @@ const Login = () => {
       if (axios.isAxiosError(error)) {
         const serverError = error as AxiosError;
         if (serverError.response) {
-          console.log(serverError.response.data);
           // setMessage(serverError.response.data.message as unknown as string);
           let returnedErrorKey = serverError.response.data.key;
          if (serverError.response.data === "Something went wrong") {

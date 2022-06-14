@@ -1,10 +1,11 @@
-
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
+import appReducer from "@/reduxFeatures/app/appSlice";
+import authStateReducer from "@/reduxFeatures/authState/authStateSlice";
 
 import {
   useDispatch as useDispatchBase,
   useSelector as useSelectorBase,
-} from 'react-redux';
+} from "react-redux";
 
 import postReducer from './post'
 import gistReducer from './gist'
@@ -15,7 +16,9 @@ import gistReducer from './gist'
 export const store = configureStore({
   reducer: {
     post:postReducer,
-    gist:gistReducer
+    gist:gistReducer,
+    app: appReducer,
+    authState: authStateReducer,
   },
 });
 

@@ -37,7 +37,6 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     document.body.style.backgroundColor = "#f6f6f6";
      (async function (){
         try{
-          alert('wow')
           const response = await axios.get('/api/gists')
           console.log(response.data);
           
