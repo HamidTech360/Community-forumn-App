@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useEffect , useState} from "react";
+import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useSelector } from "@/redux/store";
 import { Col, Container, Card as BCard, Row, Modal , Form, Button, Alert} from "react-bootstrap";
@@ -9,54 +10,66 @@ import GistCard from "../../components/Organisms/Gist/GistCard";
 import {AiOutlinePlusCircle} from 'react-icons/ai'
 import { toast, ToastContainer } from 'react-toastify';
 import {FaTimes} from 'react-icons/fa'
+
+//STYLES
 import styles from "../../styles/gist.module.scss";
 import formStyles from '../../styles/templates/new-group/formField.module.css'
+import 'react-toastify/dist/ReactToastify.css';
 
-import axios from "axios";
+
 
 //redux actions
 import { uploadFailed, uploadStart, uploadSuccess } from "@/redux/gist";
 
 const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
  
-  useEffect(() => {
-    toast.success('🦄 Wow so easy!', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      });
-    document.body.style.backgroundColor = "#f6f6f6";
-
-    return () => {
-      document.body.style.backgroundColor = "initial";
-    };
-  }, []);
-
- 
-
+  const customId = "toastId"
   const dispatch = useDispatch()
   const state = useSelector(s=>s.gist)
-  
-  
   const [showModal, setShowModal] = useState(false)
+  const [allGists, setAllGists] = useState([])
   const [formData, setFormData] = useState({
     title:'',
     post:''
   })
   
- 
+  useEffect(() => {   
+    document.body.style.backgroundColor = "#f6f6f6";
+     (async function (){
+        try{
+          alert('wow')
+          const response = await axios.get('/api/gists')
+          console.log(response.data);
+          
+        }catch(e){
+          console.log('Failed to fetch');
+          
+        }
+
+    })()
+    return () => {
+      document.body.style.backgroundColor = "initial";
+    };
+  }, []);
+
   useEffect(()=>{
-    
-    // if(state.isSuccess){
-    //   alert('upload was successful')
-    // }else if(state.error){
-    //   alert('action failed')
-    // }
+    if(state.isSuccess){
+      
+      toast.success('Gist uploaded successfully', {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId:customId
+      })
+      setShowModal(false)
+     
+    }else if(state.error){
+      toast.error('Error uploading', {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId:customId
+      })
+    }
   },[state])
+
+
   
 
   const handleChange = (e)=>{
@@ -88,6 +101,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
 
   return (
     <section className={styles.gist} style={{ marginBottom: "-2.4rem" }}>
+      <ToastContainer/>
       <Head>
         <title>Gists</title>
       </Head>
@@ -135,7 +149,12 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             <BCard.Header className="shadow-sm border-0">
               <div className="d-flex justify-content-between">
                 {/* <h2>New Gists</h2> */}
-                <AiOutlinePlusCircle onClick={()=>setShowModal(true)} size={35} style={{cursor:'pointer'}} />
+               
+                
+                <span>
+                  <AiOutlinePlusCircle onClick={()=>setShowModal(true)} size={35} style={{cursor:'pointer'}} />
+                  <span className="newGistText" style={{marginLeft:'10px', fontSize:'14px', fontWeight:'700'}}>create gist</span>
+                </span>
                 <select className="outline-primary">
                   <option>Canada</option>
                 </select>
@@ -152,10 +171,12 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
 
 
         <Modal 
-            size="lg" 
+         
+            // size="md"  
             show={showModal} 
             className="modal"
-           
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
           >
           
          <span className={styles.closeBtn} > <FaTimes style={{cursor:'pointer'}} size={35} onClick={()=>setShowModal(false)} /> </span>
@@ -192,8 +213,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                 </Button>
               </Form>
 
-              {state.isSuccess && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="success">Upload successfull</Alert>}
-              {state.error && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="danger">Upload failed</Alert>}
+              {/* {state.isSuccess && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="success">Upload successfull</Alert>}
+              {state.error && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="danger">Upload failed</Alert>} */}
           </div>
           
         </Modal>

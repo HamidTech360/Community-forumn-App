@@ -13,26 +13,7 @@ export const gistSlice = createSlice({
         isSuccess:false
     },
     reducers:{
-        // uploadgist:  (state, action)=>{
-            
-        //     state.isLoading = true;
-        //     (async function(){
-        //         console.log(action.payload);
-        //         // const dispatch = useDispatch()
-        //         try{
-        //             const response = await axios.post(`/api/gists`, {...action.payload}, {headers:{
-        //                 Authorization:`Bearer ${localStorage.getItem('authToken')}`
-        //             }})
-
-        //             console.log(response.data);
-        //             state.data = response.data
-        //        }catch(error){
-        //             //  dispatch(uploadFailed({error}))
-        //             console.log(error.response?.data);                
-        //        }
-              
-        //     })()
-        // },
+     
         uploadStart:(state, action)=>{
             state.isLoading = true
         },
