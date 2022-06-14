@@ -54,6 +54,17 @@ const handler = async (req:NextApiRequest, res:NextApiResponse)=>{
         }catch(error){
             res.status(500).send(error)
         }
+    }else if (req.method=="GET"){
+        try{
+            const users = await User.find()
+            res.json({
+                status:'success',
+                message:'All users fetched',
+                users
+            })
+        }catch(error){
+            res.status(500).send(error)
+        }
     }
 }
 

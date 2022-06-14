@@ -6,6 +6,8 @@ import Link from "next/link";
 import { BsChevronDoubleRight } from "react-icons/bs";
 
 const Card = ({ image, title, author, id }: Record<string, any>) => {
+  // console.log(author);
+  
   return (
     <>
       <BCard
@@ -28,13 +30,13 @@ const Card = ({ image, title, author, id }: Record<string, any>) => {
             className="text-primary"
             style={{ textTransform: "capitalize", fontSize: "1rem" }}
           >
-            {title.raw.replace("&amp;", "&")}
+            {title.replace("&amp;", "&")}
           </h4>
           <span
             className="text-muted"
             style={{ fontSize: ".8rem", marginTop: "-5rem" }}
           >
-            by &nbsp;{author}
+            by &nbsp;{author.firstName} {author.lastName}
           </span>
         </div>
         <Link href={`/gist/${id}`} passHref>
