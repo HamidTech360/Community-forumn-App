@@ -1,31 +1,41 @@
+//@ts-nocheck
 import AuthContent from "@/components/Auth/AuthContent";
 import Head from "next/head";
-import React, { useEffect } from "react";
-import { GoPrimitiveDot } from "react-icons/go";
+import React, { useEffect, useState } from "react";
 import styles from "../styles/notifications.module.css";
+import { dummyData } from "@/components/notifications/dummyData";
+import NotificationRender from "@/components/notifications/notificationRender";
+
+import { useDispatch } from "@/redux/store";
+import { notificationsOffcanvas } from "@/reduxFeatures/app/appSlice";
+
+import { BsThreeDots } from "react-icons/bs";
+import { GiCheckMark } from "react-icons/gi";
+import { FiSettings } from "react-icons/fi";
+import { TiDeviceDesktop } from "react-icons/ti";
+
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  OverlayTrigger,
+  Popover,
+  ToggleButton,
+} from "react-bootstrap";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 const Notifications = () => {
-  const notifications = [
-    {
-      message: "Welcome to setlinn. Your accunt ihas been set up successfully",
-      date: "Dec 12, 2021 at 9:00am",
-    },
-    {
-      message: "Welcome to setlinn. Your accunt ihas been set up successfully",
-      date: "Dec 12, 2021 at 9:00am",
-    },
-    {
-      message: "Welcome to setlinn. Your accunt ihas been set up successfully",
-      date: "Dec 12, 2021 at 9:00am",
-    },
-    {
-      message: "Your password has been successfully changed",
-      date: "Dec 12, 2021 at 9:00am",
-    },
-    {
-      message: "Welcome to setlinn. Your accunt ihas been set up successfully",
-      date: "Dec 12, 2021 at 9:00am",
-    },
+  const notifications = dummyData;
+
+  const [radioValue, setRadioValue] = useState("1");
+  let router = useRouter(null);
+
+  const dispatch = useDispatch();
+
+  const radios = [
+    { name: "All", value: "1" },
+    { name: "Unread", value: "2" },
   ];
 
   useEffect(() => {
@@ -35,35 +45,145 @@ const Notifications = () => {
       document.body.style.backgroundColor = "initial";
     };
   }, []);
+
+  const newAndEarlierStatus = (receivedDate) => {
+    const today = new Date().toGMTString();
+    let todaysDateStr = "";
+    let receivedDateStr = "";
+
+    function convertDate(inputFormat) {
+      function pad(s) {
+        return s < 10 ? "0" + s : s;
+      }
+      var d = new Date(inputFormat);
+      return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join(
+        "/"
+      );
+    }
+
+    todaysDateStr = convertDate(today);
+    receivedDateStr = convertDate(receivedDate);
+  };
+
+  const closeNotificationOffcanvas = () => {
+    dispatch(notificationsOffcanvas(false));
+    router.push("/notifications");
+  };
+
+  const popover = (
+    <Popover id="popover-positioned-bottom-end">
+      <Popover.Body>
+        <div className="d-grid">
+          <Button variant="outline-primary" style={{ textAlign: "start" }}>
+            <GiCheckMark /> Mark all as read
+          </Button>
+          <Button variant="outline-primary" style={{ textAlign: "start" }}>
+            <FiSettings /> Notification settings
+          </Button>
+          {router.asPath !== "/notifications" && (
+            <Button
+              variant="outline-primary"
+              style={{ textAlign: "start" }}
+              onClick={closeNotificationOffcanvas}
+            >
+              <TiDeviceDesktop /> Open Notifications
+            </Button>
+          )}
+        </div>
+      </Popover.Body>
+    </Popover>
+  );
+
   return (
     <AuthContent>
       <Head>
         <title>Notifications</title>
       </Head>
 
-      <div className={styles.notificationBox}>
-        <div className={styles.notificationHeader}>
-          <span className={styles.notificationHeaderText}>Notifications</span>
-          <span className={`${styles.markAsRead} float-sm-end`}>
-            Mark all as read
-          </span>
-        </div>
+      <div
+        className={`${
+          router.asPath === "/notifications"
+            ? "row justify-content-center mt-md-5 mb-5 mb-lg-0 pb-3 pb-lg-0"
+            : "row justify-content-center"
+        }`}
+        style={{ marginTop: "-.3rem" }}
+      >
+        <div
+          className={`${
+            router.asPath === "/notifications"
+              ? "col-12 col-md-9 col-lg-6"
+              : "col-12"
+          }`}
+        >
+          <Card className="border-0 shadow px-4">
+            <Card.Body>
+              <Card.Title className={styles.notificationHeaderText}>
+                <span className="h1"> Notifications</span>
+                <span className="float-end fs-2">
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="bottom-end"
+                    overlay={popover}
+                  >
+                    <Button
+                      variant="none"
+                      size="lg"
+                      style={{ borderRadius: "100%", fontSize: "1.5rem" }}
+                    >
+                      <BsThreeDots />
+                    </Button>
+                  </OverlayTrigger>
+                </span>
+                <div className={styles.notificationDay}>
+                  <ButtonGroup>
+                    {radios.map((radio, idx) => (
+                      <ToggleButton
+                        key={idx}
+                        className={`${styles.markAsRead} me-3`}
+                        style={{
+                          borderRadius: "10%",
+                          border: "none",
+                        }}
+                        id={`radio-${idx}`}
+                        type="radio"
+                        variant="outline-success"
+                        name="radio"
+                        value={radio.value}
+                        checked={radioValue === radio.value}
+                        onChange={(e) => setRadioValue(e.currentTarget.value)}
+                      >
+                        {radio.name}
+                      </ToggleButton>
+                    ))}
+                  </ButtonGroup>
+                </div>
+              </Card.Title>
 
-        <div className={styles.notificationDay}>Today</div>
-
-        <div className={styles.notificationList}>
-          {notifications.map((item, i) => (
-            <div className={styles.notificationListItem}>
-              <div className={styles.notificationDot}>
-                {" "}
-                <GoPrimitiveDot size={30} color="#069197" />{" "}
+              <div className={styles.notificationList}>
+                <div className="d-flex">
+                  <h5>New</h5>
+                  {router.asPath !== "/notifications" && (
+                    <h6
+                      className="ms-auto btn"
+                      style={{ color: "blue", marginTop: "-.6rem" }}
+                      onClick={closeNotificationOffcanvas}
+                    >
+                      See all
+                    </h6>
+                  )}
+                </div>
+                {notifications.map((notification, index) => (
+                  <div key={index}>
+                    {radioValue === "1" ? (
+                      <NotificationRender notification={notification} />
+                    ) : radioValue === "2" && !notification.read ? (
+                      <NotificationRender notification={notification} />
+                    ) : null}
+                  </div>
+                ))}
               </div>
-              <div className={styles.notificationMessages}>
-                {item.message}
-                <div className={styles.notificationTime}>{item.date} </div>
-              </div>
-            </div>
-          ))}
+            </Card.Body>
+          </Card>
         </div>
       </div>
     </AuthContent>

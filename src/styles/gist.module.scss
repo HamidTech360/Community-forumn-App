@@ -20,6 +20,8 @@ s.gist {
     justify-content: start !important;
     position: static;
   }
+
+ 
 }
 
 .ul {
@@ -29,6 +31,30 @@ s.gist {
     }
   }
 }
+
+.newGistModal{
+  padding: 40px;
+}
+.closeBtn{
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+@media screen and (max-width:768px) {
+  .newGistModal{
+    padding: 20px;
+  }
+  .modal{
+    // margin: auto;
+    margin-top: 100px;
+  }
+  .closeBtn{
+    margin-top: 40px;
+    
+  }
+}
+
+
 
 .img {
   @media screen and (max-width: 500px) {

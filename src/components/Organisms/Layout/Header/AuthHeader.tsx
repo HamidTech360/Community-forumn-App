@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React from "react";
 import {
   Container,
   Form,
@@ -9,11 +8,20 @@ import {
   Image,
   Button,
   Badge,
+  Offcanvas,
 } from "react-bootstrap";
 import useUser from "@/hooks/useUser";
+import Notifications from "@/pages/notifications";
 
 import Logo from "@/components/Atoms/Logo";
 import Loader from "@/components/Organisms/Layout/Loader/Loader";
+import { useRouter } from "next/router";
+
+import { useDispatch, useSelector } from "@/redux/store";
+import {
+  notificationsOffcanvas,
+  selectNotificationOffcanvas,
+} from "@/reduxFeatures/app/appSlice";
 
 const AuthHeader = () => {
   const links = [
@@ -24,6 +32,24 @@ const AuthHeader = () => {
   ];
 
   const { user } = useUser();
+  const router = useRouter();
+
+  const dispatch = useDispatch();
+  const show = useSelector(selectNotificationOffcanvas);
+
+  // Set notificationsOffcanvas in redux state to true
+  const handleClose = () => dispatch(notificationsOffcanvas(false));
+  const handleShow = () => dispatch(notificationsOffcanvas(true));
+
+  const notificationsDisplay = () => {
+    if (window.innerWidth >= 992) {
+      // Display Offcanvas
+      handleShow();
+    } else {
+      router.push("/notifications");
+    }
+  };
+
   return (
     <>
       <Navbar
@@ -45,8 +71,8 @@ const AuthHeader = () => {
           />
           <Nav className="d-flex justify-content-between gap-4 	d-none d-md-flex">
             {links.map((link, key) => (
-              <Link href={`/${link.icon}`} passHref>
-                <div className="d-flex flex-column align-items-center gap-1">
+              <Link key={key} href={`/${link.icon}`} passHref>
+                <div className="d-flex flex-column align-items-center gap-1 btn">
                   <span>
                     <Image
                       src={`/assets/icons/${link.icon}.svg`}
@@ -61,44 +87,58 @@ const AuthHeader = () => {
             ))}
           </Nav>
           <div className="notifications d-flex  gap-2">
-          <Link href="/chat">
-          <Button
+            <Link href="/chat" passHref>
+              <Button
                 className="position-relative"
-                  style={{
-                    width: 35,
-                    height: 35,
-                    borderRadius: "100%",
-                    backgroundColor: "#EAFEFD",
-                    border: "none",
-                  }}
-                >
-                  <Image src="/assets/icons/message.svg" alt="" fluid />
-                  <Badge bg="danger" className="position-absolute end-0 top-0">3</Badge>
-                </Button>
-          </Link>
-               
-              
-     
-     <Link href="/notifications">
-     <Button
-                className="position-relative"
-                  style={{
-                    width: 35,
-                    height: 35,
-                    borderRadius: "100%",
-                    backgroundColor: "#EAFEFD",
-                    border: "none",
-                  }}
-                >
-                  
-                  <Image src="/assets/icons/notification.svg" alt="" fluid />
-                  <Badge bg="warning" className="position-absolute end-0 top-0">3</Badge>
-                </Button>
-     </Link>
-          
-              
-              
-          
+                style={{
+                  width: 35,
+                  height: 35,
+                  borderRadius: "100%",
+                  backgroundColor: "#EAFEFD",
+                  border: "none",
+                }}
+              >
+                <Image src="/assets/icons/message.svg" alt="" fluid />
+                <Badge bg="danger" className="position-absolute end-0 top-0">
+                  3
+                </Badge>
+              </Button>
+            </Link>
+
+            <Offcanvas
+              show={show}
+              onHide={handleClose}
+              placement={"end"}
+              style={{
+                position: "fixed",
+                top: "4.8rem",
+                borderRadius: "15px 0 0 0",
+              }}
+              scroll={true}
+              // backdrop={false}
+            >
+              <Offcanvas.Body>
+                <Notifications />
+              </Offcanvas.Body>
+            </Offcanvas>
+
+            <Button
+              variant="primary position-relative"
+              style={{
+                width: 35,
+                height: 35,
+                borderRadius: "100%",
+                backgroundColor: "#EAFEFD",
+                border: "none",
+              }}
+              onClick={notificationsDisplay}
+              disabled={router.asPath === "/notifications" ? true : false}
+            >
+              <Image src="/assets/icons/notification.svg" alt="" fluid />
+              <Badge bg="warning" className="position-absolute end-0 top-0">
+                3
+              </Badge>
+            </Button>
           </div>
           <NavDropdown
             className="d-none d-md-block "
@@ -131,7 +171,9 @@ const AuthHeader = () => {
             <NavDropdown.Divider />
             <NavDropdown.Item>Dark mode</NavDropdown.Item>
             <NavDropdown.Item>
-              <Link href="/settings">Account Settings</Link>
+              <Link href="/settings" passHref>
+                Account Settings
+              </Link>
             </NavDropdown.Item>
             <NavDropdown.Item>Support</NavDropdown.Item>
             {/* <NavDropdown.Item onClick={handleLogOut}>Logout</NavDropdown.Item> */}
@@ -147,8 +189,8 @@ const AuthHeader = () => {
         <Container className="d-flex justify-content-start">
           <Nav className="d-flex justify-content-around gap-4 w-100">
             {links.map((link, key) => (
-              <Link href={`/${link.icon}`} passHref>
-                <div className="d-flex flex-column align-items-center gap-1 mobi-nav bg-white">
+              <Link key={key} href={`/${link.icon}`} passHref>
+                <div className="d-flex flex-column align-items-center gap-1 mobi-nav bg-white btn">
                   <span>
                     <Image
                       src={`/assets/icons/${link.icon}.svg`}
