@@ -1,0 +1,17 @@
+.form{
+    @media screen and (max-width: 600px) {
+        font-size: small;
+    }
+
+    @media screen and (max-width: 300px) {
+        font-size: smaller;
+    }
+}
+
+.btn{
+    width: 38px;
+    height: 38px;
+    border-radius: 100%;
+    background-color: #EAFEFD;
+    border: none;
+}
