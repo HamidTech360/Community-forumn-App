@@ -13,7 +13,7 @@ const Settings = () => {
     security: { component: <Security />, icon: "bi-lock" },
     notifications: { component: <Notifications />, icon: "bi-bell" },
     privacy: { component: <Privacy />, icon: "bi-shield-check" },
-    delete: { component: <Delete />, icon: "bi-trash3" },
+    "delete account": { component: <Delete />, icon: "bi-trash3" },
   };
 
   const names = Object.keys(tabs);
