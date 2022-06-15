@@ -44,8 +44,7 @@ const PostCard = ({
       }}
     >
       <Card.Title
-        className="position-relative d-flex justify-content-start gap-2 pb-2 border-bottom"
-        style={{ marginLeft: "-1rem" }}
+        className={`position-relative d-flex justify-content-start gap-2 pb-2 border-bottom ${styles.title}`}
       >
         <Image
           src={post?.user_avatar?.full}
@@ -57,10 +56,9 @@ const PostCard = ({
         <div className="d-flex flex-column">
           <div className = { styles.div}>
             <small
-              style={{ fontSize: "0.8rem" }}
               dangerouslySetInnerHTML={{ __html: post?.title }}
-            />
-            <span style={{ fontSize: "0.9rem" }}>
+            /> 
+           <span >
                <Age time={post?.date} />
             </span>
           </div>
@@ -74,10 +72,10 @@ const PostCard = ({
               </Button>
             }
           >
-            <NavDropdown.Item>
+            <NavDropdown.Item className = {styles.item}>
               <RiClipboardFill /> &nbsp; Copy post link
             </NavDropdown.Item>
-            <NavDropdown.Item>
+            <NavDropdown.Item className = {styles.item}>
               <BsFolderFill /> &nbsp; Open Post
             </NavDropdown.Item>
             <NavDropdown.Item className = {styles.item}>
@@ -93,9 +91,7 @@ const PostCard = ({
       </Card.Title>
       <Card.Body
         style={{
-          cursor: "pointer",
-          marginLeft: "-1.8rem",
-          marginRight: "-1.8rem",
+          cursor: "pointer"
         }}
       >
         <div
@@ -131,7 +127,7 @@ const PostCard = ({
               alt=""
               width={20}
               height={20}
-              // className="post-img"
+              className="post-img"
             />
             <span className="d-none d-md-block">{item.name}</span>
           </Button>

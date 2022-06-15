@@ -32,15 +32,18 @@
 .main {
   min-height: 90vh;
 
+  @media screen and (max-width:1100px) {
+    margin: 3.5rem 0;
+    min-height: 50vh;
+  }
 
-
-  @media all and (max-width:1100px) and (max-height:600px) {
-    margin-bottom: 4rem !important;
-    min-height: 70vh;
+  @media screen and (max-height:600px) {
+    margin: 3.5rem 0;
+    min-height: 80vh;
   }
 
   @media screen and (max-width:1000px) {
-    margin-bottom: 1rem !important;
+    margin: 0 0 1rem !important;
     min-height: 50vh;
 
   }
@@ -114,6 +117,10 @@
 
   @media screen and (max-width: 900px){
     font-size: 1.1rem;
+  }
+
+  @media screen and (max-width: 800px){
+    font-size: 1rem;
   }
 
   @media screen and (max-width: 300px){

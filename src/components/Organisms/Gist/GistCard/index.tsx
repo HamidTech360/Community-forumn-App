@@ -68,10 +68,7 @@ const GistCard = ({
             "<a> <b> <em> <p> <strong> <i>"
           ).slice(0, 500),
         }}
-        style={{
-          marginTop: "-1rem",
-          lineHeight: "1.3rem",
-        }}
+        className= {styles.gistBody}
       />
       {!primary && (
         <div className="d-flex justify-content-end mt-2">

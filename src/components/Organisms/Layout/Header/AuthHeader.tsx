@@ -22,6 +22,7 @@ import {
   notificationsOffcanvas,
   selectNotificationOffcanvas,
 } from "@/reduxFeatures/app/appSlice";
+import styles from '@/styles/utils.module.scss'
 
 const AuthHeader = () => {
   const links = [
@@ -86,22 +87,12 @@ const AuthHeader = () => {
               </Link>
             ))}
           </Nav>
-          <div className="notifications d-flex  gap-2">
+          <div className="notifications d-flex  gap-3">
             <Link href="/chat" passHref>
               <Button
-                className="position-relative"
-                style={{
-                  width: 35,
-                  height: 35,
-                  borderRadius: "100%",
-                  backgroundColor: "#EAFEFD",
-                  border: "none",
-                }}
+                className={`position-relative ${styles.btn}`}
               >
                 <Image src="/assets/icons/message.svg" alt="" fluid />
-                <Badge bg="danger" className="position-absolute end-0 top-0">
-                  3
-                </Badge>
               </Button>
             </Link>
 
@@ -124,20 +115,11 @@ const AuthHeader = () => {
 
             <Button
               variant="primary position-relative"
-              style={{
-                width: 35,
-                height: 35,
-                borderRadius: "100%",
-                backgroundColor: "#EAFEFD",
-                border: "none",
-              }}
+              className={`position-relative ${styles.btn}`}
               onClick={notificationsDisplay}
               disabled={router.asPath === "/notifications" ? true : false}
             >
               <Image src="/assets/icons/notification.svg" alt="" fluid />
-              <Badge bg="warning" className="position-absolute end-0 top-0">
-                3
-              </Badge>
             </Button>
           </div>
           <NavDropdown
