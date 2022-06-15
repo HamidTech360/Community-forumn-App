@@ -46,7 +46,7 @@ body {
   @media screen and (max-width: 1000px) {
     padding-top: 5vmax;
   }
-  
+
   @media screen and (max-width: 730px) {
     padding-top: 6vmax;
   }
@@ -214,67 +214,44 @@ nav {
   margin-right: -2rem;
   border: none;
 
-<<<<<<< HEAD
   &:focus {
     outline: none;
     box-shadow: none;
   }
 
+  @media screen and (max-width: 1290px) {
+    margin-right: -4rem !important;
+  }
+
   @media screen and (max-width: 1200px) {
-    margin-top: 4.5rem;
-    margin-left: 3rem;
+    margin: 4.5rem 0 0 5rem;
   }
 
   @media screen and (max-width: 992px) {
     margin-top: 5rem;
-    margin-left: 5rem;
+    font-size: 1.7rem;
+  }
+
+  @media screen and (max-width: 800px) {
+    margin-top: 5rem;
+    margin-left: 4rem;
     font-size: 1.7rem;
   }
 
   @media screen and (max-width: 599px) {
     margin-top: 4rem;
-    margin-left: 2.5rem;
+    margin-left: 2rem;
   }
 
   @media screen and (max-width: 400px) {
     margin-left: 3rem;
     margin-top: 4.5rem;
   }
-=======
-    @media screen and (max-width: 1290px) {
-      margin-right: -4rem !important;
-    }
 
-    @media screen and (max-width: 1200px){
-      margin: 4.5rem 0 0 5rem;
-    }
-
-    @media screen and (max-width: 992px){
-      margin-top: 5rem;
-      font-size: 1.7rem;
-    }
-
-    @media screen and (max-width: 800px){
-      margin-top: 5rem;
-      margin-left: 4rem;
-      font-size: 1.7rem;
-    }
-
-    @media screen and (max-width: 599px){
-      margin-top: 4rem;
-      margin-left: 2rem;
-    }
-
-    @media screen and (max-width: 400px){
-      margin-left: 3rem;
-      margin-top: 4.5rem;
-    }
-
-    @media screen and (max-width: 300px){
-      font-size: 1.4rem;
-      margin-left: 3.5rem;
-    }
->>>>>>> 1642d08341ac78d113886d423a4a3ef0cea4ad03
+  @media screen and (max-width: 300px) {
+    font-size: 1.4rem;
+    margin-left: 3.5rem;
+  }
 }
 
 .post-content {
@@ -283,7 +260,7 @@ nav {
       font-size: small;
     }
 
-    @media screen and (max-width:300px){
+    @media screen and (max-width: 300px) {
       font-size: x-small;
     }
   }
@@ -397,12 +374,11 @@ textarea {
   padding: 0.5rem;
   border-radius: 10px;
 
-  @media screen and (max-width:300px){
-    font-size:smaller !important;
+  @media screen and (max-width: 300px) {
+    font-size: smaller !important;
     padding: 0.2rem 0.5rem;
   }
 }
-
 
 .card li {
   margin: 0;
@@ -433,18 +409,17 @@ textarea {
   }
 }
 
-.img-container{
+.img-container {
   @media screen and (max-width: 748px) {
     margin-bottom: 2rem;
   }
 }
 
-.image-container{
+.image-container {
   @media screen and (max-width: 748px) {
     margin-top: -4rem;
     margin-bottom: 2rem;
   }
-    
 }
 .absolute-bottom {
   position: absolute;
@@ -460,20 +435,17 @@ textarea {
     color: inherit;
     margin-right: 3rem;
 
-    @media screen and (max-width:1100px) {
+    @media screen and (max-width: 1100px) {
       margin-right: 1.5rem;
     }
 
-    
-
     @media screen and (max-width: 900px) {
       font-size: large;
-
     }
   }
 }
 
-.nav-btn{
+.nav-btn {
   margin-top: 1rem;
 }
 
