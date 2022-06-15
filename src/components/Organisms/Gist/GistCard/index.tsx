@@ -18,11 +18,7 @@ import styles from "@/styles/gist.module.scss";
 //     body: string;
 //   };
 // }
-const GistCard = ({
-  gist,
-  author,
-  primary,
-}:any) => {
+const GistCard = ({ gist, author, primary }: any) => {
   return (
     <Card
       className="mt-4 p-3 shadow-sm"
@@ -36,7 +32,7 @@ const GistCard = ({
       <div className="row d-flex flex-row mb-0 mb-md-2">
         <div className="col-1 me-3 pt-2 pt-md-3 align-items-center">
           <Image
-            src={'/images/imagePlaceholder.jpg'}
+            src={"/images/imagePlaceholder.jpg"}
             width={50}
             height={50}
             alt="Avatar"
@@ -46,7 +42,7 @@ const GistCard = ({
         </div>
         <div className={`col-9 col-sm-10 col-md-7 ${styles.div}`}>
           <small className="text-secondary">
-            Started by {author.firstName} {author.lastName}
+            Started by {author?.firstName} {author?.lastName}
           </small>
           <br />
           <h5 className={`text-primary mt-1 ${styles.title}`}>
@@ -61,20 +57,20 @@ const GistCard = ({
       </div>
       <Card.Body
         dangerouslySetInnerHTML={{
-          __html: striptags(
-            gist?.post,
-            "<a> <b> <em> <p> <strong> <i>"
-          ).slice(0, 500),
+          __html: striptags(gist?.post, "<a> <b> <em> <p> <strong> <i>").slice(
+            0,
+            500
+          ),
         }}
         style={{
           marginTop: "-1rem",
           lineHeight: "1.3rem",
-          whiteSpace:'pre-line'
+          whiteSpace: "pre-line",
         }}
       />
       {!primary && (
         <div className="d-flex justify-content-end mt-2">
-          <Link href={`/gist/${gist._id}`} passHref>
+          <Link href={`/gist/${gist?._id}`} passHref>
             <Button variant="primary">Join conversation</Button>
           </Link>
         </div>
