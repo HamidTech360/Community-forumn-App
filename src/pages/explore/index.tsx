@@ -62,7 +62,7 @@ const Explore = ({
               </div>
             </Col>
             <Col md={6}>
-              <Container className="image-container">
+              <Container className="img-container">
                 <Image
                   src="/assets/blog-post/pana.svg"
                   alt="Vector Icon"

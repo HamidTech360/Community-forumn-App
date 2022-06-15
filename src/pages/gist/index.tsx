@@ -110,7 +110,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   }
 
   return (
-    <section className={styles.gist} style={{ marginBottom: "-2.4rem" }}>
+    <section className={styles.gist} >
       <ToastContainer/>
       <Head>
         <title>Gists</title>
@@ -162,8 +162,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                
                 
                 <span>
-                  <AiOutlinePlusCircle onClick={()=>setShowModal(true)} size={35} style={{cursor:'pointer'}} />
-                  <span className="newGistText" style={{marginLeft:'10px', fontSize:'14px', fontWeight:'700'}}>create gist</span>
+                  <AiOutlinePlusCircle color = '#207681' onClick={()=>setShowModal(true)} size={35}  className = {styles.create}/>
+                  <span className="newGistText" style={{marginLeft:'10px', fontSize:'14px', fontWeight:'700'}}>Create Gist</span>
                 </span>
                 <select className="outline-primary">
                   <option>Canada</option>
@@ -196,7 +196,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             centered
           >
           
-         <span className={styles.closeBtn} > <FaTimes style={{cursor:'pointer'}} size={35} onClick={()=>setShowModal(false)} /> </span>
+         <span className={styles.closeBtn} > <FaTimes color = '#207681'style={{cursor:'pointer'}} size={35} onClick={()=>setShowModal(false)} /> </span>
          <div className={styles.newGistModal}>
              <Form onSubmit={(e)=>handleSubmit(e)}>
                 <Form.Group className={formStyles.formGroup}>
@@ -226,7 +226,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                 
                 <Button variant="primary" className="d-flex mx-auto" type="submit">
                  
-                  {state.isLoading?'uploading...':'continue'} 
+                  {state.isLoading?'uploading...':'Continue'} 
                 </Button>
               </Form>
 

@@ -1222,6 +1222,7 @@ progress {
     width: 50%;
   }
 
+  
   .col-md-7 {
     flex: 0 0 auto;
     width: 58.33333333%;
@@ -3125,6 +3126,8 @@ fieldset:disabled .btn {
   background-color: #207681;
   border-color: #207681;
 }
+
+
 .btn-primary:hover,
 .tab-item:hover {
   color: #fff !important;
@@ -3134,13 +3137,13 @@ fieldset:disabled .btn {
 
 @media screen and (max-width: 900px) {
   .mt-2 > .btn-primary {
-    font-size: small;
+    font-size: medium;
   }
 }
 
 @media screen and (max-width: 500px) {
   .mt-2 > .btn-primary {
-    font-size: x-small;
+    font-size: smaller;
   }
 }
 
@@ -3754,6 +3757,12 @@ fieldset:disabled .btn {
   border-radius: 0.3rem;
 }
 
+@media screen and (max-width: 300px){
+  .btn-lgs{
+    font-size: medium;
+  }
+}
+
 .btn-sm,
 .btn-group-sm > .btn {
   padding: 0.25rem 0.5rem;
@@ -4349,6 +4358,12 @@ fieldset:disabled .btn {
   text-decoration: none;
   white-space: nowrap;
 }
+
+@media screen and (max-width: 1100px){
+  .navbar-brand{
+    margin-right: 2rem;
+  }
+}
 .navbar-nav {
   display: flex;
   flex-direction: column;
@@ -4376,7 +4391,6 @@ fieldset:disabled .btn {
 }
 
 .navbar-toggler {
-  padding: 0.25rem 0.75rem;
   font-size: 1.25rem;
   line-height: 1;
   background-color: transparent;
@@ -4840,7 +4854,7 @@ fieldset:disabled .btn {
 
 .card-body {
   flex: 1 1 auto;
-  padding: 1rem 1rem;
+  padding: 1rem;
 }
 
 .card-body > p > b {
@@ -4849,7 +4863,7 @@ fieldset:disabled .btn {
 
 @media screen and (max-width: 500px) {
   .card-body{
-    padding: 1rem 0.5rem;
+    padding: 1rem 0rem;
   }
   .card-body > p {
     font-size: small !important;
@@ -4868,10 +4882,6 @@ fieldset:disabled .btn {
 @media screen and (max-width: 800px){
   .card-title{
     margin:  auto -1rem !important;
-  }
-
-  .card-title{
-    margin: auto !important;
   }
 
   .card-subtitle.h6{
@@ -4911,6 +4921,19 @@ fieldset:disabled .btn {
   background-color: rgba(0, 0, 0, 0.03);
   border-top: 1px solid rgba(0, 0, 0, 0.125);
 }
+
+@media screen and (max-width: 400px){
+  .card-footer{
+    padding: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 300px){
+  .card-footer{
+    padding: 0.5rem 0;
+  }
+}
+
 .card-footer:last-child {
   border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
 }
@@ -5218,27 +5241,6 @@ fieldset:disabled .btn {
 .pagination-sm .page-item:last-child .page-link {
   border-top-right-radius: 0.2rem;
   border-bottom-right-radius: 0.2rem;
-}
-
-.badge {
-  display: inline-block;
-  padding: 0.45em 0.65em;
-  font-size: 0.75em;
-  font-weight: 700;
-  line-height: 1;
-  color: #fff;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: 0.25rem;
-}
-.badge:empty {
-  display: none;
-}
-
-.btn .badge {
-  position: relative;
-  top: -1px;
 }
 
 .alert {
@@ -9277,8 +9279,8 @@ fieldset:disabled .btn {
     }
 
     .post-img {
-      width: 15px;
-      height: 15px;
+      width: 20px;
+      height: 20px;
     }
   }
 
@@ -11919,5 +11921,13 @@ fieldset:disabled .btn {
     display: none !important;
   }
 }
+
+@media screen and (max-width: 300px){
+  .post-img{
+    width: 14px;
+  }
+}
+
+
 
 /*# sourceMappingURL=bootstrap.css.map */
