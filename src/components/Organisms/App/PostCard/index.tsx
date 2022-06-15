@@ -58,6 +58,7 @@ const PostCard = ({
             <small
               dangerouslySetInnerHTML={{ __html: post?.title }}
             /> 
+            <br/>
            <span >
                <Age time={post?.date} />
             </span>
