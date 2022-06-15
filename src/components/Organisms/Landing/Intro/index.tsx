@@ -24,7 +24,8 @@ const Intro = () => {
                 abroad community and get all the information that you need.
               </p>
 
-              <Button variant="primary" size="lg">
+              <Button variant="primary" className = 'btn-lgs' 
+              size="lg">
                 Get Started
               </Button>
             </Container>

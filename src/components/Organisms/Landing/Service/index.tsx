@@ -7,7 +7,7 @@ const Services = () => {
     <section className={`${styles.services} align-items-center`}>
       <Container>
         <Row className={`align-items-center ${styles.row}`}>
-          <Col md={6}>
+          <Col md={6} className = {styles.image_section}>
             <div className={`m-4 ${styles.masonry}`}>
               {masonry.map((number) => (
                 <Image
@@ -22,13 +22,16 @@ const Services = () => {
           <Col md={6}>
             <Container>
               <h1 className={styles.heading}>What we offer</h1>
-              <div className="text">
-                We offer an interactive online community that provides
-                information and connects people about studying, working and
-                living abroad. The platform offers an interactive source of
-                information about free education & scholarship opportunities for
-                international students at the undergraduate, graduate &
-                Postgraduate levels of studies abroad.
+              <div >
+                <p className = {styles.msg}>
+                  We offer an interactive online community that provides
+                  information and connects people about studying, working and
+                  living abroad. The platform offers an interactive source of
+                  information about free education & scholarship opportunities for
+                  international students at the undergraduate, graduate &
+                  Postgraduate levels of studies abroad.
+                </p>
+               
               </div>
             </Container>
           </Col>
