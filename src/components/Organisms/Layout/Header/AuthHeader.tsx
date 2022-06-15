@@ -155,8 +155,12 @@ const AuthHeader = () => {
                 ) : (
                   <BsEnvelope />
                 )}
-                <Badge bg="danger" className="position-absolute end-0 top-0">
-                  3
+                <Badge
+                  bg="danger"
+                  style={{ width: 25, height: 25 }}
+                  className=" rounded-circle position-absolute end-0 top-0"
+                >
+                  <small>3</small>
                 </Badge>
               </Button>
             </Link>
@@ -194,8 +198,12 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
-              <Badge bg="warning" className="position-absolute end-0 top-0">
-                3
+              <Badge
+                bg="warning"
+                style={{ width: 25, height: 25 }}
+                className="position-absolute  rounded-circle end-0 top-0"
+              >
+                <small>3</small>
               </Badge>
             </Button>
           </div>
