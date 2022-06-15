@@ -7,11 +7,11 @@ function NotificationRender({ notification }) {
   return (
     <div className={styles.notificationListItem}>
       <div className={styles.notificationDot}>
-        <GoPrimitiveDot size={10} className="text-primary" />{" "}
+        <GoPrimitiveDot size={30} className="text-primary" />{" "}
       </div>
       <div>
         <div
-          className={`${styles.notificationMessages} lh-1`}
+          className={`${styles.notificationMessages}`}
           style={{ cursor: "pointer" }}
         >
           <Card.Text> {notification.message}</Card.Text>

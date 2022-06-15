@@ -28,6 +28,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   const state = useSelector(s=>s.gist)
   const [showModal, setShowModal] = useState(false)
   const [allGists, setAllGists] = useState([])
+  const [users, setUsers] = useState([])
   const [formData, setFormData] = useState({
     title:'',
     post:''
@@ -37,12 +38,16 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     document.body.style.backgroundColor = "#f6f6f6";
      (async function (){
         try{
-          const response = await axios.get('/api/gists')
-          console.log(response.data);
+          const gistResponse = await axios.get('/api/gists')
+          const userResponse = await axios.get('/api/user', {headers:{
+            authorization:`Bearer ${localStorage.getItem('accessToken')}`
+          }})
+          setUsers(userResponse.data.users)
+          setAllGists(gistResponse.data.reverse())
+          console.log(gistResponse.data.reverse());
           
-        }catch(e){
-          console.log('Failed to fetch');
-          
+        }catch(error){
+          console.log(error.response?.data); 
         }
 
     })()
@@ -52,13 +57,17 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   }, []);
 
   useEffect(()=>{
-    if(state.isSuccess){
+    if(state?.isSuccess){
       
       toast.success('Gist uploaded successfully', {
         position: toast.POSITION.TOP_RIGHT,
         toastId:customId
       })
-      setShowModal(false)
+      setShowModal(false);
+      (async function(){
+        const response  = await axios.get('/api/gists')
+        setAllGists(response.data.reverse())
+      })()
      
     }else if(state.error){
       toast.error('Error uploading', {
@@ -110,17 +119,17 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         <h2>Popular Gists</h2>
         <div>
           <EndlessCarousel gap="mx-auto">
-            {gists?.map((post, key) => (
+            {allGists?.map((item, key) => (
               <Card
                 key={`article-${key}`}
-                id={post?.id}
+                id={item?._id}
                 image={
-                  post?.bbp_media
-                    ? post?.bbp_media[0]!.attachment_data?.thumb
+                  item?.bbp_media
+                    ? item?.bbp_media[0]!.attachment_data?.thumb
                     : "/images/formbg.png"
                 }
-                title={post?.title}
-                author={post?._embedded?.user[0].name}
+                title={item.title}
+                author={users.find((i)=>item.user==i._id)}
               />
             ))}
           </EndlessCarousel>
@@ -160,8 +169,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
               </div>
             </BCard.Header>
             <BCard.Body className={styles.cardBody}>
-              {gists.map((post, key) => (
-                <GistCard gist={post} key={`gist-${key}`} />
+              {allGists.map((post, key) => (
+                <GistCard gist={post} author={users.find((i)=>post.user==i._id)} key={`gist-${key}`} />
               ))}
             </BCard.Body>
           </Col>
