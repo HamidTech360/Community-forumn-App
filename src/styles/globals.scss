@@ -214,11 +214,6 @@ nav {
   margin-right: -2rem;
   border: none;
 
-  &:focus {
-    outline: none;
-    box-shadow: none;
-  }
-
   @media screen and (max-width: 1290px) {
     margin-right: -4rem !important;
   }
