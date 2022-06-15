@@ -60,7 +60,7 @@ const Footer = () => {
         </div>
       ) : (
         <footer
-          className="d-none d-lg-block mt-5 p-3 position-relative fixed-bottom shadow"
+          className="footer d-none d-lg-block mt-5 p-3  fixed-bottom shadow"
           style={{ backgroundColor: "#ffffff", zIndex: "9" }}
         >
           <Container>
