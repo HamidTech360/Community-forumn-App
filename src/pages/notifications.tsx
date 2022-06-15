@@ -112,10 +112,16 @@ const Notifications = () => {
           className={`${
             router.asPath === "/notifications"
               ? "col-12 col-md-9 col-lg-6"
-              : "col-12"
+              : "col-12 p-0"
           }`}
         >
-          <Card className="border-0 shadow px-4">
+          <Card
+            className={
+              router.asPath === "/notifications"
+                ? "shadow  border-0 px-4"
+                : " border-0"
+            }
+          >
             <Card.Body>
               <Card.Title className={styles.notificationHeaderText}>
                 <span className="h1"> Notifications</span>
