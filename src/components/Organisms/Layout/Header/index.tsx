@@ -80,7 +80,7 @@ const Header = () => {
 
             {!disabled.includes(activePage) && (
               <Navbar.Collapse id="responsive-navbar-nav" className=" gap-4">
-                <Nav className="mx-auto  gap-5">
+                <Nav className="mx-auto blockquote nav-item ">
                   {links.map((link, index) => (
                     <Nav.Item
                       className={link.link === activePage ? `active` : ""}

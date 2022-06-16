@@ -7,7 +7,7 @@ import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
 import { BsFolderFill, BsXCircleFill } from "react-icons/bs";
 
 import Age from "../../../Atoms/Age";
-import styles from '@/styles/profile.module.scss'
+import styles from "@/styles/profile.module.scss";
 
 const PostCard = ({
   post,
@@ -44,29 +44,28 @@ const PostCard = ({
       }}
     >
       <Card.Title
-        className="position-relative d-flex justify-content-start gap-2 pb-2 border-bottom"
-        style={{ marginLeft: "-1rem" }}
+        className={`position-relative d-flex justify-content-start gap-2 pb-2 border-bottom ${styles.title}`}
       >
         <Image
-          src={'/images/imagePlaceholder.jpg'}
+          src={"/images/imagePlaceholder.jpg"}
           width={45}
           height={45}
           alt=""
           roundedCircle
         />
         <div className="d-flex flex-column">
-          <div className = { styles.div}>
+          <div className={styles.div}>
             <small
               style={{ fontSize: "0.8rem" }}
-              dangerouslySetInnerHTML={{ __html: 'Posted '}}
+              dangerouslySetInnerHTML={{ __html: "Posted " }}
             />
             <span style={{ fontSize: "0.9rem" }}>
-               <Age time={post?.createdAt} />
+              <Age time={post?.createdAt} />
             </span>
           </div>
 
           <NavDropdown
-            className={`position-absolute end-0 ${ styles.dropdown}`}
+            className={`position-absolute end-0 ${styles.dropdown}`}
             drop="down"
             title={
               <Button variant="light" size="sm" className="dot-btn">
@@ -74,13 +73,13 @@ const PostCard = ({
               </Button>
             }
           >
-            <NavDropdown.Item>
+            <NavDropdown.Item className={styles.item}>
               <RiClipboardFill /> &nbsp; Copy post link
             </NavDropdown.Item>
-            <NavDropdown.Item>
+            <NavDropdown.Item className={styles.item}>
               <BsFolderFill /> &nbsp; Open Post
             </NavDropdown.Item>
-            <NavDropdown.Item className = {styles.item}>
+            <NavDropdown.Item className={styles.item}>
               {" "}
               <RiFlagFill /> &nbsp; Report post
             </NavDropdown.Item>
@@ -94,19 +93,19 @@ const PostCard = ({
       <Card.Body
         style={{
           cursor: "pointer",
-          marginLeft: "-1.8rem",
-          marginRight: "-1.8rem",
         }}
       >
         <div
           className="post-content"
           dangerouslySetInnerHTML={{
             __html: trimmed
+
               ? strip(
                   post.postBody,
                   "<p> <strong> <b> <a> <em> <i>"
                 )?.slice(0, 500) + "..."
-              : post.postTitle,
+              : post.postTitle
+
           }}
         />
         {!trimmed && (
@@ -131,7 +130,7 @@ const PostCard = ({
               alt=""
               width={20}
               height={20}
-              // className="post-img"
+              className="post-img"
             />
             <span className="d-none d-md-block">{item.name}</span>
           </Button>

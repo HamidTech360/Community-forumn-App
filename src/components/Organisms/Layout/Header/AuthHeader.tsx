@@ -23,6 +23,7 @@ import {
   notificationsOffcanvas,
   selectNotificationOffcanvas,
 } from "@/reduxFeatures/app/appSlice";
+import styles from "@/styles/utils.module.scss";
 
 import {
   AiFillHome,
@@ -149,7 +150,7 @@ const AuthHeader = () => {
               </Link>
             ))}
           </Nav>
-          <div className="notifications d-flex  gap-2">
+          <div className="notifications d-flex  gap-3">
             <Link href="/chat" passHref>
               <Button
                 variant="none position-relative"

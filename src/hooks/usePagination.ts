@@ -27,7 +27,7 @@ interface IPost {
 // };
 
 export const usePagination = () => {
-  // const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1);
   // const { data, error, isValidating } = useSWR(
   //   `buddyboss/v1/activity?_fields=content_stripped,user_id,name,content,date,user_avatar,bp_media_ids,title,id,type&per_page=10&page=${page}`,
   //   fetcher,
@@ -36,7 +36,7 @@ export const usePagination = () => {
   //   }
   // );
   const [posts, setPosts] = useState<IPost[]>([]);
-  const [isFetchingMore, setIsFetchingMore] = useState(false)
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
 
   useEffect(() => {
     // if (data) {
@@ -54,24 +54,24 @@ export const usePagination = () => {
     //     return posts;
     //   });
     // }
-    (async function(){
-        try{
-          const response = await axios.get(`/api/posts`)
-          console.log(response.data);
-          
-          setPosts(response.data.posts)
-        }catch(error){
-          console.log(error.response?.data);
-        }
-    })()
+    (async function () {
+      try {
+        const response = await axios.get(`/api/posts`);
+        console.log(response.data);
+
+        setPosts(response.data.posts);
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    })();
   }, []);
 
   return {
     posts,
     // error,
-    // setPage,
+    setPage,
     isFetchingMore,
     // hasMore: data ? page < Number(data.headers["x-wp-totalpages"]) : true,
-    hasMore:false
+    hasMore: false,
   };
 };

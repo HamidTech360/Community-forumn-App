@@ -1,7 +1,10 @@
 //import useUser from "@/hooks/useUser";
 import React from "react";
 import { Card, Col, Form, Image, Row } from "react-bootstrap";
+
 import { useSelector } from "@/redux/store";
+import styles from '@/styles/utils.module.scss';
+
 
 import Editor from "../Editor";
 
@@ -23,7 +26,7 @@ const CreatePost = () => {
         <>
           <Form style={{ width: "100%" }}>
             <Form.Control
-              className="radius-20"
+              className={`radius-20  ${styles.form}`}
               style={{ width: "100%" }}
               placeholder={`Hey ${
                 data?.firstName.split(" ")[0]
