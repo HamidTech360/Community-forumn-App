@@ -6,7 +6,7 @@ import CreatePost from "../../Organisms/CreatePost";
 
 const Timeline = () => {
   const [scrollInitialized, setScrollInitialized] = useState(false);
-  const { posts, setPage, hasMore, isFetchingMore } = usePagination();
+  const { posts,  hasMore, isFetchingMore } = usePagination();
   const intersection = useRef();
 
   const checkScroll = () => {
@@ -32,7 +32,7 @@ const Timeline = () => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setPage((prevPage) => prevPage + 1);
+            // setPage((prevPage) => prevPage + 1);
           }
         });
       },
@@ -45,7 +45,7 @@ const Timeline = () => {
       if (targetItem) observer.unobserve(targetItem);
       observer.disconnect();
     };
-  }, [posts, scrollInitialized, setPage]);
+  }, [posts, scrollInitialized]);
 
   return (
     <div>

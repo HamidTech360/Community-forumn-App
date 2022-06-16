@@ -10,8 +10,9 @@ import {
   Badge,
   Offcanvas,
 } from "react-bootstrap";
-import useUser from "@/hooks/useUser";
+//import useUser from "@/hooks/useUser";
 import Notifications from "@/pages/notifications";
+import {RiLogoutCircleRLine} from 'react-icons/ri'
 
 import Logo from "@/components/Atoms/Logo";
 import Loader from "@/components/Organisms/Layout/Loader/Loader";
@@ -37,6 +38,8 @@ import {
 } from "react-icons/md";
 import styles from '@/styles/utils.module.scss'
 
+import { logout } from "@/redux/user";
+
 const AuthHeader = () => {
   const links = [
     { icon: "feed", name: "Home" },
@@ -45,11 +48,12 @@ const AuthHeader = () => {
     { icon: "groups", name: "Groups" },
   ];
 
-  const { user } = useUser();
+  //const { user } = useUser();
   const router = useRouter();
 
   const dispatch = useDispatch();
   const show = useSelector(selectNotificationOffcanvas);
+  const {data} = useSelector(s=>s.user)
 
   // Set notificationsOffcanvas in redux state to true
   const handleClose = () => dispatch(notificationsOffcanvas(false));
@@ -63,6 +67,12 @@ const AuthHeader = () => {
       router.push("/notifications");
     }
   };
+
+  const LogOut = ()=>{
+    router.push('/login')
+    dispatch(logout({}))
+    //router.push('/login')
+  }
 
   const activeTab = (link) => {
     console.log("link.icon:", link.icon);
@@ -192,25 +202,27 @@ const AuthHeader = () => {
             title={
               <>
                 <Image
-                  src={user?.avatar?.url || "/images/formbg.png"}
+                  src={data?.avatar?.url || "/images/formbg.png"}
                   alt=""
                   className = {styles.img}
                   roundedCircle
                 />
+
                 <span className={`mx-2 ${styles.span}`}>{user?.firstName.split(" ")[0]}</span>
+
               </>
             }
           >
             <NavDropdown.Header>
               <Image
-                src={user?.avatar?.url || "/images/formbg.png"}
+                src={data?.avatar?.url || "/images/formbg.png"}
                 alt=""
                 width={20}
                 height={20}
                 roundedCircle
               />
               <span className="mx-2">
-                {user?.firstName}&nbsp; {user?.lastName}
+                {data?.firstName}&nbsp; {data?.lastName}
               </span>{" "}
             </NavDropdown.Header>
             <NavDropdown.Divider />
@@ -221,7 +233,11 @@ const AuthHeader = () => {
               </Link>
             </NavDropdown.Item>
             <NavDropdown.Item>Support</NavDropdown.Item>
-            {/* <NavDropdown.Item onClick={handleLogOut}>Logout</NavDropdown.Item> */}
+            <NavDropdown.Item 
+                  style={{fontWeight:'700', marginTop:'10px'}} onClick={()=>LogOut()}>
+                    Logout 
+                    <RiLogoutCircleRLine size={14}/>
+            </NavDropdown.Item> 
           </NavDropdown>
         </Container>
       </Navbar>

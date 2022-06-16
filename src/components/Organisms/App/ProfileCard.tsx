@@ -7,6 +7,7 @@ import Bookmarks from "../../Templates/Profile/Bookmarks";
 import Friends from "../../Templates/Profile/Friends";
 import Media from "../../Templates/Profile/Media";
 import Timeline from "../../Templates/Profile/Timeline";
+import {useSelector} from "@/redux/store"
 
 interface IComponents {
   about: ReactNode;
@@ -25,7 +26,7 @@ const Components: IComponents = {
 
 const ProfileCard = () => {
   const { path } = useRouter().query;
-
+  const {data} = useSelector(s=>s.user)
   return (
     <Card className="mt-2 mb-3">
       <CardImg
@@ -45,8 +46,8 @@ const ProfileCard = () => {
           }}
           roundedCircle
         />
-        <text className=" mt-4 bold text-center fs-7">Mike Dike</text>
-        <text className="text-muting">@MikeD</text>
+        <text className=" mt-4 bold text-center fs-7">{data?.firstName} {data?.lastName}</text>
+        <text className="text-muting">@{data?.firstName}</text>
         <text className="text-muted text-center">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
           illum quasi voluptatem explicabo, tempore enim!

@@ -19,7 +19,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 //redux actions
-import { uploadFailed, uploadStart, uploadSuccess } from "@/redux/gist";
+import { uploadFailed, uploadStart, uploadSuccess, uploadCleanUp } from "@/redux/gist";
 
 const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
  
@@ -70,7 +70,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         const response  = await axios.get('/api/gists')
         setAllGists(response.data.reverse())
       })()
-     
+
+      dispatch(uploadCleanUp({}))
     }else if(state.error){
       toast.error('Error uploading', {
         position: toast.POSITION.TOP_RIGHT,

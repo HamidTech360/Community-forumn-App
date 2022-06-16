@@ -31,7 +31,7 @@ const Components: IComponents = {
   bookmarks: <Bookmarks />,
 };
 const Profile = () => {
-  const { posts, setPage, hasMore, isFetchingMore } = usePagination();
+  //const { posts,  hasMore, isFetchingMore } = usePagination();
 
   const router = useRouter();
 

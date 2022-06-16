@@ -9,6 +9,7 @@ import {
 
 import postReducer from './post'
 import gistReducer from './gist'
+import userReducer from './user'
 
 /**
  * Creates a store and includes all the slices as reducers.
@@ -17,6 +18,7 @@ export const store = configureStore({
   reducer: {
     post:postReducer,
     gist:gistReducer,
+    user:userReducer,
     app: appReducer,
     authState: authStateReducer,
   },
