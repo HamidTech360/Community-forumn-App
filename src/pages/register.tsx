@@ -86,7 +86,7 @@ const Register = () => {
   }, [message]);
 
   return (
-    <AuthContent>
+    <UnAuthContent>
       <FormWrapper
         form={
           <div>
@@ -206,7 +206,7 @@ const Register = () => {
           </div>
         }
       />
-    </AuthContent>
+    </UnAuthContent>
   );
 };
 
