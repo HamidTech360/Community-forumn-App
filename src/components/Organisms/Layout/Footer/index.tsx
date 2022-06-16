@@ -5,12 +5,12 @@ import { useSelector } from "@/redux/store";
 import Logo from "../../../Atoms/Logo";
 
 const Footer = () => {
- // const { isAuthenticated } = useUser();
- const state = useSelector(s=>s.user)
+  // const { isAuthenticated } = useUser();
+  const state = useSelector((s) => s.user);
   return (
     <>
       {!state.isAuthenticated ? (
-        <div className="footer mt-5 fixed-bottom">
+        <div className="footer mt-5">
           <Container>
             <Row className="px-3">
               <Col md={3} xs={6}>
@@ -61,7 +61,7 @@ const Footer = () => {
         </div>
       ) : (
         <footer
-          className="footer d-none d-lg-block mt-5 p-3  fixed-bottom shadow"
+          className="footer d-none d-lg-block mt-5 p-3   shadow"
           style={{ backgroundColor: "#ffffff", zIndex: "9" }}
         >
           <Container>

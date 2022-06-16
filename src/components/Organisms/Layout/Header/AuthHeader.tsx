@@ -160,7 +160,11 @@ const AuthHeader = () => {
                 ) : (
                   <BsEnvelope />
                 )}
-                <Badge className = {styles.badge}>1</Badge>
+
+                <Badge className = {styles.badge}>1</Badge
+                  <small>3</small>
+                </Badge>
+
               </Button>
             </Link>
 
@@ -192,7 +196,11 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
+
               <Badge className = {styles.badge}>9</Badge>
+                <small>3</small>
+              </Badge>
+
             </Button>
           {/* </Link> */}
           </div>
