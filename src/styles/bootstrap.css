@@ -8316,6 +8316,17 @@ fieldset:disabled .btn {
   }
 }
 
+@media (max-width: 450px) {
+  .textMute, .text-primaries{
+    margin-right: -1rem;
+  }
+
+  .text-primaries > a, 
+  .textMute > a{
+    font-size: 0.9rem !important;
+  }
+}
+
 @media (max-width: 400px) {
   .textMute, .text-primaries{
     margin-right: -1rem;

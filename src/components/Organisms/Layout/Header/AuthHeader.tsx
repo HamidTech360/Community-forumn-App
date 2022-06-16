@@ -154,7 +154,7 @@ const AuthHeader = () => {
               </Button>
             </Link>
 
-            {/* <Offcanvas
+            <Offcanvas
               show={show}
               onHide={handleClose}
               placement={"end"}
@@ -168,9 +168,9 @@ const AuthHeader = () => {
               <Offcanvas.Body>
                 <Notifications />
               </Offcanvas.Body>
-            </Offcanvas> */}
+            </Offcanvas>
 
-          <Link href="/notifications" passHref>
+          {/* <Link href="/notifications" passHref> */}
             <Button
               variant="none position-relative"
               className = {styles.btn}
@@ -184,7 +184,7 @@ const AuthHeader = () => {
               )}
               <Badge className = {styles.badge}>9</Badge>
             </Button>
-          </Link>
+          {/* </Link> */}
           </div>
           <NavDropdown
             className={`d-none d-md-block ${styles.header}`}
