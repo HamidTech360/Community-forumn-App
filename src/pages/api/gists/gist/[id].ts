@@ -32,6 +32,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       categories,
     });
     res.status(200).json({ message: "Gist updated" });
+  }else if(req.method==="GET"){
+    console.log('getting');
+    
+    try{
+     const gist= await Gist.findById(gistID)
+     res.json({
+      status:'success',
+      message:'Gist fetched',
+      gist
+     })
+    }catch(error){
+      res.status(500).json({ error: error, message: "Something went wrong" });
+    }
   }
 };
 

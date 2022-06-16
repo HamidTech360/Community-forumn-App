@@ -1,5 +1,6 @@
 import useUser from "@/hooks/useUser";
 import Head from "next/head";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Col, Container, Image, Row, Spinner } from "react-bootstrap";
 import AuthContent from "@/components/Auth/AuthContent";
@@ -14,10 +15,12 @@ import styles from "@/styles/feed.module.scss";
 
 const Feed = () => {
   const { user } = useUser();
-  const { posts, setPage, hasMore, isFetchingMore } = usePagination();
+  //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
 
   const [scrollInitialised, setScrollInitialised] = useState(false);
-
+  const [posts, setPosts] = useState([])
+  const [users, setUsers] = useState([])
+  const [isFetching, setIsFetching] = useState(true)
   const checkScroll = () => {
     if (window.scrollY > 100) {
       setScrollInitialised(true);
@@ -25,6 +28,24 @@ const Feed = () => {
   };
 
   useEffect(() => {
+
+    (async function(){
+      try{
+        const response = await axios.get(`/api/posts`)
+        console.log(response.data);
+        
+        setPosts(response.data.posts)
+        setIsFetching(false)
+        const userResponse = await axios.get('/api/user', {headers:{
+          authorization:`Bearer ${localStorage.getItem('accessToken')}`
+        }})
+        setUsers(userResponse.data.users)
+      }catch(error){
+        console.log(error.response?.data);
+      }
+  })()
+
+
     document.body.style.backgroundColor = "#f6f6f6";
     window.addEventListener("scroll", checkScroll);
 
@@ -47,7 +68,7 @@ const Feed = () => {
               className="position-fixed d-none d-lg-flex flex-column gap-4 vh-100"
             >
               <UserCard user={user!} />
-              <Discussions />
+              <Discussions posts={posts}  />
             </div>
           </>
 
@@ -83,18 +104,18 @@ const Feed = () => {
             {posts?.map((post) => (
               <PostCard post={post} key={`activity-post-${post.id}`} trimmed />
             ))}
-            {isFetchingMore && (
+            {isFetching && (
               <div className="m-2 p-2 d-flex justify-content-center">
                 <Spinner animation="border" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </Spinner>
               </div>
-            )}
-            {!hasMore && (
+            )} 
+            {/* {!hasMore && (
               <p style={{ textAlign: "center" }}>
                 <b>Yay! You have seen it all</b>
               </p>
-            )}
+            )} */}
             {/* </InfiniteScroll> */}
           </main>
           <div

@@ -42,11 +42,12 @@ body {
 
 .body {
   padding-top: 6vmax;
-
+  min-height: 90vh;
+  margin-bottom: 1rem;
   @media screen and (max-width: 1000px) {
     padding-top: 5vmax;
   }
-  
+
   @media screen and (max-width: 730px) {
     padding-top: 6vmax;
   }
@@ -128,7 +129,6 @@ nav {
   @media screen and (max-width: 1000px) {
     margin-left: 1.5rem;
   }
-  
 
   @media screen and (max-width: 500px) {
     font-weight: smaller;
@@ -175,86 +175,84 @@ nav {
   }
 }
 
-.mb-div{
-
+.mb-div {
   @media screen and (max-width: 1000px) {
     margin-left: 1rem;
   }
-  
-  .mb-btns{
+
+  .mb-btns {
     margin: 1rem 0.5rem;
     padding: 0.5rem 1.5rem;
-  
-      @media screen and (max-width: 1000px) {
-        padding: 0.5rem 1.2rem;
-      }
-  
-      @media screen and (max-width: 700px) {
-        font-size: small;
-        margin: 1rem 0.4rem ;
-      }
-  
-      @media screen and (max-width: 430px) {
-        font-size: smaller;
-        margin: 1rem 0.3rem ;
-      } 
 
-      @media screen and (max-width: 360px) {
-        font-size: x-small;
-        margin: 0.8rem 0.3rem ;
+    @media screen and (max-width: 1000px) {
+      padding: 0.5rem 1.2rem;
+    }
 
-      }
-      @media screen and (max-width: 360px) {
-        font-size: xx-small;
-        margin: 0.7rem 0.3rem ;
-      } 
+    @media screen and (max-width: 700px) {
+      font-size: small;
+      margin: 1rem 0.4rem;
+    }
+
+    @media screen and (max-width: 430px) {
+      font-size: smaller;
+      margin: 1rem 0.3rem;
+    }
+
+    @media screen and (max-width: 360px) {
+      font-size: x-small;
+      margin: 0.8rem 0.3rem;
+    }
+    @media screen and (max-width: 360px) {
+      font-size: xx-small;
+      margin: 0.7rem 0.3rem;
+    }
   }
 }
-.dot-btn{
+.dot-btn {
   font-size: 2rem;
   background: none !important;
   margin-top: 5rem;
   margin-right: -2rem;
   border: none;
-  
-    &:focus{
-      outline: none;
-      box-shadow: none;
-    }
 
-    @media screen and (max-width: 1290px) {
-      margin-right: -4rem !important;
-    }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
 
-    @media screen and (max-width: 1200px){
-      margin: 4.5rem 0 0 5rem;
-    }
+  @media screen and (max-width: 1290px) {
+    margin-right: -4rem !important;
+  }
 
-    @media screen and (max-width: 992px){
-      margin-top: 5rem;
-      font-size: 1.7rem;
-    }
+  @media screen and (max-width: 1200px) {
+    margin: 4.5rem 0 0 5rem;
+  }
 
-    @media screen and (max-width: 800px){
-      margin-top: 5rem;
-      margin-left: 4rem;
-      font-size: 1.7rem;
-    }
+  @media screen and (max-width: 992px) {
+    margin-top: 5rem;
+    font-size: 1.7rem;
+  }
 
-    @media screen and (max-width: 599px){
-      margin-top: 4rem;
-      margin-left: 2rem;
-    }
+  @media screen and (max-width: 800px) {
+    margin-top: 5rem;
+    margin-left: 4rem;
+    font-size: 1.7rem;
+  }
 
-    @media screen and (max-width: 400px){
-      margin-left: 3rem;
-      margin-top: 4.5rem;
-    }
+  @media screen and (max-width: 599px) {
+    margin-top: 4rem;
+    margin-left: 2rem;
+  }
 
-    @media screen and (max-width: 300px){
-      font-size: 1.4rem;
-      margin-left: 3.5rem;
-    }
+  @media screen and (max-width: 400px) {
+    margin-left: 3rem;
+    margin-top: 4.5rem;
+  }
+
+  @media screen and (max-width: 300px) {
+    font-size: 1.4rem;
+    margin-left: 3.5rem;
+  }
 }
 
 .post-content{
@@ -266,35 +264,34 @@ nav {
       font-size: medium;
     }
 
-    @media screen and (max-width:300px){
+    @media screen and (max-width: 300px) {
       font-size: x-small;
     }
   }
 }
 
-.ham-menu{
+.ham-menu {
   font-size: 2rem;
   border: none;
   color: #207681;
 
-    &:focus{
-      outline: none;
-      box-shadow: none;
-    }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
 
-    @media (max-width: 380px){
-      font-size: x-large;
-    }
-    @media (max-width: 260px){
-      font-size: larger;
-    }
+  @media (max-width: 380px) {
+    font-size: x-large;
+  }
+  @media (max-width: 260px) {
+    font-size: larger;
+  }
 }
 .text-primary {
   font-weight: bold !important;
 }
 .footer {
-  position: absolute;
-  bottom: auto;
+  margin-top: 2rem;
   width: 100%;
   background: #052b29;
   color: #ffffff;
@@ -314,9 +311,8 @@ nav {
 section {
   padding: 1rem 0;
 
-  @media screen and (max-width: 994px){
+  @media screen and (max-width: 994px) {
     padding: 1rem 0;
-
   }
 }
 
@@ -324,25 +320,23 @@ section {
   width: 260px !important;
   border-radius: 8.21687px;
   margin-bottom: 1rem;
-  
 
   .card {
     width: 100%;
     border: none;
     box-shadow: 0px 2px 15px rgba(33, 33, 52, 0.1);
 
-    @media screen and(max-width:1000px){
+    @media screen and(max-width:1000px) {
       width: 95% !important;
       font-size: medium !important;
     }
   }
 
-  @media screen and(max-width:1000px){
+  @media screen and(max-width:1000px) {
     width: 240px !important;
-    
   }
 
-  @media screen and(max-width:500px){
+  @media screen and(max-width:500px) {
     width: 180px !important;
   }
 }
@@ -383,56 +377,52 @@ textarea {
   padding: 0.5rem;
   border-radius: 10px;
 
-  @media screen and (max-width:300px){
-    font-size:smaller !important;
+  @media screen and (max-width: 300px) {
+    font-size: smaller !important;
     padding: 0.2rem 0.5rem;
   }
 }
-
 
 .card li {
   margin: 0;
   padding: 0;
 }
 
-.img2{
+.img2 {
   @media screen and (max-width: 600px) {
-      width: 0.5rem;
-
+    width: 0.5rem;
   }
   @media screen and (max-width: 300px) {
-      width: 0.2rem;
-      // margin-top: -6rem;
-
+    width: 0.2rem;
+    // margin-top: -6rem;
   }
 }
 
-.cards{
+.cards {
   border: none;
   padding: 2rem;
   box-shadow: 0px 2px 15px rgba(33, 33, 52, 0.2);
 
-  @media screen  and (max-width: 500px){
+  @media screen and (max-width: 500px) {
     padding: 1rem 1rem;
   }
 
-  @media screen  and (max-width: 400px){
+  @media screen and (max-width: 400px) {
     padding: 0 1rem;
   }
 }
 
-.img-container{
+.img-container {
   @media screen and (max-width: 748px) {
     margin-bottom: 2rem;
   }
 }
 
-.image-container{
+.image-container {
   @media screen and (max-width: 748px) {
     margin-top: -4rem;
     margin-bottom: 2rem;
   }
-    
 }
 .absolute-bottom {
   position: absolute;
@@ -448,18 +438,17 @@ textarea {
     color: inherit;
     margin-right: 3rem;
 
-    @media screen and (max-width:1100px) {
+    @media screen and (max-width: 1100px) {
       margin-right: 1.5rem;
     }
 
     @media screen and (max-width: 900px) {
       font-size: large;
-
     }
   }
 }
 
-.nav-btn{
+.nav-btn {
   margin-top: 1rem;
 }
 

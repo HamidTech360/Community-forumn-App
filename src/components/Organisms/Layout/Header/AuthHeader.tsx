@@ -22,7 +22,21 @@ import {
   notificationsOffcanvas,
   selectNotificationOffcanvas,
 } from "@/reduxFeatures/app/appSlice";
-import styles from '@/styles/utils.module.scss'
+import styles from "@/styles/utils.module.scss";
+
+import {
+  AiFillHome,
+  AiOutlineHome,
+  AiFillCompass,
+  AiOutlineCompass,
+} from "react-icons/ai";
+import { RiMessage2Fill, RiMessage2Line } from "react-icons/ri";
+import { HiUserGroup, HiOutlineUserGroup } from "react-icons/hi";
+import { BsEnvelopeFill, BsEnvelope } from "react-icons/bs";
+import {
+  MdNotificationsActive,
+  MdOutlineNotificationsActive,
+} from "react-icons/md";
 
 const AuthHeader = () => {
   const links = [
@@ -51,6 +65,46 @@ const AuthHeader = () => {
     }
   };
 
+  const activeTab = (link) => {
+    console.log("link.icon:", link.icon);
+    if (link.icon === "feed") {
+      if (link.icon === "feed" && router.asPath.substring(1) === "feed") {
+        return <AiFillHome />;
+      } else if (
+        link.icon === "feed" &&
+        router.asPath.substring(1) !== "feed"
+      ) {
+        return <AiOutlineHome />;
+      }
+    } else if (link.icon === "explore") {
+      if (link.icon === "explore" && router.asPath.substring(1) === "explore") {
+        return <AiFillCompass />;
+      } else if (
+        link.icon === "explore" &&
+        router.asPath.substring(1) !== "explore"
+      ) {
+        return <AiOutlineCompass />;
+      }
+    } else if (link.icon === "gist") {
+      if (link.icon === "gist" && router.asPath.substring(1) === "gist") {
+        return <RiMessage2Fill />;
+      } else if (
+        link.icon === "gist" &&
+        router.asPath.substring(1) !== "gist"
+      ) {
+        return <RiMessage2Line />;
+      }
+    } else if (link.icon === "groups") {
+      if (link.icon === "groups" && router.asPath.substring(1) === "groups") {
+        return <HiUserGroup />;
+      } else if (
+        link.icon === "groups" &&
+        router.asPath.substring(1) !== "groups"
+      ) {
+        return <HiOutlineUserGroup />;
+      }
+    }
+  };
   return (
     <>
       <Navbar
@@ -73,15 +127,14 @@ const AuthHeader = () => {
           <Nav className="d-flex justify-content-between gap-4 	d-none d-md-flex">
             {links.map((link, key) => (
               <Link key={key} href={`/${link.icon}`} passHref>
-                <div className="d-flex flex-column align-items-center gap-1 btn">
-                  <span>
-                    <Image
-                      src={`/assets/icons/${link.icon}.svg`}
-                      width={15}
-                      height={15}
-                      alt=""
-                    />
-                  </span>
+                <div
+                  className={`${
+                    router.asPath.substring(1) === link.icon
+                      ? "text-primary"
+                      : "text-muted"
+                  } d-flex flex-column align-items-center gap-1 btn`}
+                >
+                  <span>{activeTab(link)}</span>
                   <small>{link.name}</small>
                 </div>
               </Link>
@@ -90,9 +143,18 @@ const AuthHeader = () => {
           <div className="notifications d-flex  gap-3">
             <Link href="/chat" passHref>
               <Button
-                className={`position-relative ${styles.btn}`}
+                variant="none position-relative"
+                style={{
+                  borderRadius: "100%",
+                  backgroundColor: "#EAFEFD",
+                  border: "none",
+                }}
               >
-                <Image src="/assets/icons/message.svg" alt="" fluid />
+                {router.asPath === "/chat" ? (
+                  <BsEnvelopeFill />
+                ) : (
+                  <BsEnvelope />
+                )}
               </Button>
             </Link>
 
@@ -106,7 +168,6 @@ const AuthHeader = () => {
                 borderRadius: "15px 0 0 0",
               }}
               scroll={true}
-              // backdrop={false}
             >
               <Offcanvas.Body>
                 <Notifications />
@@ -114,12 +175,23 @@ const AuthHeader = () => {
             </Offcanvas>
 
             <Button
-              variant="primary position-relative"
-              className={`position-relative ${styles.btn}`}
+              variant="none position-relative"
+              style={{
+                width: 35,
+                height: 35,
+                borderRadius: "100%",
+                backgroundColor: "#EAFEFD",
+                border: "none",
+              }}
               onClick={notificationsDisplay}
               disabled={router.asPath === "/notifications" ? true : false}
             >
-              <Image src="/assets/icons/notification.svg" alt="" fluid />
+              {router.asPath === "/notifications" ? (
+                <MdNotificationsActive />
+              ) : (
+                <MdOutlineNotificationsActive />
+              )}
+             
             </Button>
           </div>
           <NavDropdown
@@ -172,15 +244,14 @@ const AuthHeader = () => {
           <Nav className="d-flex justify-content-around gap-4 w-100">
             {links.map((link, key) => (
               <Link key={key} href={`/${link.icon}`} passHref>
-                <div className="d-flex flex-column align-items-center gap-1 mobi-nav bg-white btn">
-                  <span>
-                    <Image
-                      src={`/assets/icons/${link.icon}.svg`}
-                      width={15}
-                      height={15}
-                      alt=""
-                    />
-                  </span>
+                <div
+                  className={`${
+                    router.asPath.substring(1) === link.icon
+                      ? "text-primary"
+                      : "text-muted"
+                  } d-flex flex-column align-items-center gap-1 mobi-nav bg-white btn`}
+                >
+                  <span>{activeTab(link)}</span>
                   <small>{link.name}</small>
                 </div>
               </Link>
