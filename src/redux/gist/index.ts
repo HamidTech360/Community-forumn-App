@@ -27,10 +27,14 @@ export const gistSlice = createSlice({
             state.data = action.payload
             state.isLoading = false
             state.isSuccess= true
+        },
+        uploadCleanUp:(state, action)=>{
+            state.isSuccess=false
+            state.isLoading=false
         }
 
     }
 })
 
-export const {uploadSuccess ,uploadFailed, uploadStart} = gistSlice.actions
+export const {uploadSuccess ,uploadFailed, uploadStart, uploadCleanUp} = gistSlice.actions
 export default gistSlice.reducer

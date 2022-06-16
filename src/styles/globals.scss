@@ -43,6 +43,7 @@ body {
 .body {
   padding-top: 6vmax;
 
+  margin-bottom: 1rem;
   @media screen and (max-width: 1000px) {
     padding-top: 5vmax;
   }
@@ -214,6 +215,11 @@ nav {
   margin-right: -2rem;
   border: none;
 
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
   @media screen and (max-width: 1290px) {
     margin-right: -4rem !important;
   }
@@ -283,7 +289,8 @@ nav {
 }
 .footer {
   position: absolute;
-  bottom: auto;
+  z-index: 3;
+  margin-top: 2rem;
   width: 100%;
   background: #052b29;
   color: #ffffff;

@@ -3,7 +3,7 @@ import { useEffect , useState} from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useSelector } from "@/redux/store";
-import { Col, Container, Card as BCard, Row, Modal , Form, Button, Alert} from "react-bootstrap";
+import { Col, Container, Card as BCard, Row,Spinner, Modal , Form, Button, Alert} from "react-bootstrap";
 import Card from "../../components/Organisms/Gist";
 import EndlessCarousel from "../../components/Molecules/Carousel";
 import GistCard from "../../components/Organisms/Gist/GistCard";
@@ -19,7 +19,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 //redux actions
-import { uploadFailed, uploadStart, uploadSuccess } from "@/redux/gist";
+import { uploadFailed, uploadStart, uploadSuccess, uploadCleanUp } from "@/redux/gist";
 
 const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
  
@@ -27,6 +27,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   const dispatch = useDispatch()
   const state = useSelector(s=>s.gist)
   const [showModal, setShowModal] = useState(false)
+  const [isFetching, setIsFetching] = useState(true)
   const [allGists, setAllGists] = useState([])
   const [users, setUsers] = useState([])
   const [formData, setFormData] = useState({
@@ -44,6 +45,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
           }})
           setUsers(userResponse.data.users)
           setAllGists(gistResponse.data.reverse())
+          setIsFetching(false)
           console.log(gistResponse.data.reverse());
           
         }catch(error){
@@ -68,7 +70,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         const response  = await axios.get('/api/gists')
         setAllGists(response.data.reverse())
       })()
-     
+
+      dispatch(uploadCleanUp({}))
     }else if(state.error){
       toast.error('Error uploading', {
         position: toast.POSITION.TOP_RIGHT,
@@ -169,6 +172,13 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
               </div>
             </BCard.Header>
             <BCard.Body className={styles.cardBody}>
+            {isFetching && (
+              <div className="m-2 p-2 d-flex justify-content-center">
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              </div>
+            )} 
               {allGists.map((post, key) => (
                 <GistCard gist={post} author={users.find((i)=>post.user==i._id)} key={`gist-${key}`} />
               ))}
