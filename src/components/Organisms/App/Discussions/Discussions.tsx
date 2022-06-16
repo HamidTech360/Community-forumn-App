@@ -2,14 +2,20 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Card, Image } from "react-bootstrap";
 
-const Discussions = () => {
+
+const Discussions = ({posts}:any) => {
   const [gists, setGists] = useState<Record<string, any>[]>();
+  const [users, setUsers] = useState([])
   useEffect(() => {
     (async () => {
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_REST}/buddyboss/v1/topics?_embed=user&order=desc&orderby=ID`
       );
       setGists(data);
+      const userResponse = await axios.get('/api/user', {headers:{
+        authorization:`Bearer ${localStorage.getItem('accessToken')}`
+      }})
+      setUsers(userResponse.data.users)
     })();
   }, []);
   return (
@@ -25,10 +31,10 @@ const Discussions = () => {
         <small className="text-bold text-primary">See more</small>
       </Card.Header>
       <Card.Body>
-        {gists &&
-          gists?.map((gist) => (
+        {posts &&
+          posts?.map((post) => (
             <div
-              key={`discussion-${gist.id}`}
+              key={`discussion-${post._id}`}
               className="d-flex gap-3 mt-2 py-1 border-bottom"
             >
               <div>
@@ -43,10 +49,11 @@ const Discussions = () => {
               <div className="d-flex flex-column">
                 <small
                   className="bolden"
-                  dangerouslySetInnerHTML={{ __html: gist.title.raw }}
+                  dangerouslySetInnerHTML={{ __html:post.postTitle }}
                 />
                 <small className="text-muted">
-                  By {gist._embedded.user[0].name}
+                  By {'Author'} 
+                  {(users.find((i)=>post.userId==i._id)?.firstName)}
                 </small>
               </div>
             </div>

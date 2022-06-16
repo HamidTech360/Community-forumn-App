@@ -48,7 +48,7 @@ const PostCard = ({
         style={{ marginLeft: "-1rem" }}
       >
         <Image
-          src={post?.user_avatar?.full}
+          src={'/images/imagePlaceholder.jpg'}
           width={45}
           height={45}
           alt=""
@@ -58,10 +58,10 @@ const PostCard = ({
           <div className = { styles.div}>
             <small
               style={{ fontSize: "0.8rem" }}
-              dangerouslySetInnerHTML={{ __html: post?.title }}
+              dangerouslySetInnerHTML={{ __html: 'Posted '}}
             />
             <span style={{ fontSize: "0.9rem" }}>
-               <Age time={post?.date} />
+               <Age time={post?.createdAt} />
             </span>
           </div>
 
@@ -86,7 +86,7 @@ const PostCard = ({
             </NavDropdown.Item>
             <NavDropdown.Item>
               <BsXCircleFill /> &nbsp; Unfollow &nbsp;
-              {post.name.split(" ")[0]}
+              {/* {post.name.split(" ")[0]} */}
             </NavDropdown.Item>
           </NavDropdown>
         </div>
@@ -103,10 +103,10 @@ const PostCard = ({
           dangerouslySetInnerHTML={{
             __html: trimmed
               ? strip(
-                  post.content.rendered,
+                  post.postBody,
                   "<p> <strong> <b> <a> <em> <i>"
                 )?.slice(0, 500) + "..."
-              : post.content.rendered,
+              : post.postBody,
           }}
         />
         {!trimmed && (
