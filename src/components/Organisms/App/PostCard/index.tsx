@@ -106,7 +106,7 @@ const PostCard = ({
                   post.postBody,
                   "<p> <strong> <b> <a> <em> <i>"
                 )?.slice(0, 500) + "..."
-              : post.postBody,
+              : post.postTitle,
           }}
         />
         {!trimmed && (

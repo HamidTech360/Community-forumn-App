@@ -8,9 +8,10 @@ import Head from "next/head";
 import { toast, ToastContainer } from 'react-toastify';
 import { useRouter } from "next/router";
 import Link from "next/link";
-import useUser from "@/hooks/useUser";
+// import useUser from "@/hooks/useUser";
 import axios, { AxiosError } from "axios";
 import { setAccessToken } from "@/misc/token";
+import UnAuthContent from "@/components/Auth/UnAuthContent";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -24,17 +25,17 @@ const Login = () => {
     password: "",
   });
 
-  const { user, authenticating, isAuthenticated } = useUser();
+  //const { user, authenticating, isAuthenticated } = useUser();
   const [loading, setLoading] = useState(false);
   const [displayPassword, setDisplayPassword] = useState(false);
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (isAuthenticated && !authenticating) {
-      router.replace("/feed");
-    }
-  }, [isAuthenticated, authenticating, router]);
+  // useEffect(() => {
+  //   if (isAuthenticated && !authenticating) {
+  //     router.replace("/feed");
+  //   }
+  // }, [isAuthenticated, authenticating, router]);
   const [message, setMessage] = useState({ message: "", variant: "" });
 
   useEffect(() => {
@@ -58,7 +59,7 @@ const Login = () => {
         sessionStorage.setItem("token", data.refreshToken);
       }
 
-     setAccessToken(data.accessToken);
+    localStorage.setItem('accessToken', data.accessToken);
      toast.success('Auhentication successful',{
         position: toast.POSITION.TOP_RIGHT,
         autoClose:7000
@@ -105,7 +106,7 @@ const Login = () => {
   };
 
   return (
-    <>
+    <UnAuthContent>
     <ToastContainer/>
     <FormWrapper
       form={
@@ -185,7 +186,7 @@ const Login = () => {
         </div>
       }
     />
-    </>
+    </UnAuthContent>
   );
 };
 

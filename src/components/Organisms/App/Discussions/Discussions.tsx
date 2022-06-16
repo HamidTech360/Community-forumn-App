@@ -52,7 +52,7 @@ const Discussions = ({posts}:any) => {
                   dangerouslySetInnerHTML={{ __html:post.postTitle }}
                 />
                 <small className="text-muted">
-                  By {'Author'} 
+                  By {" "}
                   {(users.find((i)=>post.userId==i._id)?.firstName)}
                 </small>
               </div>

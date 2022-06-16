@@ -1,7 +1,8 @@
-import useUser from "@/hooks/useUser";
+// import useUser from "@/hooks/useUser";
 import Head from "next/head";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSelector } from "@/redux/store";
 import { Col, Container, Image, Row, Spinner } from "react-bootstrap";
 import AuthContent from "@/components/Auth/AuthContent";
 import Discussions from "@/components/Organisms/App/Discussions/Discussions";
@@ -14,7 +15,7 @@ import { usePagination } from "@/hooks/usePagination";
 import styles from "@/styles/feed.module.scss";
 
 const Feed = () => {
-  const { user } = useUser();
+  const { data } = useSelector(s=>s.user);
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
 
   const [scrollInitialised, setScrollInitialised] = useState(false);
@@ -67,7 +68,7 @@ const Feed = () => {
               style={{ width: 250 }}
               className="position-fixed d-none d-lg-flex flex-column gap-4 vh-100"
             >
-              <UserCard user={user!} />
+              <UserCard user={data!} />
               <Discussions posts={posts}  />
             </div>
           </>

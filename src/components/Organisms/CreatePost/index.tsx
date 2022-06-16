@@ -1,17 +1,19 @@
-import useUser from "@/hooks/useUser";
+//import useUser from "@/hooks/useUser";
 import React from "react";
 import { Card, Col, Form, Image, Row } from "react-bootstrap";
+import { useSelector } from "@/redux/store";
 
 import Editor from "../Editor";
 
 const CreatePost = () => {
-  const { user } = useUser();
+ // const { user } = useUser();
+ const {data} = useSelector(s=>s.user)
   return (
     <Card className="p-2 py-4" style={{ border: "none" }}>
       <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
         <>
           <Image
-            src={user?.avatar?.url || "/images/formbg.png"}
+            src={data?.avatar?.url || "/images/formbg.png"}
             width={50}
             height={50}
             alt=""
@@ -24,7 +26,7 @@ const CreatePost = () => {
               className="radius-20"
               style={{ width: "100%" }}
               placeholder={`Hey ${
-                user?.firstName.split(" ")[0]
+                data?.firstName.split(" ")[0]
               }! wanna say something?`}
             />
           </Form>
