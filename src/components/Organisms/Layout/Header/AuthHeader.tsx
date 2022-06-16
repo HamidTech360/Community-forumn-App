@@ -22,8 +22,6 @@ import {
   notificationsOffcanvas,
   selectNotificationOffcanvas,
 } from "@/reduxFeatures/app/appSlice";
-import styles from "@/styles/utils.module.scss";
-
 import {
   AiFillHome,
   AiOutlineHome,
@@ -37,6 +35,7 @@ import {
   MdNotificationsActive,
   MdOutlineNotificationsActive,
 } from "react-icons/md";
+import styles from '@/styles/utils.module.scss'
 
 const AuthHeader = () => {
   const links = [
@@ -144,21 +143,18 @@ const AuthHeader = () => {
             <Link href="/chat" passHref>
               <Button
                 variant="none position-relative"
-                style={{
-                  borderRadius: "100%",
-                  backgroundColor: "#EAFEFD",
-                  border: "none",
-                }}
+                className = {styles.btn}
               >
                 {router.asPath === "/chat" ? (
                   <BsEnvelopeFill />
                 ) : (
                   <BsEnvelope />
                 )}
+                <Badge className = {styles.badge}>1</Badge>
               </Button>
             </Link>
 
-            <Offcanvas
+            {/* <Offcanvas
               show={show}
               onHide={handleClose}
               placement={"end"}
@@ -172,17 +168,12 @@ const AuthHeader = () => {
               <Offcanvas.Body>
                 <Notifications />
               </Offcanvas.Body>
-            </Offcanvas>
+            </Offcanvas> */}
 
+          <Link href="/notifications" passHref>
             <Button
               variant="none position-relative"
-              style={{
-                width: 35,
-                height: 35,
-                borderRadius: "100%",
-                backgroundColor: "#EAFEFD",
-                border: "none",
-              }}
+              className = {styles.btn}
               onClick={notificationsDisplay}
               disabled={router.asPath === "/notifications" ? true : false}
             >
@@ -191,22 +182,22 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
-             
+              <Badge className = {styles.badge}>9</Badge>
             </Button>
+          </Link>
           </div>
           <NavDropdown
-            className="d-none d-md-block "
+            className={`d-none d-md-block ${styles.header}`}
             style={{ color: "black" }}
             title={
               <>
                 <Image
                   src={user?.avatar?.url || "/images/formbg.png"}
                   alt=""
-                  width={40}
-                  height={40}
+                  className = {styles.img}
                   roundedCircle
                 />
-                <span className="mx-2">{user?.firstName.split(" ")[0]}</span>
+                <span className={`mx-2 ${styles.span}`}>{user?.firstName.split(" ")[0]}</span>
               </>
             }
           >
