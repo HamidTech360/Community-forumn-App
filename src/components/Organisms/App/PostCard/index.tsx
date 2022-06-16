@@ -99,11 +99,13 @@ const PostCard = ({
           className="post-content"
           dangerouslySetInnerHTML={{
             __html: trimmed
-              ? strip(post.postBody, "<p> <strong> <b> <a> <em> <i>")?.slice(
-                  0,
-                  500
-                ) + "..."
-              : post.postBody,
+
+              ? strip(
+                  post.postBody,
+                  "<p> <strong> <b> <a> <em> <i>"
+                )?.slice(0, 500) + "..."
+              : post.postTitle
+
           }}
         />
         {!trimmed && (
