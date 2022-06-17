@@ -29,7 +29,10 @@ export default function AuthContent({ children }: { children: ReactNode }) {
          dispatch(user(response.data))
         }catch(error){
          console.log(error.response?.data);
-         router.push('/login')
+         localStorage.removeItem('accessToken')
+          setTimeout(()=>{
+            router.push('/login')
+          }, 3000)
         }
      })()
      console.log(state);
