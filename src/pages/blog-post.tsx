@@ -3,9 +3,11 @@ import { Image } from "react-bootstrap";
 import { HiOutlineArrowLeft } from "react-icons/hi";
 import { BsDot } from "react-icons/bs";
 import { dummyData } from "../components/BlogPost/dummyData";
+import { useRouter } from "next/router";
 
 const BlogPost = () => {
   const [blogPost, setBlogPost] = useState(dummyData);
+  const router = useRouter();
 
   const addComment = () => {
     const comment = (
@@ -35,12 +37,13 @@ const BlogPost = () => {
         <div
           className="col-12 col-md-1 justify-content-left align-items-top"
           style={{ cursor: "pointer" }}
+          onClick={() => router.push("/explore")}
         >
           <HiOutlineArrowLeft className="h3" />
         </div>
         <hr className="d-md-none" />
         <div className="col-12 col-md-8">
-          <div className="card mb-3 border-0">
+          <div className="card mb-3 border-0 mt-md-2 p-md-4">
             <div className="card-Header text-center text-md-start">
               <h4 className="card-title text-primary">{blogPost.title}</h4>
               <div className="row">
@@ -77,7 +80,7 @@ const BlogPost = () => {
               </div>
               <Image
                 src={blogPost.blogImage}
-                className="img-fluid shadow mt-2"
+                className="img-fluid shadow-sm mt-2"
                 alt="Blog Post Image"
               ></Image>
             </div>
@@ -114,20 +117,22 @@ const BlogPost = () => {
                 </div>
               </div>
             </section>
-            <section className="">
+            <section>
               <h6 style={{ fontWeight: "bolder" }}>
                 Comments ({blogPost.comments.length})
               </h6>
               <div className="row">
-                <div className="col mt-4">
+                <div className="col-12 mt-4">
                   {blogPost.comments.length > 1 &&
                     blogPost.comments.map((comment, index) => {
                       return (
-                        <div className="row mb-4 shadow" key={index}>
+                        <div className="row mb-4" key={index}>
                           <div className="col-2">
                             <Image
                               src={comment.image}
                               className="img-fluid"
+                              // width={55}
+                              // height={55}
                               roundedCircle={true}
                               alt="Author's Image"
                             ></Image>
@@ -159,7 +164,7 @@ const BlogPost = () => {
                               <p>{comment.comment}</p>
                             </div>
                           </div>
-                          <div className="row justify-content-end mb-3 ms-auto">
+                          <div className="row justify-content-end mb-2 ms-auto">
                             <div
                               className="col-3 text-secondary mb-1 text-end"
                               onClick={likeComment}

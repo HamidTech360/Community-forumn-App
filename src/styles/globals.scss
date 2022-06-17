@@ -548,3 +548,9 @@ textarea {
     display: none !important;
   }
 }
+
+.pushDownNavBarBottomOnSm {
+  @media screen and (max-width: 991px) {
+    padding-bottom: 7vh;
+  }
+}

@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Provider store={store}>
         <Header />
-        <div className="body">
+        <div className="body pushDownNavBarBottomOnSm">
           <Component {...pageProps} />
         </div>
         <Footer />

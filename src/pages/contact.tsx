@@ -5,22 +5,22 @@ import IconWithText from "../components/Atoms/IconWithText";
 import Typography from "../components/Atoms/Typography";
 import Banner from "../components/Molecules/Banner";
 
-import {HiLocationMarker} from 'react-icons/hi'
-import {FaEnvelope} from 'react-icons/fa'
-import {BsFillTelephoneFill} from 'react-icons/bs'
+import { HiLocationMarker } from "react-icons/hi";
+import { FaEnvelope } from "react-icons/fa";
+import { BsFillTelephoneFill } from "react-icons/bs";
 
 const Contact = () => {
   const contacts = [
     {
-      icon: <HiLocationMarker/>,
+      icon: <HiLocationMarker />,
       text: "Berlin, Berlin 12249, DE",
     },
     {
-      icon: <FaEnvelope/>,
+      icon: <FaEnvelope />,
       text: "hello@step-ng.com",
     },
     {
-      icon: <BsFillTelephoneFill/>,
+      icon: <BsFillTelephoneFill />,
       text: (
         <>
           +49 30 901820, <br />

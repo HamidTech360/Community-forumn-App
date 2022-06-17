@@ -83,7 +83,6 @@ const AuthHeader = () => {
   }
 
   const activeTab = (link) => {
-    console.log("link.icon:", link.icon);
     if (link.icon === "feed") {
       if (link.icon === "feed" && router.asPath.substring(1) === "feed") {
         return <AiFillHome />;

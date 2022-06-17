@@ -1,10 +1,8 @@
-
 import Link from "next/link";
 import React, { useState } from "react";
 import { Button, Container, Form, Image } from "react-bootstrap";
 
 const ForgotPassword = () => {
-  
   //to review
   const [isSent, setIsSent] = useState(false);
   const wasEmailSent = false;
@@ -65,10 +63,9 @@ const ForgotPassword = () => {
         </div>
         <Form
           onSubmit={handleSubmit}
-          className="p-3"
+          className="p-3 shadow"
           style={{
             background: "#F5FEFF",
-            border: "0.2px solid #0B5351",
             borderRadius: 10,
           }}
         >
