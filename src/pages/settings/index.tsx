@@ -3,6 +3,7 @@ import General from "@/components/Templates/Settings/General";
 import Notifications from "@/components/Templates/Settings/Notifications";
 import Privacy from "@/components/Templates/Settings/Privacy";
 import Security from "@/components/Templates/Settings/Security";
+import AuthContent from "@/components/Auth/AuthContent";
 import React from "react";
 import { useState } from "react";
 import { Card, Col, Container, Nav, Row } from "react-bootstrap";
@@ -19,6 +20,7 @@ const Settings = () => {
   const names = Object.keys(tabs);
   const [current, setCurrent] = useState(names[0]);
   return (
+    <AuthContent>
     <div className="mt-5">
       <Container>
         <Card style={{ border: "1px solid #e0e0e0" }}>
@@ -49,6 +51,7 @@ const Settings = () => {
         </Card>
       </Container>
     </div>
+    </AuthContent>
   );
 };
 
