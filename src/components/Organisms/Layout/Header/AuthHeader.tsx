@@ -1,7 +1,11 @@
+import { useState } from "react";
 import Link from "next/link";
 import {
   Container,
   Form,
+  FormControl,
+  InputGroup,
+  Modal,
   Nav,
   Navbar,
   NavDropdown,
@@ -13,6 +17,7 @@ import {
 //import useUser from "@/hooks/useUser";
 import Notifications from "@/pages/notifications";
 import {RiLogoutCircleRLine} from 'react-icons/ri'
+import { BsSearch } from 'react-icons/bs';
 
 import Logo from "@/components/Atoms/Logo";
 import Loader from "@/components/Organisms/Layout/Loader/Loader";
@@ -31,6 +36,7 @@ import {
   AiFillCompass,
   AiOutlineCompass,
 } from "react-icons/ai";
+import { FaTimes } from 'react-icons/fa';
 import { RiMessage2Fill, RiMessage2Line } from "react-icons/ri";
 import { HiUserGroup, HiOutlineUserGroup } from "react-icons/hi";
 import { BsEnvelopeFill, BsEnvelope } from "react-icons/bs";
@@ -49,6 +55,7 @@ const AuthHeader = () => {
     { icon: "groups", name: "Groups" },
   ];
 
+  const [showModal, setShowModal] = useState(false)
   //const { user } = useUser();
   const router = useRouter();
 
@@ -118,7 +125,7 @@ const AuthHeader = () => {
   return (
     <>
       <Navbar
-        className="bg-white"
+        className={`bg-white  ${styles.navBar}`}
         style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
         fixed="top"
       >
@@ -129,20 +136,45 @@ const AuthHeader = () => {
             </Navbar.Brand>
           </Link>
           <Form.Control
-            className="mx-2"
+            className={`mx-2 ${styles.formControl}`}
             type="search"
             style={{ maxWidth: 300 }}
             placeholder="Search"
           />
-          <Nav className="d-flex justify-content-between gap-4 	d-none d-md-flex">
+
+          <div className = {styles.search}>
+            <BsSearch onClick={()=>setShowModal(true)} className= {styles.iconSearch}/>
+          </div>
+
+          <Modal show={showModal} 
+            className={styles.modal}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered>
+              <FaTimes className = {styles.times} onClick={()=>setShowModal(false)} />
+
+              <InputGroup className={styles.inputGroup}>
+                <FormControl
+                  placeholder="Enter keyword here"
+                  aria-label="Recipient's username"
+                  aria-describedby="basic-addon2"
+                />
+                <Button className = {styles.button} id="button-addon2">
+                  Enter
+                </Button>
+              </InputGroup>                         
+          </Modal>
+
+         
+
+          <Nav className="d-flex justify-content-between gap-4 d-md-flex auth-nav">
             {links.map((link, key) => (
               <Link key={key} href={`/${link.icon}`} passHref>
                 <div
                   className={`${
                     router.asPath.substring(1) === link.icon
-                      ? "text-primary"
-                      : "text-muted"
-                  } d-flex flex-column align-items-center gap-1 btn`}
+                      ? "text-primary auth-name"
+                      : "text-muted auth-name"
+                  } d-flex flex-column align-items-center gap-1 auth-gap btn`}
                 >
                   <span>{activeTab(link)}</span>
                   <small>{link.name}</small>
@@ -200,7 +232,7 @@ const AuthHeader = () => {
             </Button>
           </div>
           <NavDropdown
-            className={`d-none d-md-block ${styles.header}`}
+            className={` d-md-block ${styles.header}`}
             style={{ color: "black" }}
             title={
               <>
