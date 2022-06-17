@@ -196,7 +196,7 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
-             <Badge className = {styles.badge}>9</Badge>
+               <Badge className = {styles.badge}>9</Badge>
             </Button>
           </div>
           <NavDropdown
@@ -207,13 +207,13 @@ const AuthHeader = () => {
                 <Image
                   src={data?.avatar?.url || "/images/formbg.png"}
                   alt=""
-                  className = {styles.img}
+                 className = {styles.img}
                   roundedCircle
                 />
                 <span className={`mx-2 ${styles.span}`}>{data?.firstName.split(" ")[0]}</span>
               </>
             }
-          >
+          >            
             <NavDropdown.Header>
               <Image
                 src={data?.avatar?.url || "/images/formbg.png"}
@@ -222,7 +222,7 @@ const AuthHeader = () => {
                 height={20}
                 roundedCircle
               />
-              <span className={`mx-2 ${styles.span}`}>
+              <span className="mx-2">
                 {data?.firstName}&nbsp; {data?.lastName}
               </span>{" "}
             </NavDropdown.Header>
