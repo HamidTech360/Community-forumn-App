@@ -47,24 +47,31 @@
     border-radius: 100%;
     background-color: rgb(234, 254, 253);
     padding: 0.7rem;
+    display: none;
+
 
     .iconSearch{
-        display: none;
         
     
             @media screen and (max-width:840px), screen and (max-width: 400px){
-                display: block;
                 font-size: large;
             }
     
-            @media screen and (max-width:740px){
-                display:none;
-            }
-    
             @media screen and (max-width: 400px){
-                display: block;
                 font-size: medium;
             }
+    }
+
+    @media screen and (max-width:840px), screen and (max-width: 400px){
+        display: block;
+    }
+
+    @media screen and (max-width:740px){
+        display:none;
+    }
+
+    @media screen and (max-width: 400px){
+        display: block;
     }
 }
 
