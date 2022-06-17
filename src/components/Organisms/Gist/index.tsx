@@ -7,13 +7,13 @@ import { BsChevronDoubleRight } from "react-icons/bs";
 
 const Card = ({ image, title, author, id }: Record<string, any>) => {
   // console.log(author);
-  
+
   return (
     <>
       <BCard
         style={{
-          width: "261px",
-          height: "300px",
+          width: "271px",
+          height: "250px",
         }}
       >
         <BCard.Img
@@ -41,7 +41,7 @@ const Card = ({ image, title, author, id }: Record<string, any>) => {
         </div>
         <Link href={`/gist/${id}`} passHref>
           <span
-            className="d-flex btn mt-auto mb-4 me-2 justify-content-end text-primary absolute bottom-0"
+            className="d-flex btn mt-auto me-2 justify-content-end text-primary absolute bottom-0"
             style={{ fontSize: ".9rem" }}
           >
             Read More &nbsp; <BsChevronDoubleRight className="mt-1" />

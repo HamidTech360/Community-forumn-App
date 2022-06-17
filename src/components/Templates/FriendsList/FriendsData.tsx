@@ -24,7 +24,7 @@ const FriendsData = (props: FriendsListProp) => {
 
   return (
       <>
-            <Row xs={1} md={2} className="g-4" >
+            <Row xs={1} md={2} className={`g-4 ${styles.row}`} >
 
                 {friends.map((friend) => (
                     <Col md={12} lg = {6}>
@@ -33,13 +33,15 @@ const FriendsData = (props: FriendsListProp) => {
                                 <ListGroup variant = 'flush'>
                                     <ListGroup.Item  as="li" className="d-flex justify-content-between align-items-start">
                                         <div>
-                                            <Image src= {friend.image} alt='debola'/>
+                                            <Image 
+                                            className = {styles.img}
+                                            src= {friend.image} alt='debola'/>
                                         </div>
                                         <div className = { styles.title}>
                                                                                                         <Card.Title className = { styles.name}>
                                                 {friend.name}
                                             </Card.Title>
-                                            <Card.Subtitle className = "mb-2 text-muted">{friend.number} </Card.Subtitle>
+                                            <Card.Subtitle className = {`mb-2 text-muted ${styles.subtitle}`}>{friend.number} </Card.Subtitle>
 
                                         </div>
 

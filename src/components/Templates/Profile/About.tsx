@@ -9,6 +9,7 @@ import {
   BsFillPersonFill,
 } from "react-icons/bs";
 import { MdCall } from "react-icons/md";
+import styles from '@/styles/profile.module.scss'
 
 const About = () => {
   const [activeTab, setActiveTab] = useState("bio");
@@ -163,7 +164,7 @@ const About = () => {
   };
 
   return (
-    <section>
+    <section  className = {styles.profileWrap}>
       <Container className="shadow-sm">
         <Card className="border-0">
           <div className="row g-2" style={{ marginTop: "-2rem" }}>

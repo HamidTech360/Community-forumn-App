@@ -3,6 +3,7 @@ import { Spinner } from "react-bootstrap";
 import { usePagination } from "../../../hooks/usePagination";
 import PostCard from "../../Organisms/App/PostCard";
 import CreatePost from "../../Organisms/CreatePost";
+import styles from '@/styles/profile.module.scss'
 
 const Timeline = () => {
   const [scrollInitialized, setScrollInitialized] = useState(false);
@@ -48,7 +49,7 @@ const Timeline = () => {
   }, [posts, scrollInitialized]);
 
   return (
-    <div>
+    <div className = {styles.profileWrapper}>
       <CreatePost />
       <div
         ref={intersection}
