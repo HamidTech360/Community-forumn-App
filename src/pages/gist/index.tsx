@@ -167,10 +167,9 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             <div className="d-flex justify-content-between">
               {/* <h2>New Gists</h2> */}
 
-              <span>
+              <Button variant="none" onClick={() => setShowModal(true)}>
                 <AiOutlinePlusCircle
                   color="#207681"
-                  onClick={() => setShowModal(true)}
                   size={35}
                   className={styles.create}
                 />
@@ -184,7 +183,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                 >
                   Create Gist
                 </span>
-              </span>
+              </Button>
               <select className="outline-primary">
                 <option>Canada</option>
               </select>
