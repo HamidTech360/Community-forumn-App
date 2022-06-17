@@ -51,7 +51,7 @@ const Delete =  () => {
             <Image src= './assets/Warning.png' alt= 'warning' className = {styles.img}/>
             <Card.Text className= {styles.text}>
               Deleting your account will delete all of the content you have created. 
-              It will be completely irrecoverable
+              It will be completely irrecoverable.
             </Card.Text>
 
             <div>

@@ -165,13 +165,7 @@ const AuthHeader = () => {
                 ) : (
                   <BsEnvelope />
                 )}
-                <Badge
-                  bg="danger"
-                  style={{ width: 25, height: 25 }}
-                  className=" rounded-circle position-absolute end-0 top-0"
-                >
-                  <small>3</small>
-                </Badge>
+                 <Badge className = {styles.badge}>9</Badge>
               </Button>
             </Link>
 
@@ -193,13 +187,7 @@ const AuthHeader = () => {
 
             <Button
               variant="none position-relative"
-              style={{
-                width: 35,
-                height: 35,
-                borderRadius: "100%",
-                backgroundColor: "#EAFEFD",
-                border: "none",
-              }}
+              className = {styles.btn}
               onClick={notificationsDisplay}
               disabled={router.asPath === "/notifications" ? true : false}
             >
@@ -208,31 +196,24 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
-              <Badge
-                bg="warning"
-                style={{ width: 25, height: 25 }}
-                className="position-absolute  rounded-circle end-0 top-0"
-              >
-                <small>3</small>
-              </Badge>
+               <Badge className = {styles.badge}>9</Badge>
             </Button>
           </div>
           <NavDropdown
-            className="d-none d-md-block "
+            className={`d-none d-md-block ${styles.header}`}
             style={{ color: "black" }}
             title={
               <>
                 <Image
                   src={data?.avatar?.url || "/images/formbg.png"}
                   alt=""
-                  width={40}
-                  height={40}
+                 className = {styles.img}
                   roundedCircle
                 />
-                <span className="mx-2">{data?.firstName.split(" ")[0]}</span>
+                <span className={`mx-2 ${styles.span}`}>{data?.firstName.split(" ")[0]}</span>
               </>
             }
-          >
+          >            
             <NavDropdown.Header>
               <Image
                 src={data?.avatar?.url || "/images/formbg.png"}
@@ -291,3 +272,4 @@ const AuthHeader = () => {
 };
 
 export default AuthHeader;
+
