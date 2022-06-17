@@ -42,7 +42,9 @@ const GistCard = ({ gist, author, primary }: any) => {
             />
           </div>
           <div className={` ${styles.div}`}>
-            <small className="text-secondary fs-5">
+            <small
+              className={`${styles.title} text-secondary text-capitalize `}
+            >
               Started by {author?.firstName} {author?.lastName}
             </small>
             <br />
@@ -50,7 +52,7 @@ const GistCard = ({ gist, author, primary }: any) => {
               {gist?.title?.replace("&amp;", "&")}
             </h5>
           </div>
-          <div className="ms-md-5 mb-2 text-muted">
+          <div className="ms-auto mb-2 text-muted">
             <small className={`d-flex text-center ${styles.time}`}>
               <Age time={gist?.createdAt} /> <BsBookmarkDash className="ms-2" />
             </small>
