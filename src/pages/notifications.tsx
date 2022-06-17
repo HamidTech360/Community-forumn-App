@@ -123,7 +123,9 @@ const Notifications = () => {
             }
           >
             <Card.Body>
-              <Card.Title className={styles.notificationHeaderText}>
+              <Card.Title
+                className={`${styles.notificationHeaderText} p-3 p-lg-0`}
+              >
                 <span className="h1"> Notifications</span>
                 <span className="float-end fs-2">
                   <OverlayTrigger

@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 //import useUser from "@/hooks/useUser";
 import Notifications from "@/pages/notifications";
-import {RiLogoutCircleRLine} from 'react-icons/ri'
+import { RiLogoutCircleRLine } from "react-icons/ri";
 
 import Logo from "@/components/Atoms/Logo";
 import Loader from "@/components/Organisms/Layout/Loader/Loader";
@@ -54,7 +54,7 @@ const AuthHeader = () => {
 
   const dispatch = useDispatch();
   const show = useSelector(selectNotificationOffcanvas);
-  const {data} = useSelector(s=>s.user)
+  const { data } = useSelector((s) => s.user);
 
   // Set notificationsOffcanvas in redux state to true
   const handleClose = () => dispatch(notificationsOffcanvas(false));
@@ -69,11 +69,11 @@ const AuthHeader = () => {
     }
   };
 
-  const LogOut = ()=>{
-    router.push('/login')
-    dispatch(logout({}))
+  const LogOut = () => {
+    router.push("/login");
+    dispatch(logout({}));
     //router.push('/login')
-  }
+  };
 
   const activeTab = (link) => {
     if (link.icon === "feed") {
@@ -252,39 +252,43 @@ const AuthHeader = () => {
               </Link>
             </NavDropdown.Item>
             <NavDropdown.Item>Support</NavDropdown.Item>
-            <NavDropdown.Item 
-                  style={{fontWeight:'700', marginTop:'10px'}} onClick={()=>LogOut()}>
-                    Logout 
-                    <RiLogoutCircleRLine size={14}/>
-            </NavDropdown.Item> 
+            <NavDropdown.Item
+              style={{ fontWeight: "700", marginTop: "10px" }}
+              onClick={() => LogOut()}
+            >
+              Logout
+              <RiLogoutCircleRLine size={14} />
+            </NavDropdown.Item>
           </NavDropdown>
         </Container>
       </Navbar>
 
-      <Navbar
-        className="mobi-nav bg-white rounded"
-        style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
-        fixed="bottom"
-      >
-        <Container className="d-flex justify-content-start">
-          <Nav className="d-flex justify-content-around gap-4 w-100">
-            {links.map((link, key) => (
-              <Link key={key} href={`/${link.icon}`} passHref>
-                <div
-                  className={`${
-                    router.asPath.substring(1) === link.icon
-                      ? "text-primary"
-                      : "text-muted"
-                  } d-flex flex-column align-items-center gap-1 mobi-nav bg-white btn`}
-                >
-                  <span>{activeTab(link)}</span>
-                  <small>{link.name}</small>
-                </div>
-              </Link>
-            ))}
-          </Nav>
-        </Container>
-      </Navbar>
+      {router.asPath !== "/chat" && (
+        <Navbar
+          className="mobi-nav bg-white rounded"
+          style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
+          fixed="bottom"
+        >
+          <Container className="d-flex justify-content-start">
+            <Nav className="d-flex justify-content-around gap-4 w-100">
+              {links.map((link, key) => (
+                <Link key={key} href={`/${link.icon}`} passHref>
+                  <div
+                    className={`${
+                      router.asPath.substring(1) === link.icon
+                        ? "text-primary"
+                        : "text-muted"
+                    } d-flex flex-column align-items-center gap-1 mobi-nav bg-white btn`}
+                  >
+                    <span>{activeTab(link)}</span>
+                    <small>{link.name}</small>
+                  </div>
+                </Link>
+              ))}
+            </Nav>
+          </Container>
+        </Navbar>
+      )}
     </>
   );
 };

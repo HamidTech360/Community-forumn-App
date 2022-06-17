@@ -13,9 +13,9 @@ function ChatBubble(message) {
     <div style={{ fontSize: "14px" }}>
       <div
         style={{
-          width: "22%",
+          width: "35%",
           height: "auto",
-          fontSize: "11px",
+          fontSize: "10px",
         }}
         className={`${messagingStyle2} text-secondary`}
       >
@@ -25,7 +25,8 @@ function ChatBubble(message) {
         className={messagingStyle}
         style={{
           letterSpacing: "1px",
-          maxWidth: "35%",
+          minWidth: "35%",
+          maxWidth: "85%",
           height: "auto",
           borderRadius: borderRadiusBubble,
         }}

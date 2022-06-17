@@ -7,7 +7,10 @@ function NotificationRender({ notification }) {
   return (
     <div className={styles.notificationListItem}>
       <div className={styles.notificationDot}>
-        <GoPrimitiveDot size={30} className="text-primary" />{" "}
+        <GoPrimitiveDot
+          size={globalThis.innerWidth < 768 ? 10 : 30}
+          className="text-primary"
+        />{" "}
       </div>
       <div>
         <div
