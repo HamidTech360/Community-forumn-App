@@ -18,7 +18,7 @@ export default function UnAuthContent({ children }: { children: ReactNode }) {
 
   
 
-    if(localStorage.getItem('accessToken') && state.isAuthenticated){
+    if(localStorage.getItem('accessToken')){
       router.push('/feed')
     }
     
