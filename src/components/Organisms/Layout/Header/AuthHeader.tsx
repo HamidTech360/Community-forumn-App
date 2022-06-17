@@ -246,31 +246,35 @@ const AuthHeader = () => {
               </>
             }
           >            
-            <NavDropdown.Header>
-              <Image
-                src={data?.avatar?.url || "/images/formbg.png"}
-                alt=""
-                width={20}
-                height={20}
-                roundedCircle
-              />
-              <span className="mx-2">
-                {data?.firstName}&nbsp; {data?.lastName}
-              </span>{" "}
-            </NavDropdown.Header>
-            <NavDropdown.Divider />
-            <NavDropdown.Item>Dark mode</NavDropdown.Item>
-            <NavDropdown.Item>
-              <Link href="/settings" passHref>
-                Account Settings
-              </Link>
-            </NavDropdown.Item>
-            <NavDropdown.Item>Support</NavDropdown.Item>
-            <NavDropdown.Item 
-                  style={{fontWeight:'700', marginTop:'10px'}} onClick={()=>LogOut()}>
-                    Logout 
-                    <RiLogoutCircleRLine size={14}/>
-            </NavDropdown.Item> 
+           <div className = {styles.navDrop}>
+            <NavDropdown.Header className = {styles.navHead}>
+                <Image
+                  src={data?.avatar?.url || "/images/formbg.png"}
+                  alt=""
+                  width={20}
+                  height={20}
+                  roundedCircle
+                />
+                <span className="mx-2">
+                  {data?.firstName}&nbsp; {data?.lastName}
+                </span>{" "}
+              </NavDropdown.Header>
+              <NavDropdown.Divider />
+              <NavDropdown.Item className = {styles.navMenu}>Dark mode</NavDropdown.Item>
+              <NavDropdown.Item className = {styles.navMenu}>
+                <Link href="/settings" passHref>
+                  Account Settings
+                </Link>
+              </NavDropdown.Item>
+              <NavDropdown.Item className = {styles.navMenu}>Support</NavDropdown.Item>
+              <NavDropdown.Item 
+                    className = {styles.navMenu}
+                    style={{fontWeight:'700',
+                    color: '#207681',marginTop:'10px'}} onClick={()=>LogOut()}>
+                      Logout 
+                      <RiLogoutCircleRLine size={14}/>
+              </NavDropdown.Item> 
+           </div>
           </NavDropdown>
         </Container>
       </Navbar>
