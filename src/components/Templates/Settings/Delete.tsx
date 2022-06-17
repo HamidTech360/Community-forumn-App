@@ -56,7 +56,7 @@ const Delete = () => {
             />
             <Card.Text className={styles.text}>
               Deleting your account will delete all of the content you have
-              created. It will be completely irrecoverable
+              created. It will be completely irrecoverable.
             </Card.Text>
 
             <div>
