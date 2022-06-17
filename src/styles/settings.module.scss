@@ -1,188 +1,184 @@
 .container {
-    border-left: 1px solid rgb(196, 194, 194);
+  border-left: 1px solid rgb(196, 194, 194);
 
-        @media screen and (max-width: 767px){
-            border: none;
+  @media screen and (max-width: 767px) {
+    border: none;
+  }
+  .form {
+    margin: 2rem 1rem;
+
+    .group {
+      padding: 1rem;
+
+      // @media screen and (max-width: 500px) {
+      //    padding: 0.5rem ;
+      // }
+
+      .label {
+        font-size: 1.2rem;
+
+        @media screen and (max-width: 500px) {
+          font-size: 1.1rem;
         }
-        .form {
-            margin: 2rem 1rem;
+      }
 
-            .group{
-                padding: 1rem;
+      .input {
+        width: 90%;
+        height: 3rem;
+        border: 1px solid black;
+        outline: 1.08346px solid #e1e7ef;
+        border-radius: 10.8346px;
+        font-size: 1.1rem;
 
-                // @media screen and (max-width: 500px) {
-                //    padding: 0.5rem ;
-                // }
-
-                .label{
-                    font-size: 1.2rem;
-    
-                    @media screen and (max-width: 500px) {
-                        font-size: 1.1rem;
-                    }
-                }
-            
-                .input {
-                    width: 90%;
-                    height: 3rem;
-                    border: 1px solid black;
-                    outline: 1.08346px solid #E1E7EF;
-                    border-radius: 10.8346px;
-                    font-size: 1.1rem;
-            
-                    @media screen and (max-width: 767px) {
-                        width: 100%;
-                    }
-    
-                    &:focus {
-                        box-shadow: none;               
-                    }
-                }
-            }
-
-          
-
-            .img1 {
-                position: absolute;
-                width: 1.4rem;
-                right: 14%;
-                top: 27%;
-
-                @media screen and (max-width: 1200px){
-                    right: 16%;
-                }
-
-                @media screen and(max-width: 991px) {
-                    right: 18%;
-                }
-
-                @media screen and (max-width: 767px) {
-                    top: 37%;
-                }
-
-                @media screen and (max-width: 480px){
-                    right: 20%;
-                    width: 1.2rem;
-                }
-
-                @media screen and (max-width: 400px){
-                    top: 42%;
-                    right: 22%;
-                }
-            }
-
-            .img2{
-                position: absolute;
-                width: 1.4rem;
-                right: 14%;
-                top: 49%;
-
-                @media screen and (max-width: 1200px){
-                    right: 16%;
-                }
-
-                @media screen and(max-width: 991px) {
-                    right: 18%;
-                }
-
-                @media screen and (max-width: 767px) {
-                    top: 56%;
-                }
-
-                @media screen and (max-width: 480px){
-                    right: 20%;
-                    width: 1.2rem;
-                }
-
-                @media screen and (max-width: 400px){
-                    top: 59%;
-                    right: 22%;
-                }
-            }
-        
-            .img3{
-                position: absolute;
-                width: 1.4rem;
-                right: 14%;
-                bottom: 25%;
-
-            @media screen and (max-width: 1200px){
-                    right: 16%;
-            }     
-
-            @media screen and(max-width: 991px) {
-                right: 18%;
-            }
-
-            @media screen and (max-width: 767px) {
-                    bottom: 22%;
-            }
-
-            @media screen and (max-width: 480px){    right: 20%;
-                    width: 1.2rem;
-            }
-
-            @media screen and (max-width: 400px){
-                    right: 22%; 
-                    bottom: 20%;
-            }
-            }
-        
-            .div{
-                width: 90%;
-                text-align: center;
-        
-                .btn {
-                    padding: 0.2rem 4rem;
-                    font-size: 1.1rem;
-        
-                    @media screen and (max-width: 500px) {
-                        padding: 0.2rem 3rem;
-                    }
-                }
-            }
-
-            @media screen and (max-width: 600px) {
-                margin: 2rem 0.5rem;
-            }
-
+        @media screen and (max-width: 767px) {
+          width: 100%;
         }
 
-        .forms{
-            position: absolute;
-            display: block;
-
-            div{
-                display: flex;
-                flex-direction: row;
-
-                .name {
-                    margin-right: 2rem;
-                }
-        
-                .label [type='checkbox']{
-                    box-shadow: none !important;
-                    background-color: var(--bs-blue) !important;
-        
-                    &:focus{
-                        background-color: var(--bs-blue) !important;
-                    }
-                    &:checked{
-                        background-color: var(--bs-blue) !important;
-                    }
-            }
-            
-        
-            }
+        &:focus {
+          box-shadow: none;
         }
-
-    h4{
-        font-weight: 600;
-        padding-top: -2rem;
+      }
     }
 
-    // .checkbox{
-    //     .checkboxOne{
-    //     }
-    // }
+    .img1 {
+      position: absolute;
+      width: 1.4rem;
+      right: 14%;
+      top: 27%;
+
+      @media screen and (max-width: 1200px) {
+        right: 16%;
+      }
+
+      @media screen and(max-width: 991px) {
+        right: 18%;
+      }
+
+      @media screen and (max-width: 767px) {
+        top: 37%;
+      }
+
+      @media screen and (max-width: 480px) {
+        right: 20%;
+        width: 1.2rem;
+      }
+
+      @media screen and (max-width: 400px) {
+        top: 42%;
+        right: 22%;
+      }
+    }
+
+    .img2 {
+      position: absolute;
+      width: 1.4rem;
+      right: 14%;
+      top: 49%;
+
+      @media screen and (max-width: 1200px) {
+        right: 16%;
+      }
+
+      @media screen and(max-width: 991px) {
+        right: 18%;
+      }
+
+      @media screen and (max-width: 767px) {
+        top: 56%;
+      }
+
+      @media screen and (max-width: 480px) {
+        right: 20%;
+        width: 1.2rem;
+      }
+
+      @media screen and (max-width: 400px) {
+        top: 59%;
+        right: 22%;
+      }
+    }
+
+    .img3 {
+      position: absolute;
+      width: 1.4rem;
+      right: 14%;
+      bottom: 25%;
+
+      @media screen and (max-width: 1200px) {
+        right: 16%;
+      }
+
+      @media screen and(max-width: 991px) {
+        right: 18%;
+      }
+
+      @media screen and (max-width: 767px) {
+        bottom: 22%;
+      }
+
+      @media screen and (max-width: 480px) {
+        right: 20%;
+        width: 1.2rem;
+      }
+
+      @media screen and (max-width: 400px) {
+        right: 22%;
+        bottom: 20%;
+      }
+    }
+
+    .div {
+      width: 90%;
+      text-align: center;
+
+      .btn {
+        padding: 0.2rem 4rem;
+        font-size: 1.1rem;
+
+        @media screen and (max-width: 500px) {
+          padding: 0.2rem 3rem;
+        }
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      margin: 2rem 0.5rem;
+    }
+  }
+
+  .forms {
+    position: absolute;
+    display: block;
+
+    div {
+      display: flex;
+      flex-direction: row;
+
+      .name {
+        margin-right: 2rem;
+      }
+
+      .label [type="checkbox"] {
+        box-shadow: none !important;
+        background-color: var(--bs-blue) !important;
+
+        &:focus {
+          background-color: var(--bs-blue) !important;
+        }
+        &:checked {
+          background-color: var(--bs-blue) !important;
+        }
+      }
+    }
+  }
+
+  h4 {
+    font-weight: 600;
+    padding-top: -2rem;
+  }
+
+  // .checkbox{
+  //     .checkboxOne{
+  //     }
+  // }
 }

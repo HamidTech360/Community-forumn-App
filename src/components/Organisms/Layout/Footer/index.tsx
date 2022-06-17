@@ -3,13 +3,14 @@ import React from "react";
 import { Col, Container, Image, Nav, Row } from "react-bootstrap";
 import { useSelector } from "@/redux/store";
 import Logo from "../../../Atoms/Logo";
+import useUser from "@/hooks/useUser";
 
 const Footer = () => {
-  // const { isAuthenticated } = useUser();
-  const state = useSelector((s) => s.user);
+  const { isAuthenticated } = useUser();
+  // const state = useSelector((s) => s.user);
   return (
     <>
-      {!state.isAuthenticated ? (
+      {!isAuthenticated ? (
         <div className="footer mt-5">
           <Container>
             <Row className="px-3">

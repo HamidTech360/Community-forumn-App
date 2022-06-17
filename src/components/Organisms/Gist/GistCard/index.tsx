@@ -29,32 +29,35 @@ const GistCard = ({ gist, author, primary }: any) => {
         marginRight: "-.2rem",
       }}
     >
-      <div className="row d-flex flex-row mb-0 mb-md-2">
-        <div className="col-1 me-3 pt-2 pt-md-3 align-items-center">
-          <Image
-            src={"/images/imagePlaceholder.jpg"}
-            width={50}
-            height={50}
-            alt="Avatar"
-            roundedCircle
-            className={styles.img}
-          />
+      <Card.Title>
+        <div className="d-flex flex-wrap gap-3 px-2 mb-0 mb-md-2">
+          <div className="pt-2 pt-md-3 align-items-center">
+            <Image
+              src={"/images/imagePlaceholder.jpg"}
+              width={50}
+              height={50}
+              alt="Avatar"
+              roundedCircle
+              className={styles.img}
+            />
+          </div>
+          <div className={` ${styles.div}`}>
+            <small className="text-secondary fs-5">
+              Started by {author?.firstName} {author?.lastName}
+            </small>
+            <br />
+            <h5 className={`text-primary mt-1 ${styles.title}`}>
+              {gist?.title?.replace("&amp;", "&")}
+            </h5>
+          </div>
+          <div className="ms-md-5 mb-2 text-muted">
+            <small className={`d-flex text-center ${styles.time}`}>
+              <Age time={gist?.createdAt} /> <BsBookmarkDash className="ms-2" />
+            </small>
+          </div>
         </div>
-        <div className={`col-9 col-sm-10 col-md-7 ${styles.div}`}>
-          <small className="text-secondary">
-            Started by {author?.firstName} {author?.lastName}
-          </small>
-          <br />
-          <h5 className={`text-primary mt-1 ${styles.title}`}>
-            {gist?.title?.replace("&amp;", "&")}
-          </h5>
-        </div>
-        <div className="col-12 col-md-3 ms-5 ms-md-auto mb-2 text-muted">
-          <small className={`d-flex ${styles.time}`}>
-            <Age time={gist?.createdAt} /> <BsBookmarkDash className="ms-2" />
-          </small>
-        </div>
-      </div>
+      </Card.Title>
+
       <Card.Body
         dangerouslySetInnerHTML={{
           __html: striptags(gist?.post, "<a> <b> <em> <p> <strong> <i>").slice(
