@@ -5,32 +5,42 @@
             border: none;
         }
         .form {
-            margin: 2rem;
+            margin: 2rem 1rem;
 
-            .label{
-                font-size: 1.2rem;
+            .group{
+                padding: 1rem;
 
-                @media screen and (max-width: 500px) {
+                // @media screen and (max-width: 500px) {
+                //    padding: 0.5rem ;
+                // }
+
+                .label{
+                    font-size: 1.2rem;
+    
+                    @media screen and (max-width: 500px) {
+                        font-size: 1.1rem;
+                    }
+                }
+            
+                .input {
+                    width: 90%;
+                    height: 3rem;
+                    border: 1px solid black;
+                    outline: 1.08346px solid #E1E7EF;
+                    border-radius: 10.8346px;
                     font-size: 1.1rem;
+            
+                    @media screen and (max-width: 767px) {
+                        width: 100%;
+                    }
+    
+                    &:focus {
+                        box-shadow: none;               
+                    }
                 }
             }
-        
-            .input {
-                width: 90%;
-                height: 3rem;
-                border: 1px solid black;
-                outline: 1.08346px solid #E1E7EF;
-                border-radius: 10.8346px;
-                font-size: 1.1rem;
-        
-                @media screen and (max-width: 767px) {
-                    width: 100%;
-                }
 
-                &:focus {
-                    box-shadow: none;               
-                }
-            }
+          
 
             .img1 {
                 position: absolute;
