@@ -1,6 +1,7 @@
 //@ts-nocheck
 import { setAccessToken } from "@/misc/token";
 import AuthContent from "@/components/Auth/AuthContent";
+import UnAuthContent from "@/components/Auth/UnAuthContent";
 import axios, { AxiosError } from "axios";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
@@ -86,7 +87,7 @@ const Register = () => {
   }, [message]);
 
   return (
-    <AuthContent>
+    <UnAuthContent>
       <FormWrapper
         form={
           <div>
@@ -206,7 +207,7 @@ const Register = () => {
           </div>
         }
       />
-    </AuthContent>
+    </UnAuthContent>
   );
 };
 
