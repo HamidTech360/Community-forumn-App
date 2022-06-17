@@ -212,7 +212,6 @@ const AuthHeader = () => {
               style={{
                 position: "fixed",
                 top: "4.8rem",
-                borderRadius: "15px 0 0 0",
               }}
               scroll={true}
             >

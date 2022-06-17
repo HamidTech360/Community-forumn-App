@@ -282,7 +282,7 @@ const Chat = () => {
 
   return (
     <AuthContent>
-      <Container className="mt-lg-3">
+      <Container className="mt-lg-3" style={{ marginBottom: "-9.3vh" }}>
         <div className="row" style={{ minHeight: "87vh" }}>
           {/* SideBar */}
           <div ref={mainSidebar} className="d-md-block col-12 col-md-4 shadow">
@@ -570,7 +570,7 @@ const Chat = () => {
                                   <hr />
                                 </div>
                               </div>
-                              {ChatBubble(message, index)}
+                              {ChatBubble(message)}
                             </div>
                           );
                         } else {
@@ -582,7 +582,7 @@ const Chat = () => {
                             // No unread message
                             return (
                               <div key={index} ref={readChat}>
-                                {ChatBubble(message, index)}
+                                {ChatBubble(message)}
                               </div>
                             );
                           } else {
@@ -590,11 +590,7 @@ const Chat = () => {
                              ** No need to Focus as focus has already been made above
                              ** Maintain Read State
                              */
-                            return (
-                              <div key={index}>
-                                {ChatBubble(message, index)}
-                              </div>
-                            );
+                            return <div key={index}>{ChatBubble(message)}</div>;
                           }
                         }
                       }

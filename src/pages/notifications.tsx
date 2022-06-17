@@ -103,7 +103,7 @@ const Notifications = () => {
       <div
         className={`${
           router.asPath === "/notifications"
-            ? "row justify-content-center mt-md-5 mb-5 mb-lg-0 pb-3 pb-lg-0"
+            ? "row justify-content-center mt-md-2 mb-0 mb-lg-0 pb-3 pb-lg-0"
             : "row justify-content-center"
         }`}
         style={{ marginTop: "-.3rem" }}
@@ -122,8 +122,8 @@ const Notifications = () => {
                 : " border-0"
             }
           >
-            <Card.Body>
-              <Card.Title className={`${styles.notificationHeaderText} p-3`}>
+            <Card.Body className="p-3">
+              <Card.Title className={`${styles.notificationHeaderText}`}>
                 <span className="h1"> Notifications</span>
                 <span className="float-end fs-2">
                   <OverlayTrigger
@@ -165,7 +165,7 @@ const Notifications = () => {
                 </div>
               </Card.Title>
 
-              <div className={styles.notificationList}>
+              <div>
                 <div className="d-flex">
                   <h5>New</h5>
                   {router.asPath !== "/notifications" && (

@@ -26,7 +26,7 @@ function ChatBubble(message) {
         style={{
           letterSpacing: "1px",
           minWidth: "35%",
-          maxWidth: "85%",
+          maxWidth: "80%",
           height: "auto",
           borderRadius: borderRadiusBubble,
         }}

@@ -15,12 +15,6 @@
   font-size: 14px;
   line-height: 16px;
 }
-.notificationListItem {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: no-wrap;
-  margin-top: 20px;
-}
 .notificationMessages {
   border-bottom: 1px solid #e0e0e0;
   padding-left: 20px;
