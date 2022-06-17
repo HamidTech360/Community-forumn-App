@@ -1,9 +1,15 @@
 .wrapper {
   display: grid;
   grid-template-columns: 100%;
+  height: auto;
+  margin-bottom: 2rem !important;
+  padding-bottom: 2rem !important;
   
   @media screen and (max-width: 768px) {
     grid-template-columns: 100%;
+  }
+  @media screen and (max-width: 750px) {
+    margin-bottom: 4rem !important;
   }
 
   .posts,
@@ -16,5 +22,5 @@
     }
   }
 
-  
+
 }
