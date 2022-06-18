@@ -7,7 +7,8 @@ import Bookmarks from "../../Templates/Profile/Bookmarks";
 import Friends from "../../Templates/Profile/Friends";
 import Media from "../../Templates/Profile/Media";
 import Timeline from "../../Templates/Profile/Timeline";
-import {useSelector} from "@/redux/store"
+import { useSelector } from "@/redux/store";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 
 interface IComponents {
   about: ReactNode;
@@ -26,13 +27,11 @@ const Components: IComponents = {
 
 const ProfileCard = () => {
   const { path } = useRouter().query;
-  const {data} = useSelector(s=>s.user)
+  // const {data} = useSelector(s=>s.user)
+  const data = useSelector(selectUser);
   return (
     <Card className="mt-2 mb-3">
-      <CardImg
-        src="/images/formbg.png"
-        className="image3"
-      />
+      <CardImg src="/images/formbg.png" className="image3" />
       <Card.Body className="d-flex position-relative justify-content-center align-items-center flex-column ">
         <Image
           width={130}
@@ -46,7 +45,9 @@ const ProfileCard = () => {
           }}
           roundedCircle
         />
-        <text className=" mt-4 bold text-center fs-7">{data?.firstName} {data?.lastName}</text>
+        <text className=" mt-4 bold text-center fs-7">
+          {data?.firstName} {data?.lastName}
+        </text>
         <text className="text-muting">@{data?.firstName}</text>
         <text className="text-muted text-center">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente

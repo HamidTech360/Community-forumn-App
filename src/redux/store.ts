@@ -1,24 +1,26 @@
 import { configureStore } from "@reduxjs/toolkit";
 import appReducer from "@/reduxFeatures/app/appSlice";
 import authStateReducer from "@/reduxFeatures/authState/authStateSlice";
+import postReducer from "@/reduxFeatures/api/postSlice";
+import gistReducer from "@/reduxFeatures/api/gistSlice";
 
 import {
   useDispatch as useDispatchBase,
   useSelector as useSelectorBase,
 } from "react-redux";
 
-import postReducer from './post'
-import gistReducer from './gist'
-import userReducer from './user'
+// import postReducer from "./post";
+// import gistReducer from "./gist";
+// import userReducer from "./_user";
 
 /**
  * Creates a store and includes all the slices as reducers.
  */
 export const store = configureStore({
   reducer: {
-    post:postReducer,
-    gist:gistReducer,
-    user:userReducer,
+    post: postReducer,
+    gist: gistReducer,
+    // user: userReducer,
     app: appReducer,
     authState: authStateReducer,
   },

@@ -5,7 +5,7 @@ import Typography from "../components/Atoms/Typography";
 import FormWrapper from "../components/Organisms/Layout/FormWrapper";
 import styles from "../styles/form.module.scss";
 import Head from "next/head";
-import { toast, ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/router";
 import Link from "next/link";
 // import useUser from "@/hooks/useUser";
@@ -14,7 +14,7 @@ import { setAccessToken } from "@/misc/token";
 import UnAuthContent from "@/components/Auth/UnAuthContent";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "@/redux/store";
 import { userAuthenticated } from "@/reduxFeatures/authState/authStateSlice";
 
@@ -55,18 +55,16 @@ const Login = () => {
     try {
       setLoading(true);
       const { data } = await axios.post("/api/auth", { ...formData });
+      // console.log('DATA:',data)
       if (data.refreshToken) {
         sessionStorage.setItem("token", data.refreshToken);
       }
 
-    localStorage.setItem('accessToken', data.accessToken);
-     toast.success('Auhentication successful',{
+      localStorage.setItem("accessToken", data.accessToken);
+      toast.success("Authentication successful", {
         position: toast.POSITION.TOP_RIGHT,
-        autoClose:7000
-     })
-
-      // Set isAuthenticated in redux state to true
-      dispatch(userAuthenticated(true));
+        autoClose: 7000,
+      });
 
       let push2Page = JSON.parse(sessionStorage.getItem("pageB4Login"))
         ? JSON.parse(sessionStorage.getItem("pageB4Login"))
@@ -80,16 +78,16 @@ const Login = () => {
         if (serverError.response) {
           // setMessage(serverError.response.data.message as unknown as string);
           let returnedErrorKey = serverError.response.data.key;
-         if (serverError.response.data === "Something went wrong") {
-            toast.error('Auhentication Failed',{
+          if (serverError.response.data === "Something went wrong") {
+            toast.error("Authentication Failed", {
               position: toast.POSITION.TOP_RIGHT,
-              autoClose:7000
-            })
-         }else{
-            toast.error(serverError.response.data.message,{
+              autoClose: 7000,
+            });
+          } else {
+            toast.error(serverError.response.data.message, {
               position: toast.POSITION.TOP_RIGHT,
-              autoClose:7000
-           })
+              autoClose: 7000,
+            });
           }
         }
       }
@@ -107,85 +105,85 @@ const Login = () => {
 
   return (
     <UnAuthContent>
-    <ToastContainer/>
-    <FormWrapper
-      form={
-        <div>
-          {message.message && (
-            <Alert
-              variant={message.variant}
-              style={{ textTransform: "capitalize" }}
-            >
-              {message.message.replace("_", " ")}
-            </Alert>
-          )}
-         
-          <Head>
-            <title>Login</title>
-          </Head>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group>
-              <Form.Label> Email</Form.Label>
-              <Form.Control
-                placeholder="Enter email"
-                name="email"
-                type="email"
-                required
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label> Password</Form.Label>
-              <div className="row">
-                <div className="col-12">
-                  <Form.Control
-                    placeholder="Enter password"
-                    name="password"
-                    type={displayPassword ? "text" : "password"}
-                    required
-                    onChange={handleChange}
-                  />
+      <ToastContainer />
+      <FormWrapper
+        form={
+          <div>
+            {message.message && (
+              <Alert
+                variant={message.variant}
+                style={{ textTransform: "capitalize" }}
+              >
+                {message.message.replace("_", " ")}
+              </Alert>
+            )}
+
+            <Head>
+              <title>Login</title>
+            </Head>
+            <Form onSubmit={handleSubmit}>
+              <Form.Group>
+                <Form.Label> Email</Form.Label>
+                <Form.Control
+                  placeholder="Enter email"
+                  name="email"
+                  type="email"
+                  required
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label> Password</Form.Label>
+                <div className="row">
+                  <div className="col-12">
+                    <Form.Control
+                      placeholder="Enter password"
+                      name="password"
+                      type={displayPassword ? "text" : "password"}
+                      required
+                      onChange={handleChange}
+                    />
+                  </div>
+                  {/* ++++++++++++++++++++++++++++++++ */}
+                  <div
+                    className="col-1 btn"
+                    style={{
+                      marginLeft: "-3.5rem",
+                      fontSize: "1.5rem",
+                      marginTop: "-.3rem",
+                    }}
+                    onClick={() => setDisplayPassword(!displayPassword)}
+                  >
+                    <Form.Text>
+                      {displayPassword ? (
+                        <AiOutlineEye />
+                      ) : (
+                        <AiOutlineEyeInvisible />
+                      )}
+                    </Form.Text>
+                  </div>
                 </div>
-                {/* ++++++++++++++++++++++++++++++++ */}
-                <div
-                  className="col-1 btn"
-                  style={{
-                    marginLeft: "-3.5rem",
-                    fontSize: "1.5rem",
-                    marginTop: "-.3rem",
-                  }}
-                  onClick={() => setDisplayPassword(!displayPassword)}
-                >
-                  <Form.Text>
-                    {displayPassword ? (
-                      <AiOutlineEye />
-                    ) : (
-                      <AiOutlineEyeInvisible />
-                    )}
-                  </Form.Text>
-                </div>
-              </div>
-            </Form.Group>
-            <Form.Text className="d-flex justify-content-end text-primary">
-              <Link href="./forgotPassword">Forgot password?</Link>
-            </Form.Text>
-            <Button
-              variant="primary"
-              className="d-flex mx-auto mt-3"
-              type="submit"
-            >
-              Log In{" "}
-              {loading && (
-                <div
-                  className="spinner-grow spinner-grow-sm text-light"
-                  role="status"
-                ></div>
-              )}
-            </Button>
-          </Form>
-        </div>
-      }
-    />
+              </Form.Group>
+              <Form.Text className="d-flex justify-content-end text-primary">
+                <Link href="./forgotPassword">Forgot password?</Link>
+              </Form.Text>
+              <Button
+                variant="primary"
+                className="d-flex mx-auto mt-3"
+                type="submit"
+              >
+                Log In{" "}
+                {loading && (
+                  <div
+                    className="spinner-grow spinner-grow-sm text-light"
+                    role="status"
+                  ></div>
+                )}
+              </Button>
+            </Form>
+          </div>
+        }
+      />
     </UnAuthContent>
   );
 };

@@ -7,8 +7,11 @@ import FormField from "@/components/Templates/new-group/form";
 import Settings from "@/components/Templates/new-group/settings";
 import AddConnections from "@/components/Templates/new-group/connections";
 import AuthContent from "@/components/Auth/AuthContent";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const CreateNewGroup = () => {
+  const router = useRouter();
   const [tabs, setTabs] = useState([
     {
       label: "Details",
@@ -50,8 +53,9 @@ const CreateNewGroup = () => {
       <div className={styles.createGroupFlex}>
         <div className={styles.createGroupLayout}>
           <div className={styles.ArrowBox}>
-            {" "}
-            <BsArrowLeft size={30} />{" "}
+            <div className="btn" onClick={() => router.back()}>
+              <BsArrowLeft size={30} />
+            </div>
           </div>
           <div className={styles.createGroupContent}>
             <div className={`${styles.createGroupHeader} text-center`}>
@@ -82,7 +86,10 @@ const CreateNewGroup = () => {
             </div>
 
             <div className={styles.createGroupElement}>
-              {tabs.map((item) => (item.active ? item.component : ""))}
+              {/* {tabs.map((item) => (item.active ? item.component : ""))} */}
+              {tabs.map((item, index) => (
+                <div key={index}>{item.active ? item.component : ""}</div>
+              ))}
             </div>
           </div>
         </div>
