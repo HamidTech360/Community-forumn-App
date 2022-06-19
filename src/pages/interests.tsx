@@ -77,7 +77,7 @@ const Interests = () => {
         <title>Interests</title>
       </Head>
       <section>
-        <Container fluid className="row mt-3 text-center h1 ms-3">
+        <Container fluid className="row mt-3 text-center h1 mx-3">
           <Card border="0 bg-transparent">
             <Card.Header
               className="border-0 fw-4 h1 mb-5 bg-transparent"

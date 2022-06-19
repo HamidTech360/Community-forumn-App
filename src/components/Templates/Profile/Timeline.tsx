@@ -7,8 +7,10 @@ import styles from "@/styles/profile.module.scss";
 import Link from "next/link";
 
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import { useRouter } from "next/router";
 
 const Timeline = () => {
+  const router = useRouter();
   const [scrollInitialized, setScrollInitialized] = useState(false);
   const { posts, hasMore, isFetchingMore } = usePagination();
   const intersection = useRef();
@@ -57,7 +59,16 @@ const Timeline = () => {
         className={`${styles.addNewGroupBtn} row col-6 col-md-4 col-lg-3 ms-auto me-2`}
       >
         <Link href="/groups/new" passHref>
-          <Button variant="outline-primary" className=" btn-sm">
+          <Button
+            variant="outline-primary"
+            className=" btn-sm"
+            onClick={() =>
+              sessionStorage.setItem(
+                "newGroup_coming4rm",
+                JSON.stringify(router.asPath)
+              )
+            }
+          >
             <AiOutlineUsergroupAdd size={23} /> Create New Group
           </Button>
         </Link>
