@@ -89,7 +89,7 @@ const GroupInfoCard = () => {
           {Object.keys(Components).map((item, index) => (
             <Nav.Item
               key={item}
-              className={item === path ? "text-primary" : "text-muted"}
+              className={item === path ? "text-primaries" : "textMute"}
             >
               <Link href={`/groups/${id}/${item}`}>{item}</Link>
             </Nav.Item>

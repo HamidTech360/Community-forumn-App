@@ -4859,12 +4859,19 @@ fieldset:disabled .btn {
 
 .card-body > p > b {
   font-weight: 700;
+  font-size: large;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 1100px) {
   .card-body{
     padding: 1rem 0rem;
   }
+  .card-body > p {
+    font-size: medium !important;
+  }
+}
+
+@media screen and (max-width: 300px) {
   .card-body > p {
     font-size: small !important;
   }
@@ -8296,14 +8303,38 @@ fieldset:disabled .btn {
 
 @media (max-width: 500px) {
   .text-primary,
-  .text-muted {
+  .text-muted, 
+  .text-mute, 
+  .text-primaries > a, 
+  .textMute > a {
     font-size: small;
+  }
+  
+  .pic {
+    width: 70px;
+    height: 70px;
   }
 }
 
-@media (max-width: 500px) {
-  .text-mute {
-    font-size: small;
+@media (max-width: 450px) {
+  .textMute, .text-primaries{
+    margin-right: -1rem;
+  }
+
+  .text-primaries > a, 
+  .textMute > a{
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .textMute, .text-primaries{
+    margin-right: -1rem;
+  }
+
+  .text-primaries > a, 
+  .textMute > a{
+    font-size: 0.8rem !important;
   }
 }
 
@@ -8313,19 +8344,19 @@ fieldset:disabled .btn {
   .text-mute {
     font-size: xx-small;
   }
-}
 
-@media (max-width: 300px) {
+  .text-primaries > a, 
+  .textMute > a{
+    font-size: 0.6rem !important;
+  }
+
   .text-mute {
     margin-left: 0;
   }
 }
 
 @media screen and (max-width: 500px) {
-  .pic {
-    width: 70px;
-    height: 70px;
-  }
+  
 }
 
 .text-secondary {

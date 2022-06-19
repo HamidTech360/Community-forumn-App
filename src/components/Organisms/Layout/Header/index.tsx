@@ -14,8 +14,8 @@ import AuthHeader from "./AuthHeader";
 import { user } from "@/redux/user";
 import { useSelector } from "@/redux/store";
 
-
 import { selectAuthState } from "@/reduxFeatures/authState/authStateSlice";
+import useUser from "@/hooks/useUser";
 
 const links = [
   { name: "Gist", link: "/gist" },
@@ -28,10 +28,10 @@ const links = [
 const Header = () => {
   const router = useRouter();
   const activePage = router.pathname;
- // const { isAuthenticated, user } = useUser();
+  const { isAuthenticated, user } = useUser();
   const [isMobile, setIsMobile] = useState(false);
 
-  const authState = useSelector(s=>s.user);
+  const authState = useSelector((s) => s.user);
 
   const handleClick = () => {
     setIsMobile(!isMobile);
@@ -51,7 +51,7 @@ const Header = () => {
 
   return (
     <>
-      {authState.isAuthenticated? (
+      {isAuthenticated ? (
         <AuthHeader />
       ) : (
         <Navbar collapseOnSelect className="nav_bar" expand="lg" fixed="top">

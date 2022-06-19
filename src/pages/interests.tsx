@@ -72,7 +72,7 @@ const Interests = () => {
 
   return (
     <section>
-      <Container className="mt-3 text-center h1">
+      <Container className="mt-3 text-center h1 mx-3">
         <Card border="0">
           <Card.Header
             className="border-0 fw-4 mb-5 bg-body"

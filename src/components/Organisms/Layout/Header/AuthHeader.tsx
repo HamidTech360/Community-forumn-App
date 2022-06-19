@@ -1,7 +1,11 @@
+import { useState } from "react";
 import Link from "next/link";
 import {
   Container,
   Form,
+  FormControl,
+  InputGroup,
+  Modal,
   Nav,
   Navbar,
   NavDropdown,
@@ -13,6 +17,7 @@ import {
 //import useUser from "@/hooks/useUser";
 import Notifications from "@/pages/notifications";
 import {RiLogoutCircleRLine} from 'react-icons/ri'
+import { BsSearch } from 'react-icons/bs';
 
 import Logo from "@/components/Atoms/Logo";
 import Loader from "@/components/Organisms/Layout/Loader/Loader";
@@ -31,6 +36,7 @@ import {
   AiFillCompass,
   AiOutlineCompass,
 } from "react-icons/ai";
+import { FaTimes } from 'react-icons/fa';
 import { RiMessage2Fill, RiMessage2Line } from "react-icons/ri";
 import { HiUserGroup, HiOutlineUserGroup } from "react-icons/hi";
 import { BsEnvelopeFill, BsEnvelope } from "react-icons/bs";
@@ -49,6 +55,7 @@ const AuthHeader = () => {
     { icon: "groups", name: "Groups" },
   ];
 
+  const [showModal, setShowModal] = useState(false)
   //const { user } = useUser();
   const router = useRouter();
 
@@ -76,7 +83,6 @@ const AuthHeader = () => {
   }
 
   const activeTab = (link) => {
-    console.log("link.icon:", link.icon);
     if (link.icon === "feed") {
       if (link.icon === "feed" && router.asPath.substring(1) === "feed") {
         return <AiFillHome />;
@@ -118,7 +124,7 @@ const AuthHeader = () => {
   return (
     <>
       <Navbar
-        className="bg-white"
+        className={`bg-white  ${styles.navBar}`}
         style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
         fixed="top"
       >
@@ -129,20 +135,45 @@ const AuthHeader = () => {
             </Navbar.Brand>
           </Link>
           <Form.Control
-            className="mx-2"
+            className={`mx-2 ${styles.formControl}`}
             type="search"
             style={{ maxWidth: 300 }}
             placeholder="Search"
           />
-          <Nav className="d-flex justify-content-between gap-4 	d-none d-md-flex">
+
+          <div className = {styles.search}>
+            <BsSearch onClick={()=>setShowModal(true)} className= {styles.iconSearch}/>
+          </div>
+
+          <Modal show={showModal} 
+            className={styles.modal}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered>
+              <FaTimes className = {styles.times} onClick={()=>setShowModal(false)} />
+
+              <InputGroup className={styles.inputGroup}>
+                <FormControl
+                  placeholder="Enter keyword here"
+                  aria-label="Recipient's username"
+                  aria-describedby="basic-addon2"
+                />
+                <Button className = {styles.button} id="button-addon2">
+                  Enter
+                </Button>
+              </InputGroup>                         
+          </Modal>
+
+         
+
+          <Nav className="d-flex justify-content-between gap-4 d-md-flex auth-nav">
             {links.map((link, key) => (
               <Link key={key} href={`/${link.icon}`} passHref>
                 <div
                   className={`${
                     router.asPath.substring(1) === link.icon
-                      ? "text-primary"
-                      : "text-muted"
-                  } d-flex flex-column align-items-center gap-1 btn`}
+                      ? "text-primary auth-name"
+                      : "text-muted auth-name"
+                  } d-flex flex-column align-items-center gap-1 auth-gap btn`}
                 >
                   <span>{activeTab(link)}</span>
                   <small>{link.name}</small>
@@ -165,13 +196,7 @@ const AuthHeader = () => {
                 ) : (
                   <BsEnvelope />
                 )}
-                <Badge
-                  bg="danger"
-                  style={{ width: 25, height: 25 }}
-                  className=" rounded-circle position-absolute end-0 top-0"
-                >
-                  <small>3</small>
-                </Badge>
+                 <Badge className = {styles.badge}>9</Badge>
               </Button>
             </Link>
 
@@ -193,13 +218,7 @@ const AuthHeader = () => {
 
             <Button
               variant="none position-relative"
-              style={{
-                width: 35,
-                height: 35,
-                borderRadius: "100%",
-                backgroundColor: "#EAFEFD",
-                border: "none",
-              }}
+              className = {styles.btn}
               onClick={notificationsDisplay}
               disabled={router.asPath === "/notifications" ? true : false}
             >
@@ -208,56 +227,53 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
-              <Badge
-                bg="warning"
-                style={{ width: 25, height: 25 }}
-                className="position-absolute  rounded-circle end-0 top-0"
-              >
-                <small>3</small>
-              </Badge>
+               <Badge className = {styles.badge}>9</Badge>
             </Button>
           </div>
           <NavDropdown
-            className="d-none d-md-block "
+            className={` d-md-block ${styles.header}`}
             style={{ color: "black" }}
             title={
               <>
                 <Image
                   src={data?.avatar?.url || "/images/formbg.png"}
                   alt=""
-                  width={40}
-                  height={40}
+                 className = {styles.img}
                   roundedCircle
                 />
-                <span className="mx-2">{data?.firstName.split(" ")[0]}</span>
+                <span className={`mx-2 ${styles.span}`}>{data?.firstName.split(" ")[0]}</span>
               </>
             }
-          >
-            <NavDropdown.Header>
-              <Image
-                src={data?.avatar?.url || "/images/formbg.png"}
-                alt=""
-                width={20}
-                height={20}
-                roundedCircle
-              />
-              <span className="mx-2">
-                {data?.firstName}&nbsp; {data?.lastName}
-              </span>{" "}
-            </NavDropdown.Header>
-            <NavDropdown.Divider />
-            <NavDropdown.Item>Dark mode</NavDropdown.Item>
-            <NavDropdown.Item>
-              <Link href="/settings" passHref>
-                Account Settings
-              </Link>
-            </NavDropdown.Item>
-            <NavDropdown.Item>Support</NavDropdown.Item>
-            <NavDropdown.Item 
-                  style={{fontWeight:'700', marginTop:'10px'}} onClick={()=>LogOut()}>
-                    Logout 
-                    <RiLogoutCircleRLine size={14}/>
-            </NavDropdown.Item> 
+          >            
+           <div className = {styles.navDrop}>
+            <NavDropdown.Header className = {styles.navHead}>
+                <Image
+                  src={data?.avatar?.url || "/images/formbg.png"}
+                  alt=""
+                  width={20}
+                  height={20}
+                  roundedCircle
+                />
+                <span className="mx-2">
+                  {data?.firstName}&nbsp; {data?.lastName}
+                </span>{" "}
+              </NavDropdown.Header>
+              <NavDropdown.Divider />
+              <NavDropdown.Item className = {styles.navMenu}>Dark mode</NavDropdown.Item>
+              <NavDropdown.Item className = {styles.navMenu}>
+                <Link href="/settings" passHref>
+                  Account Settings
+                </Link>
+              </NavDropdown.Item>
+              <NavDropdown.Item className = {styles.navMenu}>Support</NavDropdown.Item>
+              <NavDropdown.Item 
+                    className = {styles.navMenu}
+                    style={{fontWeight:'700',
+                    color: '#207681',marginTop:'10px'}} onClick={()=>LogOut()}>
+                      Logout 
+                      <RiLogoutCircleRLine size={14}/>
+              </NavDropdown.Item> 
+           </div>
           </NavDropdown>
         </Container>
       </Navbar>
@@ -291,3 +307,4 @@ const AuthHeader = () => {
 };
 
 export default AuthHeader;
+

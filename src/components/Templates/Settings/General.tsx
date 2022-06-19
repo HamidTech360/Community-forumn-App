@@ -97,22 +97,23 @@ const General = () => {
     <>
       <ToastContainer/>
       <Container className = {styles.container}>
-        <Form method="post" className = {styles.form}>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-            <Form.Label className = { styles.label}>Full Name</Form.Label>
+
+        <Form className = {styles.form}>
+          <Form.Group className={`mb-3 ${styles.group}`} controlId="exampleForm.ControlInput1">
+         <Form.Label className = { styles.label}>Full Name</Form.Label>
 
             <Form.Control type="text" readOnly={true} defaultValue={`${data?.firstName} ${data?.lastName}`}  className = {styles.input} />
           </Form.Group>
 
 
-          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+          <Form.Group className={`mb-3 ${styles.group}`} controlId="exampleForm.ControlInput1">
             <Form.Label className = { styles.label}>Username</Form.Label>
 
             <Form.Control type="text" readOnly={true} defaultValue={data?.firstName} placeholder={data?.firstName} className = { styles.input }/>
           </Form.Group>
 
 
-          <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Group  className={`mb-3 ${styles.group}`}controlId="formBasicEmail">
             <Form.Label className = { styles.label}>Email Address</Form.Label>
 
             <Form.Control  name="email" onChange={(e)=>handleChange(e)} type="email" value={formData.email}  className = {styles.input} />

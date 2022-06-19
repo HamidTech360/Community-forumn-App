@@ -8,13 +8,16 @@ import React from "react";
 import { useState } from "react";
 import { Card, Col, Container, Nav, Row } from "react-bootstrap";
 
+import { VscSettingsGear } from "react-icons/vsc";
+import { BsLock, BsBell, BsShieldCheck, BsTrash } from "react-icons/bs";
+
 const Settings = () => {
   const tabs = {
-    general: { component: <General />, icon: "bi-gear" },
-    security: { component: <Security />, icon: "bi-lock" },
-    notifications: { component: <Notifications />, icon: "bi-bell" },
-    privacy: { component: <Privacy />, icon: "bi-shield-check" },
-    delete: { component: <Delete />, icon: "bi-trash3" },
+    general: { component: <General />, icon: <VscSettingsGear /> },
+    security: { component: <Security />, icon: <BsLock /> },
+    notifications: { component: <Notifications />, icon: <BsBell /> },
+    privacy: { component: <Privacy />, icon: <BsShieldCheck /> },
+    "delete account": { component: <Delete />, icon: <BsTrash /> },
   };
 
   const names = Object.keys(tabs);
@@ -35,9 +38,7 @@ const Settings = () => {
                       key={name}
                       onClick={() => setCurrent(names[index])}
                     >
-                      <span className="pe-3">
-                        <i className={`bi ${tabs[name].icon}`}></i>
-                      </span>
+                      <span className="pe-3">{tabs[name].icon}</span>
                       <span className="d-none d-md-inline">{name}</span>
                     </Nav.Link>
                   ))}

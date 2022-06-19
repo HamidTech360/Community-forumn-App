@@ -56,11 +56,11 @@ const PostCard = ({
         <div className="d-flex flex-column">
           <div className={styles.div}>
             <small
-              style={{ fontSize: "0.8rem" }}
-              dangerouslySetInnerHTML={{ __html: "Posted " }}
-            />
-            <span style={{ fontSize: "0.9rem" }}>
-              <Age time={post?.createdAt} />
+              dangerouslySetInnerHTML={{ __html: post?.title }}
+            /> 
+            <br/>
+           <span >
+               <Age time={post?.date} />
             </span>
           </div>
 
@@ -82,8 +82,8 @@ const PostCard = ({
             <NavDropdown.Item className={styles.item}>
               {" "}
               <RiFlagFill /> &nbsp; Report post
-            </NavDropdown.Item>
-            <NavDropdown.Item>
+            </NavDropdown.Item >
+            <NavDropdown.Item className={styles.item}>
               <BsXCircleFill /> &nbsp; Unfollow &nbsp;
               {/* {post.name.split(" ")[0]} */}
             </NavDropdown.Item>
