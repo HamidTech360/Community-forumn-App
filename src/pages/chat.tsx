@@ -15,6 +15,7 @@ import {
   BsArrowLeft,
 } from "react-icons/bs";
 import { RiSendPlaneFill } from "react-icons/ri";
+import Head from "next/head";
 
 const Chat = () => {
   const [open, setOpen] = useState(true);
@@ -282,6 +283,9 @@ const Chat = () => {
 
   return (
     <AuthContent>
+      <Head>
+        <title>Chat</title>
+      </Head>
       <Container className="mt-lg-3" style={{ marginBottom: "-9.3vh" }}>
         <div className="row" style={{ minHeight: "87vh" }}>
           {/* SideBar */}

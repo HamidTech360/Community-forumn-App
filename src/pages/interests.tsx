@@ -1,3 +1,4 @@
+import Head from "next/head";
 import React, { MouseEventHandler, useEffect, useState } from "react";
 
 import { Container, Card, Button, Image } from "react-bootstrap";
@@ -71,79 +72,89 @@ const Interests = () => {
   };
 
   return (
-    <section>
-      <Container className="mt-3 text-center h1 mx-3">
-        <Card border="0">
-          <Card.Header
-            className="border-0 fw-4 mb-5 bg-body"
-            style={{ backgroundColor: "none" }}
-          >
-            <Image
-              src="/assets/ellipse-intro-top.png"
-              className="d-none d-lg-block"
-              style={{
-                position: "fixed",
-                top: "-5%",
-                left: "-10%",
-              }}
-              alt="ellipse-intro-top.png"
-            />
-            Select interests
-            <p className="fs-6 text-secondary d-block mt-3">
-              Select a minimum of three things that you plan to use Settlin to
-              achieve
-            </p>
-          </Card.Header>
+    <>
+      <Head>
+        <title>Interests</title>
+      </Head>
+      <section>
+        <Container fluid className="row mt-3 text-center h1 ms-3">
+          <Card border="0 bg-transparent">
+            <Card.Header
+              className="border-0 fw-4 h1 mb-5 bg-transparent"
+              style={{ backgroundColor: "none" }}
+            >
+              <Image
+                src="/assets/ellipse-intro-top.png"
+                className="d-none d-md-block"
+                style={{
+                  position: "fixed",
+                  top: "-5%",
+                  left: "-10%",
+                  zIndex: "-1",
+                }}
+                alt="ellipse-intro-top.png"
+              />
+              Select interests
+              <p className="fs-6 text-secondary d-block mt-3">
+                Select a minimum of three things that you plan to use Settlin to
+                achieve
+              </p>
+            </Card.Header>
 
-          <Card.Body style={{ marginTop: "-2rem" }}>
-            <div className="row justify-content-center align-items-center">
-              {initInterests.map((interest, index) => {
-                let idIndex = `initInterests-${index}`;
-                let initInterestsLength = initInterests.length;
-                let btnWidth =
-                  index < initInterestsLength / 3
-                    ? "col-sm-5 col-md-4 col-lg-3 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3"
-                    : index > initInterestsLength / 3 &&
-                      index <= initInterestsLength / Number(1.5)
-                    ? "col-sm-4 col-md-4 col-lg-3 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3"
-                    : index >= initInterestsLength / Number(1.5)
-                    ? "col-sm-4 col-md-3 col-lg-2 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3"
-                    : "col-sm-4 col-md-2 col-lg-4 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3";
-                return (
-                  <div
-                    id={idIndex}
-                    className={btnWidth}
-                    key={index}
-                    onClick={interestSelected}
-                  >
-                    {interest}
-                  </div>
-                );
-              })}
-            </div>
-          </Card.Body>
-          <Card.Footer className="border-0 bg-body">
-            <Image
-              src="/assets/ellipse-intro-right.png"
-              className="d-none d-lg-block"
-              style={{
-                position: "fixed",
-                bottom: "-82%",
-                right: "-5%",
-              }}
-              alt="ellipse-intro-right.png"
-            />
-            <div className="row justify-content-center align-items-center">
-              <div className="col-5 d-grid mt-5">
-                <Button className="btn btn-lg" onClick={axiosInterestSelected}>
-                  Continue
-                </Button>
+            <Card.Body style={{ marginTop: "-2rem" }}>
+              <div className="row justify-content-center align-items-center">
+                {initInterests.map((interest, index) => {
+                  let idIndex = `initInterests-${index}`;
+                  let initInterestsLength = initInterests.length;
+                  let btnWidth =
+                    index < initInterestsLength / 3
+                      ? "col-sm-5 col-md-4 col-lg-3 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3"
+                      : index > initInterestsLength / 3 &&
+                        index <= initInterestsLength / Number(1.5)
+                      ? "col-sm-4 col-md-4 col-lg-3 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3"
+                      : index >= initInterestsLength / Number(1.5)
+                      ? "col-sm-4 col-md-3 col-lg-2 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3"
+                      : "col-sm-4 col-md-2 col-lg-4 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3";
+                  return (
+                    <div
+                      id={idIndex}
+                      className={btnWidth}
+                      key={index}
+                      onClick={interestSelected}
+                    >
+                      {interest}
+                    </div>
+                  );
+                })}
               </div>
-            </div>
-          </Card.Footer>
-        </Card>
-      </Container>
-    </section>
+            </Card.Body>
+            <Card.Footer className="border-0 bg-transparent">
+              <Image
+                src="/assets/ellipse-intro-right.png"
+                className="d-none d-md-block"
+                style={{
+                  position: "fixed",
+                  bottom: "-82%",
+                  right: "-5%",
+                  zIndex: "-1",
+                }}
+                alt="ellipse-intro-right.png"
+              />
+              <div className="row justify-content-center">
+                <div className="col-5 mt-5 d-grid">
+                  <Button
+                    className="btn btn-lg"
+                    onClick={axiosInterestSelected}
+                  >
+                    Continue
+                  </Button>
+                </div>
+              </div>
+            </Card.Footer>
+          </Card>
+        </Container>
+      </section>
+    </>
   );
 };
 

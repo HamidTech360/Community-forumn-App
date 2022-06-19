@@ -4,6 +4,7 @@ import { Button, Card, CardImg, Container, Form, Image } from "react-bootstrap";
 import Timeline from "@/components/Templates/Profile/Timeline";
 import AuthContent from "@/components/Auth/AuthContent";
 import Link from "next/link";
+import Head from "next/head";
 const posts = [
   {
     image: "/images/article.png",
@@ -34,7 +35,9 @@ const Groups = () => {
   }, []);
   return (
     <AuthContent>
-      {" "}
+      <Head>
+        <title>Groups</title>
+      </Head>
       <div className="mt-5">
         <Container className={styles.wrapper}>
           <Card
