@@ -16,8 +16,7 @@ import {
 } from "react-bootstrap";
 //import useUser from "@/hooks/useUser";
 import Notifications from "@/pages/notifications";
-import {RiLogoutCircleRLine} from 'react-icons/ri'
-import { BsSearch } from 'react-icons/bs';
+import { RiLogoutCircleRLine } from "react-icons/ri";
 
 import Logo from "@/components/Atoms/Logo";
 import Loader from "@/components/Organisms/Layout/Loader/Loader";
@@ -36,10 +35,10 @@ import {
   AiFillCompass,
   AiOutlineCompass,
 } from "react-icons/ai";
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes } from "react-icons/fa";
 import { RiMessage2Fill, RiMessage2Line } from "react-icons/ri";
 import { HiUserGroup, HiOutlineUserGroup } from "react-icons/hi";
-import { BsEnvelopeFill, BsEnvelope } from "react-icons/bs";
+import { BsEnvelopeFill, BsEnvelope, BsSearch } from "react-icons/bs";
 import {
   MdNotificationsActive,
   MdOutlineNotificationsActive,
@@ -55,13 +54,13 @@ const AuthHeader = () => {
     { icon: "groups", name: "Groups" },
   ];
 
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModal] = useState(false);
   //const { user } = useUser();
   const router = useRouter();
 
   const dispatch = useDispatch();
   const show = useSelector(selectNotificationOffcanvas);
-  const {data} = useSelector(s=>s.user)
+  const { data } = useSelector((s) => s.user);
 
   // Set notificationsOffcanvas in redux state to true
   const handleClose = () => dispatch(notificationsOffcanvas(false));
@@ -76,11 +75,11 @@ const AuthHeader = () => {
     }
   };
 
-  const LogOut = ()=>{
-    router.push('/login')
-    dispatch(logout({}))
+  const LogOut = () => {
+    router.push("/login");
+    dispatch(logout({}));
     //router.push('/login')
-  }
+  };
 
   const activeTab = (link) => {
     if (link.icon === "feed") {
@@ -141,29 +140,35 @@ const AuthHeader = () => {
             placeholder="Search"
           />
 
-          <div className = {styles.search}>
-            <BsSearch onClick={()=>setShowModal(true)} className= {styles.iconSearch}/>
+          <div className={styles.search}>
+            <BsSearch
+              onClick={() => setShowModal(true)}
+              className={styles.iconSearch}
+            />
           </div>
 
-          <Modal show={showModal} 
+          <Modal
+            show={showModal}
             className={styles.modal}
             aria-labelledby="contained-modal-title-vcenter"
-            centered>
-              <FaTimes className = {styles.times} onClick={()=>setShowModal(false)} />
+            centered
+          >
+            <FaTimes
+              className={styles.times}
+              onClick={() => setShowModal(false)}
+            />
 
-              <InputGroup className={styles.inputGroup}>
-                <FormControl
-                  placeholder="Enter keyword here"
-                  aria-label="Recipient's username"
-                  aria-describedby="basic-addon2"
-                />
-                <Button className = {styles.button} id="button-addon2">
-                  Enter
-                </Button>
-              </InputGroup>                         
+            <InputGroup className={styles.inputGroup}>
+              <FormControl
+                placeholder="Enter keyword here"
+                aria-label="Recipient's username"
+                aria-describedby="basic-addon2"
+              />
+              <Button className={styles.button} id="button-addon2">
+                Enter
+              </Button>
+            </InputGroup>
           </Modal>
-
-         
 
           <Nav className="d-flex justify-content-between gap-4 d-md-flex auth-nav">
             {links.map((link, key) => (
@@ -196,7 +201,7 @@ const AuthHeader = () => {
                 ) : (
                   <BsEnvelope />
                 )}
-                 <Badge className = {styles.badge}>9</Badge>
+                <Badge className={styles.badge}>9</Badge>
               </Button>
             </Link>
 
@@ -207,7 +212,6 @@ const AuthHeader = () => {
               style={{
                 position: "fixed",
                 top: "4.8rem",
-                borderRadius: "15px 0 0 0",
               }}
               scroll={true}
             >
@@ -218,7 +222,7 @@ const AuthHeader = () => {
 
             <Button
               variant="none position-relative"
-              className = {styles.btn}
+              className={styles.btn}
               onClick={notificationsDisplay}
               disabled={router.asPath === "/notifications" ? true : false}
             >
@@ -227,7 +231,7 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
-               <Badge className = {styles.badge}>9</Badge>
+              <Badge className={styles.badge}>9</Badge>
             </Button>
           </div>
           <NavDropdown
@@ -238,15 +242,17 @@ const AuthHeader = () => {
                 <Image
                   src={data?.avatar?.url || "/images/formbg.png"}
                   alt=""
-                 className = {styles.img}
+                  className={styles.img}
                   roundedCircle
                 />
-                <span className={`mx-2 ${styles.span}`}>{data?.firstName.split(" ")[0]}</span>
+                <span className={`mx-2 ${styles.span}`}>
+                  {data?.firstName.split(" ")[0]}
+                </span>
               </>
             }
-          >            
-           <div className = {styles.navDrop}>
-            <NavDropdown.Header className = {styles.navHead}>
+          >
+            <div className={styles.navDrop}>
+              <NavDropdown.Header className={styles.navHead}>
                 <Image
                   src={data?.avatar?.url || "/images/formbg.png"}
                   alt=""
@@ -259,52 +265,62 @@ const AuthHeader = () => {
                 </span>{" "}
               </NavDropdown.Header>
               <NavDropdown.Divider />
-              <NavDropdown.Item className = {styles.navMenu}>Dark mode</NavDropdown.Item>
-              <NavDropdown.Item className = {styles.navMenu}>
+              <NavDropdown.Item className={styles.navMenu}>
+                Dark mode
+              </NavDropdown.Item>
+              <NavDropdown.Item className={styles.navMenu}>
                 <Link href="/settings" passHref>
                   Account Settings
                 </Link>
               </NavDropdown.Item>
-              <NavDropdown.Item className = {styles.navMenu}>Support</NavDropdown.Item>
-              <NavDropdown.Item 
-                    className = {styles.navMenu}
-                    style={{fontWeight:'700',
-                    color: '#207681',marginTop:'10px'}} onClick={()=>LogOut()}>
-                      Logout 
-                      <RiLogoutCircleRLine size={14}/>
-              </NavDropdown.Item> 
-           </div>
+              <NavDropdown.Item className={styles.navMenu}>
+                Support
+              </NavDropdown.Item>
+              <NavDropdown.Item
+                className={styles.navMenu}
+                style={{
+                  fontWeight: "700",
+                  color: "#207681",
+                  marginTop: "10px",
+                }}
+                onClick={() => LogOut()}
+              >
+                Logout
+                <RiLogoutCircleRLine size={14} />
+              </NavDropdown.Item>
+            </div>
           </NavDropdown>
         </Container>
       </Navbar>
 
-      <Navbar
-        className="mobi-nav bg-white rounded"
-        style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
-        fixed="bottom"
-      >
-        <Container className="d-flex justify-content-start">
-          <Nav className="d-flex justify-content-around gap-4 w-100">
-            {links.map((link, key) => (
-              <Link key={key} href={`/${link.icon}`} passHref>
-                <div
-                  className={`${
-                    router.asPath.substring(1) === link.icon
-                      ? "text-primary"
-                      : "text-muted"
-                  } d-flex flex-column align-items-center gap-1 mobi-nav bg-white btn`}
-                >
-                  <span>{activeTab(link)}</span>
-                  <small>{link.name}</small>
-                </div>
-              </Link>
-            ))}
-          </Nav>
-        </Container>
-      </Navbar>
+      {router.asPath !== "/chat" && (
+        <Navbar
+          className="mobi-nav bg-white rounded"
+          style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
+          fixed="bottom"
+        >
+          <Container className="d-flex justify-content-start">
+            <Nav className="d-flex justify-content-around gap-4 w-100">
+              {links.map((link, key) => (
+                <Link key={key} href={`/${link.icon}`} passHref>
+                  <div
+                    className={`${
+                      router.asPath.substring(1) === link.icon
+                        ? "text-primary"
+                        : "text-muted"
+                    } d-flex flex-column align-items-center gap-1 mobi-nav bg-white btn`}
+                  >
+                    <span>{activeTab(link)}</span>
+                    <small>{link.name}</small>
+                  </div>
+                </Link>
+              ))}
+            </Nav>
+          </Container>
+        </Navbar>
+      )}
     </>
   );
 };
 
 export default AuthHeader;
-

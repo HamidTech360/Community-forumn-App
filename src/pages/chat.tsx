@@ -282,11 +282,8 @@ const Chat = () => {
 
   return (
     <AuthContent>
-      <Container
-        className="mt-3"
-        style={{ marginTop: "-1.7rem", marginBottom: "-2.7rem" }}
-      >
-        <div className="row shadow" style={{ minHeight: "80vh" }}>
+      <Container className="mt-lg-3" style={{ marginBottom: "-9.3vh" }}>
+        <div className="row" style={{ minHeight: "87vh" }}>
           {/* SideBar */}
           <div ref={mainSidebar} className="d-md-block col-12 col-md-4 shadow">
             <div className="row">
@@ -337,7 +334,7 @@ const Chat = () => {
                   id="toggleMessagingBody"
                   className="pt-2"
                   style={{
-                    height: "61vh",
+                    height: "75vh",
                     overflowY: "auto",
                     overflowX: "hidden",
                   }}
@@ -389,7 +386,7 @@ const Chat = () => {
                                 onClick={startChattingWithChild}
                               >
                                 <div
-                                  className="col-8 fs-5"
+                                  className="col-8 fs-6"
                                   data-nameid={message.id}
                                   onClick={startChattingWithChild}
                                 >
@@ -422,20 +419,23 @@ const Chat = () => {
                                   {message.message[message.message.length - 1]
                                     .message.length > 26 && <span>...</span>}
                                 </p>
-                                <h6
+                                <small
                                   className="col-2 text-center"
                                   data-nameid={message.id}
                                   onClick={startChattingWithChild}
                                 >
                                   <span
-                                    className="badge bg-primary rounded-pill fw-normal"
+                                    className={` ${
+                                      message.unreadMessage !== 0 && "p-1"
+                                    } badge bg-primary rounded-pill text-white`}
+                                    style={{ fontSize: "9px" }}
                                     data-nameid={message.id}
                                     onClick={startChattingWithChild}
                                   >
                                     {message.unreadMessage !== 0 &&
                                       message.unreadMessage}
                                   </span>
-                                </h6>
+                                </small>
                               </div>
                             </div>
 
@@ -462,11 +462,11 @@ const Chat = () => {
           >
             <Card
               className="border-0 d-flex flex-column"
-              style={{ height: "79vh" }}
+              style={{ height: "95vh" }}
             >
               <Card.Header>
                 <div className="row">
-                  <h3 className="col-12 mt-2">
+                  <h4 className="col-12 mt-2">
                     {JSON.stringify(selectUserToChatTimeline[0]) !== "{}" && (
                       <BsArrowLeft
                         className="me-2 d-inline d-md-none"
@@ -477,12 +477,12 @@ const Chat = () => {
                       />
                     )}
                     {selectUserToChatTimeline[0].name}
-                  </h3>
+                  </h4>
                 </div>
                 {JSON.stringify(selectUserToChatTimeline[0]) === "{}" ? (
                   <div className="row">
                     <div className="col-12">
-                      <h3>
+                      <h4>
                         {" "}
                         <BsArrowLeft
                           className="me-2 d-inline d-md-none"
@@ -492,7 +492,7 @@ const Chat = () => {
                           }}
                         />
                         New message
-                      </h3>
+                      </h4>
                     </div>
                     <div className="col-12 ">
                       <input
@@ -510,6 +510,7 @@ const Chat = () => {
                       style={{
                         fontSize: "3rem",
                         marginTop: "-1.2rem",
+                        marginBottom: "-1.6rem",
                         color: "gray",
                       }}
                     >
@@ -528,6 +529,7 @@ const Chat = () => {
                       style={{
                         fontSize: "3rem",
                         marginTop: "-1.2rem",
+                        marginBottom: "-1.6rem",
                         color: "#4c959f",
                       }}
                     >
@@ -568,7 +570,7 @@ const Chat = () => {
                                   <hr />
                                 </div>
                               </div>
-                              {ChatBubble(message, index)}
+                              {ChatBubble(message)}
                             </div>
                           );
                         } else {
@@ -580,7 +582,7 @@ const Chat = () => {
                             // No unread message
                             return (
                               <div key={index} ref={readChat}>
-                                {ChatBubble(message, index)}
+                                {ChatBubble(message)}
                               </div>
                             );
                           } else {
@@ -588,11 +590,7 @@ const Chat = () => {
                              ** No need to Focus as focus has already been made above
                              ** Maintain Read State
                              */
-                            return (
-                              <div key={index}>
-                                {ChatBubble(message, index)}
-                              </div>
-                            );
+                            return <div key={index}>{ChatBubble(message)}</div>;
                           }
                         }
                       }
