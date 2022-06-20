@@ -5,11 +5,14 @@ import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import Header from "../components/Organisms/Layout/Header";
 import Footer from "../components/Organisms/Layout/Footer";
+import AuthStatus from "@/components/Auth/AuthStatus";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Provider store={store}>
+        {/* Update State With Auth User If Any */}
+        <AuthStatus />
         <Header />
         <div className="body pushDownNavBarBottomOnSm">
           <Component {...pageProps} />

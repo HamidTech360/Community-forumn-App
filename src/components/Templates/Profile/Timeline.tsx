@@ -1,13 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Spinner } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import { usePagination } from "../../../hooks/usePagination";
 import PostCard from "../../Organisms/App/PostCard";
 import CreatePost from "../../Organisms/CreatePost";
-import styles from '@/styles/profile.module.scss'
+import styles from "@/styles/profile.module.scss";
+import Link from "next/link";
+
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
 
 const Timeline = () => {
   const [scrollInitialized, setScrollInitialized] = useState(false);
-  const { posts,  hasMore, isFetchingMore } = usePagination();
+  const { posts, hasMore, isFetchingMore } = usePagination();
   const intersection = useRef();
 
   const checkScroll = () => {
@@ -49,7 +52,16 @@ const Timeline = () => {
   }, [posts, scrollInitialized]);
 
   return (
-    <div className = {styles.profileWrapper}>
+    <div className={styles.profileWrapper}>
+      <div
+        className={`${styles.addNewGroupBtn} row col-6 col-md-4 col-lg-3 ms-auto me-2`}
+      >
+        <Link href="/groups/new" passHref>
+          <Button variant="outline-primary" className=" btn-sm">
+            <AiOutlineUsergroupAdd size={23} /> Create New Group
+          </Button>
+        </Link>
+      </div>
       <CreatePost />
       <div
         ref={intersection}

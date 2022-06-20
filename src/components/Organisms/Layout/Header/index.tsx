@@ -11,10 +11,10 @@ import { AiOutlineClose } from "react-icons/ai";
 import AuthHeader from "./AuthHeader";
 
 // import useUser from "@/hooks/useUser";
-import { user } from "@/redux/user";
+// import { user } from "@/redux/_user";
 import { useSelector } from "@/redux/store";
 
-import { selectAuthState } from "@/reduxFeatures/authState/authStateSlice";
+import { selectIsAuthenticated } from "@/reduxFeatures/authState/authStateSlice";
 import useUser from "@/hooks/useUser";
 
 const links = [
@@ -28,10 +28,11 @@ const links = [
 const Header = () => {
   const router = useRouter();
   const activePage = router.pathname;
-  const { isAuthenticated, user } = useUser();
+  // const { isAuthenticated, user } = useUser();
   const [isMobile, setIsMobile] = useState(false);
 
-  const authState = useSelector((s) => s.user);
+  // const authState = useSelector((s) => s.user);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const handleClick = () => {
     setIsMobile(!isMobile);

@@ -44,7 +44,8 @@ import {
   MdOutlineNotificationsActive,
 } from "react-icons/md";
 
-import { logout } from "@/redux/user";
+// import { logout } from "@/redux/_user";
+import { selectUser, logout } from "@/reduxFeatures/authState/authStateSlice";
 
 const AuthHeader = () => {
   const links = [
@@ -60,7 +61,8 @@ const AuthHeader = () => {
 
   const dispatch = useDispatch();
   const show = useSelector(selectNotificationOffcanvas);
-  const { data } = useSelector((s) => s.user);
+  // const { data } = useSelector((s) => s.user);
+  const data = useSelector(selectUser);
 
   // Set notificationsOffcanvas in redux state to true
   const handleClose = () => dispatch(notificationsOffcanvas(false));
@@ -76,9 +78,8 @@ const AuthHeader = () => {
   };
 
   const LogOut = () => {
-    router.push("/login");
-    dispatch(logout({}));
-    //router.push('/login')
+    dispatch(logout());
+    router.push("/");
   };
 
   const activeTab = (link) => {
@@ -186,7 +187,7 @@ const AuthHeader = () => {
               </Link>
             ))}
           </Nav>
-          <div className="notifications d-flex  gap-3">
+          <div className="notifications d-flex gap-3">
             <Link href="/chat" passHref>
               <Button
                 variant="none position-relative"
@@ -235,7 +236,7 @@ const AuthHeader = () => {
             </Button>
           </div>
           <NavDropdown
-            className={` d-md-block ${styles.header}`}
+            className={`d-md-block ${styles.header}`}
             style={{ color: "black" }}
             title={
               <>

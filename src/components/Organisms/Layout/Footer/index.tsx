@@ -1,13 +1,17 @@
 //import useUser from "@/hooks/useUser";
 import React from "react";
 import { Col, Container, Image, Nav, Row } from "react-bootstrap";
-import { useSelector } from "@/redux/store";
 import Logo from "../../../Atoms/Logo";
 import useUser from "@/hooks/useUser";
 import { useRouter } from "next/router";
 
+import { useSelector } from "@/redux/store";
+import { selectIsAuthenticated } from "@/reduxFeatures/authState/authStateSlice";
+import Link from "next/link";
+
 const Footer = () => {
-  const { isAuthenticated } = useUser();
+  // const { isAuthenticated } = useUser();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   // const state = useSelector((s) => s.user);
   const router = useRouter();
   return (
@@ -66,15 +70,29 @@ const Footer = () => {
         <>
           {router.asPath !== "/chat" && (
             <footer
-              className="footer d-none d-lg-block mt-5 p-3   shadow"
+              className="footer d-none d-md-block mt-5 p-3 shadow"
               style={{ backgroundColor: "#ffffff", zIndex: "9" }}
             >
               <Container>
                 <Nav className="d-flex justify-content-evenly text-primary">
-                  <Nav.Item>About us</Nav.Item>
-                  <Nav.Item>Privacy Policy</Nav.Item>
-                  <Nav.Item>Contact Us</Nav.Item>
-                  <Nav.Item>Terms of Service</Nav.Item>
+                  <Link href="/about" passHref>
+                    <Nav.Item style={{ cursor: "pointer" }}>About us</Nav.Item>
+                  </Link>
+                  <Link href="/privacy" passHref>
+                    <Nav.Item style={{ cursor: "pointer" }}>
+                      Privacy Policy
+                    </Nav.Item>
+                  </Link>
+                  <Link href="/contact" passHref>
+                    <Nav.Item style={{ cursor: "pointer" }}>
+                      Contact Us
+                    </Nav.Item>
+                  </Link>
+                  <Link href="/about" passHref>
+                    <Nav.Item style={{ cursor: "pointer" }}>
+                      Terms of Service (noPage)
+                    </Nav.Item>
+                  </Link>
                 </Nav>
               </Container>
             </footer>
