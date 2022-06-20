@@ -4,10 +4,12 @@ import { Col, Container, Image, Nav, Row } from "react-bootstrap";
 import { useSelector } from "@/redux/store";
 import Logo from "../../../Atoms/Logo";
 import useUser from "@/hooks/useUser";
+import { useRouter } from "next/router";
 
 const Footer = () => {
   const { isAuthenticated } = useUser();
   // const state = useSelector((s) => s.user);
+  const router = useRouter();
   return (
     <>
       {!isAuthenticated ? (
@@ -61,19 +63,23 @@ const Footer = () => {
           </Container>
         </div>
       ) : (
-        <footer
-          className="footer d-none d-lg-block mt-5 p-3   shadow"
-          style={{ backgroundColor: "#ffffff", zIndex: "9" }}
-        >
-          <Container>
-            <Nav className="d-flex justify-content-evenly text-primary">
-              <Nav.Item>About us</Nav.Item>
-              <Nav.Item>Privacy Policy</Nav.Item>
-              <Nav.Item>Contact Us</Nav.Item>
-              <Nav.Item>Terms of Service</Nav.Item>
-            </Nav>
-          </Container>
-        </footer>
+        <>
+          {router.asPath !== "/chat" && (
+            <footer
+              className="footer d-none d-lg-block mt-5 p-3   shadow"
+              style={{ backgroundColor: "#ffffff", zIndex: "9" }}
+            >
+              <Container>
+                <Nav className="d-flex justify-content-evenly text-primary">
+                  <Nav.Item>About us</Nav.Item>
+                  <Nav.Item>Privacy Policy</Nav.Item>
+                  <Nav.Item>Contact Us</Nav.Item>
+                  <Nav.Item>Terms of Service</Nav.Item>
+                </Nav>
+              </Container>
+            </footer>
+          )}
+        </>
       )}
     </>
   );

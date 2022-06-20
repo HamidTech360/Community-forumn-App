@@ -11,8 +11,8 @@ const Delete = () => {
   const router = useRouter();
 
   const handleDelete = async () => {
-    const comfirm = window.confirm("Continue wuth this action");
-    if (!comfirm) return;
+    const confirm = window.confirm("Continue with this action");
+    if (!confirm) return;
     setProgress(true);
     try {
       const response = await axios.delete(`/api/user`, {
