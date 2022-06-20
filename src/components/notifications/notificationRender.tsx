@@ -9,7 +9,7 @@ function NotificationRender({ notification }) {
       <div className="col-1">
         <GoPrimitiveDot size={18} className="text-primary" />{" "}
       </div>
-      <div className="col-11">
+      <div className="col-10 col-sm-11 pe-0">
         <div
           className={`${styles.notificationMessages}`}
           style={{ cursor: "pointer" }}
