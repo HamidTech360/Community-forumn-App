@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(500).json({ error: error, message: "Something went wrong" });
     }
   } else if (req.method === "GET") {
-    const gists = await Gist.find();
+    const gists = await Gist.find().sort({createdAt:-1});
     res.status(200).json(gists);
   }
 };

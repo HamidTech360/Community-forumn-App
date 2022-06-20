@@ -4,6 +4,7 @@ export interface IPost extends mongoose.Document {
   userId: string;
   postTitle: string;
   postBody: string;
+  type:string;
 }
 
 const postSchema = new mongoose.Schema(
@@ -23,6 +24,10 @@ const postSchema = new mongoose.Schema(
     deleted:{
       type:Boolean,
       default:false
+    },
+    type:{
+      type:String,
+      default:'post'
     }
   },
   { timestamps: true }

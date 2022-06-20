@@ -44,9 +44,9 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             authorization:`Bearer ${localStorage.getItem('accessToken')}`
           }})
           setUsers(userResponse.data.users)
-          setAllGists(gistResponse.data.reverse())
+          setAllGists(gistResponse.data)
           setIsFetching(false)
-          console.log(gistResponse.data.reverse());
+          console.log(gistResponse.data);
           
         }catch(error){
           console.log(error.response?.data); 
@@ -68,7 +68,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
       setShowModal(false);
       (async function(){
         const response  = await axios.get('/api/gists')
-        setAllGists(response.data.reverse())
+        setAllGists(response.data)
       })()
 
       dispatch(uploadCleanUp({}))
@@ -189,10 +189,10 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
 
 
         <Modal 
-         
+            
             // size="md"  
             show={showModal} 
-            className="modal"
+            className={styles.GistModal}
             aria-labelledby="contained-modal-title-vcenter"
             centered
           >

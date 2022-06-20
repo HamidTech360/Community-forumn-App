@@ -9,7 +9,9 @@ interface ICard {
   size?: string;
 }
 
-const Card = ({ image, title, author, body, size }: ICard) => {
+const Card = ({ image, title, author, body, size }) => {
+ // console.log( image, title, author, body, size );
+  
   return (
     <>
       <BCard
@@ -38,7 +40,7 @@ const Card = ({ image, title, author, body, size }: ICard) => {
               className="text-primary"
               style={{ textTransform: "capitalize" }}
             >
-              {title.toLowerCase()}
+              {title?.toLowerCase()}
             </h6>
             <span className="text-muted">
               <small style={{ marginTop: "-2rem", fontSize: "0.8rem" }}>

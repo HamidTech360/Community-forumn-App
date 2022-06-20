@@ -101,10 +101,10 @@ const PostCard = ({
             __html: trimmed
 
               ? strip(
-                  post.postBody,
+                  post.postBody || post.post,
                   "<p> <strong> <b> <a> <em> <i>"
                 )?.slice(0, 500) + "..."
-              : post.postTitle
+              : post.postTitle || post.title
 
           }}
         />
