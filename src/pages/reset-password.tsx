@@ -1,3 +1,4 @@
+import AuthContent from "@/components/Auth/AuthContent";
 import Head from "next/head";
 import React, { useState, useRef } from "react";
 import { Button, Container, Form, Image, InputGroup } from "react-bootstrap";
@@ -42,7 +43,7 @@ const ResetPassword = () => {
   //   }
   // }
   return (
-    <>
+    <AuthContent>
       <Head>
         <title>Password reset</title>
       </Head>
@@ -63,10 +64,9 @@ const ResetPassword = () => {
           </div>
           <Form
             // onSubmit={handleSubmit}
-            className="p-3"
+            className="p-3 shadow"
             style={{
               background: "#F5FEFF",
-              border: "0.2px solid #0B5351",
               borderRadius: 10,
             }}
           >
@@ -133,7 +133,7 @@ const ResetPassword = () => {
         fluid
       /> */}
       </Container>
-    </>
+    </AuthContent>
   );
 };
 

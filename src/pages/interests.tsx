@@ -67,7 +67,7 @@ const Interests = () => {
     } else {
       // Send with axios
 
-      console.log("interest selected", interestSelected);
+      // console.log("interest selected", interestSelected);
     }
   };
 

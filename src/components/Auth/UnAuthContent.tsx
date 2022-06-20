@@ -1,11 +1,12 @@
 import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
-//import useUser from "../../hooks/useUser";
 import Loader from "../Organisms/Layout/Loader/Loader";
 import axios from "axios";
 import { useDispatch, useSelector } from "@/redux/store";
+import { selectIsAuthenticated } from "@/reduxFeatures/authState/authStateSlice";
 
 export default function UnAuthContent({ children }: { children: ReactNode }) {
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   const router = useRouter();
 
   // Navigate authenticated users to Feed page.
@@ -15,7 +16,5 @@ export default function UnAuthContent({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  return <div>{children}</div>;
-
-  // return <Loader />;
+  return <>{!isAuthenticated && <div>{children}</div>}</>;
 }

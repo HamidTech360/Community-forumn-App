@@ -104,7 +104,7 @@ const Notifications = () => {
         className={`${
           router.asPath === "/notifications"
             ? "row justify-content-center mt-md-2 mb-0 mb-lg-0 pb-3 pb-lg-0"
-            : "row justify-content-center pe-1"
+            : "row justify-content-center pe-2"
         }`}
         style={{ marginTop: "-.3rem" }}
       >
