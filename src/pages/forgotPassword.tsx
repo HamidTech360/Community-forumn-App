@@ -1,3 +1,4 @@
+import UnAuthContent from "@/components/Auth/UnAuthContent";
 import Head from "next/head";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -38,7 +39,7 @@ const ForgotPassword = () => {
   }
 
   return (
-    <>
+    <UnAuthContent>
       <Head>
         <title>Forgot Password</title>
       </Head>
@@ -103,7 +104,7 @@ const ForgotPassword = () => {
         fluid
       /> */}
       </Container>
-    </>
+    </UnAuthContent>
   );
 };
 

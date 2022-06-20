@@ -17,5 +17,5 @@ export default function UnAuthContent({ children }: { children: ReactNode }) {
 
   return <div>{children}</div>;
 
-  return <Loader />;
+  // return <Loader />;
 }
