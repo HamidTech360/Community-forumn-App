@@ -10,6 +10,7 @@ import { Card, Col, Container, Nav, Row } from "react-bootstrap";
 
 import { VscSettingsGear } from "react-icons/vsc";
 import { BsLock, BsBell, BsShieldCheck, BsTrash } from "react-icons/bs";
+import Head from "next/head";
 
 const Settings = () => {
   const tabs = {
@@ -24,6 +25,9 @@ const Settings = () => {
   const [current, setCurrent] = useState(names[0]);
   return (
     <AuthContent>
+      <Head>
+        <title>Settings</title>
+      </Head>
     <div className="mt-5">
       <Container>
         <Card style={{ border: "1px solid #e0e0e0" }}>

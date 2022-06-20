@@ -45,6 +45,16 @@ const CreateNewGroup = () => {
     setTabs(allTabs);
   };
 
+  const goBack = () => {
+    if (sessionStorage.getItem("newGroup_coming4rm")) {
+      let backTo = JSON.parse(sessionStorage.getItem("newGroup_coming4rm"));
+      sessionStorage.removeItem("newGroup_coming4rm");
+      router.push(backTo);
+    } else {
+      router.push("/");
+    }
+  };
+
   return (
     <AuthContent>
       <Head>
@@ -53,7 +63,7 @@ const CreateNewGroup = () => {
       <div className={styles.createGroupFlex}>
         <div className={styles.createGroupLayout}>
           <div className={styles.ArrowBox}>
-            <div className="btn" onClick={() => router.back()}>
+            <div className="btn" onClick={goBack}>
               <BsArrowLeft size={30} />
             </div>
           </div>
