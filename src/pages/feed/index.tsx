@@ -103,7 +103,12 @@ const Feed = () => {
                 }
               > */}
             {posts?.map((post) => (
-              <PostCard post={post} key={`activity-post-${post.id}`} trimmed />
+              <PostCard 
+                post={post} 
+                author={users.find((i) => post.user  == i._id)}
+                key={`activity-post-${post.id}`} 
+                trimmed
+              />
             ))}
             {isFetching && (
               <div className="m-2 p-2 d-flex justify-content-center">

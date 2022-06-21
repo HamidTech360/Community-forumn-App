@@ -5,7 +5,7 @@ import getUserID from "@/utils/get-userID";
 import { NextApiRequest, NextApiResponse } from "next";
 import { validatePost } from '@/validators/post';
 
-const handler = async (req:NextApiRequest, res:NextApiResponse)=>{
+const handler = async (req:any, res:NextApiResponse)=>{
     await dbConnect()
     const postId = req.query.id
     const token = req.headers.authorization?.split(" ")[1] || "";

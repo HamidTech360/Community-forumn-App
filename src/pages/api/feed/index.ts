@@ -8,7 +8,7 @@ import Gist from "@/models/gist";
 import Post from "@/models/post";
 import post from "@/redux/post";
 
-const handler = async (req:NextApiRequest, res:NextApiResponse)=>{
+const handler = async (req:any, res:NextApiResponse)=>{
     if(req.method==="GET"){
         try{
             let gists = await Gist

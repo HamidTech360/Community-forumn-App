@@ -185,7 +185,7 @@ const Explore = ({
                     image={ '/images/postPlaceholder.jpg'}
                     title={post.postTitle}
                     body={post.postBody}
-                    author={(users.find((i)=>post.userId==i._id))?.firstName}
+                    author={(users.find((i)=>post.user==i._id))?.firstName}
                     size="any"
                   />
                 </Col>

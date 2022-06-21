@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 export interface IPost extends mongoose.Document {
-  userId: string;
+  user: string;
   postTitle: string;
   postBody: string;
   type:string;
@@ -9,7 +9,7 @@ export interface IPost extends mongoose.Document {
 
 const postSchema = new mongoose.Schema(
   {
-    userId: {
+    user: {
       type: String,
       required: true,
     },

@@ -5,7 +5,7 @@ import {validatePost} from '../../../validators/post'
 
 import Post from "@/models/post";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: any, res: NextApiResponse) => {
   await dbConnect();
 
   if (req.method == "POST") {
@@ -21,7 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const {error} = validatePost(req.body)
       if(error) return res.status(400).send(error.details[0].message)
       const newPost = await Post.create({
-        userId,
+        user:userId,
         postTitle,
         postBody,
       });

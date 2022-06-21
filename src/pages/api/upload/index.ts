@@ -26,7 +26,7 @@ import formidable from 'formidable'
 // export default apiRoute
 
 
-const handler = async (req:NextApiRequest, res:NextApiResponse)=>{
+const handler = async (req:any, res:NextApiResponse)=>{
     await dbConnect()
    // upload.single('file')
     if(req.method==="POST"){

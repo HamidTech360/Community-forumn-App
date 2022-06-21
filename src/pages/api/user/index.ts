@@ -5,7 +5,7 @@ import getUserID from "@/utils/get-userID";
 import User from "@/models/User";
 import { validateUser } from "@/validators/user";
 
-const handler = async (req:NextApiRequest, res:NextApiResponse)=>{
+const handler = async (req:any, res:NextApiResponse)=>{
     await dbConnect()
     const token = req.headers.authorization?.split(" ")[1] || "";
     const userId = getUserID(token)
