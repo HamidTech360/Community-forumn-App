@@ -6,7 +6,7 @@ import { sendMail } from "@/lib/mailer";
 import getUserID from "@/utils/get-userID";
 import Gist from "@/models/gist";
 import Post from "@/models/post";
-import post from "@/redux/post";
+
 
 const handler = async (req:any, res:NextApiResponse)=>{
     if(req.method==="GET"){
