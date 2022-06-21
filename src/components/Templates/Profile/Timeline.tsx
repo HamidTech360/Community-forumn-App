@@ -61,7 +61,7 @@ const Timeline = () => {
         }}
       ></div>
       {posts?.map((post) => (
-        <PostCard post={post} key={`activity-post-${post.id}`} trimmed />
+        <PostCard author={""} post={post} key={`activity-post-${post.id}`} trimmed />
       ))}
       {isFetchingMore && (
         <div className="m-2 p-2 d-flex justify-content-center">

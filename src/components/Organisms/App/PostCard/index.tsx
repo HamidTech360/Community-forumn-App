@@ -62,7 +62,7 @@ const PostCard = ({
         <div className="d-flex flex-column">
           <div className={styles.div}>
             <small
-              dangerouslySetInnerHTML={{ __html: `${author?.firstName} ${author.lastName}` }}
+              dangerouslySetInnerHTML={{ __html: `${author?.firstName} ${author?.lastName}` }}
             /> 
             <br/>
            <span style={{marginTop:'10px', fontSize:'13px'}} >
