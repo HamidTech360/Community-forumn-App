@@ -9,19 +9,36 @@ import {
   Button,
   Tabs,
   Tab,
-  Alert,
+  Modal,
+  Spinner,
+  Form,
 } from "react-bootstrap";
+import { FaTimes } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
 import Card from "../../components/Molecules/Card";
+import axios from "axios";
 import styles from "../../styles/explore.module.scss";
-const Explore = ({
-  categories,
-  users,
-}: {
-  categories: Record<string, any>[];
-  users: Record<string, any>[];
-}) => {
+import formStyles from "../../styles/templates/new-group/formField.module.css";
+import "react-toastify/dist/ReactToastify.css";
+
+const Explore = ({}) => {
+  const [categories, setCategories] = useState([
+    { name: "How to work abroad" },
+    { name: "Engineering" },
+    { name: "Technology" },
+    { name: "Visa acquisition" },
+    { name: "How to work abroad" },
+  ]);
   const [key, setKey] = useState<string>("all");
-  const [posts, setPosts] = useState<Record<string, any>[]>([]);
+  const [posts, setPosts] = useState([]);
+  const [isFetching, setIsFetching] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [formData, setFormData] = useState({
+    postTitle: "",
+    postBody: "",
+  });
   useEffect(() => {
     console.log(users);
     document.body.style.backgroundColor = "#f6f6f6";
@@ -31,19 +48,80 @@ const Explore = ({
     };
   }, []);
 
-  const fetchData = useCallback(async () => {
-    const res = await fetch(`${process.env.REST}/wp/v2/posts?per_page=10`);
-
-    const posts = await res.json();
-
-    setPosts(posts);
-  }, [key, posts]);
-
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    //alert('fetching');
+
+    fetchPost();
+    (async function () {
+      try {
+        const response = await axios.get(`/api/user`, {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        });
+        console.log(response.data);
+        setUsers(response.data.users);
+      } catch (error) {
+        console.log(error.ressponse?.data);
+        setIsFetching(false);
+      }
+    })();
+  }, []);
+
+  const handleChange = (e) => {
+    const data = { ...formData };
+    data[e.currentTarget.name] = e.currentTarget.value;
+    setFormData(data);
+    //console.log(formData);
+  };
+  const fetchPost = async () => {
+    try {
+      const response = await axios.get(`/api/posts`);
+      console.log(response.data.posts);
+      // const allPosts = [...posts,...response.data.posts]
+      setPosts(response.data.posts);
+      setIsFetching(false);
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setUploading(true);
+    try {
+      const response = await axios.post(
+        `/api/posts`,
+        { ...formData },
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      console.log(response.data);
+      toast.success("Post uploaded successfully", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1",
+      });
+      setShowModal(false);
+      setUploading(false);
+      fetchPost();
+    } catch (error) {
+      console.log(error.response?.data);
+      toast.error("Failed to upload post", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1",
+      });
+      setShowModal(false);
+      setUploading(false);
+    }
+  };
+
   return (
     <div>
+      <ToastContainer />
+
       <Head>
         <title>Explore</title>
       </Head>
@@ -60,7 +138,9 @@ const Explore = ({
                   millions of readers and writers across the world
                 </p>
                 <div className="d-flex gap-3">
-                  <Button variant="primary">Start writing</Button>
+                  <Button variant="primary" onClick={() => setShowModal(true)}>
+                    Start writing
+                  </Button>
                   <Button variant="light">Explore</Button>
                 </div>
               </div>
@@ -91,22 +171,26 @@ const Explore = ({
               defaultActiveKey={"all"}
             >
               <Tab title="All" eventKey="all" key="all" />
-              {categories.map((category) => (
-                <Tab
-                  eventKey={category.categoryId}
-                  title={category.name}
-                  key={category.id}
-                />
+              {categories.map((category, i) => (
+                <Tab eventKey={i} title={category.name} key={i} />
               ))}
             </Tabs>
+            {isFetching && (
+              <div className="m-2 p-2 d-flex justify-content-center">
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              </div>
+            )}
             <Row className="d-flex justify-content-start">
               {posts?.map((post, key) => (
                 <Col md={4} className={`my-4 ${styles.card}`}>
                   <Card
-                    image={post.featuredImage.node.mediaItemUrl}
-                    title={post.title}
-                    body={post.excerpt}
-                    author={post.author.node.name}
+                    image={"/images/postPlaceholder.jpg"}
+                    title={post.postTitle}
+                    body={post.postBody}
+                    author={users.find((i) => post.user == i._id)?.firstName}
+                    size="any"
                   />
                 </Col>
               ))}
@@ -127,12 +211,14 @@ const Explore = ({
                   <Image
                     width={50}
                     height={50}
-                    src={user.avatar_urls["96"]}
+                    src={"/images/imagePlaceholder.jpg"}
                     roundedCircle
-                    alt={user.name}
+                    alt={user?.firstName}
                   />
 
-                  <span className="mt-1">{user.name}</span>
+                  <span className="mt-1">
+                    {user?.firstName} {user?.lastName}
+                  </span>
 
                   <Button variant="outline-primary">Follow</Button>
                 </div>
@@ -142,25 +228,77 @@ const Explore = ({
           </Row>
         </Container>
       </section>
+
+      <Modal
+        show={showModal}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <span className={styles.closeBtn}>
+          {" "}
+          <FaTimes
+            color="#207681"
+            style={{ cursor: "pointer" }}
+            size={35}
+            onClick={() => setShowModal(false)}
+          />{" "}
+        </span>
+        <div className={styles.newGistModal}>
+          <Form onSubmit={(e) => handleSubmit(e)}>
+            <Form.Group className={formStyles.formGroup}>
+              <Form.Label className={formStyles.formLabel}>
+                {" "}
+                Gist Title
+              </Form.Label>
+              <Form.Control
+                size="lg"
+                name="postTitle"
+                type="text"
+                required
+                onChange={(e) => handleChange(e)}
+              />
+            </Form.Group>
+
+            <Form.Group className={formStyles.formGroup}>
+              <Form.Control
+                className={formStyles.bigForm}
+                as="textarea"
+                name="postBody"
+                type="text"
+                required
+                placeholder="Write something"
+                onChange={(e) => handleChange(e)}
+              />
+            </Form.Group>
+
+            <Button variant="primary" className="d-flex mx-auto" type="submit">
+              {uploading ? "uploading..." : "Continue"}
+            </Button>
+          </Form>
+
+          {/* {state.isSuccess && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="success">Upload successfull</Alert>}
+              {state.error && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="danger">Upload failed</Alert>} */}
+        </div>
+      </Modal>
     </div>
   );
 };
 
-export const getStaticProps = async () => {
-  const res = await fetch(
-    `${process.env.REST}/wp/v2/categories?per_page=10&_fields=id,name`
-  );
-  const categories = await res.json();
+// export const getStaticProps = async () => {
+//   const res = await fetch(
+//     `${process.env.REST}/wp/v2/categories?per_page=10&_fields=id,name`
+//   );
+//   const categories = await res.json();
 
-  const users = await (await fetch(`${process.env.REST!}/wp/v2/users`)).json();
+//   const users = await (await fetch(`${process.env.REST!}/wp/v2/users`)).json();
 
-  return {
-    props: {
-      categories,
-      users,
-    },
-    revalidate: 1,
-  };
-};
+//   return {
+//     props: {
+//       categories,
+//       users,
+//     },
+//     revalidate: 1,
+//   };
+// };
 
 export default Explore;
