@@ -43,9 +43,27 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   const [allGists, setAllGists] = useState([]);
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
-    title: "",
-    post: "",
-  });
+    title:'',
+    post:''
+  })
+  
+  useEffect(() => {   
+    document.body.style.backgroundColor = "#f6f6f6";
+     (async function (){
+        try{
+          const gistResponse = await axios.get('/api/gists')
+          const userResponse = await axios.get('/api/user', {headers:{
+            authorization:`Bearer ${localStorage.getItem('accessToken')}`
+          }})
+          setUsers(userResponse.data.users)
+          setAllGists(gistResponse.data)
+          setIsFetching(false)
+          console.log(gistResponse.data);
+          
+        }catch(error){
+          console.log(error.response?.data); 
+        }
+
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -77,10 +95,12 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         toastId: customId,
       });
       setShowModal(false);
-      (async function () {
-        const response = await axios.get("/api/gists");
-        setAllGists(response.data.reverse());
-      })();
+
+      (async function(){
+        const response  = await axios.get('/api/gists')
+        setAllGists(response.data)
+      })()
+
 
       dispatch(uploadCleanUp({}));
     } else if (state.error) {
@@ -244,6 +264,42 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
               />
             </Form.Group>
 
+
+        <Modal 
+            
+            // size="md"  
+            show={showModal} 
+            className={styles.GistModal}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+          >
+          
+         <span className={styles.closeBtn} > <FaTimes color = '#207681'style={{cursor:'pointer'}} size={35} onClick={()=>setShowModal(false)} /> </span>
+         <div className={styles.newGistModal}>
+             <Form onSubmit={(e)=>handleSubmit(e)}>
+                <Form.Group className={formStyles.formGroup}>
+                  <Form.Label className={formStyles.formLabel}> Gist Title</Form.Label>
+                  <Form.Control
+                    size="lg"
+                    name="title"
+                    type="text"
+                    required
+                    onChange={(e)=>handleChange(e)}
+                  />
+                </Form.Group>
+
+                <Form.Group className={formStyles.formGroup}>
+                  <Form.Control
+                    className={formStyles.bigForm}
+                    as="textarea"
+                    name="post"
+                    type="text"
+                    required
+                    placeholder="Write something"
+                    onChange={(e)=>handleChange(e)}
+                  />
+                </Form.Group>
+
             <Form.Group className={formStyles.formGroup}>
               <Form.Control
                 className={formStyles.bigForm}
@@ -255,6 +311,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                 onChange={(e) => handleChange(e)}
               />
             </Form.Group>
+
 
             <Button variant="primary" className="d-flex mx-auto" type="submit">
               {state.isLoading ? "uploading..." : "Continue"}

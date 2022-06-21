@@ -32,10 +32,10 @@ const Feed = () => {
 
     (async function(){
       try{
-        const response = await axios.get(`/api/posts`)
+        const response = await axios.get(`/api/feed`)
         console.log(response.data);
         
-        setPosts(response.data.posts)
+        setPosts(response.data.data)
         setIsFetching(false)
         const userResponse = await axios.get('/api/user', {headers:{
           authorization:`Bearer ${localStorage.getItem('accessToken')}`
