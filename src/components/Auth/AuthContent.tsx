@@ -34,7 +34,6 @@ export default function AuthContent({ children }: { children: ReactNode }) {
           dispatch(user(response.data));
         } catch (error) {
           localStorage.removeItem("accessToken");
-          sessionStorage.removeItem("token");
           router.push("/login");
         }
       })();

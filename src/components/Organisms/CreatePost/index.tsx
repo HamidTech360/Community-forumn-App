@@ -9,8 +9,6 @@ import styles from "@/styles/utils.module.scss";
 import Editor from "../Editor";
 
 const CreatePost = () => {
-  // const { user } = useUser();
-  // const { data } = useSelector((s) => s.user);
   const data = useSelector(selectUser);
   return (
     <Card className="p-2 py-4" style={{ border: "none" }}>

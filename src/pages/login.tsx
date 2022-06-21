@@ -48,10 +48,6 @@ const Login = () => {
     try {
       setLoading(true);
       const { data } = await axios.post("/api/auth", { ...formData });
-      // console.log('DATA:',data)
-      if (data.refreshToken) {
-        sessionStorage.setItem("token", data.refreshToken);
-      }
 
       localStorage.setItem("accessToken", data.accessToken);
       toast.success("Authentication successful", {

@@ -43,7 +43,7 @@ const ResetPassword = () => {
   //   }
   // }
   return (
-    <AuthContent>
+    <>
       <Head>
         <title>Password reset</title>
       </Head>
@@ -133,7 +133,7 @@ const ResetPassword = () => {
         fluid
       /> */}
       </Container>
-    </AuthContent>
+    </>
   );
 };
 

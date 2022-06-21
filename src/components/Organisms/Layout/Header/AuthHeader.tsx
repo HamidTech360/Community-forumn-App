@@ -14,7 +14,6 @@ import {
   Badge,
   Offcanvas,
 } from "react-bootstrap";
-//import useUser from "@/hooks/useUser";
 import Notifications from "@/pages/notifications";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 
@@ -44,7 +43,6 @@ import {
   MdOutlineNotificationsActive,
 } from "react-icons/md";
 
-// import { logout } from "@/redux/_user";
 import { selectUser, logout } from "@/reduxFeatures/authState/authStateSlice";
 
 const AuthHeader = () => {
@@ -61,7 +59,6 @@ const AuthHeader = () => {
 
   const dispatch = useDispatch();
   const show = useSelector(selectNotificationOffcanvas);
-  // const { data } = useSelector((s) => s.user);
   const data = useSelector(selectUser);
 
   // Set notificationsOffcanvas in redux state to true
