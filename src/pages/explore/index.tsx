@@ -1,4 +1,5 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
+import Head from "next/head";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Col,
@@ -117,7 +118,13 @@ const Explore = ({
 
   return (
     <div>
+
       <ToastContainer/>
+
+      <Head>
+        <title>Explore</title>
+      </Head>
+
       <section className={`d-flex align-items-center ${styles.intro}`}>
         <Container>
           <Row>

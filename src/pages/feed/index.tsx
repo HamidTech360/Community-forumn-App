@@ -10,25 +10,26 @@ import PostCard from "@/components/Organisms/App/PostCard";
 import UserCard from "@/components/Organisms/App/UserCard";
 import CreatePost from "@/components/Organisms/CreatePost";
 import Modal from "@/components/Organisms/Layout/Modal/Modal";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 
 import { usePagination } from "@/hooks/usePagination";
 import styles from "@/styles/feed.module.scss";
 
 const Feed = () => {
-  const { data } = useSelector(s=>s.user);
+  const data = useSelector(selectUser);
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
 
   const [scrollInitialised, setScrollInitialised] = useState(false);
-  const [posts, setPosts] = useState([])
-  const [users, setUsers] = useState([])
-  const [isFetching, setIsFetching] = useState(true)
+  const [posts, setPosts] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [isFetching, setIsFetching] = useState(true);
   const checkScroll = () => {
     if (window.scrollY > 100) {
       setScrollInitialised(true);
     }
   };
 
-  useEffect(() => {
+   useEffect(() => {
 
     (async function(){
       try{
@@ -69,7 +70,7 @@ const Feed = () => {
               className="position-fixed d-none d-lg-flex flex-column gap-4 vh-100"
             >
               <UserCard user={data!} />
-              <Discussions posts={posts}  />
+              <Discussions posts={posts} />
             </div>
           </>
 
@@ -116,7 +117,7 @@ const Feed = () => {
                   <span className="visually-hidden">Loading...</span>
                 </Spinner>
               </div>
-            )} 
+            )}
             {/* {!hasMore && (
               <p style={{ textAlign: "center" }}>
                 <b>Yay! You have seen it all</b>

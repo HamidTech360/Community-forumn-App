@@ -17,9 +17,8 @@
 }
 .notificationMessages {
   border-bottom: 1px solid #e0e0e0;
-  padding-left: 20px;
   padding-bottom: 10px;
-  padding-right: 20px;
+  text-align: justify;
   font-size: 20px;
   font-weight: 400;
 }
@@ -33,8 +32,6 @@
   }
   .notificationMessages {
     font-size: 17px;
-    padding-right: 10px !important;
-    padding-left: 10px;
   }
   .notificationDay {
     font-size: 15px;

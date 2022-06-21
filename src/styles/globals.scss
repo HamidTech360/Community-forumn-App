@@ -266,9 +266,8 @@ nav {
   }
 }
 
-.post-content{
-  p{
-
+.post-content {
+  p {
     font-size: large;
 
     @media screen and (max-width: 1100px) {
@@ -443,34 +442,33 @@ textarea {
   right: 1rem;
 }
 
-.auth-gap{
-  @media screen and (max-width: 1100px){
+.auth-gap {
+  @media screen and (max-width: 1100px) {
     grid-gap: 0 !important;
     gap: 0 !important;
   }
 }
 
 .auth-name {
-  @media screen and (max-width:1100px){
+  @media screen and (max-width: 1100px) {
     font-size: 1rem;
   }
 
-  @media screen and (max-width: 750px){
+  @media screen and (max-width: 750px) {
     display: block !important;
   }
 }
 
-.auth-nav{
-  @media screen and (max-width: 1100px){
+.auth-nav {
+  @media screen and (max-width: 1100px) {
     gap: 1rem !important;
   }
 
-  @media screen and (max-width: 750px){
+  @media screen and (max-width: 750px) {
     display: none !important;
   }
 
-
-  a{
+  a {
     @media screen and (max-width: 1100px) {
       margin-right: 0.5rem !important;
     }
@@ -483,7 +481,7 @@ textarea {
   }
   a {
     color: inherit;
-    margin-right: 3rem; 
+    margin-right: 3rem;
 
     @media screen and (max-width: 1100px) {
       margin-right: 1.5rem;
@@ -562,6 +560,9 @@ textarea {
 
 .pushDownNavBarBottomOnSm {
   @media screen and (max-width: 991px) {
-    padding-bottom: 7vh;
+    padding-bottom: 8vh;
+  }
+  @media screen and (max-height: 475px) {
+    padding-bottom: 14vh;
   }
 }

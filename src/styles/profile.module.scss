@@ -1,123 +1,125 @@
 .profileWrapper,
-.profileWrap{
-    margin-bottom: 2rem !important;
-    height: auto !important;
+.profileWrap {
+  margin-bottom: 2rem !important;
+  height: auto !important;
 }
 
-.profileWrapper{
-    padding-bottom: 2rem;
+.profileWrapper {
+  padding-bottom: 2rem;
+}
+
+.addNewGroupBtn {
+  margin-bottom: 0.5rem;
+
+  @media screen and (max-width: 767px) {
+    margin-top: -1.4rem;
+  }
 }
 
 // .profileWrap{
 //     margin-bottom: 2rem !important;
 // }
-.title{
-    margin-left: -1rem;
+.title {
+  margin-left: -1rem;
 
-    @media screen and (max-width: 600px) {
-       margin-left: -0.8rem !important;
+  @media screen and (max-width: 600px) {
+    margin-left: -0.8rem !important;
+  }
+
+  .div {
+    small {
+      font-size: large;
+      margin-right: 0.3rem;
+
+      @media screen and (max-width: 1100px) {
+        font-size: medium;
+      }
+
+      @media screen and (max-width: 800px) {
+        margin-right: 0 !important;
+      }
+
+      @media screen and (max-width: 300px) {
+        font-size: 0.7rem;
+      }
     }
 
-    .div{
-        
-        small{
-            font-size: large;
-            margin-right: 0.3rem;
+    span {
+      font-size: large;
 
-            @media screen and (max-width:1100px){
-                font-size: medium;
-                
-            }
+      @media screen and (max-width: 1100px) {
+        font-size: medium;
+      }
 
-            @media screen and (max-width: 800px) {
-                margin-right: 0 !important;
-            }
-
-            @media screen and (max-width: 300px) {
-                font-size: 0.7rem;
-            }
-        }
-
-        span{
-            font-size: large;
-
-            @media screen and (max-width:1100px){
-                font-size: medium;
-            }
-
-            @media screen and (max-width: 300px) {
-                font-size: 0.7rem;
-            }
-        }
-    
-        @media screen and (max-width: 1100px) {
-            width: 96%;
-            line-height: 1rem;
-        }
-
-        @media screen and (max-width: 800px) {
-            width: 100%;
-        }
-
-        @media screen and (max-width: 440px) {
-            width: 85%;
-        }
-
-        @media screen and (max-width: 400px) {
-            width: 90%;
-        }
-
-        @media screen and (max-width: 300px) {
-            line-height: 0.8rem;
-            width: 86%;
-        }
+      @media screen and (max-width: 300px) {
+        font-size: 0.7rem;
+      }
     }
 
-    .dropdown {
-        background: none !important;
-
-        @media screen and (max-width:540px){
-            margin-right: -2rem;
-            margin-top: 1rem;
-        }
-    
-        @media screen and (max-width: 500px) {
-            margin-right: 0;
-            margin-top: 0;
-        }
-    
-        @media screen and (max-width: 400px) {
-            right: 3% !important;
-
-        }
-
-        @media screen and (max-width: 300px) {
-            right: 3% !important;
-        }
-    
-    
-    
-        .item{
-
-            @media screen and(max-width: 900px){
-                font-size: medium;
-            }
-
-            @media screen and(max-width: 800px){
-                font-size: small;
-            }
-    
-            @media screen and(max-width: 700px){
-                font-size: smaller;
-            }
-    
-            @media screen and(max-width: 500px){
-                font-size: x-small;
-            }
-    
-            @media screen and(max-width: 300px){
-                font-size: xx-small;
-            }
-        }
+    @media screen and (max-width: 1100px) {
+      width: 96%;
+      line-height: 1rem;
     }
+
+    @media screen and (max-width: 800px) {
+      width: 100%;
+    }
+
+    @media screen and (max-width: 440px) {
+      width: 85%;
+    }
+
+    @media screen and (max-width: 400px) {
+      width: 90%;
+    }
+
+    @media screen and (max-width: 300px) {
+      line-height: 0.8rem;
+      width: 86%;
+    }
+  }
+
+  .dropdown {
+    background: none !important;
+
+    @media screen and (max-width: 540px) {
+      margin-right: -2rem;
+      margin-top: 1rem;
+    }
+
+    @media screen and (max-width: 500px) {
+      margin-right: 0;
+      margin-top: 0;
+    }
+
+    @media screen and (max-width: 400px) {
+      right: 3% !important;
+    }
+
+    @media screen and (max-width: 300px) {
+      right: 3% !important;
+    }
+
+    .item {
+      @media screen and(max-width: 900px) {
+        font-size: medium;
+      }
+
+      @media screen and(max-width: 800px) {
+        font-size: small;
+      }
+
+      @media screen and(max-width: 700px) {
+        font-size: smaller;
+      }
+
+      @media screen and(max-width: 500px) {
+        font-size: x-small;
+      }
+
+      @media screen and(max-width: 300px) {
+        font-size: xx-small;
+      }
+    }
+  }
 }

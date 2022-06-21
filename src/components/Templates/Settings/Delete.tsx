@@ -21,7 +21,7 @@ const Delete = () => {
         },
       });
       setProgress(false);
-      console.log(response.data);
+      // console.log(response.data);
 
       setTimeout(() => {
         toast.success("Account deleted successfully", {

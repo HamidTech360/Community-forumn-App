@@ -3,7 +3,8 @@ import styles from "@/styles/groups.module.scss";
 import { Button, Card, CardImg, Container, Form, Image } from "react-bootstrap";
 import Timeline from "@/components/Templates/Profile/Timeline";
 import AuthContent from "@/components/Auth/AuthContent";
-import Link from "next/link"
+import Link from "next/link";
+import Head from "next/head";
 const posts = [
   {
     image: "/images/article.png",
@@ -34,14 +35,15 @@ const Groups = () => {
   }, []);
   return (
     <AuthContent>
-      {" "}
+      <Head>
+        <title>Groups</title>
+      </Head>
       <div className="mt-5">
         <Container className={styles.wrapper}>
           <Card
             style={{ maxWidth: "280px", border: "none" }}
             className="d-none d-lg-block p-3 position-fixed left-0"
           >
-        
             <div className="d-flex justify-content-between my-2">
               {" "}
               <text className="bold">Your groups</text>
@@ -49,35 +51,34 @@ const Groups = () => {
             </div>
             <Form.Control placeholder="search" />
           </Card>
-          
-          
+
           <div className={styles.posts}>
-          <Link href="/groups/new">
-          <Button variant="outline-primary" className="position-absolute" style={{ right:"2rem"}}>+ Create New Group</Button>
-          </Link>
             <div className={`d-none d-md-flex gap-3 mb-3`}>
               {posts.map((post, index) => (
-                <Link href="/groups/1/timeline">
-                <Card
-                  key={`card-${index}`}
-                  style={{ height: "280px", border: "none" }}
-                >
-                  <CardImg src={post.image} alt="" style={{ height: "60%" }} />
-                  <Card.Body className="d-flex flex-column">
-                    <text className="bold">{post.title}</text>
-                    <small className="text-muted">
-                      Admin: {post.author.split(" ")[1]}
-                    </small>
-                    <Image
-                      width={20}
-                      height={20}
-                      alt="members"
-                      src="/assets/icons/users.svg"
+                <Link href="/groups/1/timeline" passHref>
+                  <Card
+                    key={`card-${index}`}
+                    style={{ height: "280px", border: "none" }}
+                  >
+                    <CardImg
+                      src={post.image}
+                      alt=""
+                      style={{ height: "60%" }}
                     />
-                  </Card.Body>
-                </Card> 
+                    <Card.Body className="d-flex flex-column">
+                      <text className="bold">{post.title}</text>
+                      <small className="text-muted">
+                        Admin: {post.author.split(" ")[1]}
+                      </small>
+                      <Image
+                        width={20}
+                        height={20}
+                        alt="members"
+                        src="/assets/icons/users.svg"
+                      />
+                    </Card.Body>
+                  </Card>
                 </Link>
-               
               ))}
             </div>
             <main>
