@@ -16,7 +16,6 @@ import { usePagination } from "@/hooks/usePagination";
 import styles from "@/styles/feed.module.scss";
 
 const Feed = () => {
-  // const { data } = useSelector(s=>s.user);
   const data = useSelector(selectUser);
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
 
@@ -34,7 +33,6 @@ const Feed = () => {
     (async function () {
       try {
         const response = await axios.get(`/api/posts`);
-        // console.log(response.data);
 
         setPosts(response.data.posts);
         setIsFetching(false);

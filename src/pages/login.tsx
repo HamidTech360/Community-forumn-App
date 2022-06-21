@@ -8,7 +8,6 @@ import Head from "next/head";
 import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/router";
 import Link from "next/link";
-// import useUser from "@/hooks/useUser";
 import axios, { AxiosError } from "axios";
 import { setAccessToken } from "@/misc/token";
 import UnAuthContent from "@/components/Auth/UnAuthContent";
@@ -25,17 +24,11 @@ const Login = () => {
     password: "",
   });
 
-  //const { user, authenticating, isAuthenticated } = useUser();
   const [loading, setLoading] = useState(false);
   const [displayPassword, setDisplayPassword] = useState(false);
 
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   if (isAuthenticated && !authenticating) {
-  //     router.replace("/feed");
-  //   }
-  // }, [isAuthenticated, authenticating, router]);
   const [message, setMessage] = useState({ message: "", variant: "" });
 
   useEffect(() => {

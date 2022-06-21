@@ -96,7 +96,6 @@ const CreateNewGroup = () => {
             </div>
 
             <div className={styles.createGroupElement}>
-              {/* {tabs.map((item) => (item.active ? item.component : ""))} */}
               {tabs.map((item, index) => (
                 <div key={index}>{item.active ? item.component : ""}</div>
               ))}

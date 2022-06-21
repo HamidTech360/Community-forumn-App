@@ -26,14 +26,6 @@ import styles from "../../styles/gist.module.scss";
 import formStyles from "../../styles/templates/new-group/formField.module.css";
 import "react-toastify/dist/ReactToastify.css";
 
-//redux actions
-// import {
-//   uploadFailed,
-//   uploadStart,
-//   uploadSuccess,
-//   uploadCleanUp,
-// } from "@/redux/gist";
-
 import {
   uploadFailed,
   uploadStart,
@@ -48,7 +40,6 @@ import {
 const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   const customId = "toastId";
   const dispatch = useDispatch();
-  // const state = useSelector((s) => s.gist);
   const gistData = useSelector(selectGistData);
   const gistIsLoading = useSelector(selectGistIsLoading);
   const gistError = useSelector(selectGistError);
@@ -87,7 +78,6 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   }, []);
 
   useEffect(() => {
-    // if (state?.isSuccess) {
     if (gistIsSuccess) {
       toast.success("Gist uploaded successfully", {
         position: toast.POSITION.TOP_RIGHT,
@@ -100,14 +90,12 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
       })();
 
       dispatch(uploadCleanUp({}));
-      // } else if (state.error) {
     } else if (gistError) {
       toast.error("Error uploading", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: customId,
       });
     }
-    // }, [state]);
   }, [gistIsSuccess, gistError]);
 
   const handleChange = (e) => {
@@ -126,11 +114,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       });
-      // console.log(response.data);
       dispatch(uploadSuccess(response.data));
-      // console.log(state);
     } catch (error) {
-      // console.log(error.response?.data);
       dispatch(uploadFailed(error.response?.data));
     }
   };
@@ -276,13 +261,9 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             </Form.Group>
 
             <Button variant="primary" className="d-flex mx-auto" type="submit">
-              {/* {state.isLoading ? "uploading..." : "Continue"} */}
               {gistIsLoading ? "uploading..." : "Continue"}
             </Button>
           </Form>
-
-          {/* {gistIsSuccess && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="success">Upload successfull</Alert>}
-              {gistError && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="danger">Upload failed</Alert>} */}
         </div>
       </Modal>
     </section>
