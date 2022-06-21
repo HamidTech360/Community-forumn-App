@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "@/lib/mongo";
 import getUserID from "@/utils/get-userID";
 import Gist from "@/models/gist";
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: any, res: NextApiResponse) => {
   //get gist id as params
   const gistID = req.query.id;
   await dbConnect();

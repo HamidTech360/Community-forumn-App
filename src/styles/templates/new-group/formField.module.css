@@ -10,7 +10,7 @@
     font-weight: 400;
 }
 .bigForm{
-    height: 150px;
+    height: 250px;
 }
 .dragBox{
     background-color: #EAFDFF;
@@ -32,6 +32,6 @@
         font-size: 14px;
     }
     .bigForm{
-        height: 60px;
+        height: 200px;
     }
 }

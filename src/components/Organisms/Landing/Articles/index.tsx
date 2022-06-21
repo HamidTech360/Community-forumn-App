@@ -52,6 +52,7 @@ const Articles = ({ articles }: { articles?: Record<string, any> }) => {
                 title={post.title}
                 body={post.body}
                 author={post.author}
+                size=""
               />
             ))}
           </EndlessCarousel>

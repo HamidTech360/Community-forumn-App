@@ -5,7 +5,7 @@ import {validatePost} from '../../../validators/post'
 
 import Post from "@/models/post";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: any, res: NextApiResponse) => {
   await dbConnect();
 
   if (req.method == "POST") {
@@ -21,7 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const {error} = validatePost(req.body)
       if(error) return res.status(400).send(error.details[0].message)
       const newPost = await Post.create({
-        userId,
+        user:userId,
         postTitle,
         postBody,
       });
@@ -36,10 +36,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(500).json({ error: error, message: "Something went wrong" });
     }
   } else if (req.method === "GET") {
+    const query = req.query
+   // return console.log(query);
+   console.log('Getting posts');
+   
+    const size = parseInt(`${query.size}`)
+    const page = parseInt(`${query.page}`)
+
+    console.log(size, page, 'queries');
+    
     try {
       const posts = await Post
       .find()
       .or([{deleted:false}, {deleted:null}])
+      .limit(size||10)
+      .skip(page||0)
+      .sort({createdAt:-1})
 
       res.status(200).json({
         status: "success",

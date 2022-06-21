@@ -8,6 +8,7 @@ export interface IGistSchema extends mongoose.Document {
   comments: [];
   categories: string;
   post: string;
+  Type:string;
 }
 
 const gistSchema = new mongoose.Schema<IGistSchema>(
@@ -32,6 +33,10 @@ const gistSchema = new mongoose.Schema<IGistSchema>(
       required: true,
     },
     comments: [],
+    Type:{
+      type:String,
+      default:'gist'
+    }
   },
   { timestamps: true }
 );

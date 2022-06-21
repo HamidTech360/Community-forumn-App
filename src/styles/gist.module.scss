@@ -51,7 +51,16 @@
   padding: 40px;
 }
 
+@media screen and (max-width:768px) {
+  .GistModal{
+    width: 100% !important;
+    margin: 0 !important;
+  }
+}
+
+
 .gistBody {
+
   margin-top: -1rem;
   line-height: 1.3rem;
 

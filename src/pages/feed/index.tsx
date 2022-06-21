@@ -29,23 +29,24 @@ const Feed = () => {
     }
   };
 
-  useEffect(() => {
-    (async function () {
-      try {
-        const response = await axios.get(`/api/posts`);
+   useEffect(() => {
 
-        setPosts(response.data.posts);
-        setIsFetching(false);
-        const userResponse = await axios.get("/api/user", {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        });
-        setUsers(userResponse.data.users);
-      } catch (error) {
-        // console.log(error.response?.data);
+    (async function(){
+      try{
+        const response = await axios.get(`/api/feed`)
+        console.log(response.data);
+        
+        setPosts(response.data.data)
+        setIsFetching(false)
+        const userResponse = await axios.get('/api/user', {headers:{
+          authorization:`Bearer ${localStorage.getItem('accessToken')}`
+        }})
+        setUsers(userResponse.data.users)
+      }catch(error){
+        console.log(error.response?.data);
       }
-    })();
+  })()
+
 
     document.body.style.backgroundColor = "#f6f6f6";
     window.addEventListener("scroll", checkScroll);
@@ -103,7 +104,12 @@ const Feed = () => {
                 }
               > */}
             {posts?.map((post) => (
-              <PostCard post={post} key={`activity-post-${post.id}`} trimmed />
+              <PostCard 
+                post={post} 
+                author={users.find((i) => post.user  == i._id)}
+                key={`activity-post-${post.id}`} 
+                trimmed
+              />
             ))}
             {isFetching && (
               <div className="m-2 p-2 d-flex justify-content-center">

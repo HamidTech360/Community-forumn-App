@@ -5,7 +5,7 @@ import { BsBookmarkDash } from "react-icons/bs";
 import Link from "next/link";
 import Age from "../../../Atoms/Age";
 import striptags from "striptags";
-import { DirectiveLocation } from "graphql";
+//import { DirectiveLocation } from "graphql";
 import styles from "@/styles/gist.module.scss";
 // interface IGist {
 //   gist: {
