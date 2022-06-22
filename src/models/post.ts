@@ -1,14 +1,15 @@
 import mongoose from "mongoose";
 
 export interface IPost extends mongoose.Document {
-  userId: string;
+  user: string;
   postTitle: string;
   postBody: string;
+  type:string;
 }
 
 const postSchema = new mongoose.Schema(
   {
-    userId: {
+    user: {
       type: String,
       required: true,
     },
@@ -23,6 +24,10 @@ const postSchema = new mongoose.Schema(
     deleted:{
       type:Boolean,
       default:false
+    },
+    type:{
+      type:String,
+      default:'post'
     }
   },
   { timestamps: true }

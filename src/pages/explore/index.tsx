@@ -125,6 +125,7 @@ const Explore = ({}) => {
       <Head>
         <title>Explore</title>
       </Head>
+
       <section className={`d-flex align-items-center ${styles.intro}`}>
         <Container>
           <Row>

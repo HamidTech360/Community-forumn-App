@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { sendMail } from "@/lib/mailer";
 import getUserID from "@/utils/get-userID";
 import Gist from "@/models/gist";
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: any, res: NextApiResponse) => {
   await dbConnect();
   if (req.method === "POST") {
     //get token from headers
@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(500).json({ error: error, message: "Something went wrong" });
     }
   } else if (req.method === "GET") {
-    const gists = await Gist.find();
+    const gists = await Gist.find().sort({createdAt:-1});
     res.status(200).json(gists);
   }
 };

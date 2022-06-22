@@ -12,10 +12,16 @@ import styles from "@/styles/profile.module.scss";
 const PostCard = ({
   post,
   trimmed,
+  author
 }: {
   post: Record<string, any>;
   trimmed?: Boolean;
+  author:any;
 }) => {
+
+
+  console.log(author);
+  
   const postButton = [
     {
       name: "Like",
@@ -56,11 +62,11 @@ const PostCard = ({
         <div className="d-flex flex-column">
           <div className={styles.div}>
             <small
-              dangerouslySetInnerHTML={{ __html: post?.title }}
+              dangerouslySetInnerHTML={{ __html: `${author?.firstName} ${author?.lastName}` }}
             /> 
             <br/>
-           <span >
-               <Age time={post?.date} />
+           <span style={{marginTop:'10px', fontSize:'13px'}} >
+               <Age time={post?.createdAt} />
             </span>
           </div>
 
@@ -101,10 +107,10 @@ const PostCard = ({
             __html: trimmed
 
               ? strip(
-                  post.postBody,
+                  post.postBody || post.post,
                   "<p> <strong> <b> <a> <em> <i>"
                 )?.slice(0, 500) + "..."
-              : post.postTitle
+              : post.postTitle || post.title
 
           }}
         />
