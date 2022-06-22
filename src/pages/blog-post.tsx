@@ -6,22 +6,21 @@ import { dummyData } from "../components/BlogPost/dummyData";
 import Comment from "../components/Organisms/App/Comment";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import Age from "@/components/Atoms/Age";
 
 const BlogPost = () => {
   const [blogPost, setBlogPost] = useState(dummyData);
   const router = useRouter();
 
   const addComment = () => {
-    const comment = (
+    const content = (
       document.getElementById("articleTextarea") as HTMLTextAreaElement
     ).value;
 
     let newComment = {
       name: "Elisabet Lusi",
       image: "/images/friends3.png",
-      time: new Date(),
-      comment,
+      date: new Date(),
+      content,
       like: [],
       reply: [],
     };
@@ -58,7 +57,11 @@ const BlogPost = () => {
                     By <span>{blogPost.author}</span>
                     <small className="text-secondary ms-5">
                       <BsDot />
-                      {<Age time={blogPost?.date && blogPost.date} />}
+                      {blogPost.time.toLocaleTimeString("en-US", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false,
+                      })}
                     </small>
                   </div>
                 </div>
