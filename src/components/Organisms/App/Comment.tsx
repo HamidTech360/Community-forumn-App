@@ -27,7 +27,7 @@ const Comment = ({ comment }: Record<string, any>) => {
           </h6>
           <small>
             {/* <Age time={comment?.date} /> */}
-            <Age time={comment?.date && comment.date} />
+            <Age time={comment?.date && comment.date.toLocaleString()} />
           </small>
         </div>
       </div>
