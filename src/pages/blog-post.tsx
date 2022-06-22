@@ -131,7 +131,7 @@ const BlogPost = () => {
                     {blogPost.comments.length > 1 &&
                       blogPost.comments.map((comment, index) => {
                         return (
-                          <div className="row mb-4" key={index}>
+                          <div className="row mb-2" key={index}>
                             <div className="col-2">
                               <Image
                                 src={comment.image}

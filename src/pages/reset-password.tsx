@@ -52,7 +52,7 @@ const ResetPassword = () => {
         className=" d-flex mt-5 flex-column align-items-center justify-content-center"
       >
         <div
-          className="p-4  mb-3position-relatived-flex justify-content-center flex-column align-items-center"
+          className="p-4  mb-5 position-relative-flex justify-content-center flex-column align-items-center"
           style={{ maxWidth: "663px" }}
         >
           <div>
