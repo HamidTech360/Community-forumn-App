@@ -50,9 +50,11 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   const [allGists, setAllGists] = useState([]);
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
-    title: "",
-    post: "",
-  });
+    title:'',
+    post:''
+  })
+  
+ 
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
