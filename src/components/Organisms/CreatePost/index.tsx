@@ -8,7 +8,7 @@ import styles from "@/styles/utils.module.scss";
 
 import Editor from "../Editor";
 
-const CreatePost = () => {
+const CreatePost = ({DisplayModal}) => {
   // const { user } = useUser();
   // const { data } = useSelector((s) => s.user);
   const data = useSelector(selectUser);
@@ -32,6 +32,7 @@ const CreatePost = () => {
               placeholder={`Hey ${
                 data?.firstName && data.firstName.split(" ")[0]
               }! wanna say something?`}
+              onClick={()=>DisplayModal()}
             />
           </Form>
         </>

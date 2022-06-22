@@ -54,24 +54,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     post:''
   })
   
-  useEffect(() => {   
-    document.body.style.backgroundColor = "#f6f6f6";
-     (async function (){
-        try{
-          const gistResponse = await axios.get('/api/gists')
-          const userResponse = await axios.get('/api/user', {headers:{
-            authorization:`Bearer ${localStorage.getItem('accessToken')}`
-          }})
-          setUsers(userResponse.data.users)
-          setAllGists(gistResponse.data)
-          setIsFetching(false)
-          console.log(gistResponse.data);
-          
-        }catch(error){
-          console.log(error.response?.data); 
-        }
-      })
-    },[])
+ 
 
 
   useEffect(() => {

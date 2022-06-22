@@ -20,7 +20,7 @@ const PostCard = ({
 }) => {
 
 
-  console.log(author);
+  //console.log(author);
   
   const postButton = [
     {
