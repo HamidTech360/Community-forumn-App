@@ -241,7 +241,7 @@ const Explore = ({
                   onSubmit={(e)=>handleSubmit(e)}
               >
                 <Form.Group className={formStyles.formGroup}>
-                  <Form.Label className={formStyles.formLabel}> Gist Title</Form.Label>
+                  <Form.Label className={formStyles.formLabel}> Post Title</Form.Label>
                   <Form.Control
                     size="lg"
                     name="postTitle"
