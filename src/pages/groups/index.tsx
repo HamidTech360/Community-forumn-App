@@ -5,6 +5,8 @@ import Timeline from "@/components/Templates/Profile/Timeline";
 import AuthContent from "@/components/Auth/AuthContent";
 import Link from "next/link";
 import Head from "next/head";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import { useRouter } from "next/router";
 const posts = [
   {
     image: "/images/article.png",
@@ -26,6 +28,7 @@ const posts = [
   },
 ];
 const Groups = () => {
+  const router = useRouter();
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
 
@@ -82,6 +85,24 @@ const Groups = () => {
               ))}
             </div>
             <main>
+              <div
+                className={`${styles.addNewGroupBtn} row col-6 col-md-4 col-lg-3 ms-auto me-2`}
+              >
+                <Link href="/groups/new" passHref>
+                  <Button
+                    variant="outline-primary"
+                    className=" btn-sm"
+                    onClick={() =>
+                      sessionStorage.setItem(
+                        "newGroup_coming4rm",
+                        JSON.stringify(router.asPath)
+                      )
+                    }
+                  >
+                    <AiOutlineUsergroupAdd size={23} /> Create New Group
+                  </Button>
+                </Link>
+              </div>
               <Timeline />
             </main>
           </div>

@@ -185,7 +185,11 @@ const Explore = ({}) => {
             )}
             <Row className="d-flex justify-content-start">
               {posts?.map((post, key) => (
-                <Col md={4} className={`my-4 ${styles.card}`}>
+                <Col
+                  key={`posts_${key}`}
+                  md={4}
+                  className={`my-4 ${styles.card}`}
+                >
                   <Card
                     image={"/images/postPlaceholder.jpg"}
                     title={post.postTitle}
