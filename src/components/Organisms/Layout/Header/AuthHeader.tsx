@@ -44,6 +44,7 @@ import {
 } from "react-icons/md";
 
 import { selectUser, logout } from "@/reduxFeatures/authState/authStateSlice";
+import Head from "next/head";
 
 const AuthHeader = () => {
   const links = [
@@ -120,6 +121,9 @@ const AuthHeader = () => {
   };
   return (
     <>
+      <Head>
+        <meta name="robots" content="noindex" />
+      </Head>
       <Navbar
         className={`bg-white  ${styles.navBar}`}
         style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}

@@ -155,11 +155,11 @@ const Feed = () => {
                   </p>
                 }
               > */}
-            {posts?.map((post) => (
+            {posts?.map((post, index) => (
               <PostCard 
                 post={post} 
                 author={users.find((i) => post.user  == i._id)}
-                key={`activity-post-${post.id}`} 
+                key={`activity-post-${index}-${post.id}`} 
                 trimmed
               />
             ))}

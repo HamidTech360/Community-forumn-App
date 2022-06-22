@@ -55,24 +55,6 @@ const Timeline = () => {
 
   return (
     <div className={styles.profileWrapper}>
-      <div
-        className={`${styles.addNewGroupBtn} row col-6 col-md-4 col-lg-3 ms-auto me-2`}
-      >
-        <Link href="/groups/new" passHref>
-          <Button
-            variant="outline-primary"
-            className=" btn-sm"
-            onClick={() =>
-              sessionStorage.setItem(
-                "newGroup_coming4rm",
-                JSON.stringify(router.asPath)
-              )
-            }
-          >
-            <AiOutlineUsergroupAdd size={23} /> Create New Group
-          </Button>
-        </Link>
-      </div>
       <CreatePost DisplayModal={""} />
       <div
         ref={intersection}
@@ -83,11 +65,11 @@ const Timeline = () => {
           bottom: 0,
         }}
       ></div>
-      {posts?.map((post) => (
+      {posts?.map((post, index) => (
         <PostCard
           author={""}
           post={post}
-          key={`activity-post-${post.id}`}
+          key={`activity-post-${index}-${post.id}`}
           trimmed
         />
       ))}
