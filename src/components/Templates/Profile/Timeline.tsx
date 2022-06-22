@@ -73,7 +73,7 @@ const Timeline = () => {
           </Button>
         </Link>
       </div>
-      <CreatePost />
+      <CreatePost DisplayModal={""} />
       <div
         ref={intersection}
         style={{
