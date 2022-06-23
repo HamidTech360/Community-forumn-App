@@ -65,16 +65,19 @@ const Feed = ({
     return axios.get(`/api/gists/gist/${feedId}`, {headers:{
       authorization:`Bearer ${localStorage.getItem('accessToken')}`
      }})
-    .then((feedResponse) => {
-      if (feedResponse.data.gist.type === 'gist'){
-        let response = feedResponse.data.gist;
+    .then((postResponse) => {
+      if (postResponse.data.gist.type === 'gist'){
+        let response = postResponse.data.gist;
         setFeed(response)
       }else {
           return axios.get(`/api/posts/post/${feedId}`, {
             headers: {
-              
+              authorization:`Bearer ${localStorage.getItem('accessToken')}`
             }
           })
+            .then((gistResponse) => {
+              
+            })
       }
     })
   }

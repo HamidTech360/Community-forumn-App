@@ -18,8 +18,7 @@ const PostCard = ({
   trimmed?: Boolean;
   author: any;
 }) => {
-  //console.log(author);
-
+  
   const postButton = [
     {
       name: "Like",
@@ -101,6 +100,29 @@ const PostCard = ({
           cursor: "pointer",
         }}
       >
+        <Link href = {`/feed/${post?._id}`} passHref>
+          <div
+            className="post-content"
+            dangerouslySetInnerHTML={{
+              __html: trimmed
+
+                ? strip(
+                    post?.postBody || post?.post,
+                    "<p> <strong> <b> <a> <em> <i>"
+                  )?.slice(0, 500) + "..."
+                : post.postTitle || post.title
+
+            }}
+          />
+        </Link>
+      
+        {!trimmed && (
+          <Image
+            className="d-none d-sm-block d-lg-none"
+            style={{ borderRadius: 0 }}
+            src={"/images/formbg.png"}
+            fluid
+            alt={""}
           />
         )}
       </Card.Body>
@@ -112,6 +134,7 @@ const PostCard = ({
             variant="none"
             className="d-flex justify-content-center gap-1 align-items-center"
           >
+            <Image
               src={`/assets/icons/${item.name.toLowerCase()}.svg`}
               alt=""
               width={20}
