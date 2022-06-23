@@ -12,16 +12,14 @@ import styles from "@/styles/profile.module.scss";
 const PostCard = ({
   post,
   trimmed,
-  author
+  author,
 }: {
   post: Record<string, any>;
   trimmed?: Boolean;
-  author:any;
+  author: any;
 }) => {
-
-
   //console.log(author);
-  
+
   const postButton = [
     {
       name: "Like",
@@ -62,11 +60,13 @@ const PostCard = ({
         <div className="d-flex flex-column">
           <div className={styles.div}>
             <small
-              dangerouslySetInnerHTML={{ __html: `${author?.firstName} ${author?.lastName}` }}
-            /> 
-            <br/>
-           <span style={{marginTop:'10px', fontSize:'13px'}} >
-               <Age time={post?.createdAt} />
+              dangerouslySetInnerHTML={{
+                __html: `${author?.firstName} ${author?.lastName}`,
+              }}
+            />
+            <br />
+            <span style={{ marginTop: "10px", fontSize: "13px" }}>
+              <Age time={post?.createdAt} />
             </span>
           </div>
 
@@ -88,7 +88,7 @@ const PostCard = ({
             <NavDropdown.Item className={styles.item}>
               {" "}
               <RiFlagFill /> &nbsp; Report post
-            </NavDropdown.Item >
+            </NavDropdown.Item>
             <NavDropdown.Item className={styles.item}>
               <BsXCircleFill /> &nbsp; Unfollow &nbsp;
               {/* {post.name.split(" ")[0]} */}
@@ -105,13 +105,11 @@ const PostCard = ({
           className="post-content"
           dangerouslySetInnerHTML={{
             __html: trimmed
-
               ? strip(
                   post.postBody || post.post,
                   "<p> <strong> <b> <a> <em> <i>"
                 )?.slice(0, 500) + "..."
-              : post.postTitle || post.title
-
+              : post.postTitle || post.title,
           }}
         />
         {!trimmed && (
@@ -128,6 +126,7 @@ const PostCard = ({
       <Card.Footer className="mx-2 d-flex justify-content-between bg-white">
         {postButton.map((item, key) => (
           <Button
+            key={key}
             variant="none"
             className="d-flex justify-content-center gap-1 align-items-center"
           >

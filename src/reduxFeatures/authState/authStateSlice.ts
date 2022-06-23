@@ -32,7 +32,6 @@ export const authStateSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       localStorage.removeItem("accessToken");
-      sessionStorage.removeItem("token");
     },
   },
 });

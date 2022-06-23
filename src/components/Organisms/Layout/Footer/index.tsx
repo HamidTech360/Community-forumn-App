@@ -10,9 +10,7 @@ import { selectIsAuthenticated } from "@/reduxFeatures/authState/authStateSlice"
 import Link from "next/link";
 
 const Footer = () => {
-  // const { isAuthenticated } = useUser();
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  // const state = useSelector((s) => s.user);
   const router = useRouter();
   return (
     <>

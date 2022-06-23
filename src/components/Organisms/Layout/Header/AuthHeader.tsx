@@ -14,7 +14,6 @@ import {
   Badge,
   Offcanvas,
 } from "react-bootstrap";
-//import useUser from "@/hooks/useUser";
 import Notifications from "@/pages/notifications";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 
@@ -44,8 +43,8 @@ import {
   MdOutlineNotificationsActive,
 } from "react-icons/md";
 
-// import { logout } from "@/redux/_user";
 import { selectUser, logout } from "@/reduxFeatures/authState/authStateSlice";
+import Head from "next/head";
 
 const AuthHeader = () => {
   const links = [
@@ -61,7 +60,6 @@ const AuthHeader = () => {
 
   const dispatch = useDispatch();
   const show = useSelector(selectNotificationOffcanvas);
-  // const { data } = useSelector((s) => s.user);
   const data = useSelector(selectUser);
 
   // Set notificationsOffcanvas in redux state to true
@@ -123,6 +121,9 @@ const AuthHeader = () => {
   };
   return (
     <>
+      <Head>
+        <meta name="robots" content="noindex" />
+      </Head>
       <Navbar
         className={`bg-white  ${styles.navBar}`}
         style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}

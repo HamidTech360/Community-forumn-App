@@ -20,7 +20,6 @@ const AuthStatus = () => {
             dispatch(user(response.data));
           } catch (error) {
             localStorage.removeItem("accessToken");
-            sessionStorage.removeItem("token");
           }
         })();
       }
