@@ -18,9 +18,6 @@ const PostCard = ({
   trimmed?: Boolean;
   author:any;
 }) => {
-
-
-  console.log(author);
   
   const postButton = [
     {
@@ -101,19 +98,22 @@ const PostCard = ({
           cursor: "pointer",
         }}
       >
-        <div
-          className="post-content"
-          dangerouslySetInnerHTML={{
-            __html: trimmed
+        <Link href = {`/feed/${post?._id}`} passHref>
+          <div
+            className="post-content"
+            dangerouslySetInnerHTML={{
+              __html: trimmed
 
-              ? strip(
-                  post.postBody || post.post,
-                  "<p> <strong> <b> <a> <em> <i>"
-                )?.slice(0, 500) + "..."
-              : post.postTitle || post.title
+                ? strip(
+                    post?.postBody || post?.post,
+                    "<p> <strong> <b> <a> <em> <i>"
+                  )?.slice(0, 500) + "..."
+                : post.postTitle || post.title
 
-          }}
-        />
+            }}
+          />
+        </Link>
+      
         {!trimmed && (
           <Image
             className="d-none d-sm-block d-lg-none"
