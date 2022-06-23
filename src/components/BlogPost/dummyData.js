@@ -3,7 +3,7 @@ export const dummyData = {
   title: "5 ways to work abroad",
   authorImage: "/images/friends1.png",
   blogImage: "/assets/blog-post/pana.svg",
-  time: new Date(), //.toLocaleString(),
+  date: new Date(),
   keywords: ["Work abroad", "Canada", "Housing in Canada"],
   article: (
     <div>
@@ -60,8 +60,8 @@ export const dummyData = {
     {
       name: "Ephraim Nkonam",
       image: "/images/friends2.png",
-      time: new Date(),
-      comment:
+      date: new Date(),
+      content:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis, error? ",
       like: [],
       reply: [
@@ -69,15 +69,15 @@ export const dummyData = {
           name: "",
           image: "/images/friends4.png",
           reply: "",
-          time: "",
+          date: "",
         },
       ],
     },
     {
       name: "Philips Thomas",
       image: "/images/friends5.png",
-      time: new Date(),
-      comment:
+      date: new Date(),
+      content:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe quidem ullam tempore libero nobis quod unde dolor vitae qui totam.",
       like: [
         {
@@ -90,8 +90,8 @@ export const dummyData = {
     {
       name: "Jackson Wright",
       image: "/images/friends7.png",
-      time: new Date(),
-      comment:
+      date: new Date(),
+      content:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis iste corrupti cumque sit, ratione amet repellendus!",
       like: [
         {
@@ -104,15 +104,15 @@ export const dummyData = {
           name: "Mike Dike",
           image: "/images/friends9.png",
           reply: "Lorem ipsum dolor sit amet.",
-          time: new Date(),
+          date: new Date(),
         },
       ],
     },
     {
       name: "Ephraim Nkonam",
       image: "/images/friends2.png",
-      time: new Date(),
-      comment:
+      date: new Date(),
+      content:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis, error? ",
       like: [],
       reply: [
@@ -120,15 +120,15 @@ export const dummyData = {
           name: "",
           image: "/images/friends4.png",
           reply: "",
-          time: "",
+          date: "",
         },
       ],
     },
     {
       name: "Philips Thomas",
       image: "/images/friends5.png",
-      time: new Date(),
-      comment:
+      date: new Date(),
+      content:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe quidem ullam tempore libero nobis quod unde dolor vitae qui totam.",
       like: [
         {
@@ -141,8 +141,8 @@ export const dummyData = {
     {
       name: "Jackson Wright",
       image: "/images/friends7.png",
-      time: new Date(),
-      comment:
+      date: new Date(),
+      content:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis iste corrupti cumque sit, ratione amet repellendus!",
       like: [
         {
@@ -155,15 +155,15 @@ export const dummyData = {
           name: "Mike Dike",
           image: "/images/friends9.png",
           reply: "Lorem ipsum dolor sit amet.",
-          time: new Date(),
+          date: new Date(),
         },
       ],
     },
     {
       name: "Ephraim Nkonam",
       image: "/images/friends2.png",
-      time: new Date(),
-      comment:
+      date: new Date(),
+      content:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis, error? ",
       like: [],
       reply: [
@@ -171,15 +171,15 @@ export const dummyData = {
           name: "",
           image: "/images/friends4.png",
           reply: "",
-          time: "",
+          date: "",
         },
       ],
     },
     {
       name: "Philips Thomas",
       image: "/images/friends5.png",
-      time: new Date(),
-      comment:
+      date: new Date(),
+      content:
         "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe quidem ullam tempore libero nobis quod unde dolor vitae qui totam.",
       like: [
         {
@@ -192,8 +192,8 @@ export const dummyData = {
     {
       name: "Jackson Wright",
       image: "/images/friends7.png",
-      time: new Date(),
-      comment:
+      date: new Date(),
+      content:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis iste corrupti cumque sit, ratione amet repellendus!",
       like: [
         {
@@ -206,7 +206,7 @@ export const dummyData = {
           name: "Mike Dike",
           image: "/images/friends9.png",
           reply: "Lorem ipsum dolor sit amet.",
-          time: new Date(),
+          date: new Date(),
         },
       ],
     },

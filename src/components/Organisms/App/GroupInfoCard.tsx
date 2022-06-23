@@ -57,10 +57,10 @@ const GroupInfoCard = () => {
           </Col>
           <Col xs={10} className="d-flex flex-column">
             {" "}
-            <text className="bold">
+            <p className="bold">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugit,
               atque!
-            </text>
+            </p>
             <small className="text-mute">Public Group</small>
             <div className="mb-div mb-2">
               <Button variant="primary" className="mb-btns">

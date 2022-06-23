@@ -10,8 +10,6 @@ import { FiMenu } from "react-icons/fi";
 import { AiOutlineClose } from "react-icons/ai";
 import AuthHeader from "./AuthHeader";
 
-// import useUser from "@/hooks/useUser";
-// import { user } from "@/redux/_user";
 import { useSelector } from "@/redux/store";
 
 import { selectIsAuthenticated } from "@/reduxFeatures/authState/authStateSlice";
@@ -28,10 +26,7 @@ const links = [
 const Header = () => {
   const router = useRouter();
   const activePage = router.pathname;
-  // const { isAuthenticated, user } = useUser();
   const [isMobile, setIsMobile] = useState(false);
-
-  // const authState = useSelector((s) => s.user);
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const handleClick = () => {

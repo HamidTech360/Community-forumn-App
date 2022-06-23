@@ -10,37 +10,35 @@ import {
   Tabs,
   Tab,
   Modal,
-  Spinner, 
-  Form
+  Spinner,
+  Form,
 } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
-import { toast, ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from "react-toastify";
 import Card from "../../components/Molecules/Card";
 import axios from "axios";
 import styles from "../../styles/explore.module.scss";
-import formStyles from '../../styles/templates/new-group/formField.module.css'
-import 'react-toastify/dist/ReactToastify.css';
+import formStyles from "../../styles/templates/new-group/formField.module.css";
+import "react-toastify/dist/ReactToastify.css";
 
-const Explore = ({
-}) => {
-
+const Explore = ({}) => {
   const [categories, setCategories] = useState([
-     {name:'How to work abroad'},
-     {name:'Engineering'},
-     {name:'Technology'},
-     {name:'Visa acquisition'},
-     {name:'How to work abroad'}
-  ])
+    { name: "How to work abroad" },
+    { name: "Engineering" },
+    { name: "Technology" },
+    { name: "Visa acquisition" },
+    { name: "How to work abroad" },
+  ]);
   const [key, setKey] = useState<string>("all");
   const [posts, setPosts] = useState([]);
-  const [isFetching, setIsFetching] = useState(true)
-  const [uploading, setUploading] = useState(false)
-  const [showModal, setShowModal] = useState(false)
+  const [isFetching, setIsFetching] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
-    postTitle:'',
-    postBody:''
-  })
+    postTitle: "",
+    postBody: "",
+  });
   useEffect(() => {
     console.log(users);
     document.body.style.backgroundColor = "#f6f6f6";
@@ -50,76 +48,79 @@ const Explore = ({
     };
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     //alert('fetching');
-    
+
     fetchPost();
-    (async function(){
-      try{
-        const response = await axios.get(`/api/user`, {headers:{
-          authorization:`Bearer ${localStorage.getItem('accessToken')}`
-        }})
+    (async function () {
+      try {
+        const response = await axios.get(`/api/user`, {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        });
         console.log(response.data);
-        setUsers(response.data.users)
-        
-      }catch(error){
+        setUsers(response.data.users);
+      } catch (error) {
         console.log(error.ressponse?.data);
-        setIsFetching(false) 
+        setIsFetching(false);
       }
-    })()
-  },[])
+    })();
+  }, []);
 
-
-  const handleChange = (e)=>{
-    const data = {...formData}
-    data[e.currentTarget.name] = e.currentTarget.value
-    setFormData(data)
+  const handleChange = (e) => {
+    const data = { ...formData };
+    data[e.currentTarget.name] = e.currentTarget.value;
+    setFormData(data);
     //console.log(formData);
-    
-  }
-  const fetchPost = async ()=>{
-    try{
-      const response = await axios.get(`/api/posts`)
+  };
+  const fetchPost = async () => {
+    try {
+      const response = await axios.get(`/api/posts`);
       console.log(response.data.posts);
       // const allPosts = [...posts,...response.data.posts]
-      setPosts(response.data.posts)
-      setIsFetching(false)
-    }catch(error){
-      console.log(error.response?.data); 
-    }
-  }
-
-  const handleSubmit = async (e)=>{
-    e.preventDefault()
-    setUploading(true)
-    try{
-      const response = await axios.post(`/api/posts`, {...formData}, {headers:{
-        authorization:`Bearer ${localStorage.getItem('accessToken')}`
-      }})
-      console.log(response.data);
-      toast.success('Post uploaded successfully', {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId:'1'
-      })
-      setShowModal(false);
-      setUploading(false)
-      fetchPost()
-    }catch(error){
+      setPosts(response.data.posts);
+      setIsFetching(false);
+    } catch (error) {
       console.log(error.response?.data);
-      toast.error('Failed to upload post', {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId:'1'
-      })
-      setShowModal(false);
-      setUploading(false)
     }
-  }
+  };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setUploading(true);
+    try {
+      const response = await axios.post(
+        `/api/posts`,
+        { ...formData },
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      console.log(response.data);
+      toast.success("Post uploaded successfully", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1",
+      });
+      setShowModal(false);
+      setUploading(false);
+      fetchPost();
+    } catch (error) {
+      console.log(error.response?.data);
+      toast.error("Failed to upload post", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1",
+      });
+      setShowModal(false);
+      setUploading(false);
+    }
+  };
 
   return (
     <div>
-
-      <ToastContainer/>
+      <ToastContainer />
 
       <Head>
         <title>Explore</title>
@@ -138,7 +139,9 @@ const Explore = ({
                   millions of readers and writers across the world
                 </p>
                 <div className="d-flex gap-3">
-                  <Button variant="primary" onClick={()=>setShowModal(true)}>Start writing</Button>
+                  <Button variant="primary" onClick={() => setShowModal(true)}>
+                    Start writing
+                  </Button>
                   <Button variant="light">Explore</Button>
                 </div>
               </div>
@@ -170,11 +173,7 @@ const Explore = ({
             >
               <Tab title="All" eventKey="all" key="all" />
               {categories.map((category, i) => (
-                <Tab
-                  eventKey={i}
-                  title={category.name}
-                  key={i}
-                />
+                <Tab eventKey={i} title={category.name} key={i} />
               ))}
             </Tabs>
             {isFetching && (
@@ -183,16 +182,19 @@ const Explore = ({
                   <span className="visually-hidden">Loading...</span>
                 </Spinner>
               </div>
-            )} 
+            )}
             <Row className="d-flex justify-content-start">
               {posts?.map((post, key) => (
-                <Col md={4} className={`my-4 ${styles.card}`}>
-                
+                <Col
+                  key={`posts_${key}`}
+                  md={4}
+                  className={`my-4 ${styles.card}`}
+                >
                   <Card
-                    image={ '/images/postPlaceholder.jpg'}
+                    image={"/images/postPlaceholder.jpg"}
                     title={post.postTitle}
                     body={post.postBody}
-                    author={(users.find((i)=>post.user==i._id))?.firstName}
+                    author={users.find((i) => post.user == i._id)?.firstName}
                     size="any"
                   />
                 </Col>
@@ -214,12 +216,14 @@ const Explore = ({
                   <Image
                     width={50}
                     height={50}
-                    src={'/images/imagePlaceholder.jpg'}
+                    src={"/images/imagePlaceholder.jpg"}
                     roundedCircle
                     alt={user?.firstName}
                   />
 
-                  <span className="mt-1">{user?.firstName} {user?.lastName}</span>
+                  <span className="mt-1">
+                    {user?.firstName} {user?.lastName}
+                  </span>
 
                   <Button variant="outline-primary">Follow</Button>
                 </div>
@@ -241,7 +245,7 @@ const Explore = ({
                   onSubmit={(e)=>handleSubmit(e)}
               >
                 <Form.Group className={formStyles.formGroup}>
-                  <Form.Label className={formStyles.formLabel}> Gist Title</Form.Label>
+                  <Form.Label className={formStyles.formLabel}> Post Title</Form.Label>
                   <Form.Control
                     size="lg"
                     name="postTitle"
@@ -251,28 +255,26 @@ const Explore = ({
                   />
                 </Form.Group>
 
-                <Form.Group className={formStyles.formGroup}>
-                  <Form.Control
-                    className={formStyles.bigForm}
-                    as="textarea"
-                    name="postBody"
-                    type="text"
-                    required
-                    placeholder="Write something"
-                    onChange={(e)=>handleChange(e)}
-                  />
-                </Form.Group>
+            <Form.Group className={formStyles.formGroup}>
+              <Form.Control
+                className={formStyles.bigForm}
+                as="textarea"
+                name="postBody"
+                type="text"
+                required
+                placeholder="Write something"
+                onChange={(e) => handleChange(e)}
+              />
+            </Form.Group>
 
-                
-                
-                <Button variant="primary" className="d-flex mx-auto" type="submit">
-                  {uploading?'uploading...':'Continue'} 
-                </Button>
-              </Form>
+            <Button variant="primary" className="d-flex mx-auto" type="submit">
+              {uploading ? "uploading..." : "Continue"}
+            </Button>
+          </Form>
 
-              {/* {state.isSuccess && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="success">Upload successfull</Alert>}
+          {/* {state.isSuccess && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="success">Upload successfull</Alert>}
               {state.error && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="danger">Upload failed</Alert>} */}
-          </div>
+        </div>
       </Modal>
     </div>
   );

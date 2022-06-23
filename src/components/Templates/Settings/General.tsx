@@ -9,9 +9,7 @@ import styles from "../../../styles/settings.module.scss";
 import "react-toastify/dist/ReactToastify.css";
 
 const General = () => {
-  // const { data } = useSelector((s) => s.user);
   const data = useSelector(selectUser);
-  // console.log(data);
 
   useEffect(() => {
     const clone = { ...formData };

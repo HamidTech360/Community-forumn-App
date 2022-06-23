@@ -3,23 +3,25 @@ import { Image } from "react-bootstrap";
 import { HiOutlineArrowLeft } from "react-icons/hi";
 import { BsDot } from "react-icons/bs";
 import { dummyData } from "../components/BlogPost/dummyData";
+import Comment from "../components/Organisms/App/Comment";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import Age from "@/components/Atoms/Age";
 
 const BlogPost = () => {
   const [blogPost, setBlogPost] = useState(dummyData);
   const router = useRouter();
 
   const addComment = () => {
-    const comment = (
+    const content = (
       document.getElementById("articleTextarea") as HTMLTextAreaElement
     ).value;
 
     let newComment = {
       name: "Elisabet Lusi",
       image: "/images/friends3.png",
-      time: new Date(),
-      comment,
+      date: new Date(),
+      content,
       like: [],
       reply: [],
     };
@@ -56,11 +58,13 @@ const BlogPost = () => {
                     By <span>{blogPost.author}</span>
                     <small className="text-secondary ms-5">
                       <BsDot />
-                      {blogPost.time.toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: false,
-                      })}
+                      {
+                        <Age
+                          time={
+                            blogPost?.date && blogPost.date.toLocaleString()
+                          }
+                        />
+                      }
                     </small>
                   </div>
                 </div>
@@ -131,71 +135,10 @@ const BlogPost = () => {
                     {blogPost.comments.length > 1 &&
                       blogPost.comments.map((comment, index) => {
                         return (
-                          <div className="row mb-4" key={index}>
-                            <div className="col-2">
-                              <Image
-                                src={comment.image}
-                                className="img-fluid"
-                                // width={55}
-                                // height={55}
-                                roundedCircle={true}
-                                alt="Author's Image"
-                              ></Image>
-                            </div>
-                            <div className="col-10">
-                              <div className="row">
-                                <div
-                                  className="col-md-12 h6"
-                                  style={{ fontWeight: "bold" }}
-                                >
-                                  {comment.name}
-                                </div>
-                              </div>
-                              <div className="row">
-                                <div
-                                  className="col-md-12 text-secondary"
-                                  style={{ fontSize: "14px" }}
-                                >
-                                  {comment.time.toLocaleTimeString("en-US", {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                    hour12: false,
-                                  })}
-                                </div>
-                              </div>
-                            </div>
-                            <div className="row">
-                              <div className="col-md-12">
-                                <p>{comment.comment}</p>
-                              </div>
-                            </div>
-                            <div className="row justify-content-end mb-2 ms-auto">
-                              <div
-                                className="col-3 text-secondary mb-1 text-end"
-                                onClick={likeComment}
-                                style={{ cursor: "pointer" }}
-                              >
-                                like{" "}
-                                {comment.like.length > 0 && (
-                                  <span className="badge rounded-pill bg-primary">
-                                    {comment.like.length}
-                                  </span>
-                                )}
-                              </div>
-                              <div
-                                className="col-3 text-secondary"
-                                onClick={replyComment}
-                                style={{ cursor: "pointer" }}
-                              >
-                                reply{" "}
-                                {comment.reply.length > 0 && (
-                                  <span className="badge rounded-pill bg-primary">
-                                    {comment.reply.length}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
+                          <Comment
+                            key={`blogPost_${index}`}
+                            comment={comment}
+                          />
                         );
                       })}
                   </div>

@@ -5,6 +5,8 @@ import Timeline from "@/components/Templates/Profile/Timeline";
 import AuthContent from "@/components/Auth/AuthContent";
 import Link from "next/link";
 import Head from "next/head";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import { useRouter } from "next/router";
 const posts = [
   {
     image: "/images/article.png",
@@ -26,6 +28,7 @@ const posts = [
   },
 ];
 const Groups = () => {
+  const router = useRouter();
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
 
@@ -46,8 +49,8 @@ const Groups = () => {
           >
             <div className="d-flex justify-content-between my-2">
               {" "}
-              <text className="bold">Your groups</text>
-              <text className="text-primary">See more</text>
+              <p className="bold">Your groups</p>
+              <p className="text-primary">See more</p>
             </div>
             <Form.Control placeholder="search" />
           </Card>
@@ -55,18 +58,15 @@ const Groups = () => {
           <div className={styles.posts}>
             <div className={`d-none d-md-flex gap-3 mb-3`}>
               {posts.map((post, index) => (
-                <Link href="/groups/1/timeline" passHref>
-                  <Card
-                    key={`card-${index}`}
-                    style={{ height: "280px", border: "none" }}
-                  >
+                <Link key={`card-${index}`} href="/groups/1/timeline" passHref>
+                  <Card style={{ height: "280px", border: "none" }}>
                     <CardImg
                       src={post.image}
                       alt=""
                       style={{ height: "60%" }}
                     />
                     <Card.Body className="d-flex flex-column">
-                      <text className="bold">{post.title}</text>
+                      <p className="bold">{post.title}</p>
                       <small className="text-muted">
                         Admin: {post.author.split(" ")[1]}
                       </small>
@@ -82,6 +82,24 @@ const Groups = () => {
               ))}
             </div>
             <main>
+              <div
+                className={`${styles.addNewGroupBtn} row col-6 col-md-4 col-lg-3 ms-auto me-2`}
+              >
+                <Link href="/groups/new" passHref>
+                  <Button
+                    variant="outline-primary"
+                    className=" btn-sm"
+                    onClick={() =>
+                      sessionStorage.setItem(
+                        "newGroup_coming4rm",
+                        JSON.stringify(router.asPath)
+                      )
+                    }
+                  >
+                    <AiOutlineUsergroupAdd size={23} /> Create New Group
+                  </Button>
+                </Link>
+              </div>
               <Timeline />
             </main>
           </div>

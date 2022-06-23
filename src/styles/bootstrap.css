@@ -1222,7 +1222,6 @@ progress {
     width: 50%;
   }
 
-  
   .col-md-7 {
     flex: 0 0 auto;
     width: 58.33333333%;
@@ -3127,7 +3126,6 @@ fieldset:disabled .btn {
   border-color: #207681;
 }
 
-
 .btn-primary:hover,
 .tab-item:hover {
   color: #fff !important;
@@ -3757,8 +3755,8 @@ fieldset:disabled .btn {
   border-radius: 0.3rem;
 }
 
-@media screen and (max-width: 300px){
-  .btn-lgs{
+@media screen and (max-width: 300px) {
+  .btn-lgs {
     font-size: medium;
   }
 }
@@ -4072,14 +4070,14 @@ fieldset:disabled .btn {
   display: block;
 }
 
-@media screen and (max-width: 500px){
-  .dropdown-menu.show{
+@media screen and (max-width: 500px) {
+  .dropdown-menu.show {
     max-width: 7rem !important;
   }
 }
 
-@media screen and (max-width: 400px){
-  .dropdown-menu.show{
+@media screen and (max-width: 400px) {
+  .dropdown-menu.show {
     max-width: 7.5rem !important;
   }
 }
@@ -4365,8 +4363,8 @@ fieldset:disabled .btn {
   white-space: nowrap;
 }
 
-@media screen and (max-width: 1100px){
-  .navbar-brand{
+@media screen and (max-width: 1100px) {
+  .navbar-brand {
     margin-right: 2rem;
   }
 }
@@ -4869,7 +4867,7 @@ fieldset:disabled .btn {
 }
 
 @media screen and (max-width: 1100px) {
-  .card-body{
+  .card-body {
     padding: 1rem 0rem;
   }
   .card-body > p {
@@ -4892,21 +4890,21 @@ fieldset:disabled .btn {
   margin-bottom: 0;
 }
 
-@media screen and (max-width: 800px){
-  .card-title{
-    margin:  auto -1rem !important;
+@media screen and (max-width: 800px) {
+  .card-title {
+    margin: auto -1rem !important;
   }
 
-  .card-subtitle.h6{
+  .card-subtitle.h6 {
     margin-top: 0.7rem;
   }
 }
-@media screen and (max-width: 500px){
-  .card-title{
+@media screen and (max-width: 500px) {
+  .card-title {
     margin: 1rem -1rem !important;
   }
 
-  .card-subtitle.h6{
+  .card-subtitle.h6 {
     margin-top: 0.2rem;
   }
 }
@@ -4935,14 +4933,14 @@ fieldset:disabled .btn {
   border-top: 1px solid rgba(0, 0, 0, 0.125);
 }
 
-@media screen and (max-width: 400px){
-  .card-footer{
+@media screen and (max-width: 400px) {
+  .card-footer {
     padding: 0.5rem;
   }
 }
 
-@media screen and (max-width: 300px){
-  .card-footer{
+@media screen and (max-width: 300px) {
+  .card-footer {
     padding: 0.5rem 0;
   }
 }
@@ -8309,13 +8307,13 @@ fieldset:disabled .btn {
 
 @media (max-width: 500px) {
   .text-primary,
-  .text-muted, 
-  .text-mute, 
-  .text-primaries > a, 
+  .text-muted,
+  .text-mute,
+  .text-primaries > a,
   .textMute > a {
     font-size: small;
   }
-  
+
   .pic {
     width: 70px;
     height: 70px;
@@ -8323,23 +8321,25 @@ fieldset:disabled .btn {
 }
 
 @media (max-width: 450px) {
-  .textMute, .text-primaries{
+  .textMute,
+  .text-primaries {
     margin-right: -1rem;
   }
 
-  .text-primaries > a, 
-  .textMute > a{
+  .text-primaries > a,
+  .textMute > a {
     font-size: 0.9rem !important;
   }
 }
 
 @media (max-width: 400px) {
-  .textMute, .text-primaries{
+  .textMute,
+  .text-primaries {
     margin-right: -1rem;
   }
 
-  .text-primaries > a, 
-  .textMute > a{
+  .text-primaries > a,
+  .textMute > a {
     font-size: 0.8rem !important;
   }
 }
@@ -8351,8 +8351,8 @@ fieldset:disabled .btn {
     font-size: xx-small;
   }
 
-  .text-primaries > a, 
-  .textMute > a{
+  .text-primaries > a,
+  .textMute > a {
     font-size: 0.6rem !important;
   }
 
@@ -8362,7 +8362,6 @@ fieldset:disabled .btn {
 }
 
 @media screen and (max-width: 500px) {
-  
 }
 
 .text-secondary {
@@ -11959,12 +11958,10 @@ fieldset:disabled .btn {
   }
 }
 
-@media screen and (max-width: 300px){
-  .post-img{
+@media screen and (max-width: 300px) {
+  .post-img {
     width: 14px;
   }
 }
-
-
 
 /*# sourceMappingURL=bootstrap.css.map */

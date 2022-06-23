@@ -25,7 +25,7 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
       <p className="text-center bold" style={{ marginTop: "-2rem" }}>
         {user?.firstName}&nbsp; {user?.lastName}
       </p>
-      <p className="d-flex justify-content-between">
+      <div className="d-flex justify-content-between">
         <div className="d-flex flex-column align-items-center">
           <span>1000</span>
           <small>following</small>
@@ -34,7 +34,7 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
           <span>1000</span>
           <small>followers</small>
         </div>
-      </p>
+      </div>
       <p className="text-center text-primary">
         <Link href={`/profile/timeline`}>View Profile</Link>
       </p>
