@@ -49,6 +49,7 @@ const PostCard = ({
       className="my-3 cards"
       style={{
         border: "none",
+        width: "100%",
         // padding: "-3rem",
       }}
     >

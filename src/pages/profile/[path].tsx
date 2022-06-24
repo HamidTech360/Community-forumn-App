@@ -50,7 +50,7 @@ const Profile = () => {
         <title>Profile</title>
       </Head>
       <Container>
-        <div className={`padding-top mt-3 ${styles.wrapper}`}>
+        <div className={`padding-top mt-3 ${styles.profileWrapper}`}>
           <>
             <div
               style={{ width: 250 }}

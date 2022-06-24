@@ -18,8 +18,8 @@ const handler = async (req: any, res: NextApiResponse) => {
 
     try {
       const {  postTitle, postBody } = req.body;
-      const {error} = validatePost(req.body)
-      if(error) return res.status(400).send(error.details[0].message)
+      // const {error} = validatePost(req.body)
+      // if(error) return res.status(400).send(error.details[0].message)
       const newPost = await Post.create({
         user:userId,
         postTitle,
