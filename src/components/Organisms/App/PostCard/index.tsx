@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router"
 import strip from "striptags";
 import React from "react";
 import { Button, Card, Dropdown, Image, NavDropdown } from "react-bootstrap";
@@ -13,12 +14,17 @@ const PostCard = ({
   post,
   trimmed,
   author,
+  // onNavigate,
 }: {
   post: Record<string, any>;
   trimmed?: Boolean;
   author: any;
+  // onNavigate?: (params?: any) => void;
 }) => {
   
+  const router = useRouter();
+
+ 
   const postButton = [
     {
       name: "Like",
@@ -100,8 +106,9 @@ const PostCard = ({
           cursor: "pointer",
         }}
       >
-        <Link href = {`/feed/${post?._id}`} passHref>
+        {/* <Link href = {`/feed/${post?._id}`} passHref> */}
           <div
+            // onClick = {onNavigate}
             className="post-content"
             dangerouslySetInnerHTML={{
               __html: trimmed
@@ -114,7 +121,7 @@ const PostCard = ({
 
             }}
           />
-        </Link>
+        {/* </Link> */}
       
         {!trimmed && (
           <Image

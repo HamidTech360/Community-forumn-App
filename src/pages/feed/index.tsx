@@ -1,6 +1,7 @@
 // import useUser from "@/hooks/useUser";
 import Head from "next/head";
 import axios from "axios";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSelector } from "@/redux/store";
 import { Col, Container, Image, Row, Spinner, Modal, Form, Button } from "react-bootstrap";
@@ -22,7 +23,7 @@ import formStyles from '../../styles/templates/new-group/formField.module.css'
 const Feed = () => {
   const data = useSelector(selectUser);
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
-
+const router = useRouter();	
   const [scrollInitialised, setScrollInitialised] = useState(false);
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
@@ -39,6 +40,15 @@ const Feed = () => {
     }
   };
 
+  // const navigate = (item) => {
+  //   router.push({
+  //     pathname: `/feed/${item?._id}`,
+  //     query: {
+  //       type: item?.type,
+  //     }
+  //   }, `/feed/${item?._id}`)
+  // }
+  
    useEffect(() => {
 
     (async function(){
@@ -157,6 +167,7 @@ const Feed = () => {
               > */}
             {posts?.map((post, index) => (
               <PostCard 
+                // onNavigate= {()=> navigate(post)}
                 post={post} 
                 author={users.find((i) => post.user  == i._id)}
                 key={`activity-post-${index}-${post.id}`} 
