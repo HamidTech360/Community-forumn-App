@@ -198,17 +198,7 @@ const Feed = () => {
          <span className={styles.closeBtn} > <FaTimes color = '#207681'style={{cursor:'pointer'}} size={35} onClick={()=>setShowModal(false)} /> </span>
          <div className={styles.newGistModal}>
              <Form onSubmit={(e)=>handleSubmit(e)}>
-                <Form.Group className={formStyles.formGroup}>
-                  <Form.Label className={formStyles.formLabel}> Post Title</Form.Label>
-                  <Form.Control
-                    size="lg"
-                    name="postTitle"
-                    type="text"
-                    required
-                    onChange={(e)=>handleChange(e)}
-                  />
-                </Form.Group>
-
+               
                 <Form.Group className={formStyles.formGroup}>
                   <Form.Control
                     className={formStyles.bigForm}
