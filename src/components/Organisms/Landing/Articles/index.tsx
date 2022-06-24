@@ -47,6 +47,7 @@ const Articles = ({ articles }: { articles?: Record<string, any> }) => {
           <EndlessCarousel>
             {posts?.map((post: any, key: number) => (
               <Card
+               _id={post._id} 
                 key={`article-${key}`}
                 image={post.image || "/images/formbg.png"}
                 title={post.title}
