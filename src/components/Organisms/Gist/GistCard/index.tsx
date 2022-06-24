@@ -18,17 +18,7 @@ import styles from "@/styles/gist.module.scss";
 //     body: string;
 //   };
 // }
-const GistCard = ({ 
-  gist, 
-  author, 
-  primary, 
-  // onNavigate, 
-}: {
-  gist: any;
-  author: any;
-  primary: any;
-  // onNavigate?: (params?: any) => void;
-}) => {
+const GistCard = ({ gist, author, primary }: any) => {
   return (
     <Card
       className="mt-4 p-3 shadow-sm"
@@ -71,7 +61,6 @@ const GistCard = ({
       </Card.Title>
 
       <Card.Body
-      // onClick = {onNavigate}
         dangerouslySetInnerHTML={{
           __html: striptags(gist?.post, "<a> <b> <em> <p> <strong> <i>").slice(
             0,

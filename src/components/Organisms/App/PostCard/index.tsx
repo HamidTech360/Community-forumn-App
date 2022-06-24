@@ -1,30 +1,22 @@
 import Link from "next/link";
-import { useRouter } from "next/router"
 import strip from "striptags";
 import React from "react";
 import { Button, Card, Dropdown, Image, NavDropdown } from "react-bootstrap";
 import { HiDotsVertical } from "react-icons/hi";
 import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
 import { BsFolderFill, BsXCircleFill } from "react-icons/bs";
-
 import Age from "../../../Atoms/Age";
 import styles from "@/styles/profile.module.scss";
-
 const PostCard = ({
   post,
   trimmed,
   author,
-  // onNavigate,
 }: {
   post: Record<string, any>;
   trimmed?: Boolean;
   author: any;
-  // onNavigate?: (params?: any) => void;
 }) => {
   
-  const router = useRouter();
-
- 
   const postButton = [
     {
       name: "Like",
@@ -107,9 +99,7 @@ const PostCard = ({
           cursor: "pointer",
         }}
       >
-        {/* <Link href = {`/feed/${post?._id}`} passHref> */}
           <div
-            // onClick = {onNavigate}
             className="post-content"
             dangerouslySetInnerHTML={{
               __html: trimmed
@@ -122,7 +112,6 @@ const PostCard = ({
 
             }}
           />
-        {/* </Link> */}
       
         {!trimmed && (
           <Image

@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useSelector } from "@/redux/store";
@@ -41,7 +40,6 @@ import {
 
 const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   const customId = "toastId";
-  const router = useRouter();
   const dispatch = useDispatch();
   const gistData = useSelector(selectGistData);
   const gistIsLoading = useSelector(selectGistIsLoading);
@@ -56,15 +54,6 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     title:'',
     post:''
   })
-  
-  // const navigate = (item) => {
-  //   router.push({
-  //     pathname: `/feed/${item?._id}`,
-  //     query: {
-  //       type: item?.type,
-  //     }
-  //   }, `/feed/${item?._id}`)
-  // }
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -237,7 +226,6 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             <div className="w-100 justify-content-center">
               {allGists.map((post, key) => (
                 <GistCard
-                  // onNavigate = { ()=> navigate(gists)}
                   gist={post}
                   author={users.find((i) => post.user == i._id)}
                   key={`gist-${key}`}
