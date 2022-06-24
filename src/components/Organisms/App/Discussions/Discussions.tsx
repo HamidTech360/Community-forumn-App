@@ -2,25 +2,26 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Card, Image } from "react-bootstrap";
 
-
-const Discussions = ({posts}:any) => {
+const Discussions = ({ posts }: any) => {
   const [gists, setGists] = useState<Record<string, any>[]>();
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState([]);
   useEffect(() => {
     (async () => {
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_REST}/buddyboss/v1/topics?_embed=user&order=desc&orderby=ID`
       );
       setGists(data);
-      const userResponse = await axios.get('/api/user', {headers:{
-        authorization:`Bearer ${localStorage.getItem('accessToken')}`
-      }})
-      setUsers(userResponse.data.users)
+      const userResponse = await axios.get("/api/user", {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+      setUsers(userResponse.data.users);
     })();
   }, []);
   return (
     <Card
-      style={{ border: "none", overflowY: "scroll", height: "80vh" }}
+      style={{ border: "none", overflowY: "scroll", height: "450px" }}
       className="pb-5 mb-4"
     >
       <Card.Header
@@ -49,11 +50,10 @@ const Discussions = ({posts}:any) => {
               <div className="d-flex flex-column">
                 <small
                   className="bolden"
-                  dangerouslySetInnerHTML={{ __html:post.postTitle }}
+                  dangerouslySetInnerHTML={{ __html: post.postTitle }}
                 />
                 <small className="text-muted">
-                  By {" "}
-                  {(users.find((i)=>post.userId==i._id)?.firstName)}
+                  By {users.find((i) => post.userId == i._id)?.firstName}
                 </small>
               </div>
             </div>
