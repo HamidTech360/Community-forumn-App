@@ -14,8 +14,7 @@ const postSchema = new mongoose.Schema(
       required: true,
     },
     postTitle: {
-      type: String,
-      required: true,
+      type: String
     },
     postBody: {
       type: String,

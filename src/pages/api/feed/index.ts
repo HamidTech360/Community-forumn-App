@@ -14,6 +14,7 @@ const handler = async (req:any, res:NextApiResponse)=>{
             let gists = await Gist
                 .find()
                 .limit(10)
+                .sort({createdAt:-1})
             gists.forEach(item=>{
                 item.type="gist"
             })
@@ -21,6 +22,7 @@ const handler = async (req:any, res:NextApiResponse)=>{
             let posts = await Post
                     .find()
                     .limit(10)
+                    .sort({createdAt:-1})
             posts.forEach(item=>{
                 item.type="post"
             })
