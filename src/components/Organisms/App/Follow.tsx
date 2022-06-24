@@ -19,7 +19,7 @@ const Follow = () => {
   }, []);
   return (
     <ListGroup
-      className="p-2"
+      className="p-2 radius-10"
       as={Card}
       variant="flush"
       style={{
@@ -28,12 +28,12 @@ const Follow = () => {
         height: 520,
       }}
     >
-      <text className="fw-bold">Suggested connections</text>
+      <h6 className="text-center">Suggested connections</h6>
 
       <>
         {users.map((user, key) => (
           <ListGroup.Item key={`author-${key}`}>
-            <div className="d-flex gap-2 align-items-center justify-content-center w-100">
+            <div className="d-flex gap-2 py-1 align-items-center justify-content-center w-100">
               <Image
                 width={30}
                 height={30}
