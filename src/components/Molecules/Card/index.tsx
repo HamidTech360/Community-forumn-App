@@ -1,7 +1,9 @@
 import React from "react";
+import Link from 'next/link'
 import PropTypes from "prop-types";
 import { Card as BCard } from "react-bootstrap";
 interface ICard {
+  _id: string;
   title: string;
   image: string;
   author?: string;
@@ -9,7 +11,7 @@ interface ICard {
   size?: string;
 }
 
-const Card = ({ image, title, author, body, size }) => {
+const Card = ({ _id, image, title, author, body, size }) => {
  // console.log( image, title, author, body, size );
   
   return (
@@ -58,9 +60,13 @@ const Card = ({ image, title, author, body, size }) => {
               }}
             />
           </div>
-          <span className="d-flex justify-content-end text-primary absolute-bottom">
-            Read More &nbsp;<i className="bi bi-chevron-double-right"></i>
-          </span>
+          <Link href={`/explore/${_id}`} passHref>
+
+            <span className="d-flex justify-content-end text-primary absolute-bottom">
+              Read More &nbsp;<i className="bi bi-chevron-double-right"></i>
+            </span>
+          </Link>
+
         </BCard.Body>
       </BCard>
     </>

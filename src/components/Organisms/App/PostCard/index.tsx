@@ -5,10 +5,8 @@ import { Button, Card, Dropdown, Image, NavDropdown } from "react-bootstrap";
 import { HiDotsVertical } from "react-icons/hi";
 import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
 import { BsFolderFill, BsXCircleFill } from "react-icons/bs";
-
 import Age from "../../../Atoms/Age";
 import styles from "@/styles/profile.module.scss";
-
 const PostCard = ({
   post,
   trimmed,
@@ -18,8 +16,7 @@ const PostCard = ({
   trimmed?: Boolean;
   author: any;
 }) => {
-  //console.log(author);
-
+  
   const postButton = [
     {
       name: "Like",
@@ -102,17 +99,20 @@ const PostCard = ({
           cursor: "pointer",
         }}
       >
-        <div
-          className="post-content"
-          dangerouslySetInnerHTML={{
-            __html: trimmed
-              ? strip(
-                  post.postBody || post.post,
-                  "<p> <strong> <b> <a> <em> <i>"
-                )?.slice(0, 500) + "..."
-              : post.postTitle || post.title,
-          }}
-        />
+          <div
+            className="post-content"
+            dangerouslySetInnerHTML={{
+              __html: trimmed
+
+                ? strip(
+                    post?.postBody || post?.post,
+                    "<p> <strong> <b> <a> <em> <i>"
+                  )?.slice(0, 500) + "..."
+                : post.postTitle || post.title
+
+            }}
+          />
+      
         {!trimmed && (
           <Image
             className="d-none d-sm-block d-lg-none"

@@ -4082,6 +4082,12 @@ fieldset:disabled .btn {
   }
 }
 
+@media screen and (max-width: 300px){
+  .dropdown-menu.show{
+    margin-right: -2rem !important;
+  }
+}
+
 .dropdown-header {
   display: block;
   padding: 0.5rem 1rem;

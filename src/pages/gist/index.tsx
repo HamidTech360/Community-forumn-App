@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -53,8 +54,6 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     title:'',
     post:''
   })
-  
- 
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";

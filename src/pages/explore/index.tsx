@@ -62,7 +62,7 @@ const Explore = ({}) => {
         console.log(response.data);
         setUsers(response.data.users);
       } catch (error) {
-        console.log(error.ressponse?.data);
+        console.log(error.response?.data);
         setIsFetching(false);
       }
     })();
@@ -191,6 +191,7 @@ const Explore = ({}) => {
                   className={`my-4 ${styles.card}`}
                 >
                   <Card
+                    _id={post._id}
                     image={"/images/postPlaceholder.jpg"}
                     title={post.postTitle}
                     body={post.postBody}

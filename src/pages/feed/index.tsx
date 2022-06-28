@@ -32,7 +32,6 @@ import Follow from "@/components/Organisms/App/Follow";
 const Feed = () => {
   const data = useSelector(selectUser);
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
-
   const [scrollInitialised, setScrollInitialised] = useState(false);
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
@@ -48,11 +47,12 @@ const Feed = () => {
       setScrollInitialised(true);
     }
   };
+  
+   useEffect(() => {
 
-  useEffect(() => {
-    (async function () {
-      try {
-        const response = await axios.get(`/api/feed`);
+    (async function(){
+      try{
+        const response = await axios.get(`/api/feed`)
         console.log(response.data);
 
         setPosts(response.data.data);
@@ -169,10 +169,10 @@ const Feed = () => {
                 }
               > */}
             {posts?.map((post, index) => (
-              <PostCard
-                post={post}
-                author={users.find((i) => post.user == i._id)}
-                key={`activity-post-${index}-${post.id}`}
+              <PostCard 
+                post={post} 
+                author={users.find((i) => post.user  == i._id)}
+                key={`activity-post-${index}-${post.id}`} 
                 trimmed
               />
             ))}

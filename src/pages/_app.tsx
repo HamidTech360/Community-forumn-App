@@ -8,6 +8,8 @@ import Footer from "../components/Organisms/Layout/Footer";
 import AuthStatus from "@/components/Auth/AuthStatus";
 
 function MyApp({ Component, pageProps }: AppProps) {
+
+  
   return (
     <>
       <Provider store={store}>
