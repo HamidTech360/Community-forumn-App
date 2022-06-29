@@ -3,11 +3,13 @@ import Head from "next/head";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import { HiOutlineArrowLeft } from "react-icons/hi";
+import { BsDot } from "react-icons/bs";
 import { 
-  Col,
   Container,
-  Row
- } from 'react-bootstrap';
+  Image
+       } from 'react-bootstrap';
+import Age from "@/components/Atoms/Age";
 import Comment from "../../components/Organisms/App/Comment";
 import Card from "@/components/Organisms/Card";
 import styles from '@/styles/explore.module.scss';
@@ -53,11 +55,29 @@ const Explore = ({
     <>
         <Container>
           <Head>
-            <title>{post?.postTitle}</title>
+            <title>Explore</title>
           </Head>
 
+          <div className = 'container'>
+            <div className = 'row justify-container-center mt-4'>
+              <div className="col-12 col-md-1 justify-content-left align-items-top"
+            style={{ cursor: "pointer" }}
+            onClick={() => router.back()}>
+              <HiOutlineArrowLeft className="h3" />
+              </div>
 
+              <hr className="d-md-none"/>
 
+              {/* <div className="col-12 col-md-8">
+                <div className="card mb-3 border-0 mt-md-2 p-md-4">
+                  <div className = 'card-Header text-center text-md-start'>
+                    <h4 className="card-title text-primary">{post?.postTitle}</h4>
+                  </div>
+                </div>
+                
+              </div> */}
+            </div>
+          </div>
           <Card 
             post={data}
             author={user}
