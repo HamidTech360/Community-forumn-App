@@ -48,12 +48,13 @@ const Feed = () => {
       setScrollInitialised(true);
     }
   };
-  
-   useEffect(() => {
 
-    (async function(){
-      try{
+
+  useEffect(() => {
+    (async function () {
+      try {
         const response = await axios.get(`${config.serverUrl}/api/feed`)
+
         console.log(response.data);
 
         setPosts(response.data.data);
@@ -170,10 +171,10 @@ const Feed = () => {
                 }
               > */}
             {posts?.map((post, index) => (
-              <PostCard 
-                post={post} 
-                author={users.find((i) => post.user  == i._id)}
-                key={`activity-post-${index}-${post.id}`} 
+              <PostCard
+                post={post}
+                author={users.find((i) => post.user == i._id)}
+                key={`activity-post-${index}-${post.id}`}
                 trimmed
               />
             ))}

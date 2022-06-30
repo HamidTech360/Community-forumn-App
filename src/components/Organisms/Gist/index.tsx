@@ -36,7 +36,7 @@ const Card = ({ image, title, author, id }: Record<string, any>) => {
             className="text-muted"
             style={{ fontSize: ".8rem", marginTop: "-5rem" }}
           >
-            by &nbsp;{author.firstName} {author.lastName}
+            by &nbsp;{author?.firstName} {author?.lastName}
           </span>
         </div>
         <Link href={`/gist/${id}`} passHref>
