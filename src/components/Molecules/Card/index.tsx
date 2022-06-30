@@ -46,7 +46,7 @@ const Card = ({ _id, image, title, author, body, size }) => {
             </h6>
             <span className="text-muted">
               <small style={{ marginTop: "-2rem", fontSize: "0.8rem" }}>
-                by &nbsp;{author}
+                by &nbsp;{author?.firstName}
               </small>{" "}
             </span>
             <div

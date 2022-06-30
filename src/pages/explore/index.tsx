@@ -1,5 +1,6 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
+import config from '../../config'
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Col,
@@ -54,7 +55,7 @@ const Explore = ({}) => {
     fetchPost();
     (async function () {
       try {
-        const response = await axios.get(`/api/user`, {
+        const response = await axios.get(`${config.serverUrl}/api/user`, {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
@@ -76,7 +77,7 @@ const Explore = ({}) => {
   };
   const fetchPost = async () => {
     try {
-      const response = await axios.get(`/api/posts`);
+      const response = await axios.get(`${config.serverUrl}/api/posts`);
       console.log(response.data.posts);
       // const allPosts = [...posts,...response.data.posts]
       setPosts(response.data.posts);
@@ -91,7 +92,7 @@ const Explore = ({}) => {
     setUploading(true);
     try {
       const response = await axios.post(
-        `/api/posts`,
+        `${config.serverUrl}/api/posts`,
         { ...formData },
         {
           headers: {
@@ -195,7 +196,7 @@ const Explore = ({}) => {
                     image={"/images/postPlaceholder.jpg"}
                     title={post.postTitle}
                     body={post.postBody}
-                    author={users.find((i) => post.user == i._id)?.firstName}
+                    author={post.author}
                     size="any"
                   />
                 </Col>
@@ -210,7 +211,7 @@ const Explore = ({}) => {
           <h1 className="d-flex justify-content-center">
             Top writers you should follow
           </h1>
-          <Row>
+          {/* <Row>
             {users.map((user, key) => (
               <Col md={6} lg={4} sm={12} key={`author-${key}`} className="mt-4">
                 <div className="d-flex gap-3 align-items-center justify-content-evenly">
@@ -231,7 +232,7 @@ const Explore = ({}) => {
                 <hr />
               </Col>
             ))}
-          </Row>
+          </Row> */}
         </Container>
       </section>
 

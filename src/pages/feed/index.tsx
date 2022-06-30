@@ -3,6 +3,7 @@ import Head from "next/head";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "@/redux/store";
+import config from '../../config'
 import {
   Col,
   Container,
@@ -52,12 +53,12 @@ const Feed = () => {
 
     (async function(){
       try{
-        const response = await axios.get(`/api/feed`)
+        const response = await axios.get(`${config.serverUrl}/api/feed`)
         console.log(response.data);
 
         setPosts(response.data.data);
         setIsFetching(false);
-        const userResponse = await axios.get("/api/user", {
+        const userResponse = await axios.get(`${config.serverUrl}/api/user`, {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
@@ -94,7 +95,7 @@ const Feed = () => {
 
     try {
       const response = await axios.post(
-        `/api/posts`,
+        `${config.serverUrl}/api/posts`,
         { ...formData },
         {
           headers: {

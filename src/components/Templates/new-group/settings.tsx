@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "../../../styles/templates/new-group/settings.module.css";
 import { Form } from "react-bootstrap";
 
-const Settings = () => {
+const Settings = ({handleSelectOption}) => {
   const [privacy, setPrivacy] = useState([
     {
       title: "Public group",
@@ -12,6 +12,7 @@ const Settings = () => {
         "This group will be listed in the groups directory and in search results.",
         " Group content and activity will be visible to any site member.",
       ],
+      value:'public'
     },
     {
       title: "Private group",
@@ -21,6 +22,7 @@ const Settings = () => {
         "This group will be listed in the groups directory and in search results.",
         "Group content and activity will only be visible to members of the group.",
       ],
+      value:'private'
     },
     {
       title: "Public group",
@@ -30,6 +32,7 @@ const Settings = () => {
         " This group will not be listed in the groups directory or search results.",
         "Group content and activity will only be visible to members of the group.",
       ],
+      value:'semiPublic'
     },
   ]);
 
@@ -37,14 +40,17 @@ const Settings = () => {
     {
       label: "Admin Only",
       active: false,
+      value:'admin'
     },
     {
       label: "Admin and moderators",
       active: false,
+      value:'moderators'
     },
     {
       label: "Everyone",
       active: false,
+      value:'everyone'
     },
   ]);
 
@@ -52,23 +58,30 @@ const Settings = () => {
     {
       label: "Admin Only",
       active: false,
+      value:'admin'
     },
     {
       label: "Admin and moderators",
       active: false,
+      value:'moderators',
     },
     {
       label: "Everyone",
       active: false,
+      value:'everyone'
     },
   ]);
 
-  const selectItem = (array, setArray, item, i) => {
+  const selectItem = (array, setArray, item, i, name) => {
     const clone = [...array];
     clone.map((item) => (item.active = false));
     clone[i].active = true;
     setArray(clone);
-    console.log(item);
+    //console.log(item);
+    handleSelectOption(name, item.value)
+
+    
+    
   };
   return (
     <div className={styles.settings}>
@@ -79,7 +92,7 @@ const Settings = () => {
         <div key={i} className={styles.groupType}>
           <div className={styles.groupTypeHeader}>{item.title}</div>
           <div
-            onClick={() => selectItem(privacy, setPrivacy, item, i)}
+            onClick={() => selectItem(privacy, setPrivacy, item, i, 'privacy')}
             className={`${styles.radio} ${
               item.active ? styles.radioActive : ""
             }`}
@@ -112,7 +125,7 @@ const Settings = () => {
                 }`}
                 style={{ marginTop: "0px" }}
                 onClick={() =>
-                  selectItem(inviteOptions, setInviteOptions, item, i)
+                  selectItem(inviteOptions, setInviteOptions, item, i, 'invite')
                 }
               />
             </div>
@@ -138,7 +151,7 @@ const Settings = () => {
                   item.active ? styles.radioActive : ""
                 }`}
                 style={{ marginTop: "0px" }}
-                onClick={() => selectItem(postOptions, setPostOptions, item, i)}
+                onClick={() => selectItem(postOptions, setPostOptions, item, i, 'allowedToPost')}
               />
             </div>
           ))}

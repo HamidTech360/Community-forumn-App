@@ -7,7 +7,7 @@ import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import FormWrapper from "../components/Organisms/Layout/FormWrapper";
-
+import config from '../config'
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 
 import { useRouter } from "next/router";
@@ -30,7 +30,7 @@ const Register = () => {
     if (termsAndConditionsChecked) {
       try {
         setSubmitting(true);
-        await axios.post("/api/auth/register", formData);
+        await axios.post(`${config.serverUrl}/api/auth/register`, formData);
 
         setMessage({
           message:

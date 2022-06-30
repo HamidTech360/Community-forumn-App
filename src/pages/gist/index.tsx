@@ -21,6 +21,7 @@ import GistCard from "../../components/Organisms/Gist/GistCard";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { toast, ToastContainer } from "react-toastify";
 import { FaTimes } from "react-icons/fa";
+import config from '../../config'
 
 //STYLES
 import styles from "../../styles/gist.module.scss";
@@ -59,8 +60,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     document.body.style.backgroundColor = "#f6f6f6";
     (async function () {
       try {
-        const gistResponse = await axios.get("/api/gists");
-        const userResponse = await axios.get("/api/user", {
+        const gistResponse = await axios.get(`${config.serverUrl}/api/gists`);
+        const userResponse = await axios.get(`${config.serverUrl}/api/user`, {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
@@ -79,8 +80,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     document.body.style.backgroundColor = "#f6f6f6";
     (async function () {
       try {
-        const gistResponse = await axios.get("/api/gists");
-        const userResponse = await axios.get("/api/user", {
+        const gistResponse = await axios.get(`${config.serverUrl}/api/gists`);
+        const userResponse = await axios.get(`${config.serverUrl}/api/user`, {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
@@ -107,7 +108,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
       setShowModal(false);
 
       (async function () {
-        const response = await axios.get("/api/gists");
+        const response = await axios.get(`${config.serverUrl}/api/gists`);
         setAllGists(response.data);
       })();
 
@@ -117,6 +118,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         position: toast.POSITION.TOP_RIGHT,
         toastId: customId,
       });
+      dispatch(uploadCleanUp({}));
     }
   }, [gistIsSuccess, gistError]);
 
@@ -131,7 +133,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     dispatch(uploadStart({}));
 
     try {
-      const response = await axios.post(`/api/gists`, formData, {
+      const response = await axios.post(`${config.serverUrl}/api/gists`, formData, {
         headers: {
           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -164,7 +166,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                     : "/images/formbg.png"
                 }
                 title={item.title}
-                author={users.find((i) => item.user == i._id)}
+                author={'users.find((i) => item.user == i._id)'}
               />
             ))}
           </EndlessCarousel>
@@ -227,7 +229,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
               {allGists.map((post, key) => (
                 <GistCard
                   gist={post}
-                  author={users.find((i) => post.user == i._id)}
+                  author={'users.find((i) => post.user == i._id)'}
                   key={`gist-${key}`}
                 />
               ))}
