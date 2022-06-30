@@ -21,6 +21,7 @@ import GistCard from "../../components/Organisms/Gist/GistCard";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { toast, ToastContainer } from "react-toastify";
 import { FaTimes } from "react-icons/fa";
+import config from "../../config";
 
 //STYLES
 import styles from "../../styles/gist.module.scss";
@@ -64,50 +65,23 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   const user = useSelector(selectUser);
   const isFetching = useSelector(selectIsFetching);
 
-  // const [showModal, setShowModal] = useState(false);
-  // const [isFetching, setIsFetching] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [fetching, setIsFetching] = useState(true);
   const [allGists, setAllGists] = useState([]);
-  const [users, setUsers] = useState([]);
+
   const [formData, setFormData] = useState({
     title: "",
     post: "",
   });
 
-  // useEffect(() => {
-  //   document.body.style.backgroundColor = "#f6f6f6";
-  //   (async function () {
-  //     try {
-  //       const gistResponse = await axios.get("/api/gists");
-  //       const userResponse = await axios.get("/api/user", {
-  //         headers: {
-  //           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  //         },
-  //       });
-  //       console.log("gistResponse:", gistResponse);
-  //       console.log("userResponse:", userResponse);
-  //       setUsers(userResponse.data.users);
-  //       setAllGists(gistResponse.data);
-  //       setIsFetching(false);
-  //       console.log(gistResponse.data);
-  //     } catch (error) {
-  //       console.log("ERROR:", error.response?.data);
-  //     }
-  //   });
-  // }, []);
-
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
     (async function () {
       try {
-        const gistResponse = await axios.get("/api/gists");
-        const userResponse = await axios.get("/api/user", {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        });
+        const gistResponse = await axios.get(`${config.serverUrl}/api/gists`);
+
         console.log("gistResponse:", gistResponse);
-        console.log("userResponse:", userResponse);
-        setUsers(userResponse.data.users);
+
         setAllGists(gistResponse.data);
         setIsFetching(false);
         console.log(gistResponse.data);
@@ -128,7 +102,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
       });
 
       (async function () {
-        const response = await axios.get("/api/gists");
+        const response = await axios.get(`${config.serverUrl}/api/gists`);
         setAllGists(response.data);
       })();
 
@@ -140,31 +114,33 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         position: toast.POSITION.TOP_RIGHT,
         toastId: customId,
       });
+      dispatch(uploadCleanUp({}));
     }
   }, [gistIsSuccess, gistError]);
 
   const handleChange = (e) => {
-    // const clone = { ...formData };
-    // clone[e.currentTarget.name] = e.currentTarget.value;
-    // setFormData(clone);
     dispatch(setGistTitle(e.currentTarget.value));
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   dispatch(uploadStart({}));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(uploadStart({}));
 
-  //   try {
-  //     const response = await axios.post(`/api/gists`, formData, {
-  //       headers: {
-  //         authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  //       },
-  //     });
-  //     dispatch(uploadSuccess(response.data));
-  //   } catch (error) {
-  //     dispatch(uploadFailed(error.response?.data));
-  //   }
-  // };
+    try {
+      const response = await axios.post(
+        `${config.serverUrl}/api/gists`,
+        formData,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      dispatch(uploadSuccess(response.data));
+    } catch (error) {
+      dispatch(uploadFailed(error.response?.data));
+    }
+  };
 
   return (
     <section className={styles.gist}>
@@ -188,7 +164,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                     : "/images/formbg.png"
                 }
                 title={item.title}
-                author={users.find((i) => item.user == i._id)}
+                author={`${item.author?.firstName} ${item.author?.lastName}`}
               />
             ))}
           </EndlessCarousel>
@@ -244,21 +220,17 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             </div>
             {/* </BCard.Header> */}
             {/* <BCard.Body className={styles.cardBody}> */}
-            {isFetching && (
-              <div className="m-2 p-2 d-flex justify-content-center">
-                <Spinner animation="border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              </div>
-            )}
+            {isFetching ||
+              (fetching && (
+                <div className="m-2 p-2 d-flex justify-content-center">
+                  <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                </div>
+              ))}
             <div className="w-100 justify-content-center">
               {allGists.map((post, key) => (
-                <GistCard
-                  gist={post}
-                  author={users.find((i) => post.user == i._id)}
-                  key={`gist-${key}`}
-                  trimmed
-                />
+                <GistCard gist={post} key={`gist-${key}`} trimmed />
               ))}
             </div>
 
