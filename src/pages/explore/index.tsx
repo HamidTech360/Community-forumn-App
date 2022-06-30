@@ -332,11 +332,7 @@ const Explore = ({}) => {
 
           {/* {state.isSuccess && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="success">Upload successfull</Alert>}
               {state.error && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="danger">Upload failed</Alert>} */}
-          <Editor
-            editorID={`${router.asPath}-slateRefId`}
-            postTitleID=""
-            displayInID="slateDisplay"
-          />
+          <Editor />
           <div className="mb-4"></div>
         </div>
       </Modal>
