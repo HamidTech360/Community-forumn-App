@@ -1,6 +1,6 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
-import config from '../../config'
+import config from "../../config";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Col,
@@ -59,7 +59,7 @@ const Explore = ({}) => {
   const [key, setKey] = useState<string>("all");
   // const [posts, setPosts] = useState([]);
   // const [isFetching, setIsFetching] = useState(true);
-  // const [uploading, setUploading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   // const [showModal, setShowModal] = useState(false);
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
@@ -68,6 +68,7 @@ const Explore = ({}) => {
   });
   useEffect(() => {
     console.log(users);
+
     document.body.style.backgroundColor = "#f6f6f6";
 
     return () => {
@@ -75,40 +76,9 @@ const Explore = ({}) => {
     };
   }, []);
 
-  useEffect(() => {
-    //alert('fetching');
-
-    fetchPost();
-    (async function () {
-      try {
-        const response = await axios.get(`${config.serverUrl}/api/user`, {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        });
-        console.log("response.data+++:", response.data.users);
-        setUsers(response.data.users);
-      } catch (error) {
-        console.log(error.response?.data);
-        // setIsFetching(false);
-        dispatch(setIsFetching(false));
-      }
-    })();
-  }, []);
-
-  const handleChange = (e) => {
-    // const data = { ...formData };
-    // data[e.currentTarget.name] = e.currentTarget.value;
-    // setFormData(data);
-    dispatch(setPostTitle(e.currentTarget.value));
-    //console.log(formData);
-  };
   const fetchPost = async () => {
     try {
       const response = await axios.get(`${config.serverUrl}/api/posts`);
-      console.log(response.data.posts);
-      // const allPosts = [...posts,...response.data.posts]
-      // setPosts(response.data.posts);
       dispatch(setPosts(response.data.posts));
       // setIsFetching(false);
       dispatch(setIsFetching(false));
@@ -117,6 +87,30 @@ const Explore = ({}) => {
     }
   };
 
+  useEffect(() => {
+    //alert('fetching');
+
+    fetchPost();
+    (async function () {
+      try {
+        const { data } = await axios.get(`${config.serverUrl}/api/users`, {});
+
+        setUsers(data);
+      } catch (error) {
+        console.log(error.response?.data);
+        // setIsFetching(false);
+        dispatch(setIsFetching(false));
+      }
+    })();
+  }, [fetchPost]);
+
+  const handleChange = (e) => {
+    // const data = { ...formData };
+    // data[e.currentTarget.name] = e.currentTarget.value;
+    // setFormData(data);
+    dispatch(setPostTitle(e.currentTarget.value));
+    //console.log(formData);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -136,8 +130,7 @@ const Explore = ({}) => {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
       });
-      setShowModal(false);
-      setUploading(false);
+
       fetchPost();
     } catch (error) {
       console.log(error.response?.data);
@@ -145,11 +138,9 @@ const Explore = ({}) => {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
       });
-      setShowModal(false);
       setUploading(false);
     }
   };
-
 
   return (
     <div>
@@ -249,8 +240,8 @@ const Explore = ({}) => {
           <h1 className="d-flex justify-content-center">
             Top writers you should follow
           </h1>
-          {/* <Row>
-            {users.map((user, key) => (
+          <Row>
+            {users?.map((user, key) => (
               <Col md={6} lg={4} sm={12} key={`author-${key}`} className="mt-4">
                 <div className="d-flex gap-3 align-items-center justify-content-evenly">
                   <Image
@@ -270,7 +261,7 @@ const Explore = ({}) => {
                 <hr />
               </Col>
             ))}
-          </Row> */}
+          </Row>
         </Container>
       </section>
 

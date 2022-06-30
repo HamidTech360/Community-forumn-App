@@ -1,3 +1,4 @@
+import config from "@/config";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Image, ListGroup } from "react-bootstrap";
@@ -9,7 +10,7 @@ const Follow = () => {
 
     (async function () {
       try {
-        const response = await axios.get(`/api/user`);
+        const response = await axios.get(`${config.serverUrl}/api/users`);
         console.log(response.data);
         setUsers(response.data.users.slice(0, 10));
       } catch (error) {

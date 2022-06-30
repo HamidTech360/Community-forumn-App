@@ -42,7 +42,7 @@ body {
 
 .body {
   padding-top: 6vmax;
-
+  min-height: 90vh;
   margin-bottom: 1rem;
   @media screen and (max-width: 1000px) {
     padding-top: 5vmax;
