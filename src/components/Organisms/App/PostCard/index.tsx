@@ -165,14 +165,16 @@ const PostCard = ({
         )}
       </Card.Body>
 
-      {post.likes && <span className="mx-2">Liked by</span>}
+      <span className="mx-2 text-secondary">
+        Liked by {post.likes?.length || 0}
+      </span>
       <Card.Footer className="mx-1 d-flex justify-content-between bg-white">
         {postButton.map((item, key) => (
           <Button
             key={key}
             onClick={() => item.name === "Like" && handleLike()}
             variant="none"
-            disabled={item.name === "Like" && post.likes.includes(user._id)}
+            disabled={item.name === "Like" && post.likes?.includes(user._id)}
             className="d-flex justify-content-center gap-1 align-items-center"
           >
             <Image
