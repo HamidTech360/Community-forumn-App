@@ -1,37 +1,36 @@
-.formContainer{
-    max-width: 500px;
-    margin: auto;
+.formContainer {
+  max-width: 500px;
+  margin: auto;
 }
-.formGroup{
-    margin-bottom: 30px;
+.formGroup {
+  margin-bottom: -10px;
 }
-.formLabel{
-    font-size: 20px;
-    font-weight: 400;
+.formLabel {
+  font-size: 20px;
+  font-weight: 400;
 }
-.bigForm{
-    height: 250px;
+.bigForm {
+  height: 250px;
 }
-.dragBox{
-    background-color: #EAFDFF;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.dragBox {
+  background-color: #eafdff;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.dragBoxText{
-    color: #0B5351;
+.dragBoxText {
+  color: #0b5351;
+  font-size: 14px;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .formLabel {
     font-size: 14px;
-    font-weight: 600;
-    margin-left: 10px;
-}
-
-
-@media screen and (max-width:768px) {
-    .formLabel{
-        font-size: 14px;
-    }
-    .bigForm{
-        height: 200px;
-    }
+  }
+  .bigForm {
+    height: 200px;
+  }
 }

@@ -1,0 +1,13 @@
+.popupWrapper {
+  display: inline;
+  position: relative;
+}
+.popup {
+  position: absolute;
+  left: 0;
+  background-color: white;
+  padding: 6px 10px;
+  border: 1px solid lightgray;
+  height: fit-content;
+  z-index: 1;
+}

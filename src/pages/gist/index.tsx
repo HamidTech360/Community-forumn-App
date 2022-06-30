@@ -37,9 +37,21 @@ import {
   selectGistIsLoading,
   selectGistError,
   selectGistIsSuccess,
+  setShowGistModal,
+  selectShowGistModal,
+  setGistTitle,
+  // setGistBody,
+  selectGistTitle,
+  // selectGistBody,
+  setIsFetching,
+  selectIsFetching,
 } from "@/reduxFeatures/api/gistSlice";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import Editor from "@/components/Organisms/SlateEditor/Editor";
+import { useRouter } from "next/router";
 
 const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
+  const router = useRouter();
   const customId = "toastId";
   const dispatch = useDispatch();
   const gistData = useSelector(selectGistData);
@@ -47,14 +59,42 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   const gistError = useSelector(selectGistError);
   const gistIsSuccess = useSelector(selectGistIsSuccess);
 
-  const [showModal, setShowModal] = useState(false);
-  const [isFetching, setIsFetching] = useState(true);
+  const showGistModal = useSelector(selectShowGistModal);
+  // const showGistTitle = useSelector(selectGistTitle);
+  // const showGistBody = useSelector(selectGistBody);
+  const user = useSelector(selectUser);
+  const isFetching = useSelector(selectIsFetching);
+
+  // const [showModal, setShowModal] = useState(false);
+  // const [isFetching, setIsFetching] = useState(true);
   const [allGists, setAllGists] = useState([]);
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
-    title:'',
-    post:''
-  })
+    title: "",
+    post: "",
+  });
+
+  // useEffect(() => {
+  //   document.body.style.backgroundColor = "#f6f6f6";
+  //   (async function () {
+  //     try {
+  //       const gistResponse = await axios.get("/api/gists");
+  //       const userResponse = await axios.get("/api/user", {
+  //         headers: {
+  //           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  //         },
+  //       });
+  //       console.log("gistResponse:", gistResponse);
+  //       console.log("userResponse:", userResponse);
+  //       setUsers(userResponse.data.users);
+  //       setAllGists(gistResponse.data);
+  //       setIsFetching(false);
+  //       console.log(gistResponse.data);
+  //     } catch (error) {
+  //       console.log("ERROR:", error.response?.data);
+  //     }
+  //   });
+  // }, []);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -66,26 +106,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         });
-        setUsers(userResponse.data.users);
-        setAllGists(gistResponse.data);
-        setIsFetching(false);
-        console.log(gistResponse.data);
-      } catch (error) {
-        console.log(error.response?.data);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    document.body.style.backgroundColor = "#f6f6f6";
-    (async function () {
-      try {
-        const gistResponse = await axios.get("/api/gists");
-        const userResponse = await axios.get("/api/user", {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        });
+        console.log("gistResponse:", gistResponse);
+        console.log("userResponse:", userResponse);
         setUsers(userResponse.data.users);
         setAllGists(gistResponse.data);
         setIsFetching(false);
@@ -105,7 +127,6 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         position: toast.POSITION.TOP_RIGHT,
         toastId: customId,
       });
-      setShowModal(false);
 
       (async function () {
         const response = await axios.get("/api/gists");
@@ -113,6 +134,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
       })();
 
       dispatch(uploadCleanUp({}));
+      // setShowModal(false);
+      dispatch(setShowGistModal(false));
     } else if (gistError) {
       toast.error("Error uploading", {
         position: toast.POSITION.TOP_RIGHT,
@@ -122,26 +145,27 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   }, [gistIsSuccess, gistError]);
 
   const handleChange = (e) => {
-    const clone = { ...formData };
-    clone[e.currentTarget.name] = e.currentTarget.value;
-    setFormData(clone);
+    // const clone = { ...formData };
+    // clone[e.currentTarget.name] = e.currentTarget.value;
+    // setFormData(clone);
+    dispatch(setGistTitle(e.currentTarget.value));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    dispatch(uploadStart({}));
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   dispatch(uploadStart({}));
 
-    try {
-      const response = await axios.post(`/api/gists`, formData, {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      });
-      dispatch(uploadSuccess(response.data));
-    } catch (error) {
-      dispatch(uploadFailed(error.response?.data));
-    }
-  };
+  //   try {
+  //     const response = await axios.post(`/api/gists`, formData, {
+  //       headers: {
+  //         authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  //       },
+  //     });
+  //     dispatch(uploadSuccess(response.data));
+  //   } catch (error) {
+  //     dispatch(uploadFailed(error.response?.data));
+  //   }
+  // };
 
   return (
     <section className={styles.gist}>
@@ -180,12 +204,12 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                 <h5>Browse categories</h5>
               </BCard.Header>
 
-              <BCard.Body className="mt-3">
-                <p style={{ listStyleType: "none" }}>
+              <BCard.Body className="mt-3 mx-2">
+                <div style={{ listStyleType: "none" }}>
                   {[1, 2, 3, 4, 5].map((item, key) => (
                     <li key={`category-${key}`}>Lorem, ipsum - {key}.</li>
                   ))}
-                </p>
+                </div>
               </BCard.Body>
             </BCard>
           </Col>
@@ -194,7 +218,11 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             <div className="d-flex justify-content-between">
               {/* <h2>New Gists</h2> */}
 
-              <Button variant="none" onClick={() => setShowModal(true)}>
+              {/* <Button variant="none" onClick={() => setShowModal(true)}> */}
+              <Button
+                variant="none"
+                onClick={() => dispatch(setShowGistModal(true))}
+              >
                 <AiOutlinePlusCircle
                   color="#207681"
                   size={35}
@@ -230,6 +258,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                   gist={post}
                   author={users.find((i) => post.user == i._id)}
                   key={`gist-${key}`}
+                  trimmed
                 />
               ))}
             </div>
@@ -241,10 +270,13 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
 
       <Modal
         // size="md"
-        show={showModal}
-        className={styles.GistModal}
+        // show={showModal}
+        show={showGistModal}
+        // className={styles.GistModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
+        size="lg"
+        className="p-3"
       >
         <span className={styles.closeBtn}>
           {" "}
@@ -252,10 +284,11 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             color="#207681"
             style={{ cursor: "pointer" }}
             size={35}
-            onClick={() => setShowModal(false)}
+            // onClick={() => setShowModal(false)}
+            onClick={() => dispatch(setShowGistModal(false))}
           />{" "}
         </span>
-        <div className={styles.newGistModal}>
+        {/* <div className={styles.newGistModal}>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <Form.Group className={formStyles.formGroup}>
               <Form.Label className={formStyles.formLabel}>
@@ -287,6 +320,30 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
               {gistIsLoading ? "uploading..." : "Continue"}
             </Button>
           </Form>
+        </div> */}
+        <div className="col-12 px-5">
+          <Form
+            // onSubmit={(e) => handleSubmit(e)}
+            className={styles.newGistModal}
+          >
+            <Form.Group className={formStyles.formGroup}>
+              <Form.Label className={formStyles.formLabel}>
+                {" "}
+                Gist Title
+              </Form.Label>
+              <Form.Control
+                id="createGistID"
+                size="lg"
+                name="title"
+                type="text"
+                required
+                onChange={(e) => handleChange(e)}
+              />
+            </Form.Group>
+          </Form>
+
+          <Editor />
+          <div className="mb-4"></div>
         </div>
       </Modal>
     </section>
