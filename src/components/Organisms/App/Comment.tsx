@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Card, Col, Image, Row } from "react-bootstrap";
 import Age from "../../Atoms/Age";
+import DOMPurify from "dompurify";
 
 const Comment = ({ comment }: Record<string, any>) => {
   const router = useRouter();
@@ -32,9 +33,23 @@ const Comment = ({ comment }: Record<string, any>) => {
         </div>
       </div>
       {router.asPath === "/blog-post" ? (
-        <Card.Body dangerouslySetInnerHTML={{ __html: comment.content }} />
+        <Card.Body
+          // dangerouslySetInnerHTML={{
+          //   __html: DOMPurify.sanitize(comment.content),
+          // }}
+          dangerouslySetInnerHTML={{
+            __html: comment.content,
+          }}
+        />
       ) : (
-        <Card.Body dangerouslySetInnerHTML={{ __html: comment.content.raw }} />
+        <Card.Body
+          // dangerouslySetInnerHTML={{
+          //   __html: DOMPurify.sanitize(comment.content.raw),
+          // }}
+          dangerouslySetInnerHTML={{
+            __html: comment.content.raw,
+          }}
+        />
       )}
 
       <div className="buttons d-flex gap-2 justify-content-end mr-4">
