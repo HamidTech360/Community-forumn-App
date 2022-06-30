@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
+import config from "@/config";
 import { toast, ToastContainer } from "react-toastify";
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
@@ -60,7 +61,7 @@ const General = () => {
 
     try {
       const response = await axios.put(
-        `/api/user`,
+        `${config.serverUrl}/api/user`,
         { ...formData },
         {
           headers: {

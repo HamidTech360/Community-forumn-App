@@ -7,6 +7,7 @@ import Contributors from "../../components/Organisms/Gist/Contributors";
 import GistCard from "../../components/Organisms/Gist/GistCard";
 import axios from "axios";
 import styles from "@/styles/gist.module.scss";
+import config from "@/config";
 
 const Gist = ({
   gist,
@@ -25,11 +26,14 @@ const Gist = ({
   useEffect(() => {
     (async function () {
       try {
-        const response = await axios.get(`/api/gists/gist/${router.query.id}`, {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        });
+        const response = await axios.get(
+          `${config.serverUrl}/api/gists/${router.query.id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
         const userResponse = await axios.get("/api/auth", {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -62,7 +66,7 @@ const Gist = ({
           <Contributors contributors={[user]} />
         </Col>
         <Col md={8}>
-          <GistCard gist={data} author={user} primary />
+          <GistCard gist={data} primary />
           <h5 className={`px-2 m-2 ${styles.comment}`}>Comments({"0"})</h5>
           <div className="mt-2">
             {replies?.map((reply, key) => (

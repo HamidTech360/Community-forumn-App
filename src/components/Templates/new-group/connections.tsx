@@ -2,7 +2,7 @@ import React from "react";
 import styles from "../../../styles/templates/new-group/connection.module.css";
 import { Form, Row, Col, Button } from "react-bootstrap";
 
-const AddConnections = () => {
+const AddConnections = ({handleSubmit, isLoading}) => {
   const connections = [
     {
       username: "Hammed Owolabi",
@@ -74,7 +74,7 @@ const AddConnections = () => {
       </Row>
 
       <div className="text-center">
-        <Button className={styles.createBtn}>Create group</Button>
+        <Button onClick={()=>handleSubmit()} className={styles.createBtn}> {isLoading?'creating...':'Create group'} </Button>
       </div>
     </div>
   );

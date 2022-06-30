@@ -12,6 +12,7 @@ import {
   selectPostTitle,
   setIsFetching,
 } from "@/reduxFeatures/api/postSlice";
+import config from "@/config";
 
 function BlogPostFooterBtn({ editorID }) {
   const [uploading, setUploading] = useState(false);
@@ -40,7 +41,7 @@ function BlogPostFooterBtn({ editorID }) {
     setUploading(true);
     try {
       const response = await axios.post(
-        `/api/posts`,
+        `${config.serverUrl}/api/posts`,
         { postTitle: showPostTitle, postBody: editorInnerHtml },
         {
           headers: {
@@ -59,7 +60,7 @@ function BlogPostFooterBtn({ editorID }) {
 
       const fetchPost = async () => {
         try {
-          const response = await axios.get(`/api/posts`);
+          const response = await axios.get(`${config.serverUrl}/api/posts`);
           // console.log(response.data.posts);
           // const allPosts = [...posts,...response.data.posts]
           dispatch(setPosts(response.data.posts));
@@ -84,8 +85,6 @@ function BlogPostFooterBtn({ editorID }) {
         });
       }
 
-      // setShowModal(false);
-      // dispatch(setShowPostModal(false));
       setUploading(false);
     }
   };

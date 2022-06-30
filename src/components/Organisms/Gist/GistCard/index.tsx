@@ -19,7 +19,8 @@ import styles from "@/styles/gist.module.scss";
 //     body: string;
 //   };
 // }
-const GistCard = ({ gist, author, primary, trimmed }: any) => {
+const GistCard = ({ gist, primary, trimmed }: any) => {
+  console.log(gist);
   return (
     <Card
       className="mt-4 p-3 shadow-sm"
@@ -46,7 +47,7 @@ const GistCard = ({ gist, author, primary, trimmed }: any) => {
             <small
               className={`${styles.title} text-secondary text-capitalize `}
             >
-              Started by {author?.firstName} {author?.lastName}
+              Started by {gist?.author?.firstName} {gist?.author?.lastName}
             </small>
             <br />
             <h5 className={`text-primary mt-1 ${styles.title}`}>

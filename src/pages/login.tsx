@@ -12,6 +12,7 @@ import axios, { AxiosError } from "axios";
 import { setAccessToken } from "@/misc/token";
 import UnAuthContent from "@/components/Auth/UnAuthContent";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+import config from '../config'
 
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "@/redux/store";
@@ -47,7 +48,7 @@ const Login = () => {
     const { email, password } = formData;
     try {
       setLoading(true);
-      const { data } = await axios.post("/api/auth", { ...formData });
+      const { data } = await axios.post(`${config.serverUrl}/api/auth`, { ...formData });
 
       localStorage.setItem("accessToken", data.accessToken);
       toast.success("Authentication successful", {

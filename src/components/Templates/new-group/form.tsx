@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 import { Button, Form } from "react-bootstrap";
 import styles from "../../../styles/templates/new-group/formField.module.css";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 
-const FormField = () => {
+const FormField = ({handleChange, data}) => {
+
   return (
     <div className={styles.formContainer}>
       <Form>
@@ -11,11 +12,12 @@ const FormField = () => {
           <Form.Label className={styles.formLabel}> Group Name</Form.Label>
           <Form.Control
             size="lg"
-            name="group-name"
+            name="name"
             type="text"
             // minlength="3"
+            value={data.name}
             required
-            // onChange={handleChange}
+            onChange={(e)=>handleChange(e)}
           />
         </Form.Group>
 
@@ -29,9 +31,10 @@ const FormField = () => {
             as="textarea"
             name="description"
             type="text"
+            value={data.description}
             // minlength="5"
             required
-            // onChange={handleChange}
+            onChange={(e)=>handleChange(e)}
           />
         </Form.Group>
 
