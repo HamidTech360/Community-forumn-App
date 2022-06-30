@@ -5,6 +5,7 @@ import { BsBookmarkDash } from "react-icons/bs";
 import Link from "next/link";
 import Age from "../../../Atoms/Age";
 import striptags from "striptags";
+import DOMPurify from "dompurify";
 //import { DirectiveLocation } from "graphql";
 import styles from "@/styles/gist.module.scss";
 // interface IGist {
@@ -18,7 +19,7 @@ import styles from "@/styles/gist.module.scss";
 //     body: string;
 //   };
 // }
-const GistCard = ({ gist, author, primary }: any) => {
+const GistCard = ({ gist, author, primary, trimmed }: any) => {
   return (
     <Card
       className="mt-4 p-3 shadow-sm"
@@ -60,19 +61,38 @@ const GistCard = ({ gist, author, primary }: any) => {
         </div>
       </Card.Title>
 
-      <Card.Body
-        dangerouslySetInnerHTML={{
-          __html: striptags(gist?.post, "<a> <b> <em> <p> <strong> <i>").slice(
-            0,
-            500
-          ),
-        }}
-        style={{
-          marginTop: "-1rem",
-          lineHeight: "1.3rem",
-          whiteSpace: "pre-line",
-        }}
-      />
+      {gist?.post && (
+        <Card.Body
+          // dangerouslySetInnerHTML={{
+          //   __html: striptags(gist?.post, "<a> <b> <em> <p> <strong> <i>").slice(
+          //     0,
+          //     500
+          //   ),
+          // }}
+
+          // dangerouslySetInnerHTML={{
+          //   // __html: DOMPurify.sanitize(gist.post.slice(0, 500)),
+          //   __html: DOMPurify.sanitize(gist.post),
+          // }}
+          // dangerouslySetInnerHTML={{
+          //   __html: trimmed
+          //     ? DOMPurify.sanitize(gist.post.slice(0, 500)) ||
+          //       DOMPurify.sanitize(gist.post.slice(0, 500))
+          //     : DOMPurify.sanitize(gist.post) || DOMPurify.sanitize(gist.post),
+          // }}
+          dangerouslySetInnerHTML={{
+            __html: trimmed
+              ? gist.post.slice(0, 500) || gist.post.slice(0, 500)
+              : gist.post || gist.post,
+          }}
+          style={{
+            marginTop: "-1rem",
+            lineHeight: "1.3rem",
+            whiteSpace: "pre-line",
+          }}
+        />
+      )}
+
       {!primary && (
         <div className="d-flex justify-content-end mt-2">
           <Link href={`/gist/${gist?._id}`} passHref>
