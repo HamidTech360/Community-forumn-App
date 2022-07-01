@@ -181,9 +181,12 @@ const PostCard = ({
               height={20}
               className="post-img"
             />
-            <span className="mx-2 text-secondary">
-              {post.likes?.length || 0}
-            </span>
+            {item.name === "Like" && (
+              <span className="mx-2 text-secondary">
+                {post.likes?.length || 0}
+              </span>
+            )}
+
             <span className="d-none d-md-block">{item.name}</span>
           </Button>
         ))}
