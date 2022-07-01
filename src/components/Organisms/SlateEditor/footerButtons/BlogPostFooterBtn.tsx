@@ -1,5 +1,6 @@
 //@ts-nocheck
 import React, { useState } from "react";
+import config from "../../../../config";
 import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
@@ -10,7 +11,6 @@ import {
   selectPostTitle,
   setIsFetching,
 } from "@/reduxFeatures/api/postSlice";
-import config from "@/config";
 
 function BlogPostFooterBtn({ editorID }) {
   const [uploading, setUploading] = useState(false);
@@ -22,8 +22,17 @@ function BlogPostFooterBtn({ editorID }) {
     const editorInnerHtml = document.getElementById(editorID).innerHTML;
     setUploading(true);
     try {
+      // await axios.post(
+      //   `/api/posts`,
+      //   { postTitle: showPostTitle, postBody: editorInnerHtml },
+      //   {
+      //     headers: {
+      //       authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      //     },
+      //   }
+      // );
       await axios.post(
-        `/api/posts`,
+        `${config.serverUrl}/api/posts`,
         { postTitle: showPostTitle, postBody: editorInnerHtml },
         {
           headers: {
@@ -40,7 +49,8 @@ function BlogPostFooterBtn({ editorID }) {
 
       // const fetchPost = async () => {
       try {
-        const response = await axios.get(`/api/posts`);
+        // const response = await axios.get(`/api/posts`);
+        const response = await axios.get(`${config.serverUrl}/api/posts`);
         dispatch(setPosts(response.data.posts));
         dispatch(setIsFetching(false));
       } catch (error) {

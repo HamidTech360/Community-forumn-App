@@ -68,16 +68,18 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     document.body.style.backgroundColor = "#f6f6f6";
     (async function () {
       try {
-        const gistResponse = await axios.get("/api/gists");
-        const userResponse = await axios.get("/api/user", {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        });
+        // const gistResponse = await axios.get("/api/gists");
+        const gistResponse = await axios.get(`${config.serverUrl}/api/gists`);
+
+        // const userResponse = await axios.get("/api/user", {
+        //   headers: {
+        //     authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        //   },
+        // });
         // console.log("gistResponse:", gistResponse.data);
         // console.log("userResponse:", userResponse.data.users);
 
-        setUsers(userResponse.data.users);
+        // setUsers(userResponse.data.users);
         setAllGists(gistResponse.data);
         setIsFetching(false);
         // console.log(gistResponse.data);

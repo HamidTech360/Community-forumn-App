@@ -17,7 +17,7 @@ import {
   selectGistTitle,
   setIsFetching,
 } from "@/reduxFeatures/api/gistSlice";
-import config from "@/config";
+import config from "../../../../config";
 
 function GistFooterBtn({ editorID }) {
   const gistIsLoading = useSelector(selectGistIsLoading);

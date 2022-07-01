@@ -82,11 +82,7 @@ const Explore = ({}) => {
     fetchPost();
     (async function () {
       try {
-        const response = await axios.get(`/api/user`, {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        });
+        const response = await axios.get(`${config.serverUrl}/api/users`, {});
         // console.log("response.data+++:", response.data.users);
         setUsers(response.data.users);
         dispatch(setIsFetching(false));
@@ -102,19 +98,28 @@ const Explore = ({}) => {
     dispatch(setPostTitle(e.currentTarget.value));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setUploading(true);
-    try {
-      const response = await axios.get(`/api/posts`);
-      // console.log(response.data.posts);
-      dispatch(setPosts(response.data.posts));
-      dispatch(setIsFetching(false));
-    } catch (error) {
-      console.error(error.response?.data);
-      dispatch(setIsFetching(false));
-    }
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   dispatch(setIsFetching(true));
+  //   // setUploading(true);
+  //   try {
+  //     const response = await axios.post(
+  //       `${config.serverUrl}/api/posts`,
+  //       { ...formData },
+  //       {
+  //         headers: {
+  //           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  //         },
+  //       }
+  //     );
+  //     // console.log(response.data.posts);
+  //     dispatch(setPosts(response.data.posts));
+  //     dispatch(setIsFetching(false));
+  //   } catch (error) {
+  //     console.error(error.response?.data);
+  //     dispatch(setIsFetching(false));
+  //   }
+  // };
 
   return (
     <div>
