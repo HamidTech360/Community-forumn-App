@@ -10,7 +10,8 @@ import {
   isBlockActive,
 } from "../utils/SlateUtilityFunctions.js";
 import defaultToolbarGroups from "./toolbarGroups.js";
-import defaultToolbarGroupsBottom from "./toolbarGroupBottom";
+import defaultToolbarGroupsBottom from "./toolbarGroupsBottom";
+import defaultToolbarGroupsSlim from "./toolbarGroupsSlim";
 import LinkButton from "../Elements/Link/LinkButton";
 import Embed from "../Elements/Embed/Embed";
 import EmojiButton from "../Elements/Emoji/EmojiButton";
@@ -23,6 +24,8 @@ const Toolbar = ({ position }) => {
       ? defaultToolbarGroups
       : position === "bottom"
       ? defaultToolbarGroupsBottom
+      : position === "slim"
+      ? defaultToolbarGroupsSlim
       : null
   );
 

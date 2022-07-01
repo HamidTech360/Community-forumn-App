@@ -12,7 +12,6 @@ import {
   Modal,
   Spinner,
   Form,
-  InputGroup,
 } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
@@ -30,9 +29,7 @@ import {
   setShowPostModal,
   selectShowPostModal,
   setPostTitle,
-  // setPostBody,
   selectPostTitle,
-  // selectPostBody,
   setIsFetching,
   selectIsFetching,
 } from "@/reduxFeatures/api/postSlice";
@@ -43,8 +40,6 @@ const Explore = ({}) => {
   const dispatch = useDispatch();
   const showPost = useSelector(selectPost);
   const showPostModal = useSelector(selectShowPostModal);
-  // const showPostTitle = useSelector(selectPostTitle);
-  // const showPostBody = useSelector(selectPostBody);
   const user = useSelector(selectUser);
   const isFetching = useSelector(selectIsFetching);
 
@@ -56,10 +51,6 @@ const Explore = ({}) => {
     { name: "How to work abroad" },
   ]);
   const [key, setKey] = useState<string>("all");
-  // const [posts, setPosts] = useState([]);
-  // const [isFetching, setIsFetching] = useState(true);
-  // const [uploading, setUploading] = useState(false);
-  // const [showModal, setShowModal] = useState(false);
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
     postTitle: "",
@@ -75,8 +66,6 @@ const Explore = ({}) => {
   }, []);
 
   useEffect(() => {
-    //alert('fetching');
-
     fetchPost();
     (async function () {
       try {
@@ -85,10 +74,11 @@ const Explore = ({}) => {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         });
-        console.log("response.data+++:", response.data.users);
+        // console.log("response.data+++:", response.data.users);
         setUsers(response.data.users);
+        dispatch(setIsFetching(false));
       } catch (error) {
-        console.log(error.response?.data);
+        console.error(error.response?.data);
         // setIsFetching(false);
         dispatch(setIsFetching(false));
       }
@@ -96,23 +86,17 @@ const Explore = ({}) => {
   }, []);
 
   const handleChange = (e) => {
-    // const data = { ...formData };
-    // data[e.currentTarget.name] = e.currentTarget.value;
-    // setFormData(data);
     dispatch(setPostTitle(e.currentTarget.value));
-    //console.log(formData);
   };
   const fetchPost = async () => {
     try {
       const response = await axios.get(`/api/posts`);
-      console.log(response.data.posts);
-      // const allPosts = [...posts,...response.data.posts]
-      // setPosts(response.data.posts);
+      // console.log(response.data.posts);
       dispatch(setPosts(response.data.posts));
-      // setIsFetching(false);
       dispatch(setIsFetching(false));
     } catch (error) {
-      console.log(error.response?.data);
+      console.error(error.response?.data);
+      dispatch(setIsFetching(false));
     }
   };
 
@@ -275,7 +259,6 @@ const Explore = ({}) => {
       </section>
 
       <Modal
-        // show={showModal}
         show={showPostModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -288,52 +271,34 @@ const Explore = ({}) => {
             color="#207681"
             style={{ cursor: "pointer" }}
             size={35}
-            // onClick={() => setShowModal(false)}
             onClick={() => dispatch(setShowPostModal(false))}
           />{" "}
         </span>
-        <div className="col-12 px-5">
-          {/* <div className={styles.newGistModal}> */}
-          <Form
-            // onSubmit={(e) => handleSubmit(e)}
-            className={styles.newGistModal}
+        <div className="row justify-content-center">
+          <div
+            className="col-10 col-xl-11 col-xxl-12"
+            style={{ padding: "12px 0px" }}
           >
-            <Form.Group className={formStyles.formGroup}>
-              <Form.Label className={formStyles.formLabel}>
-                {" "}
-                Post Title
-              </Form.Label>
-              <Form.Control
-                id="createPostID"
-                size="lg"
-                name="postTitle"
-                type="text"
-                required
-                onChange={(e) => handleChange(e)}
-              />
-            </Form.Group>
-
-            {/* <Form.Group className={formStyles.formGroup}>
-              <Form.Control
-                className={formStyles.bigForm}
-                as="textarea"
-                name="postBody"
-                type="text"
-                required
-                placeholder="Write something"
-                onChange={(e) => handleChange(e)}
-              />
-            </Form.Group>
-
-            <Button variant="primary" className="d-flex mx-auto" type="submit">
-              {uploading ? "uploading..." : "Continue"}
-            </Button> */}
-          </Form>
-
-          {/* {state.isSuccess && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="success">Upload successfull</Alert>}
-              {state.error && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="danger">Upload failed</Alert>} */}
-          <Editor />
-          <div className="mb-4"></div>
+            <Form className="mx-0 px-0">
+              <Form.Group>
+                <Form.Label className={formStyles.formLabel}>
+                  Post Title
+                </Form.Label>
+                <Form.Control
+                  id="createPostID"
+                  size="lg"
+                  name="postTitle"
+                  type="text"
+                  onChange={(e) => handleChange(e)}
+                  style={{ backgroundColor: "rgb(248, 244, 244)" }}
+                  required
+                />
+              </Form.Group>
+            </Form>
+          </div>
+          <div className="col-12 px-4 mt-2 mb-4">
+            <Editor slim={false} />
+          </div>
         </div>
       </Modal>
     </div>

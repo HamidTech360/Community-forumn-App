@@ -16,6 +16,7 @@ import {
 } from "react-icons/bs";
 import { RiSendPlaneFill } from "react-icons/ri";
 import Head from "next/head";
+import Editor from "@/components/Organisms/SlateEditor/Editor";
 
 const Chat = () => {
   const [open, setOpen] = useState(true);
@@ -611,7 +612,9 @@ const Chat = () => {
                     <BsLink45Deg />
                   </h2>
                 </div>
+                {/* <div className="col-10 col-lg-11"> */}
                 <div className="col-9">
+                  {/* <Editor slim={true} /> */}
                   <textarea
                     id="writeMessage"
                     className="form-control border"
@@ -619,7 +622,14 @@ const Chat = () => {
                     rows={2}
                   ></textarea>
                 </div>
-                <div className="col-1">
+                <div
+                  className="col-1"
+                  style={{
+                    alignSelf: "flex-end",
+                    // marginLeft: "-1.5rem",
+                    marginBottom: "1rem",
+                  }}
+                >
                   <button
                     type="button"
                     className="btn btn-primary"

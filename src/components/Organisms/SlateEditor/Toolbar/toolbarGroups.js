@@ -18,40 +18,40 @@ const toolbarGroups = [
       type: "mark",
       toolTip: "<Ctrl+u>",
     },
-    {
-      id: 4,
-      format: "strikethrough",
-      type: "mark",
-      toolTip: "<Ctrl+Shift+X>",
-    },
+    // {
+    //   id: 4,
+    //   format: "strikethrough",
+    //   type: "mark",
+    //   toolTip: "<Ctrl+Shift+X>",
+    // },
   ],
 
-  [
-    {
-      id: 5,
-      format: "superscript",
-      type: "mark",
-      toolTip: "",
-    },
-    {
-      id: 6,
-      format: "subscript",
-      type: "mark",
-      toolTip: "",
-    },
-    {
-      id: 7,
-      format: "code",
-      type: "mark",
-      toolTip: "<Ctrl+e>",
-    },
-    {
-      id: 8,
-      format: "heading",
-      type: "mark",
-      toolTip: "",
-    },
-  ],
+  // [
+  // {
+  //   id: 5,
+  //   format: "superscript",
+  //   type: "mark",
+  //   toolTip: "",
+  // },
+  // {
+  //   id: 6,
+  //   format: "subscript",
+  //   type: "mark",
+  //   toolTip: "",
+  // },
+  // {
+  //   id: 7,
+  //   format: "code",
+  //   type: "mark",
+  //   toolTip: "<Ctrl+e>",
+  // },
+  // {
+  //   id: 8,
+  //   format: "heading",
+  //   type: "mark",
+  //   toolTip: "",
+  // },
+  // ],
   [
     {
       id: 9,
@@ -74,26 +74,26 @@ const toolbarGroups = [
       toolTip: "<Ctrl+Shift+*>",
     },
   ],
-  [
-    {
-      id: 12,
-      format: "alignLeft",
-      type: "block",
-      toolTip: "",
-    },
-    {
-      id: 13,
-      format: "alignCenter",
-      type: "block",
-      toolTip: "",
-    },
-    {
-      id: 14,
-      format: "alignRight",
-      type: "block",
-      toolTip: "",
-    },
-  ],
+  // [
+  //   {
+  //     id: 12,
+  //     format: "alignLeft",
+  //     type: "block",
+  //     toolTip: "",
+  //   },
+  //   {
+  //     id: 13,
+  //     format: "alignCenter",
+  //     type: "block",
+  //     toolTip: "",
+  //   },
+  //   {
+  //     id: 14,
+  //     format: "alignRight",
+  //     type: "block",
+  //     toolTip: "",
+  //   },
+  // ],
   [
     {
       id: 15,

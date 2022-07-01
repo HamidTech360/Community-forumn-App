@@ -51,8 +51,9 @@ const Leaf = ({ attributes, children, leaf }) => {
   return <span {...attributes}>{children}</span>;
 };
 
-const Editor = () => {
+const Editor = ({ slim }) => {
   const router = useRouter();
+  const editorID = `${router.asPath}-slateRefId`;
   const editor = useMemo(
     () => withHistory(withEmbeds(withLinks(withReact(createEditor())))),
     []
@@ -82,31 +83,69 @@ const Editor = () => {
   }, []);
 
   return (
-    <div className="container">
+    <div className={slim ? "container-fluid" : "container"}>
       <div className="row justify-content-center">
+        {/* <div className={`col-2 shadow ${styles.main} d-inline`}>
+          <Slate editor={editor} value={value} onChange={handleEditorChange}>
+            {slim && <Toolbar position="slim" />}
+          </Slate>
+        </div> */}
         <div className={`col-12 shadow ${styles.main}`}>
           <Slate editor={editor} value={value} onChange={handleEditorChange}>
-            <Toolbar position="top" />
-            <div className={styles.editorWrapper}>
-              <Editable
-                id={`${router.asPath}-slateRefId`}
-                style={{
-                  marginTop: ".3rem",
-                  height: "18rem",
-                  overflowY: "auto",
-                  scrollBehavior: "smooth",
-                }}
-                placeholder="Start writing your thoughts"
-                renderElement={renderElement}
-                renderLeaf={renderLeaf}
-                onKeyDown={(event) => CtrlShiftCombo(event, editor)}
-              />
-            </div>
             <div className="row">
-              <div className="col-12 col-lg-3" style={{ marginTop: "-.4rem" }}>
-                <Toolbar position="bottom" />
+              <div
+                className={`${slim ? "col-1 col-md-2 col-lg-1" : "d-none"}`}
+                // style={{
+                //   borderRightStyle: "solid",
+                //   borderColor: "gray",
+                //   borderWidth: "1px",
+                //   margin: "0 -1rem 0 0",
+                // }}
+                // style={{ backgroundColor: "white", border: "none" }}
+                style={{ alignSelf: "flex-end", marginBottom: "1rem" }}
+              >
+                {slim && <Toolbar position="slim" />}
               </div>
-              <FooterButtons editorID={`${router.asPath}-slateRefId`} />
+              <div className={`${slim ? "col-10" : "col-12"}`}>
+                {!slim && <Toolbar position="top" />}
+                <div className={styles.editorWrapper}>
+                  <Editable
+                    id={editorID}
+                    className={`${
+                      !slim ? styles.editable : styles.editableSlim
+                    }`}
+                    // style={{
+                    //   marginTop: ".3rem",
+                    //   height: "18rem",
+                    //   overflowY: "auto",
+                    //   scrollBehavior: "smooth",
+                    // }}
+                    placeholder="Start writing your thoughts"
+                    renderElement={renderElement}
+                    renderLeaf={renderLeaf}
+                    onKeyDown={(event) => CtrlShiftCombo(event, editor)}
+                  />
+                </div>
+                <div className="row mb-2 mx-1">
+                  <div
+                    className="col-12 col-lg-3"
+                    style={{ marginTop: "-.4rem" }}
+                  >
+                    {!slim && <Toolbar position="bottom" />}
+                  </div>
+                  {!slim && <FooterButtons editorID={editorID} />}
+                </div>
+                {/* <div
+                  className="col-1 "
+                  style={{
+                    alignSelf: "flex-end",
+                    marginLeft: "-1.5rem",
+                    marginBottom: "1rem",
+                  }}
+                >
+                  {slim && <FooterButtons editorID={editorID} />}
+                </div> */}
+              </div>
             </div>
           </Slate>
         </div>
