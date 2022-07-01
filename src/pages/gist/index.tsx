@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Head from "next/head";
 import { useEffect, useState } from "react";
+
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useSelector } from "@/redux/store";
