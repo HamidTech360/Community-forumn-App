@@ -44,7 +44,7 @@ const Card = ({
               <div>
                 <small
                   dangerouslySetInnerHTML={{
-                    __html: `${author?.firstName} ${author?.lastName}`,
+                    __html: `${post?.author?.firstName} ${post?.author?.lastName}`,
                   }}
                 />
                 <br />

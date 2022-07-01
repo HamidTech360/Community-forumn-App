@@ -9,6 +9,7 @@ import Card from "@/components/Organisms/Card";
 import styles from "@/styles/explore.module.scss";
 import { useDispatch, useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import config from '@/config'
 
 const Explore = ({
   post,
@@ -25,7 +26,7 @@ const Explore = ({
   const FetchData = async () => {
     try {
       const exploreResponse = await axios.get(
-        `/api/posts/post/${router.query.id}`,
+        `${config.serverUrl}/api/posts/${router.query.id}`,
         {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -44,8 +45,8 @@ const Explore = ({
       // console.log(userResponse.data);
       // console.log("user:", user);
     } catch (error) {
-      router.back();
-      // console.log(error.exploreResponse?.data);
+      // router.back();
+      console.log(error.exploreResponse?.data);
     }
   };
 
@@ -61,7 +62,7 @@ const Explore = ({
         </Head>
         {/* {console.log("data000000000:", data)} */}
         {/* <Card post={data} author={user} trimmed /> */}
-        {Object.keys(data).length !== 0 && <Card post={data} author={user} />}
+        {Object.keys(data).length !== 0 && <Card post={data} />}
 
         <h5 className={`px-2 m-2 ${styles.comment}`}>Comments({"0"})</h5>
         <div className="mt-2">
