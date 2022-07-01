@@ -22,7 +22,7 @@ const makeSecuredRequest = async (
   method: AxiosRequestConfig["method"] = "GET",
   body?: Record<string, any>
 ) => {
-  let token = getAccessToken();
+  let token = localStorage.getItem("accessToken");
 
   // Fetch new token if token is undefined
   if (!token) {

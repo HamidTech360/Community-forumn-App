@@ -1,4 +1,6 @@
+import config from "@/config";
 import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import { Card, Image } from "react-bootstrap";
 
@@ -7,16 +9,8 @@ const Discussions = ({ posts }: any) => {
   const [users, setUsers] = useState([]);
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_REST}/buddyboss/v1/topics?_embed=user&order=desc&orderby=ID`
-      );
+      const { data } = await axios.get(`${config.serverUrl}/api/gists`);
       setGists(data);
-      const userResponse = await axios.get("/api/user", {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      });
-      setUsers(userResponse.data.users);
     })();
   }, []);
   return (
@@ -53,7 +47,7 @@ const Discussions = ({ posts }: any) => {
                   dangerouslySetInnerHTML={{ __html: post.postTitle }}
                 />
                 <small className="text-muted">
-                  By {users.find((i) => post.userId == i._id)?.firstName}
+                  By {`${post.author?.firstName} ${post.author?.lastName}`}
                 </small>
               </div>
             </div>

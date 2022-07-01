@@ -27,11 +27,11 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
       </p>
       <div className="d-flex justify-content-between">
         <div className="d-flex flex-column align-items-center">
-          <span>1000</span>
+          <span>{user.following?.length}</span>
           <small>following</small>
         </div>
         <div className="d-flex flex-column align-items-center ">
-          <span>1000</span>
+          <span>{user.followers?.length}</span>
           <small>followers</small>
         </div>
       </div>

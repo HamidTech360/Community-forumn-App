@@ -9,13 +9,10 @@ import DOMPurify from "dompurify";
 const Card = ({
   post,
   trimmed,
-  author,
-}: // onNavigate,
+}:
 {
   post: Record<string, any>;
   trimmed?: Boolean;
-  author: any;
-  // onNavigate?: (params?: any) => void;
 }) => {
   return (
     <>
