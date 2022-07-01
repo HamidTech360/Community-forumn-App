@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import useSWR from "swr";
+import config from "@/config";
 
 interface IPost {
   bp_media_ids: string[] | null;
@@ -56,10 +57,9 @@ export const usePagination = () => {
     // }
     (async function () {
       try {
-        const response = await axios.get(`/api/posts`);
-        console.log(response.data);
+        const { data } = await axios.get(`${config.serverUrl}/api/posts`);
 
-        setPosts(response.data.posts);
+        setPosts(data.posts);
       } catch (error) {
         console.log(error.response?.data);
       }
