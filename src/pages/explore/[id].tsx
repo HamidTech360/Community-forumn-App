@@ -81,7 +81,9 @@ const BlogPost = () => {
           <div className="col-12 col-md-8">
             <div className="card mb-3 border-0 mt-md-2 p-md-4">
               <div className="card-Header text-center text-md-start">
-                <h4 className="card-title text-primary">{blogPost.title}</h4>
+                <h4 className="card-title text-primary">
+                  {blogPost?.postTitle}
+                </h4>
                 <div className="row">
                   <div className="col-md-9">
                     By{" "}
