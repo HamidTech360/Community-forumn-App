@@ -117,7 +117,10 @@ const BlogPost = () => {
                   alt="Blog Post Image"
                 ></Image>
               </div>
-              <article className="my-3">{blogPost.postBody}</article>
+              <article
+                className="my-3"
+                dangerouslySetInnerHTML={{ __html: blogPost.postBody }}
+              />
               <section>
                 <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
                 <div className="row">

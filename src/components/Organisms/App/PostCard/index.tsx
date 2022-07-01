@@ -165,9 +165,6 @@ const PostCard = ({
         )}
       </Card.Body>
 
-      <span className="mx-2 text-secondary">
-        Liked by {post.likes?.length || 0}
-      </span>
       <Card.Footer className="mx-1 d-flex justify-content-between bg-white">
         {postButton.map((item, key) => (
           <Button
@@ -184,6 +181,9 @@ const PostCard = ({
               height={20}
               className="post-img"
             />
+            <span className="mx-2 text-secondary">
+              {post.likes?.length || 0}
+            </span>
             <span className="d-none d-md-block">{item.name}</span>
           </Button>
         ))}
