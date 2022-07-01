@@ -1,5 +1,6 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
+import config from "../../config";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Col,
@@ -58,12 +59,24 @@ const Explore = ({}) => {
   });
   useEffect(() => {
     console.log(users);
+
     document.body.style.backgroundColor = "#f6f6f6";
 
     return () => {
       document.body.style.backgroundColor = "initial";
     };
   }, []);
+
+  const fetchPost = async () => {
+    try {
+      const response = await axios.get(`${config.serverUrl}/api/posts`);
+      dispatch(setPosts(response.data.posts));
+      // setIsFetching(false);
+      dispatch(setIsFetching(false));
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
 
   useEffect(() => {
     fetchPost();
@@ -83,12 +96,15 @@ const Explore = ({}) => {
         dispatch(setIsFetching(false));
       }
     })();
-  }, []);
+  }, [fetchPost]);
 
   const handleChange = (e) => {
     dispatch(setPostTitle(e.currentTarget.value));
   };
-  const fetchPost = async () => {
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setUploading(true);
     try {
       const response = await axios.get(`/api/posts`);
       // console.log(response.data.posts);
@@ -99,41 +115,6 @@ const Explore = ({}) => {
       dispatch(setIsFetching(false));
     }
   };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   console.log("formData:", formData);
-  //   console.log("e.target:", e.target);
-  // setUploading(true);
-  // try {
-  //   const response = await axios.post(
-  //     `/api/posts`,
-  //     { ...formData },
-  // { showPostTitle, showPostBody},
-  //     {
-  //       headers: {
-  //         authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  //       },
-  //     }
-  //   );
-  //   console.log(response.data);
-  //   toast.success("Post uploaded successfully", {
-  //     position: toast.POSITION.TOP_RIGHT,
-  //     toastId: "1",
-  //   });
-  //   setShowModal(false);
-  //   setUploading(false);
-  //   fetchPost();
-  // } catch (error) {
-  //   console.log(error.response?.data);
-  //   toast.error("Failed to upload post", {
-  //     position: toast.POSITION.TOP_RIGHT,
-  //     toastId: "1",
-  //   });
-  //   setShowModal(false);
-  //   setUploading(false);
-  // }
-  // };
 
   return (
     <div>
@@ -217,7 +198,7 @@ const Explore = ({}) => {
                     image={"/images/postPlaceholder.jpg"}
                     title={post.postTitle}
                     body={post.postBody}
-                    author={users.find((i) => post.user == i._id)?.firstName}
+                    author={post.author}
                     size="any"
                   />
                 </Col>
@@ -234,7 +215,7 @@ const Explore = ({}) => {
             Top writers you should follow
           </h1>
           <Row>
-            {users.map((user, key) => (
+            {users?.map((user, key) => (
               <Col md={6} lg={4} sm={12} key={`author-${key}`} className="mt-4">
                 <div className="d-flex gap-3 align-items-center justify-content-evenly">
                   <Image

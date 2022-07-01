@@ -3,6 +3,7 @@ import Head from "next/head";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "@/redux/store";
+import config from "../../config";
 import {
   Col,
   Container,
@@ -34,7 +35,7 @@ const Feed = () => {
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
   const [scrollInitialised, setScrollInitialised] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [users, setUsers] = useState([]);
+
   const [showModal, setShowModal] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -51,17 +52,9 @@ const Feed = () => {
   useEffect(() => {
     (async function () {
       try {
-        const response = await axios.get(`/api/feed`);
-        console.log(response.data);
+        const response = await axios.get(`${config.serverUrl}/api/posts`);
 
-        setPosts(response.data.data);
-        setIsFetching(false);
-        const userResponse = await axios.get("/api/user", {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        });
-        setUsers(userResponse.data.users);
+        setPosts(response.data.posts);
       } catch (error) {
         console.log(error.response?.data);
       }
@@ -93,7 +86,7 @@ const Feed = () => {
 
     try {
       const response = await axios.post(
-        `/api/posts`,
+        `${config.serverUrl}/api/posts`,
         { ...formData },
         {
           headers: {
@@ -170,7 +163,6 @@ const Feed = () => {
             {posts?.map((post, index) => (
               <PostCard
                 post={post}
-                author={users.find((i) => post.user == i._id)}
                 key={`activity-post-${index}-${post.id}`}
                 trimmed
               />

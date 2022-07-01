@@ -10,6 +10,7 @@ import {
   selectPostTitle,
   setIsFetching,
 } from "@/reduxFeatures/api/postSlice";
+import config from "@/config";
 
 function BlogPostFooterBtn({ editorID }) {
   const [uploading, setUploading] = useState(false);

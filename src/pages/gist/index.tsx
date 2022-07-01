@@ -21,6 +21,7 @@ import GistCard from "../../components/Organisms/Gist/GistCard";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { toast, ToastContainer } from "react-toastify";
 import { FaTimes } from "react-icons/fa";
+import config from "../../config";
 
 //STYLES
 import styles from "../../styles/gist.module.scss";
@@ -57,7 +58,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   const isFetching = useSelector(selectIsFetching);
 
   const [allGists, setAllGists] = useState([]);
-  const [users, setUsers] = useState([]);
+
   const [formData, setFormData] = useState({
     title: "",
     post: "",
@@ -93,7 +94,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   useEffect(() => {
     if (gistIsSuccess) {
       (async function () {
-        const response = await axios.get("/api/gists");
+        const response = await axios.get(`${config.serverUrl}/api/gists`);
         setAllGists(response.data);
       })();
 
@@ -128,7 +129,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                     : "/images/formbg.png"
                 }
                 title={item.title}
-                author={users.find((i) => item.user == i._id)}
+                author={`${item.author?.firstName} ${item.author?.lastName}`}
               />
             ))}
           </EndlessCarousel>
@@ -187,12 +188,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             )}
             <div className="w-100 justify-content-center">
               {allGists.map((post, key) => (
-                <GistCard
-                  gist={post}
-                  author={users.find((i) => post.user == i._id)}
-                  key={`gist-${key}`}
-                  trimmed
-                />
+                <GistCard gist={post} key={`gist-${key}`} trimmed />
               ))}
             </div>
           </Col>

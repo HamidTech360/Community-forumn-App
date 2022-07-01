@@ -17,6 +17,7 @@ import {
   selectGistTitle,
   setIsFetching,
 } from "@/reduxFeatures/api/gistSlice";
+import config from "@/config";
 
 function GistFooterBtn({ editorID }) {
   const gistIsLoading = useSelector(selectGistIsLoading);
@@ -35,8 +36,13 @@ function GistFooterBtn({ editorID }) {
     setUploading(true);
     try {
       const response = await axios.post(
-        `/api/gists`,
-        { title: showGistTitle, post: editorInnerHtml },
+        `${config.serverUrl}/api/gists`,
+        {
+          title: showGistTitle,
+          post: editorInnerHtml,
+          categories: "Migration",
+          country: "Ghana",
+        },
         {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,

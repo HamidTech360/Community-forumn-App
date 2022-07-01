@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { Button, Card, Container, Image } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
+import config from "@/config";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "../../../styles/delete.module.scss";
 
@@ -15,7 +16,7 @@ const Delete = () => {
     if (!confirm) return;
     setProgress(true);
     try {
-      const response = await axios.delete(`/api/user`, {
+      const response = await axios.delete(`${config.serverUrl}/api/user`, {
         headers: {
           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },

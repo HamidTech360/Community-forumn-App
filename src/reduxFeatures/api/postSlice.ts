@@ -28,6 +28,9 @@ export const postSlice = createSlice({
     uploadPost: (state, action: PayloadAction<any>) => {
       alert("Upload post dispatched");
     },
+    likePost: (state, action: PayloadAction<any>) => {
+      alert("Liked Post");
+    },
     setPosts: (state, action: PayloadAction<any>) => {
       state.post = action.payload;
     },
@@ -49,6 +52,7 @@ export const {
   setShowPostModal,
   setPostTitle,
   setIsFetching,
+  likePost,
 } = postSlice.actions;
 
 // calling the above actions would be useless if we could not access the data in the state. So, we use something called a selector which allows us to select a value from the state.
