@@ -67,7 +67,6 @@ const Timeline = () => {
       ></div>
       {posts?.map((post, index) => (
         <PostCard
-          author={""}
           post={post}
           key={`activity-post-${index}-${post.id}`}
           trimmed
