@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "@/styles/groups.module.scss";
 import { Button, Card, CardImg, Container, Form, Image } from "react-bootstrap";
 import Timeline from "@/components/Templates/Profile/Timeline";
@@ -7,6 +7,8 @@ import Link from "next/link";
 import Head from "next/head";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { useRouter } from "next/router";
+import config from "@/config";
+import axios from "axios";
 const posts = [
   {
     image: "/images/article.png",
@@ -29,9 +31,21 @@ const posts = [
 ];
 const Groups = () => {
   const router = useRouter();
+  const [groups, setGroups] = useState([])
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
-
+    (async ()=>{
+        try{
+          const response = await axios.get(`${config.serverUrl}/api/groups/user`, {headers:{
+            authorization:`Bearer ${localStorage.getItem('accessToken')}`
+          }})
+          setGroups(response.data.groups)
+          console.log(response.data);
+          
+        }catch(error){
+          console.log(error.response?.data); 
+        }
+    })()
     return () => {
       document.body.style.backgroundColor = "initial";
     };
@@ -53,6 +67,11 @@ const Groups = () => {
               <p className="text-primary">See more</p>
             </div>
             <Form.Control placeholder="search" />
+            <div className="groupLists">
+                {groups.map((item, i)=>
+                    <div> {item.name} </div>
+                )}
+            </div>
           </Card>
 
           <div className={styles.posts}>

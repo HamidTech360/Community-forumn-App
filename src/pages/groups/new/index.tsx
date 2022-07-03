@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import config from '../../../config'
 import axios from "axios";
+import joi from 'joi-browser'
 import Head from "next/head";
 import { BsArrowLeft } from "react-icons/bs";
 import styles from "@/styles/new-group.module.css";
@@ -12,11 +13,12 @@ import AuthContent from "@/components/Auth/AuthContent";
 import Link from "next/link";
 import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/router";
+import { useSelector } from "@/redux/store";
 import "react-toastify/dist/ReactToastify.css";
 
 const CreateNewGroup = () => {
   const router = useRouter();
- 
+  const user = useSelector(s=>s.authState.user)
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState({
     name:"",
@@ -38,18 +40,18 @@ const CreateNewGroup = () => {
   }, []);
 
 
+  const moveToNewTab = (tabIndex)=>{
+    setActiveTab(tabIndex)
+  }
 
   const handleChange = (e)=>{
-  
     const clone = {...data}
     clone[e.currentTarget.name] = e.currentTarget.value
     setData(clone)
-    //console.log(data);
-    
+  
   }
 
   const handleSelectOption = (arrayName, value)=>{
-   //alert(arrayName)
    const clone = {...data}
    if(arrayName==="privacy"){
     clone['privacy'] = value
@@ -63,10 +65,38 @@ const CreateNewGroup = () => {
    }
   }
 
+  const chooseConnections = (connectionIds)=>{
+    const clone = {...data}
+    clone['groupMembers'] = connectionIds
+    setData(clone)
+  }
+
+  const validateGroupData = (data)=>{
+    const schema = {
+      name:joi.string().required(),
+      description:joi.string().required(),
+      privacy:joi.string().required(),
+      invite:joi.string().required(),
+      allowedToPost:joi.string().required(),
+      groupMembers:joi.array()
+    }
+    return joi.validate(data, schema)
+  }
+
   const handleSubmit = async ()=>{
-    //alert('makng request')
+    
+    const {error} = validateGroupData(data)
+    if(error) {
+      toast.error(error.details[0].message, {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: '2',
+      });
+      return console.log(error.details[0].message);
+    }
+    
     setIsLoading(true)
-     console.log(data);
+
+    console.log('Final group data is ',data);
     
     try{
       const response = await axios.post(`${config.serverUrl}/api/groups`, {...data}, {headers:{
@@ -85,7 +115,7 @@ const CreateNewGroup = () => {
     }catch(error){
       console.log(error.response?.data);
       setIsLoading(false)
-      toast.error("Failed to upload gist", {
+      toast.error("Failed to create group", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: '2',
       });
@@ -107,19 +137,31 @@ const CreateNewGroup = () => {
     {
       index:0,
       label: "Details",
-      component: <FormField data={data} handleChange ={handleChange} />,
+      component: <FormField 
+                        data={data} 
+                        handleChange ={handleChange}
+                        moveToNewTab = {moveToNewTab}
+                   />,
       active: true,
     },
     { 
       index:1,
       label: "Settings",
-      component: <Settings handleSelectOption={handleSelectOption} />,
+      component: <Settings 
+                    data={data} 
+                    handleSelectOption={handleSelectOption} 
+                  />,
       active: false,
     },
     {
       index:2,
       label: "Add members",
-      component: <AddConnections isLoading={isLoading} handleSubmit ={handleSubmit} />,
+      component: <AddConnections 
+                      chooseConnections={chooseConnections} 
+                      isLoading={isLoading} 
+                      handleSubmit ={handleSubmit} 
+                      data={data}
+                  />,
       active: false,
     },
   ]

@@ -67,14 +67,14 @@ const Login = () => {
         const serverError = error as AxiosError;
         if (serverError.response) {
           // setMessage(serverError.response.data.message as unknown as string);
-          let returnedErrorKey = serverError.response.data.key;
-          if (serverError.response.data === "Something went wrong") {
+        //  let returnedErrorKey = serverError.response.data.key;
+          if (serverError.response?.data === "Something went wrong") {
             toast.error("Authentication Failed", {
               position: toast.POSITION.TOP_RIGHT,
               autoClose: 7000,
             });
           } else {
-            toast.error(serverError.response.data.message, {
+            toast.error(serverError.response?.data.message, {
               position: toast.POSITION.TOP_RIGHT,
               autoClose: 7000,
             });

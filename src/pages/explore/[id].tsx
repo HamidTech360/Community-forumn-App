@@ -2,6 +2,7 @@
 import Head from "next/head";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import config from '@/config'
 import axios from 'axios';
 import { 
   Col,
@@ -27,7 +28,7 @@ const Explore = ({
 
     const FetchData = async () => {
         try {
-            const exploreResponse = await axios.get(`/api/posts/post/${router.query.id}`,{headers:{
+            const exploreResponse = await axios.get(`${config.serverUrl}/api/posts/post/${router.query.id}`,{headers:{
                 authorization:`Bearer ${localStorage.getItem('accessToken')}`
               }})
               setData(exploreResponse.data.post)
@@ -41,7 +42,7 @@ const Explore = ({
 
         } catch (error) {
             router.back()
-            console.log(error.exploreResponse?.data)
+            console.log(error.response?.data)
         }
     }
 

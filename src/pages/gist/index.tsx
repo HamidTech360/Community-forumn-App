@@ -56,25 +56,25 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     post:''
   })
 
-  useEffect(() => {
-    document.body.style.backgroundColor = "#f6f6f6";
-    (async function () {
-      try {
-        const gistResponse = await axios.get(`${config.serverUrl}/api/gists`);
-        const userResponse = await axios.get(`${config.serverUrl}/api/user`, {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        });
-        setUsers(userResponse.data.users);
-        setAllGists(gistResponse.data);
-        setIsFetching(false);
-        console.log(gistResponse.data);
-      } catch (error) {
-        console.log(error.response?.data);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   document.body.style.backgroundColor = "#f6f6f6";
+  //   (async function () {
+  //     try {
+  //       const gistResponse = await axios.get(`${config.serverUrl}/api/gists`);
+  //       const userResponse = await axios.get(`${config.serverUrl}/api/user`, {
+  //         headers: {
+  //           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  //         },
+  //       });
+  //       setUsers(userResponse.data.users);
+  //       setAllGists(gistResponse.data);
+  //       setIsFetching(false);
+  //       console.log(gistResponse.data);
+  //     } catch (error) {
+  //       console.log(error.response?.data);
+  //     }
+  //   });
+  // }, []);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -101,7 +101,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
 
   useEffect(() => {
     if (gistIsSuccess) {
-      toast.success("Gist uploaded successfully", {
+      toast.success("Gist uploaded succesfully", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: customId,
       });

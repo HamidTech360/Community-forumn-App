@@ -2,11 +2,25 @@ import React, {useState} from "react";
 import { Button, Form } from "react-bootstrap";
 import styles from "../../../styles/templates/new-group/formField.module.css";
 import { AiOutlineCloudUpload } from "react-icons/ai";
+import { toast, ToastContainer } from "react-toastify";
 
-const FormField = ({handleChange, data}) => {
+import "react-toastify/dist/ReactToastify.css";
+
+const FormField = ({handleChange, data, moveToNewTab}) => {
+  const handleSubmit = (e:any)=>{
+    e.preventDefault()
+    if(data.name==""||data.description==""){
+      return toast.error("Field cannot be left empty", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: '2',
+      });
+    }
+    moveToNewTab(1)
+  }
 
   return (
     <div className={styles.formContainer}>
+      <ToastContainer/>
       <Form>
         <Form.Group className={styles.formGroup}>
           <Form.Label className={styles.formLabel}> Group Name</Form.Label>
@@ -46,7 +60,7 @@ const FormField = ({handleChange, data}) => {
           </div>
         </Form.Group>
 
-        <Button variant="primary" className="d-flex mx-auto" type="submit">
+        <Button onClick={(e)=>handleSubmit(e)} variant="primary" className="d-flex mx-auto" type="submit">
           Continue
         </Button>
       </Form>
