@@ -1,32 +1,46 @@
 //@ts-nocheck
 import AuthContent from "@/components/Auth/AuthContent";
 import React, { useState, useRef, useEffect } from "react";
-import { Card, Container, Fade, Image, Row } from "react-bootstrap";
+import { Card, Container, Fade, Image } from "react-bootstrap";
 import ChatBubble from "../components/Chat/ChatBubble";
+import { ToastContainer } from "react-toastify";
 import { dummyData } from "../components/Chat/dummyData";
+
 import styles from "../styles/chat.module.scss";
+import "react-toastify/dist/ReactToastify.css";
 
 import { FiEdit } from "react-icons/fi";
 import {
   BsChevronDoubleDown,
   BsChevronDoubleUp,
-  BsLink45Deg,
   BsDot,
   BsArrowLeft,
 } from "react-icons/bs";
-import { RiSendPlaneFill } from "react-icons/ri";
 import Head from "next/head";
+
 import Editor from "@/components/Organisms/SlateEditor/Editor";
+import { useDispatch, useSelector } from "@/redux/store";
+import {
+  setUserToChatTimeline,
+  selectedUserInChatTimeline,
+  setInitMessages,
+  selectInitMessages,
+  setMessages,
+  selectMessages,
+} from "@/reduxFeatures/app/chatSlice";
 
 const Chat = () => {
   const [open, setOpen] = useState(true);
-  const [selectUserToChatTimeline, setSelectUserToChatTimeline] = useState([
-    {},
-    0,
-  ]);
-  const [initMessages, setInitMessages] = useState(dummyData);
+  const dispatch = useDispatch();
+  const messages = useSelector(selectMessages);
+  const initMessages = useSelector(selectInitMessages);
+  const selectUserToChatTimeline = useSelector(selectedUserInChatTimeline);
 
-  const [messages, setMessages] = useState(initMessages);
+  useEffect(() => {
+    // Change dummyData data to data from backend
+    dispatch(setInitMessages(dummyData));
+    dispatch(setMessages(dummyData));
+  }, []);
 
   const unreadChat = useRef();
   const readChat = useRef();
@@ -60,7 +74,7 @@ const Chat = () => {
   };
 
   const startChat = () => {
-    setSelectUserToChatTimeline([{}, 0]);
+    dispatch(setUserToChatTimeline([{}, 0]));
 
     // Mid Point Display (using Bootstrap d-md-block)
     if (window.innerWidth < 768) {
@@ -85,21 +99,34 @@ const Chat = () => {
     // get data of custom attribute
     const id = e.target.dataset.nameid;
 
-    // Get current user
-    const user = messages.filter((message) => {
-      return message.id === id && message;
+    let timelineUnreadMessages = 0;
+    const updatedMessages = [];
+    let currentChat = {};
+
+    messages.forEach((message) => {
+      if (message.id === id) {
+        timelineUnreadMessages = message.unreadMessage;
+        // Set unread message to 0
+        const currentChatTimeline = {
+          ...message,
+          unreadMessage: 0,
+        };
+        currentChat = { ...currentChatTimeline };
+        updatedMessages.push(currentChatTimeline);
+      } else {
+        updatedMessages.push(message);
+      }
     });
 
-    // If Same Message is selected twice, then the displayed message would be removed from message UI
+    // If Same Message is selected twice, Do nothing
     if (
-      JSON.stringify(selectUserToChatTimeline[0]) === JSON.stringify(user[0])
+      JSON.stringify(selectUserToChatTimeline[0]) ===
+      JSON.stringify(currentChat)
     ) {
-      setSelectUserToChatTimeline([{}, 0]);
+      return;
     } else {
-      const unreadMessage = user[0].unreadMessage;
-      // change unread message to 0 because it is now been read
-      user[0].unreadMessage = 0;
-      setSelectUserToChatTimeline([user[0], unreadMessage]);
+      dispatch(setUserToChatTimeline([currentChat, timelineUnreadMessages]));
+      dispatch(setMessages(updatedMessages));
     }
   };
   //   Leave below event for Event Bobbling
@@ -111,175 +138,7 @@ const Chat = () => {
     currentMessages = currentMessages.filter((item) => {
       return item.name.toLowerCase().includes(e.target.value.toLowerCase());
     });
-    setMessages(currentMessages);
-  };
-
-  const sendMessageToRecipient = (e) => {
-    const text = (
-      document.getElementById("writeMessage") as HTMLTextAreaElement
-    ).value;
-    if (text !== "") {
-      if (JSON.stringify(selectUserToChatTimeline[0]) === "{}") {
-        /*
-         ** No Previous Chat Is Selected On Sidebar
-         ** Compose Chat By Manually Typing in recipient Name
-         */
-        let sendTo = (document.getElementById("sendTo") as HTMLInputElement)
-          .value;
-
-        if (sendTo.trim() !== "") {
-          let sendToRecipients = sendTo.split(",");
-          let chatValue = {
-            message: text,
-            sender: "self",
-            read: true,
-            dateTime: new Date().toLocaleString(),
-          };
-
-          let previousChatWithUser = [];
-          let noPreviousChatWithUser = [];
-          let trimmedSendToRecipients = sendToRecipients.map((recipient) => {
-            return recipient.trim();
-          });
-          let allUsers = [];
-
-          // Check if recipient had previous chat
-          initMessages.forEach((user) => {
-            let trimmedUser = user.name.trim();
-            allUsers.push(trimmedUser);
-            if (trimmedSendToRecipients.includes(trimmedUser)) {
-              // User Had Previous Chat
-              previousChatWithUser.push(user);
-            }
-          });
-
-          // New User Chat
-          trimmedSendToRecipients.forEach((user) => {
-            if (!allUsers.includes(user)) {
-              noPreviousChatWithUser.push(user);
-            }
-          });
-
-          // .... Recurring User Chat ....
-          let tempInitMessages = [];
-          if (previousChatWithUser.length > 0) {
-            let tempInitName = [];
-            let displayCurrentUserInTimeline = {};
-            previousChatWithUser.forEach((user) => {
-              // Update Previous Chat Array/Timeline of Recipient with new Chat
-              user.message.push(chatValue);
-
-              // Update UnreadMessage Count By 1 If Any So As Not To Be Diminished By New Chat
-              if (user.unreadMessage > 0) {
-                user.unreadMessage = user.unreadMessage + 1;
-              }
-              // Store Updated User
-              displayCurrentUserInTimeline = user;
-
-              // Update initMessages with the updated current Recipient
-              tempInitMessages.push(user);
-              tempInitName.push(user.name);
-            });
-            // Last name in the list should come first
-            tempInitMessages.reverse();
-            initMessages.forEach((init) => {
-              if (!tempInitName.includes(init.name)) {
-                tempInitMessages.push(init);
-              }
-            });
-
-            // Set State
-            setInitMessages(tempInitMessages);
-            setMessages(tempInitMessages);
-            setSelectUserToChatTimeline([displayCurrentUserInTimeline, 0]);
-          }
-
-          // ....... For New Users Chat .......
-          if (noPreviousChatWithUser.length > 0) {
-            let tempNewUserInitMessages = [];
-            let newUser;
-            noPreviousChatWithUser.forEach((user, index) => {
-              // Create a new Message for user
-              newUser = {
-                name: user,
-                id: `${new Date()}${index}`,
-                faceImage: "https://source.unsplash.com/random",
-                message: [
-                  {
-                    message: text,
-                    sender: "self",
-                    read: true,
-                    dateTime: new Date().toLocaleString(),
-                  },
-                ],
-                unreadMessage: 0,
-                online: true,
-              };
-              // Update Temp Message with the updated current Recipient Message
-              tempNewUserInitMessages.push(newUser);
-            });
-            // Last name in the list should come first
-            tempNewUserInitMessages.reverse();
-
-            // Enable previousChatWithUser message to also move to top when available
-            let sudoTempInitMessages =
-              tempInitMessages.length > 0 ? tempInitMessages : initMessages;
-            tempNewUserInitMessages = [
-              ...tempNewUserInitMessages,
-              ...sudoTempInitMessages,
-            ];
-
-            // Set State
-            setInitMessages(tempNewUserInitMessages);
-            setMessages(tempNewUserInitMessages);
-            setSelectUserToChatTimeline([tempNewUserInitMessages[0], 0]);
-          }
-
-          // Clear Input Values
-          (
-            document.getElementById("writeMessage") as HTMLTextAreaElement
-          ).value = "";
-          (
-            document.getElementById("searchMessages") as HTMLInputElement
-          ).value = "";
-          (document.getElementById("sendTo") as HTMLInputElement).value = "";
-        }
-      } else {
-        /*
-         ** Previous Chat With User Selected
-         ** Compose Chat for Recurring recipient chosen from sidebar
-         */
-        const chatValue = {
-          message: text,
-          sender: "self",
-          read: true,
-          dateTime: new Date().toLocaleString(),
-        };
-        let currentRecipient = selectUserToChatTimeline[0];
-        // Update Current Recipient with new Chat
-        currentRecipient.message.push(chatValue);
-        // Update initMessages with the updated current Recipient
-        let tempInitMessages = [];
-        // Add new chat to top
-        tempInitMessages.push(currentRecipient);
-        // Other chat to follow
-        initMessages.forEach((user) => {
-          if (user.name !== currentRecipient.name) {
-            tempInitMessages.push(user);
-          }
-        });
-
-        // Set State
-        setInitMessages(tempInitMessages);
-        setMessages(tempInitMessages);
-
-        // Clear Input Values
-        (document.getElementById("writeMessage") as HTMLTextAreaElement).value =
-          "";
-        (document.getElementById("searchMessages") as HTMLInputElement).value =
-          "";
-      }
-    }
+    dispatch(setMessages(currentMessages));
   };
 
   return (
@@ -288,6 +147,7 @@ const Chat = () => {
         <title>Chat</title>
       </Head>
       <Container className="mt-lg-3" style={{ marginBottom: "-9.3vh" }}>
+        <ToastContainer />
         <div className="row" style={{ minHeight: "87vh" }}>
           {/* SideBar */}
           <div ref={mainSidebar} className="d-md-block col-12 col-md-4 shadow">
@@ -361,7 +221,10 @@ const Chat = () => {
                           onClick={startChattingWith}
                         >
                           <div
-                            className="row pb-2"
+                            className={`row pb-2 ${
+                              selectUserToChatTimeline[0].id === message.id &&
+                              styles.activeChat
+                            }`}
                             data-nameid={message.id}
                             onClick={startChattingWithChild}
                           >
@@ -403,9 +266,10 @@ const Chat = () => {
                                   onClick={startChattingWithChild}
                                   style={{ fontSize: "11px" }}
                                 >
-                                  {message.message[
-                                    message.message.length - 1
-                                  ].dateTime.substring(10)}
+                                  {
+                                    message.message[message.message.length - 1]
+                                      .dateTime
+                                  }
                                 </div>
                               </div>
                               <div
@@ -607,37 +471,8 @@ const Chat = () => {
                 className="row border-0 pb-5 pb-md-2"
                 style={{ backgroundColor: "transparent" }}
               >
-                <div className="col-1">
-                  <h2 className="text-muted fs-1" style={{ cursor: "pointer" }}>
-                    <BsLink45Deg />
-                  </h2>
-                </div>
-                {/* <div className="col-10 col-lg-11"> */}
-                <div className="col-9">
-                  {/* <Editor slim={true} /> */}
-                  <textarea
-                    id="writeMessage"
-                    className="form-control border"
-                    placeholder=" &#128522; Write something..."
-                    rows={2}
-                  ></textarea>
-                </div>
-                <div
-                  className="col-1"
-                  style={{
-                    alignSelf: "flex-end",
-                    // marginLeft: "-1.5rem",
-                    marginBottom: "1rem",
-                  }}
-                >
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    style={{ borderRadius: "15%" }}
-                    onClick={sendMessageToRecipient}
-                  >
-                    <RiSendPlaneFill size={25} />
-                  </button>
+                <div className="col-10 col-lg-11">
+                  <Editor slim={true} />
                 </div>
               </Card.Footer>
             </Card>

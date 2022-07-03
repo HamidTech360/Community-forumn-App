@@ -21,6 +21,12 @@ export const store = configureStore({
     chat: chatReducer,
     authState: authStateReducer,
   },
+
+  // Prevent Age (dateTime) from returning unSterilized error
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
