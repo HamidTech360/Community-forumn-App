@@ -1,21 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Head from "next/head";
-<<<<<<< HEAD
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import config from '@/config'
-import axios from 'axios';
-import { 
-  Col,
-  Container,
-  Row
- } from 'react-bootstrap';
-=======
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { Col, Container, Row } from "react-bootstrap";
->>>>>>> f5cffbd81aad29f4ba1837b57eaf3850b5dced8e
 import Comment from "../../components/Organisms/App/Comment";
 import Card from "@/components/Organisms/Card";
 import styles from "@/styles/explore.module.scss";
