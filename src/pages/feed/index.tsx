@@ -3,7 +3,7 @@ import Head from "next/head";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "@/redux/store";
-import config from '../../config'
+import config from "../../config";
 import {
   Col,
   Container,
@@ -48,17 +48,17 @@ const Feed = () => {
       setScrollInitialised(true);
     }
   };
-  
-   useEffect(() => {
 
-    (async function(){
-      try{
-        const response = await axios.get(`${config.serverUrl}/api/feed`)
+  useEffect(() => {
+    (async function () {
+      try {
+        const response = await axios.get(`${config.serverUrl}/api/feed`);
+
         console.log(response.data);
 
         setPosts(response.data.data);
         setIsFetching(false);
-        const userResponse = await axios.get(`${config.serverUrl}/api/user`, {
+        const userResponse = await axios.get(`${config.serverUrl}/api/users`, {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
@@ -170,10 +170,10 @@ const Feed = () => {
                 }
               > */}
             {posts?.map((post, index) => (
-              <PostCard 
-                post={post} 
-                author={users.find((i) => post.user  == i._id)}
-                key={`activity-post-${index}-${post.id}`} 
+              <PostCard
+                post={post}
+                author={users.find((i) => post.user == i._id)}
+                key={`activity-post-${index}-${post.id}`}
                 trimmed
               />
             ))}

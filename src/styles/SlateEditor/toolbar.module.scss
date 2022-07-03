@@ -1,0 +1,12 @@
+.toolbar {
+  border-radius: 10px;
+  background-color: transparent;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 15px 0 7px 0;
+  row-gap: 15px;
+  top: 0;
+}
+.toolbarGrp > * {
+  cursor: pointer;
+}

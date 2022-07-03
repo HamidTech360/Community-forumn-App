@@ -1,7 +1,9 @@
-import React from "react";
-import Link from 'next/link'
+import React, { useEffect } from "react";
+import Link from "next/link";
 import PropTypes from "prop-types";
 import { Card as BCard } from "react-bootstrap";
+import DOMPurify from "dompurify";
+
 interface ICard {
   _id: string;
   title: string;
@@ -12,8 +14,12 @@ interface ICard {
 }
 
 const Card = ({ _id, image, title, author, body, size }) => {
- // console.log( image, title, author, body, size );
-  
+  // console.log( image, title, author, body, size );
+  // console.log("title", title);
+  // console.log("author", author);
+  // console.log("body", body);
+  // console.log("size", size);
+
   return (
     <>
       <BCard
@@ -46,10 +52,13 @@ const Card = ({ _id, image, title, author, body, size }) => {
             </h6>
             <span className="text-muted">
               <small style={{ marginTop: "-2rem", fontSize: "0.8rem" }}>
-                by &nbsp;{author?.firstName}
+                by &nbsp;{author?.firstName}&nbsp;
+                {author?.lastName}
               </small>{" "}
             </span>
             <div
+              // dangerouslySetInnerHTML={{ __html: body }}
+              // dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(body) }}
               dangerouslySetInnerHTML={{ __html: body }}
               style={{
                 height: "4.5rem",
@@ -61,12 +70,13 @@ const Card = ({ _id, image, title, author, body, size }) => {
             />
           </div>
           <Link href={`/explore/${_id}`} passHref>
-
-            <span className="d-flex justify-content-end text-primary absolute-bottom">
+            <span
+              className="d-flex justify-content-end text-primary absolute-bottom"
+              style={{ cursor: "pointer" }}
+            >
               Read More &nbsp;<i className="bi bi-chevron-double-right"></i>
             </span>
           </Link>
-
         </BCard.Body>
       </BCard>
     </>

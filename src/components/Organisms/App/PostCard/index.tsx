@@ -6,7 +6,9 @@ import { HiDotsVertical } from "react-icons/hi";
 import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
 import { BsFolderFill, BsXCircleFill } from "react-icons/bs";
 import Age from "../../../Atoms/Age";
+import DOMPurify from "dompurify";
 import styles from "@/styles/profile.module.scss";
+
 const PostCard = ({
   post,
   trimmed,
@@ -16,7 +18,6 @@ const PostCard = ({
   trimmed?: Boolean;
   author: any;
 }) => {
-  
   const postButton = [
     {
       name: "Like",
@@ -99,20 +100,37 @@ const PostCard = ({
           cursor: "pointer",
         }}
       >
+        {Object.keys(post).length !== 0 && (
           <div
             className="post-content"
+            // dangerouslySetInnerHTML={{
+            //   __html: trimmed
+            //     ? (
+            //         DOMPurify.sanitize(post?.postBody) ||
+            //         DOMPurify.sanitize(post?.post)
+            //       )?.slice(0, 500) + "..."
+            //     : DOMPurify.sanitize(post?.postTitle) ||
+            //       DOMPurify.sanitize(post?.postTitle),
+            // }}
             dangerouslySetInnerHTML={{
               __html: trimmed
-
-                ? strip(
-                    post?.postBody || post?.post,
-                    "<p> <strong> <b> <a> <em> <i>"
-                  )?.slice(0, 500) + "..."
-                : post.postTitle || post.title
-
+                ? post?.postBody || post?.post?.slice(0, 500) + "..."
+                : post?.postTitle || post?.postTitle,
             }}
           />
-      
+        )}
+        {/* <div
+          className="post-content"
+          dangerouslySetInnerHTML={{
+            __html: trimmed
+              ? strip(
+                  post?.postBody || post?.post,
+                  "<p> <strong> <b> <a> <em> <i>"
+                )?.slice(0, 500) + "..."
+              : post.postTitle || post.postTitle,
+          }}
+        /> */}
+
         {!trimmed && (
           <Image
             className="d-none d-sm-block d-lg-none"

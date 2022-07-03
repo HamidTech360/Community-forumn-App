@@ -1,6 +1,6 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
-import config from '../../config'
+import config from "../../config";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Col,
@@ -13,6 +13,7 @@ import {
   Modal,
   Spinner,
   Form,
+  InputGroup,
 } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
@@ -21,8 +22,33 @@ import axios from "axios";
 import styles from "../../styles/explore.module.scss";
 import formStyles from "../../styles/templates/new-group/formField.module.css";
 import "react-toastify/dist/ReactToastify.css";
+import Editor from "@/components/Organisms/SlateEditor/Editor";
+import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "@/redux/store";
+import {
+  setPosts,
+  selectPost,
+  setShowPostModal,
+  selectShowPostModal,
+  setPostTitle,
+  // setPostBody,
+  selectPostTitle,
+  // selectPostBody,
+  setIsFetching,
+  selectIsFetching,
+} from "@/reduxFeatures/api/postSlice";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 
 const Explore = ({}) => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const showPost = useSelector(selectPost);
+  const showPostModal = useSelector(selectShowPostModal);
+  // const showPostTitle = useSelector(selectPostTitle);
+  // const showPostBody = useSelector(selectPostBody);
+  const user = useSelector(selectUser);
+  const isFetching = useSelector(selectIsFetching);
+
   const [categories, setCategories] = useState([
     { name: "How to work abroad" },
     { name: "Engineering" },
@@ -31,10 +57,10 @@ const Explore = ({}) => {
     { name: "How to work abroad" },
   ]);
   const [key, setKey] = useState<string>("all");
-  const [posts, setPosts] = useState([]);
-  const [isFetching, setIsFetching] = useState(true);
+  // const [posts, setPosts] = useState([]);
+  // const [isFetching, setIsFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
     postTitle: "",
@@ -42,6 +68,7 @@ const Explore = ({}) => {
   });
   useEffect(() => {
     console.log(users);
+
     document.body.style.backgroundColor = "#f6f6f6";
 
     return () => {
@@ -49,42 +76,40 @@ const Explore = ({}) => {
     };
   }, []);
 
+  const fetchPost = async () => {
+    try {
+      const response = await axios.get(`${config.serverUrl}/api/posts`);
+      dispatch(setPosts(response.data.posts));
+      // setIsFetching(false);
+      dispatch(setIsFetching(false));
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
+
   useEffect(() => {
     //alert('fetching');
 
     fetchPost();
     (async function () {
       try {
-        const response = await axios.get(`${config.serverUrl}/api/user`, {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        });
-        console.log(response.data);
-        setUsers(response.data.users);
+        const { data } = await axios.get(`${config.serverUrl}/api/users`, {});
+
+        setUsers(data);
       } catch (error) {
         console.log(error.response?.data);
-        setIsFetching(false);
+        // setIsFetching(false);
+        dispatch(setIsFetching(false));
       }
     })();
-  }, []);
+  }, [fetchPost]);
 
   const handleChange = (e) => {
-    const data = { ...formData };
-    data[e.currentTarget.name] = e.currentTarget.value;
-    setFormData(data);
+    // const data = { ...formData };
+    // data[e.currentTarget.name] = e.currentTarget.value;
+    // setFormData(data);
+    dispatch(setPostTitle(e.currentTarget.value));
     //console.log(formData);
-  };
-  const fetchPost = async () => {
-    try {
-      const response = await axios.get(`${config.serverUrl}/api/posts`);
-      console.log(response.data.posts);
-      // const allPosts = [...posts,...response.data.posts]
-      setPosts(response.data.posts);
-      setIsFetching(false);
-    } catch (error) {
-      console.log(error.response?.data);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -105,8 +130,7 @@ const Explore = ({}) => {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
       });
-      setShowModal(false);
-      setUploading(false);
+
       fetchPost();
     } catch (error) {
       console.log(error.response?.data);
@@ -114,7 +138,6 @@ const Explore = ({}) => {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
       });
-      setShowModal(false);
       setUploading(false);
     }
   };
@@ -140,7 +163,11 @@ const Explore = ({}) => {
                   millions of readers and writers across the world
                 </p>
                 <div className="d-flex gap-3">
-                  <Button variant="primary" onClick={() => setShowModal(true)}>
+                  {/* <Button variant="primary" onClick={() => setShowModal(true)}> */}
+                  <Button
+                    variant="primary"
+                    onClick={() => dispatch(setShowPostModal(true))}
+                  >
                     Start writing
                   </Button>
                   <Button variant="light">Explore</Button>
@@ -185,7 +212,8 @@ const Explore = ({}) => {
               </div>
             )}
             <Row className="d-flex justify-content-start">
-              {posts?.map((post, key) => (
+              {/* {posts?.map((post, key) => ( */}
+              {showPost?.map((post, key) => (
                 <Col
                   key={`posts_${key}`}
                   md={4}
@@ -201,7 +229,8 @@ const Explore = ({}) => {
                   />
                 </Col>
               ))}
-              {!posts.length && <p>No posts under this category </p>}
+              {/* {!posts.length && <p>No posts under this category </p>} */}
+              {!showPost?.length && <p>No posts under this category </p>}
             </Row>
           </div>
         </Container>
@@ -211,8 +240,8 @@ const Explore = ({}) => {
           <h1 className="d-flex justify-content-center">
             Top writers you should follow
           </h1>
-          {/* <Row>
-            {users.map((user, key) => (
+          <Row>
+            {users?.map((user, key) => (
               <Col md={6} lg={4} sm={12} key={`author-${key}`} className="mt-4">
                 <div className="d-flex gap-3 align-items-center justify-content-evenly">
                   <Image
@@ -232,32 +261,50 @@ const Explore = ({}) => {
                 <hr />
               </Col>
             ))}
-          </Row> */}
+          </Row>
         </Container>
       </section>
 
-      <Modal 
-          show={showModal}
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-       >
-      <span className={styles.closeBtn} > <FaTimes color = '#207681'style={{cursor:'pointer'}} size={35} onClick={()=>setShowModal(false)} /> </span>
-         <div className={styles.newGistModal}>
-             <Form 
-                  onSubmit={(e)=>handleSubmit(e)}
-              >
-                <Form.Group className={formStyles.formGroup}>
-                  <Form.Label className={formStyles.formLabel}> Post Title</Form.Label>
-                  <Form.Control
-                    size="lg"
-                    name="postTitle"
-                    type="text"
-                    required
-                    onChange={(e)=>handleChange(e)}
-                  />
-                </Form.Group>
-
+      <Modal
+        // show={showModal}
+        show={showPostModal}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        size="lg"
+        className="p-3"
+      >
+        <span className={styles.closeBtn}>
+          {" "}
+          <FaTimes
+            color="#207681"
+            style={{ cursor: "pointer" }}
+            size={35}
+            // onClick={() => setShowModal(false)}
+            onClick={() => dispatch(setShowPostModal(false))}
+          />{" "}
+        </span>
+        <div className="col-12 px-5">
+          {/* <div className={styles.newGistModal}> */}
+          <Form
+            // onSubmit={(e) => handleSubmit(e)}
+            className={styles.newGistModal}
+          >
             <Form.Group className={formStyles.formGroup}>
+              <Form.Label className={formStyles.formLabel}>
+                {" "}
+                Post Title
+              </Form.Label>
+              <Form.Control
+                id="createPostID"
+                size="lg"
+                name="postTitle"
+                type="text"
+                required
+                onChange={(e) => handleChange(e)}
+              />
+            </Form.Group>
+
+            {/* <Form.Group className={formStyles.formGroup}>
               <Form.Control
                 className={formStyles.bigForm}
                 as="textarea"
@@ -271,11 +318,13 @@ const Explore = ({}) => {
 
             <Button variant="primary" className="d-flex mx-auto" type="submit">
               {uploading ? "uploading..." : "Continue"}
-            </Button>
+            </Button> */}
           </Form>
 
           {/* {state.isSuccess && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="success">Upload successfull</Alert>}
               {state.error && <Alert style={{marginTop:'20px', textAlign:'center'}} variant="danger">Upload failed</Alert>} */}
+          <Editor />
+          <div className="mb-4"></div>
         </div>
       </Modal>
     </div>
