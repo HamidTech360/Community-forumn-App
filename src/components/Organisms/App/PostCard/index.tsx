@@ -8,16 +8,22 @@ import { BsFolderFill, BsXCircleFill } from "react-icons/bs";
 import Age from "../../../Atoms/Age";
 import DOMPurify from "dompurify";
 import styles from "@/styles/profile.module.scss";
+import axios from "axios";
+import config from "@/config";
+import { useDispatch } from "react-redux";
+import { setIsFetching } from "@/reduxFeatures/api/postSlice";
+import { useSelector } from "@/redux/store";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 
 const PostCard = ({
   post,
   trimmed,
-  author,
 }: {
   post: Record<string, any>;
   trimmed?: Boolean;
-  author: any;
 }) => {
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
   const postButton = [
     {
       name: "Like",
@@ -36,6 +42,23 @@ const PostCard = ({
       reaction: true,
     },
   ];
+
+  const handleLike = async () => {
+    try {
+      const { data } = await axios.get(
+        `${config.serverUrl}/api/posts/${post._id}/like`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      //
+      dispatch(setIsFetching(false));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Card
       id={post?.id}
@@ -60,7 +83,7 @@ const PostCard = ({
           <div className={styles.div}>
             <small
               dangerouslySetInnerHTML={{
-                __html: `${author?.firstName} ${author?.lastName}`,
+                __html: `${post.author?.firstName} ${post.author?.lastName}`,
               }}
             />
             <br />
@@ -142,11 +165,13 @@ const PostCard = ({
         )}
       </Card.Body>
 
-      <Card.Footer className="mx-2 d-flex justify-content-between bg-white">
+      <Card.Footer className="mx-1 d-flex justify-content-between bg-white">
         {postButton.map((item, key) => (
           <Button
             key={key}
+            onClick={() => item.name === "Like" && handleLike()}
             variant="none"
+            disabled={item.name === "Like" && post.likes?.includes(user._id)}
             className="d-flex justify-content-center gap-1 align-items-center"
           >
             <Image
@@ -156,6 +181,12 @@ const PostCard = ({
               height={20}
               className="post-img"
             />
+            {item.name === "Like" && (
+              <span className="mx-2 text-secondary">
+                {post.likes?.length || 0}
+              </span>
+            )}
+
             <span className="d-none d-md-block">{item.name}</span>
           </Button>
         ))}

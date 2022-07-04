@@ -35,7 +35,7 @@ const Feed = () => {
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
   const [scrollInitialised, setScrollInitialised] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [users, setUsers] = useState([]);
+
   const [showModal, setShowModal] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -52,18 +52,9 @@ const Feed = () => {
   useEffect(() => {
     (async function () {
       try {
-        const response = await axios.get(`${config.serverUrl}/api/feed`);
+        const response = await axios.get(`${config.serverUrl}/api/posts`);
 
-        console.log(response.data);
-
-        setPosts(response.data.data);
-        setIsFetching(false);
-        const userResponse = await axios.get(`${config.serverUrl}/api/users`, {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        });
-        setUsers(userResponse.data.users);
+        setPosts(response.data.posts);
       } catch (error) {
         console.log(error.response?.data);
       }
@@ -172,7 +163,6 @@ const Feed = () => {
             {posts?.map((post, index) => (
               <PostCard
                 post={post}
-                author={users.find((i) => post.user == i._id)}
                 key={`activity-post-${index}-${post.id}`}
                 trimmed
               />
