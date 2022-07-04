@@ -10,10 +10,13 @@ function ChatBubble(message) {
     message.sender === "self" ? "35px 0 15px 35px" : "0 35px 35px 15px";
 
   return (
-    <div style={{ fontSize: "14px" }}>
+    <div
+      // className="d-flex"
+      style={{ fontSize: "14px" }}
+    >
       <div
         style={{
-          width: "35%",
+          width: "20%",
           height: "auto",
           fontSize: "10px",
         }}
@@ -21,17 +24,19 @@ function ChatBubble(message) {
       >
         {message.dateTime}
       </div>
-      <div
-        className={messagingStyle}
-        style={{
-          letterSpacing: "1px",
-          minWidth: "35%",
-          maxWidth: "80%",
-          height: "auto",
-          borderRadius: borderRadiusBubble,
-        }}
-      >
-        {message.message}
+      <div className="d-flex">
+        <div
+          className={messagingStyle}
+          style={{
+            letterSpacing: "1px",
+            maxWidth: "80%",
+            height: "auto",
+            borderRadius: borderRadiusBubble,
+          }}
+          dangerouslySetInnerHTML={{
+            __html: message.message,
+          }}
+        ></div>
       </div>
     </div>
   );

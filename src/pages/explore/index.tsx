@@ -262,7 +262,7 @@ const Explore = ({}) => {
         </span>
         <div className="row justify-content-center">
           <div
-            className="col-12  px-4 mt-2 mb-4 w-100"
+            className="col-10 col-xl-11 col-xxl-10"
             style={{ padding: "12px 0px" }}
           >
             <Form>

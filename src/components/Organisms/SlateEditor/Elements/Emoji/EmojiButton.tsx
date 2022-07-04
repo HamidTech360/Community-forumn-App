@@ -37,7 +37,8 @@ const EmojiButton = (props) => {
 
     setShow(false);
 
-    handleInsertEmoji(props.native);
+    // handleInsertEmoji(props.native);
+    insertEmoji(editor, props.native);
   };
 
   // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -47,12 +48,12 @@ const EmojiButton = (props) => {
     setShow(true);
   };
 
-  const handleInsertEmoji = (emoji) => {
-    editor.selection && Transforms.select(editor, editor.selection);
-    editor.selection && ReactEditor.focus(editor);
-    // +++++++++++++++++++++++++++++++++
-    insertEmoji(editor, emoji);
-  };
+  // const handleInsertEmoji = (emoji) => {
+  //   editor.selection && Transforms.select(editor, editor.selection);
+  //   editor.selection && ReactEditor.focus(editor);
+  //   // +++++++++++++++++++++++++++++++++
+  //   insertEmoji(editor, emoji);
+  // };
 
   return (
     <>

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Head from "next/head";
 import { useEffect, useState } from "react";
+
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useSelector } from "@/redux/store";
@@ -216,7 +217,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
 
         <div className="row justify-content-center">
           <div
-            className="col-12  px-4 mt-2 mb-4 w-100"
+            className="col-10 col-xl-11 col-xxl-10"
             style={{ padding: "12px 0px" }}
           >
             <Form>
