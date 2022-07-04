@@ -216,11 +216,11 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
 
         <div className="row justify-content-center">
           <div
-            className="col-10 col-xl-11 col-xxl-12"
+            className="col-12  px-4 mt-2 mb-4 w-100"
             style={{ padding: "12px 0px" }}
           >
-            <Form className="mx-0 px-0">
-              <Form.Group>
+            <Form>
+              <Form.Group className="px-5">
                 <Form.Label className={formStyles.formLabel}>
                   Gist Title
                 </Form.Label>

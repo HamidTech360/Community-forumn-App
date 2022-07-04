@@ -49,36 +49,6 @@ const Feed = () => {
     }
   };
 
-  useEffect(() => {
-    (async function () {
-      try {
-        const response = await axios.get(`${config.serverUrl}/api/posts`);
-
-        setPosts(response.data.posts);
-      } catch (error) {
-        console.log(error.response?.data);
-      }
-    })();
-
-    document.body.style.backgroundColor = "#f6f6f6";
-    window.addEventListener("scroll", checkScroll);
-
-    return () => {
-      document.body.style.backgroundColor = "initial";
-      window.removeEventListener("scroll", checkScroll);
-    };
-  }, []);
-
-  const DisplayModal = () => {
-    setShowModal(true);
-  };
-
-  const handleChange = (e) => {
-    const clone = { ...formData };
-    clone[e.currentTarget.name] = e.currentTarget.value;
-    setFormData(clone);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUploading(true);
@@ -87,7 +57,7 @@ const Feed = () => {
     try {
       const response = await axios.post(
         `${config.serverUrl}/api/posts`,
-        { ...formData },
+        { ...formData, postTitle: " " },
         {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -111,6 +81,36 @@ const Feed = () => {
       setShowModal(false);
       setUploading(false);
     }
+  };
+
+  useEffect(() => {
+    (async function () {
+      try {
+        const response = await axios.get(`${config.serverUrl}/api/posts`);
+
+        setPosts(response.data.posts.reverse());
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    })();
+
+    document.body.style.backgroundColor = "#f6f6f6";
+    window.addEventListener("scroll", checkScroll);
+
+    return () => {
+      document.body.style.backgroundColor = "initial";
+      window.removeEventListener("scroll", checkScroll);
+    };
+  }, [handleSubmit]);
+
+  const DisplayModal = () => {
+    setShowModal(true);
+  };
+
+  const handleChange = (e) => {
+    const clone = { ...formData };
+    clone[e.currentTarget.name] = e.currentTarget.value;
+    setFormData(clone);
   };
 
   return (

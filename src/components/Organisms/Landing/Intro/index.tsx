@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { Col, Row, Image, Button, Container } from "react-bootstrap";
 import styles from "../../../../styles/Landing.module.scss";
@@ -19,15 +20,15 @@ const Intro = () => {
                 Welcome to <span>Settlin</span>
               </p>
               <p>
-                {" "}
                 Connect and interact with people in the study, work and live
                 abroad community and get all the information that you need.
               </p>
 
-              <Button variant="primary" className = 'btn-lgs' 
-              size="lg">
-                Get Started
-              </Button>
+              <Link href="/login">
+                <Button variant="primary" className="btn-lgs" size="lg">
+                  Get Started
+                </Button>
+              </Link>
             </Container>
           </Col>
           <Col md={6} className={` ${styles.image_section}`}>
