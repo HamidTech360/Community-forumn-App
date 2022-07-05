@@ -2,24 +2,13 @@
 import Head from "next/head";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "@/redux/store";
 import config from "../../config";
-import {
-  Col,
-  Container,
-  Image,
-  Row,
-  Spinner,
-  Modal,
-  Form,
-  Button,
-} from "react-bootstrap";
+import { Container, Spinner, Modal, Form } from "react-bootstrap";
 import AuthContent from "@/components/Auth/AuthContent";
 import Discussions from "@/components/Organisms/App/Discussions/Discussions";
 import PostCard from "@/components/Organisms/App/PostCard";
 import UserCard from "@/components/Organisms/App/UserCard";
 import CreatePost from "@/components/Organisms/CreatePost";
-//import Modal from "@/components/Organisms/Layout/Modal/Modal";
 import { toast, ToastContainer } from "react-toastify";
 import { FaTimes } from "react-icons/fa";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
@@ -29,6 +18,14 @@ import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/feed.module.scss";
 import formStyles from "../../styles/templates/new-group/formField.module.css";
 import Follow from "@/components/Organisms/App/Follow";
+import Editor from "@/components/Organisms/SlateEditor/Editor";
+
+import { useDispatch, useSelector } from "@/redux/store";
+import {
+  setShowFeedModal,
+  selectFeedModal,
+  selectNewFeed,
+} from "@/reduxFeatures/api/feedSlice";
 
 const Feed = () => {
   const data = useSelector(selectUser);
@@ -36,13 +33,13 @@ const Feed = () => {
   const [scrollInitialised, setScrollInitialised] = useState(false);
   const [posts, setPosts] = useState([]);
 
-  const [showModal, setShowModal] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [formData, setFormData] = useState({
-    postTitle: "",
-    postBody: "",
-  });
+
+  const dispatch = useDispatch();
+  const showModal = useSelector(selectFeedModal);
+  const newFeedPost = useSelector(selectNewFeed);
+
   const checkScroll = () => {
     if (window.scrollY > 100) {
       setScrollInitialised(true);
@@ -67,50 +64,11 @@ const Feed = () => {
       document.body.style.backgroundColor = "initial";
       window.removeEventListener("scroll", checkScroll);
     };
-  }, []);
+  }, [newFeedPost]);
 
   const DisplayModal = () => {
-    setShowModal(true);
-  };
-
-  const handleChange = (e) => {
-    const clone = { ...formData };
-    clone[e.currentTarget.name] = e.currentTarget.value;
-    setFormData(clone);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setUploading(true);
-    console.log(formData);
-
-    try {
-      const response = await axios.post(
-        `${config.serverUrl}/api/posts`,
-        { ...formData },
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
-      console.log(response.data);
-      toast.success("Post uploaded successfully", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
-      });
-      setShowModal(false);
-      setUploading(false);
-      // fetchPost()
-    } catch (error) {
-      console.log(error.response?.data);
-      toast.error("Failed to upload post", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
-      });
-      setShowModal(false);
-      setUploading(false);
-    }
+    // setShowModal(true);
+    dispatch(setShowFeedModal(true));
   };
 
   return (
@@ -191,11 +149,11 @@ const Feed = () => {
       </Container>
 
       <Modal
-        // size="md"
         show={showModal}
         className={styles.GistModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
+        size="lg"
       >
         <span className={styles.closeBtn}>
           {" "}
@@ -203,27 +161,11 @@ const Feed = () => {
             color="#207681"
             style={{ cursor: "pointer" }}
             size={35}
-            onClick={() => setShowModal(false)}
+            onClick={() => dispatch(setShowFeedModal(false))}
           />{" "}
         </span>
-        <div className={styles.newGistModal}>
-          <Form onSubmit={(e) => handleSubmit(e)}>
-            <Form.Group className={formStyles.formGroup}>
-              <Form.Control
-                className={formStyles.bigForm}
-                as="textarea"
-                name="postBody"
-                type="text"
-                required
-                placeholder="Write something"
-                onChange={(e) => handleChange(e)}
-              />
-            </Form.Group>
-
-            <Button variant="primary" className="d-flex mx-auto" type="submit">
-              {uploading ? "uploading..." : "Continue"}
-            </Button>
-          </Form>
+        <div className="col-12 px-4 mt-2 mb-4">
+          <Editor slim={false} />
         </div>
       </Modal>
     </AuthContent>
