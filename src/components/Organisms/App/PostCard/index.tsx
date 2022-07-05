@@ -1,6 +1,6 @@
 import Link from "next/link";
 import strip from "striptags";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Card, Dropdown, Image, NavDropdown } from "react-bootstrap";
 import { HiDotsVertical } from "react-icons/hi";
 import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
@@ -11,9 +11,14 @@ import styles from "@/styles/profile.module.scss";
 import axios from "axios";
 import config from "@/config";
 import { useDispatch } from "react-redux";
-import { setIsFetching } from "@/reduxFeatures/api/postSlice";
+import {
+  selectPost,
+  setIsFetching,
+  setPosts,
+} from "@/reduxFeatures/api/postSlice";
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import { useRouter } from "next/router";
 
 const PostCard = ({
   post,
@@ -24,6 +29,8 @@ const PostCard = ({
 }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
+  const posts = useSelector(selectPost);
+  const router = useRouter();
   const postButton = [
     {
       name: "Like",
@@ -53,12 +60,12 @@ const PostCard = ({
           },
         }
       );
-      //
-      dispatch(setIsFetching(false));
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }
   };
+
   return (
     <Card
       id={post?.id}

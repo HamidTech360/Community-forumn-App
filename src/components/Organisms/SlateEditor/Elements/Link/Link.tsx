@@ -30,7 +30,7 @@ const Link = ({ attributes, element, children }) => {
             <Popover.Body>
               <>
                 <NextLink href={element.href} passHref>
-                  <a target="_blank" rel="noreferrer">
+                  <a href={element.href} target="_blank" rel="noreferrer">
                     {element.href}
                   </a>
                 </NextLink>

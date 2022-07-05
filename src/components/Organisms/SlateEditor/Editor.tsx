@@ -51,8 +51,9 @@ const Leaf = ({ attributes, children, leaf }) => {
   return <span {...attributes}>{children}</span>;
 };
 
-const Editor = () => {
+const Editor = ({ slim }: { slim: boolean }) => {
   const router = useRouter();
+  const editorID = `${router.asPath}-slateRefId`;
   const editor = useMemo(
     () => withHistory(withEmbeds(withLinks(withReact(createEditor())))),
     []
@@ -82,34 +83,71 @@ const Editor = () => {
   }, []);
 
   return (
-    <div className="container">
-      <div className="row justify-content-center">
-        <div className={`col-12 shadow ${styles.main}`}>
+    <div className={slim ? "container-fluid px-0 mx-0" : "container"}>
+      <div className={`row justify-content-center ${slim && "px-0 mx-0"}`}>
+        <div
+          className={`${
+            slim ? "col-10 col-md-11 px-0 me-0" : "col-12"
+          } shadow ${styles.main}`}
+        >
           <Slate editor={editor} value={value} onChange={handleEditorChange}>
-            <Toolbar position="top" />
-            <div className={styles.editorWrapper}>
-              <Editable
-                id={`${router.asPath}-slateRefId`}
-                style={{
-                  marginTop: ".3rem",
-                  height: "18rem",
-                  overflowY: "auto",
-                  scrollBehavior: "smooth",
-                }}
-                placeholder="Start writing your thoughts"
-                renderElement={renderElement}
-                renderLeaf={renderLeaf}
-                onKeyDown={(event) => CtrlShiftCombo(event, editor)}
-              />
-            </div>
             <div className="row">
-              <div className="col-12 col-lg-3" style={{ marginTop: "-.4rem" }}>
-                <Toolbar position="bottom" />
+              {slim && (
+                <div
+                  className={`${slim ? "col-1 col-md-2 col-lg-1" : "d-none"}`}
+                  style={{ alignSelf: "flex-end", marginBottom: "1rem" }}
+                >
+                  <Toolbar position="slim" />
+                </div>
+              )}
+              <div
+                className={`${
+                  slim ? "col-10 pe-1 pe-sm-0 pe-md-2 pe-lg-0" : "col-12"
+                }`}
+              >
+                {!slim && <Toolbar position="top" />}
+                <div
+                  className={`${styles.editorWrapper} ${
+                    slim && "pe-0 pe-md-2 pe-lg-0"
+                  }`}
+                >
+                  <Editable
+                    id={editorID}
+                    className={`${
+                      !slim ? styles.editable : styles.editableSlim
+                    }`}
+                    placeholder="Start writing your thoughts"
+                    renderElement={renderElement}
+                    renderLeaf={renderLeaf}
+                    onKeyDown={(event) => CtrlShiftCombo(event, editor)}
+                  />
+                </div>
+                {!slim && (
+                  <div className="row mb-2 mx-1">
+                    <div
+                      className="col-12 col-lg-3"
+                      style={{ marginTop: "-.4rem" }}
+                    >
+                      {!slim && <Toolbar position="bottom" />}
+                    </div>
+                    {!slim && <FooterButtons editorID={editorID} />}
+                  </div>
+                )}
               </div>
-              <FooterButtons editorID={`${router.asPath}-slateRefId`} />
             </div>
           </Slate>
         </div>
+        {slim && (
+          <div
+            className="col-2 col-md-1 d-grid"
+            style={{
+              alignSelf: "flex-end",
+              marginBottom: "1rem",
+            }}
+          >
+            <FooterButtons editorID={editorID} />
+          </div>
+        )}
       </div>
     </div>
   );

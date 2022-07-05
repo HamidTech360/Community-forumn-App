@@ -1,46 +1,37 @@
 //@ts-nocheck
-import { useRouter } from "next/router";
 import React, { useState } from "react";
+import config from "../../../../config";
 import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import { useDispatch, useSelector } from "@/redux/store";
 import {
+  setPosts,
   setShowPostModal,
-  selectShowPostModal,
-  setPostTitle,
   selectPostTitle,
   setIsFetching,
 } from "@/reduxFeatures/api/postSlice";
-import config from "@/config";
 
 function BlogPostFooterBtn({ editorID }) {
   const [uploading, setUploading] = useState(false);
   const dispatch = useDispatch();
-  const showPostModal = useSelector(selectShowPostModal);
   const showPostTitle = useSelector(selectPostTitle);
-
-  // console.log("editorID:", editorID);
-  // console.log("postTitleID:", postTitleID);
-  // console.log("displayInID:", displayInID);
-  const router = useRouter;
-
-  // const createPost = () => {
-  //   document.getElementById(displayInID).innerHTML = "";
-
-  //   document.getElementById(displayInID).innerHTML =
-  //     document.getElementById(editorID).innerHTML;
-  // };
 
   const createPost = async (e) => {
     e.preventDefault();
-    // console.log("formData:", formData);
-    // console.log("e.target:", e.target);
     const editorInnerHtml = document.getElementById(editorID).innerHTML;
-    // const formData = { showPostTitle, editorInnerHtml };
     setUploading(true);
     try {
-      const response = await axios.post(
+      // await axios.post(
+      //   `/api/posts`,
+      //   { postTitle: showPostTitle, postBody: editorInnerHtml },
+      //   {
+      //     headers: {
+      //       authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      //     },
+      //   }
+      // );
+      await axios.post(
         `${config.serverUrl}/api/posts`,
         { postTitle: showPostTitle, postBody: editorInnerHtml },
         {
@@ -49,30 +40,27 @@ function BlogPostFooterBtn({ editorID }) {
           },
         }
       );
-      console.log(response.data);
       toast.success("Post uploaded successfully", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
       });
-      // setShowModal(false);
       setUploading(false);
       dispatch(setShowPostModal(false));
 
-      const fetchPost = async () => {
-        try {
-          const response = await axios.get(`${config.serverUrl}/api/posts`);
-          // console.log(response.data.posts);
-          // const allPosts = [...posts,...response.data.posts]
-          dispatch(setPosts(response.data.posts));
-          // setIsFetching(false);
-          dispatch(setIsFetching(false));
-        } catch (error) {
-          console.log(error.response?.data);
-        }
-      };
-      fetchPost();
+      // const fetchPost = async () => {
+      try {
+        // const response = await axios.get(`/api/posts`);
+        const response = await axios.get(`${config.serverUrl}/api/posts`);
+        dispatch(setPosts(response.data.posts));
+        dispatch(setIsFetching(false));
+      } catch (error) {
+        console.error(error.response?.data);
+        dispatch(setIsFetching(false));
+      }
+      // };
+      // fetchPost();
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data);
       if (!localStorage.getItem("accessToken")) {
         toast.error("You must login to create a  post", {
           position: toast.POSITION.TOP_RIGHT,
@@ -84,7 +72,6 @@ function BlogPostFooterBtn({ editorID }) {
           toastId: "1",
         });
       }
-
       setUploading(false);
     }
   };
