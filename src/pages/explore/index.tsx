@@ -265,8 +265,8 @@ const Explore = ({}) => {
             className="col-10 col-xl-11 col-xxl-10"
             style={{ padding: "12px 0px" }}
           >
-            <Form className="mx-0 px-0">
-              <Form.Group>
+            <Form>
+              <Form.Group className="px-5">
                 <Form.Label className={formStyles.formLabel}>
                   Post Title
                 </Form.Label>
@@ -276,7 +276,9 @@ const Explore = ({}) => {
                   name="postTitle"
                   type="text"
                   onChange={(e) => handleChange(e)}
-                  style={{ backgroundColor: "rgb(248, 244, 244)" }}
+                  style={{
+                    backgroundColor: "rgb(248, 244, 244)",
+                  }}
                   required
                 />
               </Form.Group>

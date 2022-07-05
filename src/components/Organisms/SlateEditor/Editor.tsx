@@ -51,7 +51,7 @@ const Leaf = ({ attributes, children, leaf }) => {
   return <span {...attributes}>{children}</span>;
 };
 
-export const Editor = ({ slim }) => {
+const Editor = ({ slim }: { slim: boolean }) => {
   const router = useRouter();
   const editorID = `${router.asPath}-slateRefId`;
   const editor = useMemo(

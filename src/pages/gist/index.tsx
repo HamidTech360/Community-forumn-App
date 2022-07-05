@@ -220,8 +220,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             className="col-10 col-xl-11 col-xxl-10"
             style={{ padding: "12px 0px" }}
           >
-            <Form className="mx-0 px-0">
-              <Form.Group>
+            <Form>
+              <Form.Group className="px-5">
                 <Form.Label className={formStyles.formLabel}>
                   Gist Title
                 </Form.Label>
