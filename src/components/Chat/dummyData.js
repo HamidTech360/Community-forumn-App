@@ -143,8 +143,14 @@ export const dummyData = [
         dateTime: new Date().toLocaleString(),
         read: false,
       },
+      {
+        message: "List",
+        sender: "recipient",
+        dateTime: new Date().toLocaleString(),
+        read: false,
+      },
     ],
-    unreadMessage: 3,
+    unreadMessage: 4,
     online: false,
   },
   {

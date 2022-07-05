@@ -45,13 +45,13 @@ const Articles = ({ articles }: { articles?: Record<string, any> }) => {
         </div>
         <div className={`gap-5 ${styles.cards}`}>
           <EndlessCarousel>
-            {posts?.map((post: any, key: number) => (
+            {articles?.map((post: any, key: number) => (
               <Card
-               _id={post._id} 
+                _id={post._id}
                 key={`article-${key}`}
                 image={post.image || "/images/formbg.png"}
-                title={post.title}
-                body={post.body}
+                title={post.postTitle}
+                body={post.postBody}
                 author={post.author}
                 size=""
               />

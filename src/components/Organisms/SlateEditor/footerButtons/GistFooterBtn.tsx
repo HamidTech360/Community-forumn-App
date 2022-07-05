@@ -17,7 +17,7 @@ import {
   selectGistTitle,
   setIsFetching,
 } from "@/reduxFeatures/api/gistSlice";
-import config from "@/config";
+import config from "../../../../config";
 
 function GistFooterBtn({ editorID }) {
   const gistIsLoading = useSelector(selectGistIsLoading);
@@ -32,10 +32,7 @@ function GistFooterBtn({ editorID }) {
 
   const createGist = async (e) => {
     e.preventDefault();
-    // console.log("formData:", formData);
-    // console.log("e.target:", e.target);
     const editorInnerHtml = document.getElementById(editorID).innerHTML;
-    // const formData = { showPostTitle, editorInnerHtml };
     setUploading(true);
     try {
       const response = await axios.post(
@@ -52,44 +49,26 @@ function GistFooterBtn({ editorID }) {
           },
         }
       );
-      console.log(response.data);
-      toast.success("Post uploaded successfully", {
+      toast.success("Gist uploaded successfully", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
       });
+
       setUploading(false);
-      // setShowModal(false);
-      dispatch(setShowGistModal(false));
-      // const fetchPost = async () => {
-      //   try {
-      //     const response = await axios.get(`/api/gists`);
-      //     // console.log(response.data.posts);
-      //     // const allPosts = [...posts,...response.data.posts]
-      //     dispatch(setPosts(response.data.posts));
-      //     // setIsFetching(false);
-      //     dispatch(setIsFetching(false));
-      //   } catch (error) {
-      //     console.log(error.response?.data);
-      //   }
-      // };
-      // fetchPost();
+      dispatch(uploadSuccess(response.data));
     } catch (error) {
-      console.log(error.response?.data);
       if (!localStorage.getItem("accessToken")) {
-        toast.error("You must login to create a  post", {
+        toast.error("You must login to create a  Gist", {
           position: toast.POSITION.TOP_RIGHT,
           toastId: "1",
         });
       } else {
-        toast.error("Failed to upload post: Try Again", {
+        toast.error("Failed to upload Gist: Try Again", {
           position: toast.POSITION.TOP_RIGHT,
           toastId: "1",
         });
         dispatch(uploadFailed(error.response?.data));
       }
-
-      // setShowModal(false);
-      // dispatch(setShowPostModal(false));
       setUploading(false);
     }
   };
