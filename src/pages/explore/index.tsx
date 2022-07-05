@@ -331,21 +331,6 @@ const Explore = ({}) => {
   );
 };
 
-// export const getStaticProps = async () => {
-//   const res = await fetch(
-//     `${process.env.REST}/wp/v2/categories?per_page=10&_fields=id,name`
-//   );
-//   const categories = await res.json();
 
-//   const users = await (await fetch(`${process.env.REST!}/wp/v2/users`)).json();
-
-//   return {
-//     props: {
-//       categories,
-//       users,
-//     },
-//     revalidate: 1,
-//   };
-// };
 
 export default Explore;

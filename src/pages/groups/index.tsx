@@ -32,6 +32,7 @@ const posts = [
 const Groups = () => {
   const router = useRouter();
   const [groups, setGroups] = useState([])
+  const [Posts, setPosts] = useState([])
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
     (async ()=>{
@@ -42,6 +43,11 @@ const Groups = () => {
           setGroups(response.data.groups)
           console.log(response.data);
           
+          
+          const randomPosts = await axios.get(`${config.serverUrl}/api/posts/group/random`)
+          console.log(randomPosts.data.posts);
+          setPosts(randomPosts.data.posts)
+         
         }catch(error){
           console.log(error.response?.data); 
         }
@@ -69,25 +75,27 @@ const Groups = () => {
             <Form.Control placeholder="search" />
             <div className="groupLists">
                 {groups.map((item, i)=>
-                    <div> {item.name} </div>
+                   <Link href={`/groups/${item._id}/timeline`}>
+                       <div> {item.name} </div>
+                   </Link>
                 )}
             </div>
           </Card>
 
           <div className={styles.posts}>
             <div className={`d-none d-md-flex gap-3 mb-3`}>
-              {posts.map((post, index) => (
-                <Link key={`card-${index}`} href="/groups/1/timeline" passHref>
+              {Posts.map((post, index) => (
+                <Link key={`card-${index}`} href={`/groups/${post.groupId}/timeline`} passHref>
                   <Card style={{ height: "280px", border: "none" }}>
                     <CardImg
-                      src={post.image}
+                      src={'/images/article.png'}
                       alt=""
                       style={{ height: "60%" }}
                     />
                     <Card.Body className="d-flex flex-column">
-                      <p className="bold">{post.title}</p>
+                      <p className="bold">{post.postTitle}</p>
                       <small className="text-muted">
-                        Admin: {post.author.split(" ")[1]}
+                        Admin: {post.author.firstName}
                       </small>
                       <Image
                         width={20}
@@ -119,7 +127,7 @@ const Groups = () => {
                   </Button>
                 </Link>
               </div>
-              <Timeline />
+              <Timeline Posts={Posts} />
             </main>
           </div>
         </Container>
