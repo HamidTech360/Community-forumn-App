@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState} from "react";
 import Image from "next/image";
 import styles from "../../../styles/templates/new-group/connection.module.css";
 import { Form, Row, Col, Button } from "react-bootstrap";
