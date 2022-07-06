@@ -4,7 +4,7 @@ import { Card, Col, Form, Image, Row } from "react-bootstrap";
 import { Modal } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
 import { useSelector, useDispatch } from "@/redux/store";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import styles from "@/styles/utils.module.scss";
 import formStyles from "../../../styles/templates/new-group/formField.module.css";
@@ -17,6 +17,7 @@ import {
 } from "@/reduxFeatures/api/postSlice";
 
 const CreatePost = ({ DisplayModal }) => {
+  // const router = useRouter();
   // const { user } = useUser();
   // const { data } = useSelector((s) => s.user);
   const data = useSelector(selectUser);
@@ -27,12 +28,12 @@ const CreatePost = ({ DisplayModal }) => {
     dispatch(setPostTitle(e.currentTarget.value));
   };
 
-  const handleModal = () => {
-    // console.log(router.pathname);
-    if (router.pathname === "/feed") return;
-    setShowModal(true);
-    dispatch(setShowPostModal(true));
-  };
+  // const handleModal = () => {
+  //   // console.log(router.pathname);
+  //   if (router.pathname === "/feed") return;
+  //   setShowModal(true);
+  //   dispatch(setShowPostModal(true));
+  // };
   return (
     <Card className="p-2 py-4" style={{ border: "none" }}>
       <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
