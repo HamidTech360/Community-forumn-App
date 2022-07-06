@@ -128,9 +128,9 @@ const Editor = ({ slim }: { slim: boolean }) => {
                       className="col-12 col-lg-3"
                       style={{ marginTop: "-.4rem" }}
                     >
-                      {!slim && <Toolbar position="bottom" />}
+                      <Toolbar position="bottom" />
                     </div>
-                    {!slim && <FooterButtons editorID={editorID} />}
+                    <FooterButtons editorID={editorID} />
                   </div>
                 )}
               </div>
