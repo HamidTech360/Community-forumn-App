@@ -9,7 +9,7 @@ import { ReactEditor } from "slate-react";
 
 import styles from "../../../../../styles/SlateEditor/Embed_Slate.module.scss";
 import { Modal, Button as BsBtn, Form } from "react-bootstrap";
-import DragAndDropFiles from "../DropZone/DragAndDropFiles";
+// import DragAndDropFiles from "../DropZone/DragAndDropFiles";
 
 const Embed = ({ editor, format }) => {
   const urlInputRef = useRef();
@@ -93,15 +93,7 @@ const Embed = ({ editor, format }) => {
           <Modal.Body>
             <Form.Group className="mb-3" controlId="formBasicAlt">
               <div>
-                {/* <div
-                // className="mx-auto"
-                // style={{ display: "flex", gap: "10px" }}
-                > */}
-                {/* <Form.Label style={{ fontWeight: "600" }}> */}
-                {/* <Icon icon="upload" /> <span>Upload</span> */}
-                <DragAndDropFiles format={format} />
-                {/* </Form.Label> */}
-                {/* </div> */}
+                {/* <DragAndDropFiles format={format} /> */}
                 <p
                   style={{ textAlign: "center", opacity: "0.7", width: "100%" }}
                 >
