@@ -59,7 +59,7 @@ const Explore = ({}) => {
     postBody: "",
   });
   useEffect(() => {
-    console.log(users);
+    //console.log(users);
 
     document.body.style.backgroundColor = "#f6f6f6";
 
@@ -81,18 +81,18 @@ const Explore = ({}) => {
 
   useEffect(() => {
     fetchPost();
-    (async function () {
-      try {
-        const response = await axios.get(`${config.serverUrl}/api/users`, {});
-        // console.log("response.data+++:", response.data.users);
-        setUsers(response.data.users);
-        dispatch(setIsFetching(false));
-      } catch (error) {
-        console.error(error.response?.data);
-        // setIsFetching(false);
-        dispatch(setIsFetching(false));
-      }
-    })();
+    //(async function () {
+    //   try {
+    //     const response = await axios.get(`${config.serverUrl}/api/users`, {});
+    //     // console.log("response.data+++:", response.data.users);
+    //     setUsers(response.data.users);
+    //     dispatch(setIsFetching(false));
+    //   } catch (error) {
+    //     //console.error(error.response?.data);
+    //     // setIsFetching(false);
+    //     dispatch(setIsFetching(false));
+    //   }
+    // })();
   }, [fetchPost]);
 
   const handleChange = (e) => {
@@ -294,21 +294,6 @@ const Explore = ({}) => {
   );
 };
 
-// export const getStaticProps = async () => {
-//   const res = await fetch(
-//     `${process.env.REST}/wp/v2/categories?per_page=10&_fields=id,name`
-//   );
-//   const categories = await res.json();
 
-//   const users = await (await fetch(`${process.env.REST!}/wp/v2/users`)).json();
-
-//   return {
-//     props: {
-//       categories,
-//       users,
-//     },
-//     revalidate: 1,
-//   };
-// };
 
 export default Explore;

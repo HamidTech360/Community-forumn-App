@@ -142,6 +142,51 @@ const Chat = () => {
     dispatch(setMessages(currentMessages));
   };
 
+  // const messageInt = (message) => {
+  //   // const init = {
+  //   //   messageInit: message.message[
+  //   //     message.message.length - 1
+  //   //   ].message.substring(0, 26),
+  //   //   continue:
+  //   //     message.message[message.message.length - 1].message.length > 26 &&
+  //   //     "...",
+  //   // 26 && <span>...</span>,
+
+  //   // const tip = messageTip(message)
+
+  //   // console.log('tip:'tip)
+  //   // };
+
+  //   // console.log("init.messageInit:", init.messageInit);
+
+  //   // // return init.messageInit + init.continue;
+  //   // return init.messageInit;
+
+  //   const newMessage = messageTip(message);
+  //   const displayMessage = newMessage.props.dangerouslySetInnerHTML.__html;
+  //   console.log("newMessage:", newMessage.props.dangerouslySetInnerHTML.__html);
+  //   // if (displayMessage.length > 26) {
+  //   //   console.log(
+  //   //     'displayMessage.substring(0, 26) + "...":',
+  //   //     displayMessage.substring(0, 26) + "..."
+  //   //   );
+  //   //   return displayMessage.substring(0, 26) + "...";
+  //   // } else {
+  //   //   console.log("displayMessage:", displayMessage);
+  //   //   return displayMessage;
+  //   // }
+  // };
+
+  const messageTip = (message) => {
+    return (
+      <div
+        dangerouslySetInnerHTML={{
+          __html: message.message[message.message.length - 1].message,
+        }}
+      ></div>
+    );
+  };
+
   return (
     <AuthContent>
       <Head>
@@ -282,7 +327,22 @@ const Chat = () => {
                                   className="col-10"
                                   data-nameid={message.id}
                                   onClick={startChattingWithChild}
+                                  // dangerouslySetInnerHTML={{
+                                  //   __html: messageInt(message),
+                                  // }}
+                                  // dangerouslySetInnerHTML={{
+                                  //   __html: message.message[
+                                  //     message.message.length - 1
+                                  //   ].message.substring(0, 26),
+                                  // }}
                                 >
+                                  {/* {messageInt(message)} */}
+                                  {/* {console.log(
+                                    "+++",
+                                    message.message[
+                                      message.message.length - 1
+                                    ].message.substring(0, 26)
+                                  )} */}
                                   {message.message[
                                     message.message.length - 1
                                   ].message.substring(0, 26)}

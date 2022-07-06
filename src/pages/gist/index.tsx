@@ -96,6 +96,12 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
 
   useEffect(() => {
     if (gistIsSuccess) {
+
+      toast.success("Gist uploaded succesfully", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: customId,
+      });
+
       (async function () {
         const response = await axios.get(`${config.serverUrl}/api/gists`);
         setAllGists(response.data);

@@ -24,7 +24,7 @@ interface IComponents {
   friends: ReactNode;
 }
 const Components: IComponents = {
-  timeline: <Timeline />,
+  timeline: <Timeline Posts={[]} />,
   about: <About />,
   media: <Media />,
   friends: <Friends />,
