@@ -4,23 +4,35 @@ import { Card, Col, Form, Image, Row } from "react-bootstrap";
 import { Modal } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
 import { useSelector, useDispatch } from "@/redux/store";
+import { useRouter } from "next/router";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import styles from "@/styles/utils.module.scss";
 import formStyles from "../../../styles/templates/new-group/formField.module.css";
 import Editor from "@/components/Organisms/SlateEditor/Editor";
 
 import {
-  setPostTitle
+  setPostTitle,
+  selectShowPostModal,
+  setShowPostModal
 } from "@/reduxFeatures/api/postSlice";
 
-const CreatePost = ({DisplayModal}) => {
-  
+const CreatePost = ({DisplayModal}:any) => {
+  const router = useRouter()
   const data = useSelector(selectUser);
+  const showPostModal = useSelector(selectShowPostModal);
   const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
   const handleChange = (e) => { 
     dispatch(setPostTitle(e.currentTarget.value));
+    
   };
+
+  const handleModal = ()=>{
+   // console.log(router.pathname);
+    if(router.pathname==="/feed") return 
+    setShowModal(true)
+    dispatch(setShowPostModal(true))
+  }
   return (
     <Card className="p-2 py-4" style={{ border: "none" }}>
       <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
@@ -41,7 +53,7 @@ const CreatePost = ({DisplayModal}) => {
               placeholder={`Hey ${
                 data?.firstName && data.firstName.split(" ")[0]
               }! wanna say something?`}
-              // onClick={()=>DisplayModal()}
+                onClick={()=>handleModal()}
             //  onClick={() => setShowModal(true)}
             />
           </Form>
@@ -50,7 +62,7 @@ const CreatePost = ({DisplayModal}) => {
 
 
       <Modal
-        show={showModal}
+        show={showModal && showPostModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
         size="lg"

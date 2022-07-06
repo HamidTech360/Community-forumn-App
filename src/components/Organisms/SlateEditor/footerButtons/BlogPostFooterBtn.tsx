@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import config from "../../../../config";
 import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import { useRouter } from "next/router";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import { useDispatch, useSelector } from "@/redux/store";
@@ -10,36 +11,39 @@ import {
   setShowPostModal,
   selectPostTitle,
   setIsFetching,
+  selectShowPostModal
 } from "@/reduxFeatures/api/postSlice";
 
-function BlogPostFooterBtn({ editorID }) {
+function BlogPostFooterBtn({ editorID, handleClick }:any) {
+  const router = useRouter()
+  console.log(`router query from footer btns is `, router.query);
+  
   const [uploading, setUploading] = useState(false);
+  const [groupId, setGroupId] = useState(null)
   const dispatch = useDispatch();
   const showPostTitle = useSelector(selectPostTitle);
+  const showPostModal = useSelector(selectShowPostModal);
 
   const createPost = async (e) => {
     e.preventDefault();
     const editorInnerHtml = document.getElementById(editorID).innerHTML;
+    if(router.query.path=="timeline"){
+      setGroupId(router.query.id)
+    }
     setUploading(true);
     try {
-      // await axios.post(
-      //   `/api/posts`,
-      //   { postTitle: showPostTitle, postBody: editorInnerHtml },
-      //   {
-      //     headers: {
-      //       authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      //     },
-      //   }
-      // );
+     
       await axios.post(
         `${config.serverUrl}/api/posts`,
-        { postTitle: showPostTitle, postBody: editorInnerHtml },
+        { postTitle: showPostTitle, postBody: editorInnerHtml, groupId },
         {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         }
       );
+        console.log(response.data);
+        
       toast.success("Post uploaded successfully", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
@@ -60,7 +64,7 @@ function BlogPostFooterBtn({ editorID }) {
       // };
       // fetchPost();
     } catch (error) {
-      // console.log(error.response?.data);
+       console.log(error.response?.data);
       if (!localStorage.getItem("accessToken")) {
         toast.error("You must login to create a  post", {
           position: toast.POSITION.TOP_RIGHT,

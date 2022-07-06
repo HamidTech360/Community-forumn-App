@@ -32,7 +32,7 @@ const Components: IComponents = {
   videos: <Media />,
 };
 
-const GroupInfoCard = () => {
+const GroupInfoCard = ({data}:any) => {
   const { path, id } = useRouter().query;
 
   return (
@@ -58,10 +58,9 @@ const GroupInfoCard = () => {
           <Col xs={10} className="d-flex flex-column">
             {" "}
             <p className="bold">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugit,
-              atque!
+              {data?.name}
             </p>
-            <small className="text-mute">Public Group</small>
+            <small className="text-mute">{data?.privacy} Group</small>
             <div className="mb-div mb-2">
               <Button variant="primary" className="mb-btns">
                 Joined{" "}

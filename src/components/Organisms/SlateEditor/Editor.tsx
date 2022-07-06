@@ -82,6 +82,8 @@ const Editor = ({ slim }: { slim: boolean }) => {
     return <Leaf {...props} />;
   }, []);
 
+  
+
   return (
     <div className={slim ? "container-fluid px-0 mx-0" : "container"}>
       <div className={`row justify-content-center ${slim && "px-0 mx-0"}`}>

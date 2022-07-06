@@ -1,13 +1,13 @@
 import React from "react";
 import { Container } from "react-bootstrap";
-import { FriendsDataType } from '../FriendsList/FriendsData';
+//import { FriendsDataType } from '../FriendsList/FriendsData';
 import FriendsData from "../FriendsList/FriendsData";
 import styles from '../../../styles/friends.module.scss';
 
 
 const Friends = () => {
 
-  const data: FriendsDataType = {
+  const data= {
     friends: [
       {
         id: 1,

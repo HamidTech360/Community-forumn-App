@@ -7,6 +7,8 @@ import {GiCheckMark} from 'react-icons/gi'
 const AddConnections = ({handleSubmit, isLoading, chooseConnections, data}) => {
   //ts-ignore
   const user = useSelector(s=>s.authState.user)
+  console.log('user data from connection is', user);
+  
   
   const [connections, setConnections]= useState([])
   useEffect(()=>{
