@@ -278,13 +278,14 @@ const Explore = ({}) => {
                   onChange={(e) => handleChange(e)}
                   style={{
                     backgroundColor: "rgb(248, 244, 244)",
+                    borderRadius: "50px",
                   }}
                   required
                 />
               </Form.Group>
             </Form>
           </div>
-          <div className="col-12 px-4 mt-2 mb-4">
+          <div className="col-11 px-5 mt-2 mb-4">
             <Editor slim={false} />
           </div>
         </div>

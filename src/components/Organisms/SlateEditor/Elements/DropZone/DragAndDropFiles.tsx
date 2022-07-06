@@ -25,6 +25,7 @@
 // const maxLength = 20;
 
 // function nameLengthValidator(file) {
+//   console.log("FILE:", file);
 //   if (file.name.length > maxLength) {
 //     return {
 //       code: "name-too-large",
@@ -109,6 +110,7 @@ const DragAndDropFiles = ({ format }) => {
   //   maxFiles: 10,
   //   maxSize: 512000,
   //   validator: nameLengthValidator,
+  //   // validator: nameLengthValidator(File),
   //   onDrop,
   // });
 
