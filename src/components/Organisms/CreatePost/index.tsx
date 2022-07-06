@@ -13,26 +13,26 @@ import Editor from "@/components/Organisms/SlateEditor/Editor";
 import {
   setPostTitle,
   selectShowPostModal,
-  setShowPostModal
+  setShowPostModal,
 } from "@/reduxFeatures/api/postSlice";
 
-const CreatePost = ({DisplayModal}:any) => {
-  const router = useRouter()
+const CreatePost = ({ DisplayModal }) => {
+  // const { user } = useUser();
+  // const { data } = useSelector((s) => s.user);
   const data = useSelector(selectUser);
   const showPostModal = useSelector(selectShowPostModal);
-  const dispatch = useDispatch()
-  const [showModal, setShowModal] = useState(false)
-  const handleChange = (e) => { 
+  const dispatch = useDispatch();
+  const [showModal, setShowModal] = useState(false);
+  const handleChange = (e) => {
     dispatch(setPostTitle(e.currentTarget.value));
-    
   };
 
-  const handleModal = ()=>{
-   // console.log(router.pathname);
-    if(router.pathname==="/feed") return 
-    setShowModal(true)
-    dispatch(setShowPostModal(true))
-  }
+  const handleModal = () => {
+    // console.log(router.pathname);
+    if (router.pathname === "/feed") return;
+    setShowModal(true);
+    dispatch(setShowPostModal(true));
+  };
   return (
     <Card className="p-2 py-4" style={{ border: "none" }}>
       <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
@@ -53,13 +53,11 @@ const CreatePost = ({DisplayModal}:any) => {
               placeholder={`Hey ${
                 data?.firstName && data.firstName.split(" ")[0]
               }! wanna say something?`}
-                onClick={()=>handleModal()}
-            //  onClick={() => setShowModal(true)}
+              onClick={() => DisplayModal()}
             />
           </Form>
         </>
       </div>
-
 
       <Modal
         show={showModal && showPostModal}
@@ -97,12 +95,9 @@ const CreatePost = ({DisplayModal}:any) => {
                 onChange={(e) => handleChange(e)}
               />
             </Form.Group>
-
-          
           </Form>
 
-         
-          <div style={{marginTop:'40px'}}>
+          <div style={{ marginTop: "40px" }}>
             <Editor slim={false} />
           </div>
           <div className="mb-4"></div>
