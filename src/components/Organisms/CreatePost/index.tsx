@@ -91,7 +91,7 @@ const CreatePost = ({DisplayModal}) => {
 
          
           <div style={{marginTop:'40px'}}>
-            <Editor />
+            <Editor slim={false} />
           </div>
           <div className="mb-4"></div>
         </div>
