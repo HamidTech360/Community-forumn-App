@@ -1,8 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../../../styles/templates/new-group/settings.module.css";
 import { Form } from "react-bootstrap";
 
-const Settings = ({handleSelectOption}) => {
+const Settings = ({handleSelectOption, data}) => {
+
+  const setValues = (state,  setState, dataKey)=>{
+    const clone = [...state]
+    const activeItem = clone.find(item=>item.value===data[dataKey])
+    const index = state.indexOf(activeItem)
+    console.log(`Index of current item is (${data[dataKey]})  `,index);
+    clone[index].active = true
+    setState(clone)
+  }
+  useEffect(()=>{
+     if(data.privacy) setValues(privacy, setPrivacy, 'privacy')
+     if(data.invite)  setValues(inviteOptions, setInviteOptions, 'invite')
+     if(data.allowedToPost)  setValues(postOptions, setPostOptions, 'allowedToPost')
+  },[])
+
   const [privacy, setPrivacy] = useState([
     {
       title: "Public group",

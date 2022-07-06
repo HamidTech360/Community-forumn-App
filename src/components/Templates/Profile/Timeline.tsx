@@ -5,21 +5,35 @@ import PostCard from "../../Organisms/App/PostCard";
 import CreatePost from "../../Organisms/CreatePost";
 import styles from "@/styles/profile.module.scss";
 import Link from "next/link";
+import axios from "axios";
+import config from "@/config";
 
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { useRouter } from "next/router";
 
-const Timeline = () => {
+const Timeline = ({Posts}) => {
   const router = useRouter();
   const [scrollInitialized, setScrollInitialized] = useState(false);
   const { posts, hasMore, isFetchingMore } = usePagination();
   const intersection = useRef();
-
+  // const [Posts, setPosts] = useState([])
   const checkScroll = () => {
     if (window.scrollY > 100) {
       setScrollInitialized(true);
     }
   };
+
+  // useEffect(()=>{
+  //   (async ()=>{
+  //     try{
+  //       const response = await axios.get(`${config.serverUrl}/api/posts/group/random`)
+  //       console.log(response.data.posts);
+  //       setPosts(response.data.posts)
+  //     }catch(error){
+  //       console.log(error.response?.data)     
+  //     }
+  //   })()
+  // },[])
 
   useEffect(() => {
     window.addEventListener("scroll", checkScroll);
@@ -65,7 +79,7 @@ const Timeline = () => {
           bottom: 0,
         }}
       ></div>
-      {posts?.map((post, index) => (
+      {Posts?.map((post, index) => (
         <PostCard
           post={post}
           key={`activity-post-${index}-${post.id}`}
