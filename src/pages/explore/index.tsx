@@ -58,7 +58,7 @@ const Explore = ({}) => {
     postBody: "",
   });
   useEffect(() => {
-    console.log(users);
+    //console.log(users);
 
     document.body.style.backgroundColor = "#f6f6f6";
 
@@ -80,18 +80,18 @@ const Explore = ({}) => {
 
   useEffect(() => {
     fetchPost();
-    (async function () {
-      try {
-        const response = await axios.get(`${config.serverUrl}/api/users`, {});
-        // console.log("response.data+++:", response.data.users);
-        setUsers(response.data.users);
-        dispatch(setIsFetching(false));
-      } catch (error) {
-        console.error(error.response?.data);
-        // setIsFetching(false);
-        dispatch(setIsFetching(false));
-      }
-    })();
+    //(async function () {
+    //   try {
+    //     const response = await axios.get(`${config.serverUrl}/api/users`, {});
+    //     // console.log("response.data+++:", response.data.users);
+    //     setUsers(response.data.users);
+    //     dispatch(setIsFetching(false));
+    //   } catch (error) {
+    //     //console.error(error.response?.data);
+    //     // setIsFetching(false);
+    //     dispatch(setIsFetching(false));
+    //   }
+    // })();
   }, [fetchPost]);
 
   const handleChange = (e) => {

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Card } from "react-bootstrap";
 
 
-const About = () => {
+const About = ({type, data}:any) => {
   const [activeTab, setActiveTab] = useState("bio");
   const [interests, setInterests] = useState([
     "Studying abroad",
@@ -12,6 +12,17 @@ const About = () => {
     "Housing in Ghana",
   ]);
 
+  // if(type==="group"){
+  //   return(
+  //     <Card.Body
+  //       id="profileMainSide"
+  //       className="bg-light shadow"
+  //       style={{ height: "100%" }}
+  //     >
+  //     {data?.description}
+  //   </Card.Body>
+  //   )
+  // }
   useEffect(() => {
     // Set Active Tabs Visibility To Bio
     tabVisibility("bio");
@@ -49,9 +60,9 @@ const About = () => {
         </div>
         <div className="row">
           <p className="col-12 text-muted" id="bioText">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque quas,
+            m ipsum dolor sit amet consectetur adipisicing elit. Atque quas,
             pariatur, non ex ea laborum deserunt deleniti error vel adipisci
-            fugit harum, illum iusto officia laudantium. Nesciunt fugiat illo
+            fugit hLorearum, illum iusto officia laudantium. Nesciunt fugiat illo
             maxime?
           </p>
         </div>
@@ -169,6 +180,8 @@ const About = () => {
     // ............................. >Education History Tab .............................
     educationHistory: <p>Education history page</p>,
   };
+
+ 
 
   return (
     <section>

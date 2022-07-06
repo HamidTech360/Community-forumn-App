@@ -69,7 +69,7 @@ const Timeline = ({Posts}) => {
 
   return (
     <div className={styles.profileWrapper}>
-      <CreatePost DisplayModal={""} />
+      {/* <CreatePost DisplayModal={""} /> */}
       <div
         ref={intersection}
         style={{
