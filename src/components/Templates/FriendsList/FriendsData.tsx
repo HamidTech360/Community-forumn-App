@@ -1,32 +1,34 @@
 import React from 'react';
 import { Badge, Card, Col, Image, ListGroup, Row } from 'react-bootstrap';
+import {FiMoreVertical} from 'react-icons/fi'
 import styles from '../../../styles/friends.module.scss';
 
-interface FriendsListProp {
-    friendsList: FriendsDataType
-  }
+// interface FriendsListProp {
+//     friendsList: FriendsDataType
+//   }
   
-  export type FriendsDataType = {
-    friends : friendType[]
-  }
+//   export type FriendsDataType = {
+//     friends : friendType[]
+//   }
 
-  type friendType = {
-    id: number,
-    image: string,
-    name: string,
-    number: string,
-    menu: string
-  }
+//   type friendType = {
+//     id: number,
+//     image: string,
+//     name: string,
+//     number: string,
+//     menu: string
+//   }
 
-const FriendsData = (props: FriendsListProp) => {
+const FriendsData = ({friendsList}:any) => {
     
-    const { friends } = props.friendsList;
-
+    // const { friends } = props.friendsList;
+    console.log('friend lists are ', friendsList);
+    
   return (
       <>
             <Row xs={1} md={2} className={`g-4 ${styles.row}`} >
 
-                {friends.map((friend) => (
+                {friendsList.map((friend) => (
                     <Col md={12} lg = {6}>
                         <Card key= { friend.id} className = {styles.card}>
                             <Card.Body >
@@ -35,18 +37,19 @@ const FriendsData = (props: FriendsListProp) => {
                                         <div>
                                             <Image 
                                             className = {styles.img}
-                                            src= {friend.image} alt='debola'/>
+                                            src= {'/images/imagePlaceholder.jpg'} alt='user'/>
                                         </div>
                                         <div className = { styles.title}>
-                                                                                                        <Card.Title className = { styles.name}>
-                                                {friend.name}
+                                                                                                        <Card.Title className = { styles.firstName}>
+                                                {friend.firstName}
                                             </Card.Title>
                                             <Card.Subtitle className = {`mb-2 text-muted ${styles.subtitle}`}>{friend.number} </Card.Subtitle>
 
                                         </div>
 
                                         <Badge bg= 'light'>
-                                            <Image src = {friend.menu} alt = 'dot' className = {styles.dot}/>
+                                            {/* <Image src = {'/images/dots.png'} alt = 'dot' className = {styles.dot}/> */}
+                                            <FiMoreVertical size={20} />
                                         </Badge>
                                     </ListGroup.Item>
                                 </ListGroup>
@@ -55,7 +58,7 @@ const FriendsData = (props: FriendsListProp) => {
                         </Card>
                     </Col>
                     
-                ))}
+                ))} 
         </Row>
       </>
     

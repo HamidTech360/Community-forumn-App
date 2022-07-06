@@ -4,6 +4,7 @@ import PostCard from "@/components/Organisms/App/PostCard";
 import CreatePost from "@/components/Organisms/CreatePost";
 import styles from "@/styles/feed.module.scss";
 import Head from "next/head";
+import config from "@/config";
 import UserCard from "@/components/Organisms/App/UserCard";
 import Discussions from "@/components/Organisms/App/Discussions/Discussions";
 import { usePagination } from "@/hooks/usePagination";
@@ -16,6 +17,8 @@ import Bookmarks from "@/components/Templates/Profile/Bookmarks";
 import Link from "next/link";
 import GroupInfoCard from "@/components/Organisms/App/GroupInfoCard";
 import AuthContent from "@/components/Auth/AuthContent";
+import axios from 'axios'
+
 interface IComponents {
   about: ReactNode;
   timeline: ReactNode;
@@ -23,20 +26,17 @@ interface IComponents {
   photos: ReactNode;
   members: ReactNode;
 }
-const Components: IComponents = {
-  timeline: <Timeline />,
-  about: <About />,
-  photos: <Media />,
-  members: <Friends />,
-  videos: <Media />,
-};
+
 const Group = () => {
+
+ 
+  
+
   const { posts, setPage, hasMore, isFetchingMore } = usePagination();
-
   const router = useRouter();
-
-  const { path } = router.query;
-
+  const { path, id } = router.query;
+  const [groupData, setGroupData] = useState([])
+  
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
 
@@ -44,6 +44,30 @@ const Group = () => {
       document.body.style.backgroundColor = "initial";
     };
   }, []);
+
+  useEffect(()=>{
+    //console.log('current group id is ' + id + router.isReady);
+    (async function (){
+        try{
+          const response = await axios.get(`${config.serverUrl}/api/groups/group/${id}`)
+          console.log(response.data);
+          setGroupData(response.data)
+        }catch(error){
+          console.log(error.response?.data);       
+        }
+    })()
+  },[router.isReady])
+  console.log(router.query);
+
+
+  const Components: IComponents = {
+    timeline: <Timeline groupId={id} />,
+    about: <About type={'group'} data={groupData}  />,
+    photos: <Media />,
+    members: <Friends data={groupData} />,
+    videos: <Media />,
+  };
+  
   return (
     <AuthContent>
       <Head>
@@ -61,7 +85,7 @@ const Group = () => {
           </>
 
           <main className={styles.profile}>
-            <GroupInfoCard />
+            <GroupInfoCard data={groupData} />
 
             {Components[path as unknown as string]}
           </main>

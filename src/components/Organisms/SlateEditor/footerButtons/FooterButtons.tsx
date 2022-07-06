@@ -6,13 +6,13 @@ import GistFooterBtn from "./GistFooterBtn";
 import ChatFooterBtn from "./ChatFooterBtn";
 import FeedFooterBtn from "./FeedFooterBtn";
 
-function FooterButtons({ editorID }) {
+function FooterButtons({ editorID }:any) {
   const router = useRouter();
 
   return (
     <>
       {router.asPath === "/explore" ? (
-        <BlogPostFooterBtn editorID={editorID} />
+        <BlogPostFooterBtn   editorID={editorID} />
       ) : router.asPath === "/gist" ? (
         <GistFooterBtn editorID={editorID} />
       ) : router.asPath === "/chat" ? (
