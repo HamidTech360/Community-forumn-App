@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../../redux/store";
 
-import { useDispatch, useSelector } from "@/redux/store";
-
 // declaring the types for our state
 export type Chat = {
   userToChatTimeline: [object, number];
