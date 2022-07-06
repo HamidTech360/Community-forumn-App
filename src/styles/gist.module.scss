@@ -47,20 +47,15 @@
     width: 20px;
   }
 }
-.newGistModal {
-  padding: 40px;
-}
 
-@media screen and (max-width:768px) {
-  .GistModal{
+@media screen and (max-width: 768px) {
+  .GistModal {
     width: 100% !important;
     margin: 0 !important;
   }
 }
 
-
 .gistBody {
-
   margin-top: -1rem;
   line-height: 1.3rem;
 
@@ -75,13 +70,6 @@
 }
 
 @media screen and (max-width: 768px) {
-  .newGistModal {
-    padding: 20px;
-  }
-  // .modal {
-  //   // margin: auto;
-  //   margin-top: 100px;
-  // }
   .closeBtn {
     margin-top: 40px;
   }

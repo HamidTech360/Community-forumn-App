@@ -30,9 +30,6 @@ import formStyles from "../../styles/templates/new-group/formField.module.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import {
-  uploadFailed,
-  uploadStart,
-  uploadSuccess,
   uploadCleanUp,
   selectGistData,
   selectGistIsLoading,
@@ -41,9 +38,6 @@ import {
   setShowGistModal,
   selectShowGistModal,
   setGistTitle,
-  // setGistBody,
-  selectGistTitle,
-  // selectGistBody,
   setIsFetching,
   selectIsFetching,
 } from "@/reduxFeatures/api/gistSlice";
@@ -61,13 +55,9 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   const gistIsSuccess = useSelector(selectGistIsSuccess);
 
   const showGistModal = useSelector(selectShowGistModal);
-  // const showGistTitle = useSelector(selectGistTitle);
-  // const showGistBody = useSelector(selectGistBody);
   const user = useSelector(selectUser);
   const isFetching = useSelector(selectIsFetching);
 
-  const [showModal, setShowModal] = useState(false);
-  const [fetching, setIsFetching] = useState(true);
   const [allGists, setAllGists] = useState([]);
 
   const [formData, setFormData] = useState({
@@ -79,15 +69,24 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     document.body.style.backgroundColor = "#f6f6f6";
     (async function () {
       try {
+        // const gistResponse = await axios.get("/api/gists");
         const gistResponse = await axios.get(`${config.serverUrl}/api/gists`);
 
-        console.log("gistResponse:", gistResponse);
+        // const userResponse = await axios.get("/api/user", {
+        //   headers: {
+        //     authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        //   },
+        // });
+        // console.log("gistResponse:", gistResponse.data);
+        // console.log("userResponse:", userResponse.data.users);
 
+        // setUsers(userResponse.data.users);
         setAllGists(gistResponse.data);
         setIsFetching(false);
-        console.log(gistResponse.data);
+        // console.log(gistResponse.data);
       } catch (error) {
-        console.log(error.response?.data);
+        console.error(error.response?.data);
+        setIsFetching(false);
       }
     })();
     return () => {
@@ -97,6 +96,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
 
   useEffect(() => {
     if (gistIsSuccess) {
+
       toast.success("Gist uploaded succesfully", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: customId,
@@ -108,39 +108,12 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
       })();
 
       dispatch(uploadCleanUp({}));
-      // setShowModal(false);
       dispatch(setShowGistModal(false));
-    } else if (gistError) {
-      toast.error("Error uploading", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: customId,
-      });
-      dispatch(uploadCleanUp({}));
     }
-  }, [gistIsSuccess, gistError]);
+  }, [gistIsSuccess]);
 
   const handleChange = (e) => {
     dispatch(setGistTitle(e.currentTarget.value));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    dispatch(uploadStart({}));
-
-    try {
-      const response = await axios.post(
-        `${config.serverUrl}/api/gists`,
-        formData,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
-      dispatch(uploadSuccess(response.data));
-    } catch (error) {
-      dispatch(uploadFailed(error.response?.data));
-    }
   };
 
   return (
@@ -190,11 +163,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             </BCard>
           </Col>
           <Col md={9}>
-            {/* <BCard.Header className="shadow-sm border-0"> */}
             <div className="d-flex justify-content-between">
-              {/* <h2>New Gists</h2> */}
-
-              {/* <Button variant="none" onClick={() => setShowModal(true)}> */}
               <Button
                 variant="none"
                 onClick={() => dispatch(setShowGistModal(true))}
@@ -219,32 +188,24 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                 <option>Canada</option>
               </select>
             </div>
-            {/* </BCard.Header> */}
-            {/* <BCard.Body className={styles.cardBody}> */}
-            {isFetching ||
-              (fetching && (
-                <div className="m-2 p-2 d-flex justify-content-center">
-                  <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                  </Spinner>
-                </div>
-              ))}
+            {isFetching && (
+              <div className="m-2 p-2 d-flex justify-content-center">
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              </div>
+            )}
             <div className="w-100 justify-content-center">
               {allGists.map((post, key) => (
                 <GistCard gist={post} key={`gist-${key}`} trimmed />
               ))}
             </div>
-
-            {/* </BCard.Body> */}
           </Col>
         </Row>
       </Container>
 
       <Modal
-        // size="md"
-        // show={showModal}
         show={showGistModal}
-        // className={styles.GistModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
         size="lg"
@@ -256,66 +217,35 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             color="#207681"
             style={{ cursor: "pointer" }}
             size={35}
-            // onClick={() => setShowModal(false)}
             onClick={() => dispatch(setShowGistModal(false))}
           />{" "}
         </span>
-        {/* <div className={styles.newGistModal}>
-          <Form onSubmit={(e) => handleSubmit(e)}>
-            <Form.Group className={formStyles.formGroup}>
-              <Form.Label className={formStyles.formLabel}>
-                {" "}
-                Gist Title
-              </Form.Label>
-              <Form.Control
-                size="lg"
-                name="title"
-                type="text"
-                required
-                onChange={(e) => handleChange(e)}
-              />
-            </Form.Group>
 
-            <Form.Group className={formStyles.formGroup}>
-              <Form.Control
-                className={formStyles.bigForm}
-                as="textarea"
-                name="post"
-                type="text"
-                required
-                placeholder="Write something"
-                onChange={(e) => handleChange(e)}
-              />
-            </Form.Group>
-
-            <Button variant="primary" className="d-flex mx-auto" type="submit">
-              {gistIsLoading ? "uploading..." : "Continue"}
-            </Button>
-          </Form>
-        </div> */}
-        <div className="col-12 px-5">
-          <Form
-            // onSubmit={(e) => handleSubmit(e)}
-            className={styles.newGistModal}
+        <div className="row justify-content-center">
+          <div
+            className="col-10 col-xl-11 col-xxl-10"
+            style={{ padding: "12px 0px" }}
           >
-            <Form.Group className={formStyles.formGroup}>
-              <Form.Label className={formStyles.formLabel}>
-                {" "}
-                Gist Title
-              </Form.Label>
-              <Form.Control
-                id="createGistID"
-                size="lg"
-                name="title"
-                type="text"
-                required
-                onChange={(e) => handleChange(e)}
-              />
-            </Form.Group>
-          </Form>
-
-          <Editor />
-          <div className="mb-4"></div>
+            <Form>
+              <Form.Group className="px-5">
+                <Form.Label className={formStyles.formLabel}>
+                  Gist Title
+                </Form.Label>
+                <Form.Control
+                  id="createGistID"
+                  size="lg"
+                  name="title"
+                  type="text"
+                  onChange={(e) => handleChange(e)}
+                  style={{ backgroundColor: "rgb(248, 244, 244)" }}
+                  required
+                />
+              </Form.Group>
+            </Form>
+          </div>
+          <div className="col-12 px-4 mt-2 mb-4">
+            <Editor slim={false} />
+          </div>
         </div>
       </Modal>
     </section>

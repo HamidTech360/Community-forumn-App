@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import appReducer from "@/reduxFeatures/app/appSlice";
+import chatReducer from "@/reduxFeatures/app/chatSlice";
 import authStateReducer from "@/reduxFeatures/authState/authStateSlice";
 import postReducer from "@/reduxFeatures/api/postSlice";
 import gistReducer from "@/reduxFeatures/api/gistSlice";
@@ -17,8 +18,15 @@ export const store = configureStore({
     post: postReducer,
     gist: gistReducer,
     app: appReducer,
+    chat: chatReducer,
     authState: authStateReducer,
   },
+
+  // Prevent Age (dateTime) from returning unSterilized error
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

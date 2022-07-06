@@ -1,4 +1,6 @@
 import UnAuthContent from "@/components/Auth/UnAuthContent";
+import config from "@/config";
+import axios from "axios";
 import { InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import Image from "next/image";
@@ -10,7 +12,7 @@ import Services from "../components/Organisms/Landing/Service";
 import Footer from "../components/Organisms/Layout/Footer";
 import styles from "../styles/Landing.module.scss";
 
-const Home = () => {
+const Home = ({ articles }: { articles: Record<string, any>[] }) => {
   return (
     <UnAuthContent>
       <Head>
@@ -26,11 +28,22 @@ const Home = () => {
         <>
           <Intro />
           <Services />
-          <Articles />
+          <Articles articles={articles} />
         </>
       </main>
     </UnAuthContent>
   );
 };
 
+export const getStaticProps = async () => {
+  const {
+    data: { posts },
+  } = await axios.get(`${config.serverUrl}/api/posts`);
+
+  return {
+    props: {
+      articles: posts,
+    },
+  };
+};
 export default Home;
