@@ -13,7 +13,7 @@ import {
   setPostTitle
 } from "@/reduxFeatures/api/postSlice";
 
-const CreatePost = ({}) => {
+const CreatePost = ({DisplayModal}) => {
   
   const data = useSelector(selectUser);
   const dispatch = useDispatch()

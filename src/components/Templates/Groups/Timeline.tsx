@@ -7,7 +7,7 @@ const Timeline = () => {
     <>
       <div>
         <h5 className={styles.head}>Posts</h5>
-        <Posts />
+        <Posts Posts={[]} />
       </div>
     </>
   );

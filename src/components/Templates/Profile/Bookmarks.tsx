@@ -4,7 +4,7 @@ import Timeline from "./Timeline";
 const Bookmarks = () => {
   return (
     <div>
-      <Timeline />
+      <Timeline Posts={[]} />
     </div>
   );
 };
