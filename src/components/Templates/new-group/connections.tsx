@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import styles from "../../../styles/templates/new-group/connection.module.css";
 import { Form, Row, Col, Button } from "react-bootstrap";
 
@@ -63,7 +64,7 @@ const AddConnections = ({handleSubmit, isLoading}) => {
             xs="5"
             className={styles.connectionItem}
           >
-            <img
+            <Image
               src={`/images/friends${i + 1}.png`}
               alt="profile"
               className={styles.profilePics}

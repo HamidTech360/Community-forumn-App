@@ -89,17 +89,14 @@ const PostCard = ({
         />
         <div className="d-flex flex-column">
           <div className={styles.div}>
-            <small
-              dangerouslySetInnerHTML={{
-                __html: sanitizer(`${post.author?.firstName} ${post.author?.lastName}`),
-              }}
-            />
+           <small dangerouslySetInnerHTML={{
+              __html: sanitizer(`${post.author?.firstName} ${post.author?.lastName}`),
+            }} />
             <br />
-            <span style={{ marginTop: "10px", fontSize: "13px" }}>
+            <span style={{ marginTop: "10px" }}>
               <Age time={post?.createdAt} />
             </span>
           </div>
-
           <NavDropdown
             className={`position-absolute end-0 ${styles.dropdown}`}
             drop="down"
