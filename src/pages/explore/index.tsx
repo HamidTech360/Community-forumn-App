@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import config from "../../config";

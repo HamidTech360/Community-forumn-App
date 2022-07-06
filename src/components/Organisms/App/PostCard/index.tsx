@@ -31,6 +31,7 @@ const PostCard = ({
   const user = useSelector(selectUser);
   const posts = useSelector(selectPost);
   const router = useRouter();
+  const sanitizer = DOMPurify.sanitize;
   const postButton = [
     {
       name: "Like",
@@ -90,7 +91,7 @@ const PostCard = ({
           <div className={styles.div}>
             <small
               dangerouslySetInnerHTML={{
-                __html: `${post.author?.firstName} ${post.author?.lastName}`,
+                __html: sanitizer(`${post.author?.firstName} ${post.author?.lastName}`),
               }}
             />
             <br />
@@ -143,9 +144,9 @@ const PostCard = ({
             //       DOMPurify.sanitize(post?.postTitle),
             // }}
             dangerouslySetInnerHTML={{
-              __html: trimmed
+              __html: sanitizer(trimmed
                 ? post?.postBody || post?.post?.slice(0, 500) + "..."
-                : post?.postTitle || post?.postTitle,
+                : post?.postTitle || post?.postTitle),
             }}
           />
         )}

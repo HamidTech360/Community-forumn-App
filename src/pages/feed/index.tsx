@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // import useUser from "@/hooks/useUser";
 import Head from "next/head";
 import axios from "axios";
