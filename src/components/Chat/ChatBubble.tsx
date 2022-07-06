@@ -1,4 +1,5 @@
 import React from "react";
+import DOMPurify from "dompurify";
 
 function ChatBubble(message) {
   const self = `bg-primary text-light mb-3 p-3 ms-auto`;
@@ -8,6 +9,8 @@ function ChatBubble(message) {
   const messagingStyle2 = message.sender === "self" && self2;
   const borderRadiusBubble =
     message.sender === "self" ? "35px 0 15px 35px" : "0 35px 35px 15px";
+
+    const sanitizer = DOMPurify.sanitize;
 
   return (
     <div
@@ -34,7 +37,7 @@ function ChatBubble(message) {
             borderRadius: borderRadiusBubble,
           }}
           dangerouslySetInnerHTML={{
-            __html: message.message,
+            __html: sanitizer(message.message),
           }}
         ></div>
       </div>

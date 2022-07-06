@@ -60,7 +60,7 @@ const Toolbar = ({ position }) => {
         focus: Editor?.end(editor, []),
       },
     });
-  }, [reFocusChatEditor]);
+  }, [editor, reFocusChatEditor]);
 
   const BlockButton = ({ format, toolTip }) => {
     return (

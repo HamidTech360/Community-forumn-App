@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 //@ts-nocheck
 import AuthContent from "@/components/Auth/AuthContent";
 import React, { useState, useRef, useEffect } from "react";

@@ -21,6 +21,7 @@ import styles from "@/styles/gist.module.scss";
 // }
 const GistCard = ({ gist, primary, trimmed }: any) => {
   console.log(gist);
+  const sanitizer = DOMPurify.sanitize;
   return (
     <Card
       className="mt-4 p-3 shadow-sm"
@@ -64,27 +65,11 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
 
       {gist?.post && (
         <Card.Body
-          // dangerouslySetInnerHTML={{
-          //   __html: striptags(gist?.post, "<a> <b> <em> <p> <strong> <i>").slice(
-          //     0,
-          //     500
-          //   ),
-          // }}
-
-          // dangerouslySetInnerHTML={{
-          //   // __html: DOMPurify.sanitize(gist.post.slice(0, 500)),
-          //   __html: DOMPurify.sanitize(gist.post),
-          // }}
-          // dangerouslySetInnerHTML={{
-          //   __html: trimmed
-          //     ? DOMPurify.sanitize(gist.post.slice(0, 500)) ||
-          //       DOMPurify.sanitize(gist.post.slice(0, 500))
-          //     : DOMPurify.sanitize(gist.post) || DOMPurify.sanitize(gist.post),
-          // }}
+         
           dangerouslySetInnerHTML={{
-            __html: trimmed
+            __html: sanitizer(trimmed
               ? gist.post.slice(0, 500) || gist.post.slice(0, 500)
-              : gist.post || gist.post,
+              : gist.post || gist.post),
           }}
           style={{
             marginTop: "-1rem",

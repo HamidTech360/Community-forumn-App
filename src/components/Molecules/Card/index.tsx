@@ -19,6 +19,7 @@ const Card = ({ _id, image, title, author, body, size }) => {
   // console.log("author", author);
   // console.log("body", body);
   // console.log("size", size);
+  const sanitizer = DOMPurify.sanitize
 
   return (
     <>
@@ -57,9 +58,8 @@ const Card = ({ _id, image, title, author, body, size }) => {
               </small>{" "}
             </span>
             <div
-              // dangerouslySetInnerHTML={{ __html: body }}
-              // dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(body) }}
-              dangerouslySetInnerHTML={{ __html: body }}
+    
+              dangerouslySetInnerHTML={{ __html: sanitizer(body) }}
               style={{
                 height: "4.5rem",
                 lineHeight: "1.5rem",
