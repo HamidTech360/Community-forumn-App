@@ -11,15 +11,15 @@ import {
   setShowPostModal,
   selectPostTitle,
   setIsFetching,
-  selectShowPostModal
+  selectShowPostModal,
 } from "@/reduxFeatures/api/postSlice";
 
-function BlogPostFooterBtn({ editorID, handleClick }:any) {
-  const router = useRouter()
+function BlogPostFooterBtn({ editorID, handleClick }: any) {
+  const router = useRouter();
   console.log(`router query from footer btns is `, router.query);
-  
+
   const [uploading, setUploading] = useState(false);
-  const [groupId, setGroupId] = useState(null)
+  const [groupId, setGroupId] = useState(null);
   const dispatch = useDispatch();
   const showPostTitle = useSelector(selectPostTitle);
   const showPostModal = useSelector(selectShowPostModal);
@@ -27,12 +27,11 @@ function BlogPostFooterBtn({ editorID, handleClick }:any) {
   const createPost = async (e) => {
     e.preventDefault();
     const editorInnerHtml = document.getElementById(editorID).innerHTML;
-    if(router.query.path=="timeline"){
-      setGroupId(router.query.id)
+    if (router.query.path == "timeline") {
+      setGroupId(router.query.id);
     }
     setUploading(true);
     try {
-     
       await axios.post(
         `${config.serverUrl}/api/posts`,
         { postTitle: showPostTitle, postBody: editorInnerHtml, groupId },
@@ -42,8 +41,8 @@ function BlogPostFooterBtn({ editorID, handleClick }:any) {
           },
         }
       );
-        console.log(response.data);
-        
+      console.log(response.data);
+
       toast.success("Post uploaded successfully", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
@@ -64,7 +63,7 @@ function BlogPostFooterBtn({ editorID, handleClick }:any) {
       // };
       // fetchPost();
     } catch (error) {
-       console.log(error.response?.data);
+      console.log(error.response?.data);
       if (!localStorage.getItem("accessToken")) {
         toast.error("You must login to create a  post", {
           position: toast.POSITION.TOP_RIGHT,

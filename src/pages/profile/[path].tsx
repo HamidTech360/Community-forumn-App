@@ -16,6 +16,9 @@ import Bookmarks from "../../components/Templates/Profile/Bookmarks";
 import Link from "next/link";
 import ProfileCard from "../../components/Organisms/App/ProfileCard";
 import AuthContent from "@/components/Auth/AuthContent";
+import axios from "axios";
+import config from "@/config";
+
 interface IComponents {
   about: ReactNode;
   timeline: ReactNode;
@@ -44,6 +47,37 @@ const Profile = () => {
       document.body.style.backgroundColor = "initial";
     };
   }, []);
+
+  useEffect(() => {
+    (async function () {
+      console.log("router.query.id:", router.query.id);
+      try {
+        const response = await axios.get(
+          `${config.serverUrl}/api/users/62c56395a9da114c8ee8577c`,
+          // `${config.serverUrl}/api/users/${router.query.id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        // const userResponse = await axios.get("/api/auth", {
+        //   headers: {
+        //     authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        //   },
+        // });
+        console.log("response:", response);
+        // console.log("userResponse:", userResponse);
+        // setUser(userResponse.data);
+        // //console.log(response.data);
+        // setData(response.data.gist);
+      } catch (error) {
+        // router.replace("/gist");
+        console.log("error:", error.response?.data);
+      }
+    })();
+  }, []);
+
   return (
     <AuthContent>
       <Head>
