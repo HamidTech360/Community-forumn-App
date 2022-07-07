@@ -9,7 +9,7 @@
 }
 
 .title {
-  margin-left: -1rem;
+  // margin-left: -1rem;
 
   @media screen and (max-width: 600px) {
     margin-left: -0.8rem !important;
@@ -18,7 +18,7 @@
   .div {
     small {
       font-size: large;
-      margin-right: 0.3rem;
+      // margin-right: 0.3rem;
 
       @media screen and (max-width: 1100px) {
         font-size: medium;
@@ -29,7 +29,7 @@
       }
 
       @media screen and (max-width: 300px) {
-        font-size: 0.7rem;
+        font-size: small;
       }
     }
 
@@ -37,34 +37,20 @@
       font-size: large;
 
       @media screen and (max-width: 1100px) {
-        font-size: medium;
+        font-size: 13px;
       }
 
       @media screen and (max-width: 300px) {
-        font-size: 0.7rem;
+        font-size: 10px;
       }
     }
 
     @media screen and (max-width: 1100px) {
-      width: 96%;
       line-height: 1rem;
-    }
-
-    @media screen and (max-width: 800px) {
-      width: 100%;
-    }
-
-    @media screen and (max-width: 440px) {
-      width: 85%;
-    }
-
-    @media screen and (max-width: 400px) {
-      width: 90%;
     }
 
     @media screen and (max-width: 300px) {
       line-height: 0.8rem;
-      width: 86%;
     }
   }
 

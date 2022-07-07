@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from "react";
+import React, { useEffect, useState} from "react";
+import Image from "next/image";
 import styles from "../../../styles/templates/new-group/connection.module.css";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { useSelector } from "@/redux/store";
@@ -61,7 +62,7 @@ const AddConnections = ({handleSubmit, isLoading, chooseConnections, data}) => {
             className={styles.connectionItem}
             onClick={()=>handleSelection(item, i)}
           >
-            <img
+            <Image
               src={`/images/friends${i + 1}.png`}
               alt="profile"
               className={styles.profilePics}
