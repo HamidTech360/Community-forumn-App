@@ -3,10 +3,13 @@ import { Container } from "react-bootstrap";
 //import { FriendsDataType } from '../FriendsList/FriendsData';
 import FriendsData from "../FriendsList/FriendsData";
 import styles from '../../../styles/friends.module.scss';
-
+import { useSelector } from "@/redux/store";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 
 const Friends = () => {
-
+  const Data = useSelector(selectUser)
+  console.log(Data);
+  
   const data= {
     friends: [
       {
@@ -127,7 +130,7 @@ const Friends = () => {
   return (
     <>
       <Container className = {styles.friendBody}>
-          <FriendsData friendsList={data} />
+          <FriendsData friendsList={[...Data.followers, ...Data.following]} />
       </Container>
     </>
     );

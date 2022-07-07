@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Container, Card } from "react-bootstrap";
-
+import { Container, Card, FormControl } from "react-bootstrap";
 import { FiEdit } from "react-icons/fi";
 import {
   BsPlusCircle,
@@ -9,9 +8,14 @@ import {
   BsFillPersonFill,
 } from "react-icons/bs";
 import { MdCall } from "react-icons/md";
+import { useSelector } from "@/redux/store";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import styles from '@/styles/profile.module.scss'
 
 const About = () => {
+  const user = useSelector(selectUser)
+  console.log('user coming from profile about', user);
+  
   const [activeTab, setActiveTab] = useState("bio");
   const [interests, setInterests] = useState([
     "Studying abroad",
@@ -21,12 +25,10 @@ const About = () => {
   ]);
 
   useEffect(() => {
-    // Set Active Tabs Visibility To Bio
     tabVisibility("bio");
   }, []);
 
   const tabVisibility = (pageTab) => {
-    // Set Tabs Visibility
     document.getElementById(pageTab).classList.add("text-primary");
     for (const key in Components) {
       if (key !== pageTab) {
@@ -36,12 +38,8 @@ const About = () => {
   };
 
   const tabNav = (e) => {
-    // Change Active Tab
     const pageTab = e.target.id;
-
-    // Set Active Tabs Visibility
     tabVisibility(pageTab);
-    // Display Active Tab
     setActiveTab(pageTab);
   };
 
@@ -57,11 +55,15 @@ const About = () => {
         </div>
         <div className="row">
           <p className="col-12 text-muted" id="bioText">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque quas,
-            pariatur, non ex ea laborum deserunt deleniti error vel adipisci
-            fugit harum, illum iusto officia laudantium. Nesciunt fugiat illo
-            maxime?
+           
           </p>
+          <FormControl 
+              style={{color:'grey', fontWeight:'500'}} 
+              value= {user.bio?user.bio:`I am ${user.firstName} ${user.lastName}...`} 
+               as="textarea"
+              rows={3}
+              readOnly={true}
+          />
         </div>
         <div className="row col-12 mt-4">
           <h5>Interest</h5>

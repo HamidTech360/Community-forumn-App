@@ -12,7 +12,7 @@ const AddConnections = ({handleSubmit, isLoading, chooseConnections, data}) => {
   
   const [connections, setConnections]= useState([])
   useEffect(()=>{
-    const addSelectionProps = [...user.followers, ...user.following, {_id:'12345', firstName:'Hammed', lastName:'Owolabi'}].map(el=>({...el, isSelected:false}))
+    const addSelectionProps = [...user.followers, ...user.following].map(el=>({...el, isSelected:false}))
     addSelectionProps.map((item)=>{
       const index = data.groupMembers.indexOf(item._id)
       if(index>-1){
