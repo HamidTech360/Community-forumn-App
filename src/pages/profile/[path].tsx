@@ -53,8 +53,7 @@ const Profile = () => {
       console.log("router.query.id:", router.query.id);
       try {
         const response = await axios.get(
-          `${config.serverUrl}/api/users/62c56395a9da114c8ee8577c`,
-          // `${config.serverUrl}/api/users/${router.query.id}`,
+          `${config.serverUrl}/api/users/${router.query.id}`,
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`,

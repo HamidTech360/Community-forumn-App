@@ -68,18 +68,17 @@ const Explore = ({}) => {
     };
   }, []);
 
-  const fetchPost = async () => {
-    try {
-      const response = await axios.get(`${config.serverUrl}/api/posts`);
-      dispatch(setPosts(response.data.posts));
-      // setIsFetching(false);
-      dispatch(setIsFetching(false));
-    } catch (error) {
-      console.log(error.response?.data);
-    }
-  };
-
   useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(`${config.serverUrl}/api/posts`);
+        dispatch(setPosts(response.data.posts));
+        // setIsFetching(false);
+        dispatch(setIsFetching(false));
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    };
     fetchPost();
     //(async function () {
     //   try {
@@ -93,7 +92,7 @@ const Explore = ({}) => {
     //     dispatch(setIsFetching(false));
     //   }
     // })();
-  }, [fetchPost]);
+  }, [dispatch]);
 
   const handleChange = (e) => {
     dispatch(setPostTitle(e.currentTarget.value));

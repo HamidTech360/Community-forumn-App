@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "@/redux/store";
 import { user, selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import config from "@/config";
 
 const AuthStatus = () => {
   const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const AuthStatus = () => {
       if (!stateUser) {
         (async function () {
           try {
-            const response = await axios.get(`/api/auth`, {
+            const response = await axios.get(`${config.serverUrl}/api/auth`, {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
               },
