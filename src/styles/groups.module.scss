@@ -22,3 +22,24 @@
     margin-top: -1.4rem;
   }
 }
+.groupLists{
+  margin-top: 20px;
+}
+.groupCard{
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  cursor: pointer;
+}
+.groupProfileImg{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.groupAdminName{
+  font-size: 13px;
+  font-weight: 400;
+  color: grey;
+}

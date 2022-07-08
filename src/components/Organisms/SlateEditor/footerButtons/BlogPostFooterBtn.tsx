@@ -1,5 +1,5 @@
 //@ts-nocheck
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import config from "../../../../config";
 import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import { useRouter } from "next/router";
@@ -11,12 +11,13 @@ import {
   setShowPostModal,
   selectPostTitle,
   setIsFetching,
-  selectShowPostModal
+  selectShowPostModal,
+  selectPost
 } from "@/reduxFeatures/api/postSlice";
 
 function BlogPostFooterBtn({ editorID, handleClick }:any) {
   const router = useRouter()
-  console.log(`router query from footer btns is `, router.query);
+  
   
   const [uploading, setUploading] = useState(false);
   const [groupId, setGroupId] = useState(null)
@@ -24,16 +25,22 @@ function BlogPostFooterBtn({ editorID, handleClick }:any) {
   const showPostTitle = useSelector(selectPostTitle);
   const showPostModal = useSelector(selectShowPostModal);
 
-  const createPost = async (e) => {
-    e.preventDefault();
-    const editorInnerHtml = document.getElementById(editorID).innerHTML;
+  useEffect(()=>{
     if(router.query.path=="timeline"){
       setGroupId(router.query.id)
     }
+  },[])
+
+  const createPost = async (e) => {
+    e.preventDefault();
+    const editorInnerHtml = document.getElementById(editorID).innerHTML;
+   
     setUploading(true);
     try {
+      
      
-      await axios.post(
+    
+      const response =  await axios.post(
         `${config.serverUrl}/api/posts`,
         { postTitle: showPostTitle, postBody: editorInnerHtml, groupId },
         {
@@ -52,15 +59,7 @@ function BlogPostFooterBtn({ editorID, handleClick }:any) {
       dispatch(setShowPostModal(false));
 
       // const fetchPost = async () => {
-      try {
-        // const response = await axios.get(`/api/posts`);
-        const response = await axios.get(`${config.serverUrl}/api/posts`);
-        dispatch(setPosts(response.data.posts));
-        dispatch(setIsFetching(false));
-      } catch (error) {
-        console.error(error.response?.data);
-        dispatch(setIsFetching(false));
-      }
+      
       // };
       // fetchPost();
     } catch (error) {
@@ -79,6 +78,16 @@ function BlogPostFooterBtn({ editorID, handleClick }:any) {
       setUploading(false);
     }
   };
+
+  // try {
+  //   // const response = await axios.get(`/api/posts`);
+  //   const response = await axios.get(`${config.serverUrl}/api/posts`);
+  //   dispatch(setPosts(response.data.posts));
+  //   dispatch(setIsFetching(false));
+  // } catch (error) {
+  //   console.error(error.response?.data);
+  //   dispatch(setIsFetching(false));
+  // }
 
   return (
     <>
