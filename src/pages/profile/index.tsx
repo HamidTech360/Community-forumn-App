@@ -29,9 +29,7 @@ interface IComponents {
 const Profile = () => {
   //const { posts,  hasMore, isFetchingMore } = usePagination();
 
-  const router = useRouter();
   const [path, setPath] = useState("timeline");
-  const { id } = router.query;
   const [data, setData] = useState([]);
 
   useEffect(() => {
