@@ -29,6 +29,8 @@ const ProfileCard = () => {
   const { path } = useRouter().query;
   // const {data} = useSelector(s=>s.user)
   const data = useSelector(selectUser);
+  console.log(data);
+  
   return (
     <Card className="mt-2 mb-3">
       <CardImg src="/images/formbg.png" className="image3" />
@@ -58,11 +60,11 @@ const ProfileCard = () => {
           style={{ width: "60%" }}
         >
           <div className="d-flex flex-column align-items-center">
-            <span>1000</span>
+            <span>{data.followers?.length}</span>
             <span>following</span>
           </div>
           <div className="d-flex flex-column align-items-center">
-            <span>1000</span>
+            <span>{data.following?.length}</span>
             <span>following</span>
           </div>
         </div>

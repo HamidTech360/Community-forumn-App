@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Badge, Card, Col, Image, ListGroup, Row } from 'react-bootstrap';
 import {FiMoreVertical} from 'react-icons/fi'
 import styles from '../../../styles/friends.module.scss';
@@ -21,15 +21,16 @@ import styles from '../../../styles/friends.module.scss';
 
 const FriendsData = ({friendsList}:any) => {
     
+   
     // const { friends } = props.friendsList;
     console.log('friend lists are ', friendsList);
-    
+
   return (
       <>
             <Row xs={1} md={2} className={`g-4 ${styles.row}`} >
 
-                {friendsList.map((friend) => (
-                    <Col md={12} lg = {6}>
+                {friendsList?.map((friend) => (
+                    <Col md={6} sm={12} lg = {6}>
                         <Card key= { friend.id} className = {styles.card}>
                             <Card.Body >
                                 <ListGroup variant = 'flush'>
@@ -43,12 +44,12 @@ const FriendsData = ({friendsList}:any) => {
                                                                                                         <Card.Title className = { styles.firstName}>
                                                 {friend.firstName}
                                             </Card.Title>
-                                            <Card.Subtitle className = {`mb-2 text-muted ${styles.subtitle}`}>{friend.number} </Card.Subtitle>
+                                            <Card.Subtitle className = {`mb-2 text-muted ${styles.subtitle}`}> 0 Mutual Friends </Card.Subtitle>
 
                                         </div>
 
                                         <Badge bg= 'light'>
-                                            {/* <Image src = {'/images/dots.png'} alt = 'dot' className = {styles.dot}/> */}
+                                           
                                             <FiMoreVertical size={20} />
                                         </Badge>
                                     </ListGroup.Item>

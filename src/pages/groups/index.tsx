@@ -73,10 +73,19 @@ const Groups = () => {
               <p className="text-primary">See more</p>
             </div>
             <Form.Control placeholder="search" />
-            <div className="groupLists">
+            <div className={styles.groupLists}>
                 {groups.map((item, i)=>
                    <Link href={`/groups/${item._id}/timeline`}>
-                       <div> {item.name} </div>
+                      <div className={styles.groupCard}>
+                        <div >
+                            <img src="/images/groups2.png" className={styles.groupProfileImg} alt="" />
+                        </div>
+                        <div> 
+                          <div>{item.name} </div>
+                          <div className={styles.groupAdminName}>Admin: {item.admin?.firstName} </div>
+                        </div>
+
+                      </div>
                    </Link>
                 )}
             </div>
@@ -84,7 +93,7 @@ const Groups = () => {
 
           <div className={styles.posts}>
             <div className={`d-none d-md-flex gap-3 mb-3`}>
-              {Posts.map((post, index) => (
+              {Posts.slice(0,4).map((post, index) => (
                 <Link key={`card-${index}`} href={`/groups/${post.groupId}/timeline`} passHref>
                   <Card style={{ height: "280px", border: "none" }}>
                     <CardImg
