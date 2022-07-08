@@ -19,7 +19,7 @@ import {
 } from "@/reduxFeatures/app/chatSlice";
 import { useRouter } from "next/router";
 
-const MainDisplay = ({ unreadChat, readChat, mainDisplay }) => {
+const MainDisplay = ({ unreadChat, readChat, mainSidebar, mainDisplay }) => {
   const router = useRouter();
   const [open, setOpen] = useState(true);
   const dispatch = useDispatch();

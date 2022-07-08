@@ -120,6 +120,7 @@ const Chat = () => {
           <MainDisplay
             unreadChat={unreadChat}
             readChat={readChat}
+            mainSidebar={mainSidebar}
             mainDisplay={mainDisplay}
           />
         </div>
