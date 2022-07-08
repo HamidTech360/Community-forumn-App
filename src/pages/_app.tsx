@@ -6,10 +6,9 @@ import { store } from "@/redux/store";
 import Header from "../components/Organisms/Layout/Header";
 import Footer from "../components/Organisms/Layout/Footer";
 import AuthStatus from "@/components/Auth/AuthStatus";
+// import SlimChat from "@/components/Chat/SlimChat";
 
 function MyApp({ Component, pageProps }: AppProps) {
-
-  
   return (
     <>
       <Provider store={store}>
@@ -20,6 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </div>
         <Footer />
+        {/* <SlimChat /> */}
       </Provider>
     </>
   );

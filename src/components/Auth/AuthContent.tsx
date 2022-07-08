@@ -2,7 +2,7 @@
 import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
 import Loader from "../Organisms/Layout/Loader/Loader";
-import config from '@/config'
+import config from "@/config";
 import axios from "axios";
 import { useDispatch, useSelector } from "@/redux/store";
 import {
@@ -33,8 +33,8 @@ export default function AuthContent({ children }: { children: ReactNode }) {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
           });
-          console.log('user from authContent is', response.data);
-          
+          console.log("user from authContent is", response.data);
+
           dispatch(user(response.data));
         } catch (error) {
           localStorage.removeItem("accessToken");
