@@ -18,19 +18,24 @@ interface IComponents {
   friends: ReactNode;
 }
 const Components: IComponents = {
-  timeline: <Timeline Posts={[]}/>,
+  timeline: <Timeline Posts={[]} />,
   about: <About />,
   media: <Media />,
   friends: <Friends />,
   bookmarks: <Bookmarks />,
 };
 
-const ProfileCard = () => {
-  const { path } = useRouter().query;
+const ProfileCard = ({
+  handlePath,
+  active,
+}: {
+  active: string;
+  handlePath: (path: string) => void;
+}) => {
   // const {data} = useSelector(s=>s.user)
   const data = useSelector(selectUser);
   console.log(data);
-  
+
   return (
     <Card className="mt-2 mb-3">
       <CardImg src="/images/formbg.png" className="image3" />
@@ -75,9 +80,10 @@ const ProfileCard = () => {
           {Object.keys(Components).map((item, index) => (
             <Nav.Item
               key={item}
-              className={item === path ? "text-primaries" : "textMute"}
+              onClick={() => handlePath(item.toLowerCase())}
+              className={item === active ? "text-primary" : "text-secondary"}
             >
-              <Link href={`/profile/${item}`}>{item}</Link>
+              {item}
             </Nav.Item>
           ))}
         </Nav>
