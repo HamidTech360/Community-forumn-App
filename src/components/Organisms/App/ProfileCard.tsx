@@ -18,7 +18,7 @@ interface IComponents {
   friends: ReactNode;
 }
 const Components: IComponents = {
-  timeline: <Timeline Posts={[]}/>,
+  timeline: <Timeline Posts={[]} />,
   about: <About />,
   media: <Media />,
   friends: <Friends />,
@@ -29,6 +29,8 @@ const ProfileCard = () => {
   const { path } = useRouter().query;
   // const {data} = useSelector(s=>s.user)
   const data = useSelector(selectUser);
+  console.log(data);
+  
   return (
     <Card className="mt-2 mb-3">
       <CardImg src="/images/formbg.png" className="image3" />
@@ -45,27 +47,27 @@ const ProfileCard = () => {
           }}
           roundedCircle
         />
-        <text className=" mt-4 bold text-center fs-7">
+        <div className=" mt-4 bold text-center fs-7">
           {data?.firstName} {data?.lastName}
-        </text>
-        <text className="text-muting">@{data?.firstName}</text>
-        <text className="text-muted text-center">
+        </div>
+        <div className="text-muting">@{data?.firstName}</div>
+        <div className="text-muted text-center">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
           illum quasi voluptatem explicabo, tempore enim!
-        </text>
-        <text
+        </div>
+        <div
           className="d-flex justify-content-between"
           style={{ width: "60%" }}
         >
           <div className="d-flex flex-column align-items-center">
-            <span>{data?.following?.length}</span>
+            <span>{data.followers?.length}</span>
             <span>following</span>
           </div>
           <div className="d-flex flex-column align-items-center">
-            <span>{data?.followers?.length}</span>
+            <span>{data.following?.length}</span>
             <span>following</span>
           </div>
-        </text>
+        </div>
       </Card.Body>
       <Card.Footer>
         {" "}

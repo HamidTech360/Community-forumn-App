@@ -11,7 +11,7 @@ import config from "@/config";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { useRouter } from "next/router";
 
-const Timeline = ({Posts}) => {
+const Timeline = ({ Posts }) => {
   const router = useRouter();
   const [scrollInitialized, setScrollInitialized] = useState(false);
   const { posts, hasMore, isFetchingMore } = usePagination();
@@ -30,7 +30,7 @@ const Timeline = ({Posts}) => {
   //       console.log(response.data.posts);
   //       setPosts(response.data.posts)
   //     }catch(error){
-  //       console.log(error.response?.data)     
+  //       console.log(error.response?.data)
   //     }
   //   })()
   // },[])

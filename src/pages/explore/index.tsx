@@ -68,18 +68,17 @@ const Explore = ({}) => {
     };
   }, []);
 
-  const fetchPost = async () => {
-    try {
-      const response = await axios.get(`${config.serverUrl}/api/posts`);
-      dispatch(setPosts(response.data.posts));
-      // setIsFetching(false);
-      dispatch(setIsFetching(false));
-    } catch (error) {
-      console.log(error.response?.data);
-    }
-  };
-
   useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(`${config.serverUrl}/api/posts`);
+        dispatch(setPosts(response.data.posts));
+        // setIsFetching(false);
+        dispatch(setIsFetching(false));
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    };
     fetchPost();
     //(async function () {
     //   try {
@@ -93,7 +92,7 @@ const Explore = ({}) => {
     //     dispatch(setIsFetching(false));
     //   }
     // })();
-  }, [fetchPost]);
+  }, [dispatch]);
 
   const handleChange = (e) => {
     dispatch(setPostTitle(e.currentTarget.value));
@@ -261,13 +260,14 @@ const Explore = ({}) => {
             onClick={() => dispatch(setShowPostModal(false))}
           />{" "}
         </span>
-        <div className="row justify-content-center">
+
+        <div className="row justify-content-center mx-1">
           <div
-            className="col-10 col-xl-11 col-xxl-10"
+            className="col-11 col-sm-10 col-xl-11 col-xxl-10"
             style={{ padding: "12px 0px" }}
           >
             <Form>
-              <Form.Group className="px-5">
+              <Form.Group>
                 <Form.Label className={formStyles.formLabel}>
                   Post Title
                 </Form.Label>
@@ -279,13 +279,14 @@ const Explore = ({}) => {
                   onChange={(e) => handleChange(e)}
                   style={{
                     backgroundColor: "rgb(248, 244, 244)",
+                    borderRadius: "10px",
                   }}
                   required
                 />
               </Form.Group>
             </Form>
           </div>
-          <div className="col-12 px-4 mt-2 mb-4">
+          <div className="col-12 mt-2 mb-4 px-lg-4">
             <Editor slim={false} />
           </div>
         </div>
@@ -293,7 +294,5 @@ const Explore = ({}) => {
     </div>
   );
 };
-
-
 
 export default Explore;

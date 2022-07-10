@@ -2,6 +2,8 @@ import React, { useEffect, useState, ReactNode } from "react";
 import { Card, CardImg, Container, Nav, Spinner } from "react-bootstrap";
 import PostCard from "../../components/Organisms/App/PostCard";
 import CreatePost from "../../components/Organisms/CreatePost";
+import axios from "axios";
+import config from "@/config";
 import styles from "../../styles/feed.module.scss";
 import Head from "next/head";
 import UserCard from "../../components/Organisms/App/UserCard";
@@ -16,6 +18,7 @@ import Bookmarks from "../../components/Templates/Profile/Bookmarks";
 import Link from "next/link";
 import ProfileCard from "../../components/Organisms/App/ProfileCard";
 import AuthContent from "@/components/Auth/AuthContent";
+
 interface IComponents {
   about: ReactNode;
   timeline: ReactNode;
@@ -23,27 +26,45 @@ interface IComponents {
   media: ReactNode;
   friends: ReactNode;
 }
-const Components: IComponents = {
-  timeline: <Timeline Posts={[]} />,
-  about: <About />,
-  media: <Media />,
-  friends: <Friends />,
-  bookmarks: <Bookmarks />,
-};
+
 const Profile = () => {
   //const { posts,  hasMore, isFetchingMore } = usePagination();
 
   const router = useRouter();
-
   const { path } = router.query;
+  const [data, setData] = useState([]);
 
   useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get(
+          `${config.serverUrl}/api/posts/user/all`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        console.log(response.data);
+        setData(response.data.posts);
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    })();
     document.body.style.backgroundColor = "#f6f6f6";
 
     return () => {
       document.body.style.backgroundColor = "initial";
     };
   }, []);
+
+  const Components: IComponents = {
+    timeline: <Timeline Posts={data} />,
+    about: <About />,
+    media: <Media />,
+    friends: <Friends />,
+    bookmarks: <Bookmarks />,
+  };
   return (
     <AuthContent>
       <Head>
