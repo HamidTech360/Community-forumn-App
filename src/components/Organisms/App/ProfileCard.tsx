@@ -36,7 +36,7 @@ const ProfileCard = () => {
         <Image
           width={130}
           height={130}
-          src={"/images/friends2.png"}
+          src={data?.avatar?.url || "/images/formbg.png"}
           alt="avatar"
           className="top-0 position-absolute"
           style={{
@@ -58,11 +58,11 @@ const ProfileCard = () => {
           style={{ width: "60%" }}
         >
           <div className="d-flex flex-column align-items-center">
-            <span>1000</span>
+            <span>{data?.following?.length}</span>
             <span>following</span>
           </div>
           <div className="d-flex flex-column align-items-center">
-            <span>1000</span>
+            <span>{data?.followers?.length}</span>
             <span>following</span>
           </div>
         </text>
