@@ -4,7 +4,7 @@ import Head from "next/head";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import config from "../../config";
-import { Container, Spinner, Modal, Form } from "react-bootstrap";
+import { Container, Spinner, Modal, Form, Image, Button } from "react-bootstrap";
 import AuthContent from "@/components/Auth/AuthContent";
 import Discussions from "@/components/Organisms/App/Discussions/Discussions";
 import PostCard from "@/components/Organisms/App/PostCard";
@@ -36,7 +36,7 @@ const Feed = () => {
 
   const [isFetching, setIsFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
-
+  const [showModal, setShowModal] = useState(false)
   const [formData, setFormData] = useState({
    post:''
   });
@@ -106,7 +106,7 @@ const Feed = () => {
       document.body.style.backgroundColor = "initial";
       window.removeEventListener("scroll", checkScroll);
     };
-  }, [newFeedPost]);
+  }, [handleSubmit]);
 
   const DisplayModal = () => {
     setShowModal(true);
