@@ -40,8 +40,7 @@ const Feed = () => {
   const [isFetching, setIsFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
-    postTitle: "",
-    postBody: "",
+   post:''
   });
   const checkScroll = () => {
     if (window.scrollY > 100) {
@@ -51,13 +50,17 @@ const Feed = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(formData.post=="") return toast.error("Field cannot be empty", {
+      position: toast.POSITION.TOP_RIGHT,
+      toastId: "1",
+    });
     setUploading(true);
     console.log(formData);
 
     try {
       const response = await axios.post(
-        `${config.serverUrl}/api/posts`,
-        { ...formData, postTitle: " " },
+        `${config.serverUrl}/api/feeds`,
+        { ...formData },
         {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -86,9 +89,10 @@ const Feed = () => {
   useEffect(() => {
     (async function () {
       try {
-        const response = await axios.get(`${config.serverUrl}/api/posts`);
-
-        setPosts(response.data.posts.reverse());
+        const response = await axios.get(`${config.serverUrl}/api/feeds`);
+       // console.log(response.data);
+        
+        setPosts(response.data.feeds);
       } catch (error) {
         console.log(error.response?.data);
       }
@@ -111,6 +115,8 @@ const Feed = () => {
     const clone = { ...formData };
     clone[e.currentTarget.name] = e.currentTarget.value;
     setFormData(clone);
+    console.log(formData);
+    
   };
 
   return (
@@ -121,18 +127,45 @@ const Feed = () => {
       </Head>
       <Container>
         <div className={`mt-3 ${styles.wrapper}`}>
-          <>
-            <div
-              style={{ width: 250 }}
-              className="position-fixed d-none d-lg-flex flex-column gap-4 vh-100"
-            >
-              <UserCard user={data!} />
-              <Discussions posts={posts} />
-            </div>
-          </>
+           <>
+              <div
+                style={{ width: 250 }}
+                className="position-fixed d-none d-lg-flex flex-column gap-4 vh-100"
+              >
+                <UserCard user={data!} />
+                <Discussions posts={posts} />
+              </div>
+            </>
 
-          <main className={styles.posts} id="posts">
-            <CreatePost DisplayModal={DisplayModal} />
+            <main className={styles.posts} id="posts">
+
+
+            <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
+              <>
+                <Image
+                  src={data?.avatar?.url || "/images/formbg.png"}
+                  width={50}
+                  height={50}
+                  alt=""
+                  roundedCircle
+                />
+              </>
+              <>
+                <Form style={{ width: "100%" }}>
+                  <Form.Control
+                    className={`radius-20  ${styles.form}`}
+                    style={{ width: "100%" }}
+                    placeholder={`Hey ${
+                      data?.firstName && data.firstName.split(" ")[0]
+                    }! wanna say something?`}
+                      //onClick={()=>handleModal()}
+                   onClick={() => setShowModal(true)}
+                  />
+                </Form>
+              </>
+            </div>
+
+            {/* <CreatePost DisplayModal={DisplayModal} /> */}
             <div
               id="instersection"
               style={{
@@ -212,7 +245,7 @@ const Feed = () => {
               <Form.Control
                 className={formStyles.bigForm}
                 as="textarea"
-                name="postBody"
+                name="post"
                 type="text"
                 required
                 placeholder="Write something"

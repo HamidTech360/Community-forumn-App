@@ -144,8 +144,8 @@ const PostCard = ({
             // }}
             dangerouslySetInnerHTML={{
               __html: trimmed
-                ? post?.postBody || post?.post?.slice(0, 500) + "..."
-                : post?.postTitle || post?.postTitle,
+                ? post?.postBody?.slice(0, 500)  || post?.post?.slice(0, 500) + "..." || post?.postBody
+                : post?.post || post?.post ,
             }}
           />
         )}
