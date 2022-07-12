@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -8,6 +9,9 @@ import GistCard from "../../components/Organisms/Gist/GistCard";
 import axios from "axios";
 import styles from "@/styles/gist.module.scss";
 import config from "@/config";
+
+import { useDispatch, useSelector } from "@/redux/store";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 
 const Gist = ({
   gist,
@@ -21,7 +25,9 @@ const Gist = ({
   const router = useRouter();
 
   const [data, setData] = useState({});
-  const [user, setUser] = useState({});
+  // const [user, setUser] = useState({});
+
+  const user = useSelector(selectUser);
 
   useEffect(() => {
     (async function () {
@@ -34,12 +40,12 @@ const Gist = ({
             },
           }
         );
-        const userResponse = await axios.get("/api/auth", {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        });
-        setUser(userResponse.data);
+        // const userResponse = await axios.get("/api/auth", {
+        //   headers: {
+        //     authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        //   },
+        // });
+        // setUser(userResponse.data);
         //console.log(response.data);
         setData(response.data.gist);
       } catch (error) {

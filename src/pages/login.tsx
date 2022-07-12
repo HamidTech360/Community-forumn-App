@@ -15,8 +15,8 @@ import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import config from "../config";
 
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch } from "@/redux/store";
-import { userAuthenticated } from "@/reduxFeatures/authState/authStateSlice";
+// import { useDispatch } from "@/redux/store";
+// import { userAuthenticated } from "@/reduxFeatures/authState/authStateSlice";
 
 const Login = () => {
   const router = useRouter();
@@ -28,7 +28,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [displayPassword, setDisplayPassword] = useState(false);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const [message, setMessage] = useState({ message: "", variant: "" });
 
@@ -71,7 +71,7 @@ const Login = () => {
         const serverError = error as AxiosError;
         if (serverError.response) {
           // setMessage(serverError.response.data.message as unknown as string);
-        //  let returnedErrorKey = serverError.response.data.key;
+          //  let returnedErrorKey = serverError.response.data.key;
           if (serverError.response?.data === "Something went wrong") {
             toast.error("Authentication Failed", {
               position: toast.POSITION.TOP_RIGHT,

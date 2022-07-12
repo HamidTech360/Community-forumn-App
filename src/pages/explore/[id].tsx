@@ -11,11 +11,13 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import Age from "@/components/Atoms/Age";
 import config from "@/config";
+import DOMPurify from "dompurify"
 
 const BlogPost = () => {
   const [blogPost, setBlogPost] = useState<Record<string, any>>({});
   const router = useRouter();
 
+  const sanitizer = DOMPurify.sanitize;
   const FetchData = async () => {
     try {
       const exploreResponse = await axios.get(
@@ -121,7 +123,7 @@ const BlogPost = () => {
               </div>
               <article
                 className="my-3"
-                dangerouslySetInnerHTML={{ __html: blogPost.postBody }}
+                dangerouslySetInnerHTML={{ __html: blogPost.postBody}}
               />
               <section>
                 <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>

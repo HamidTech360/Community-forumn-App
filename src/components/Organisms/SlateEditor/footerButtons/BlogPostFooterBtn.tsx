@@ -12,35 +12,31 @@ import {
   selectPostTitle,
   setIsFetching,
   selectShowPostModal,
-  selectPost
+  selectPost,
 } from "@/reduxFeatures/api/postSlice";
 
-function BlogPostFooterBtn({ editorID, handleClick }:any) {
-  const router = useRouter()
-  
-  
+function BlogPostFooterBtn({ editorID, handleClick }: any) {
+  const router = useRouter();
+
   const [uploading, setUploading] = useState(false);
-  const [groupId, setGroupId] = useState(null)
+  const [groupId, setGroupId] = useState(null);
   const dispatch = useDispatch();
   const showPostTitle = useSelector(selectPostTitle);
   const showPostModal = useSelector(selectShowPostModal);
 
-  useEffect(()=>{
-    if(router.query.path=="timeline"){
-      setGroupId(router.query.id)
+  useEffect(() => {
+    if (router.query.path == "timeline") {
+      setGroupId(router.query.id);
     }
-  },[])
+  }, []);
 
   const createPost = async (e) => {
     e.preventDefault();
     const editorInnerHtml = document.getElementById(editorID).innerHTML;
-   
+
     setUploading(true);
     try {
-      
-     
-    
-      const response =  await axios.post(
+      const response = await axios.post(
         `${config.serverUrl}/api/posts`,
         { postTitle: showPostTitle, postBody: editorInnerHtml, groupId },
         {
@@ -49,8 +45,8 @@ function BlogPostFooterBtn({ editorID, handleClick }:any) {
           },
         }
       );
-        console.log(response.data);
-        
+      console.log(response.data);
+
       toast.success("Post uploaded successfully", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
@@ -59,11 +55,11 @@ function BlogPostFooterBtn({ editorID, handleClick }:any) {
       dispatch(setShowPostModal(false));
 
       // const fetchPost = async () => {
-      
+
       // };
       // fetchPost();
     } catch (error) {
-       console.log(error.response?.data);
+      console.log(error.response?.data);
       if (!localStorage.getItem("accessToken")) {
         toast.error("You must login to create a  post", {
           position: toast.POSITION.TOP_RIGHT,

@@ -1,6 +1,6 @@
 import config from "@/config";
 import axios from "axios";
-
+import DOMPurify from 'dompurify'
 import React, { useEffect, useState } from "react";
 import { Card, Image } from "react-bootstrap";
 
@@ -13,6 +13,8 @@ const Discussions = ({ posts }: any) => {
       setGists(data);
     })();
   }, []);
+
+  const sanitizer = DOMPurify.sanitize
   return (
     <Card
       style={{ border: "none", overflowY: "scroll", height: "450px" }}
@@ -44,7 +46,7 @@ const Discussions = ({ posts }: any) => {
               <div className="d-flex flex-column">
                 <small
                   className="bolden"
-                  dangerouslySetInnerHTML={{ __html: post.postTitle }}
+                  dangerouslySetInnerHTML={{ __html: sanitizer(post.postTitle) }}
                 />
                 <small className="text-muted">
                   By {`${post.author?.firstName} ${post.author?.lastName}`}

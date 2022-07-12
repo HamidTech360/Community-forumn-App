@@ -4,6 +4,8 @@ import chatReducer from "@/reduxFeatures/app/chatSlice";
 import authStateReducer from "@/reduxFeatures/authState/authStateSlice";
 import postReducer from "@/reduxFeatures/api/postSlice";
 import gistReducer from "@/reduxFeatures/api/gistSlice";
+import feedReducer from "@/reduxFeatures/api/feedSlice";
+import dragAndDropReducer from "@/reduxFeatures/app/dragAndDropSlice";
 
 import {
   useDispatch as useDispatchBase,
@@ -17,9 +19,11 @@ export const store = configureStore({
   reducer: {
     post: postReducer,
     gist: gistReducer,
+    feed: feedReducer,
     app: appReducer,
     chat: chatReducer,
     authState: authStateReducer,
+    dragAndDrop: dragAndDropReducer,
   },
 
   // Prevent Age (dateTime) from returning unSterilized error

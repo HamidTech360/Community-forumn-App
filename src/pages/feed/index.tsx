@@ -1,25 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // import useUser from "@/hooks/useUser";
 import Head from "next/head";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "@/redux/store";
 import config from "../../config";
-import {
-  Col,
-  Container,
-  Image,
-  Row,
-  Spinner,
-  Modal,
-  Form,
-  Button,
-} from "react-bootstrap";
+import { Container, Spinner, Modal, Form } from "react-bootstrap";
 import AuthContent from "@/components/Auth/AuthContent";
 import Discussions from "@/components/Organisms/App/Discussions/Discussions";
 import PostCard from "@/components/Organisms/App/PostCard";
 import UserCard from "@/components/Organisms/App/UserCard";
 import CreatePost from "@/components/Organisms/CreatePost";
-//import Modal from "@/components/Organisms/Layout/Modal/Modal";
 import { toast, ToastContainer } from "react-toastify";
 import { FaTimes } from "react-icons/fa";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
@@ -29,6 +19,14 @@ import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/feed.module.scss";
 import formStyles from "../../styles/templates/new-group/formField.module.css";
 import Follow from "@/components/Organisms/App/Follow";
+import Editor from "@/components/Organisms/SlateEditor/Editor";
+
+import { useDispatch, useSelector } from "@/redux/store";
+import {
+  setShowFeedModal,
+  selectFeedModal,
+  selectNewFeed,
+} from "@/reduxFeatures/api/feedSlice";
 
 const Feed = () => {
   const data = useSelector(selectUser);
@@ -36,17 +34,19 @@ const Feed = () => {
   const [scrollInitialised, setScrollInitialised] = useState(false);
   const [posts, setPosts] = useState([]);
 
-  const [showModal, setShowModal] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
+
   const [formData, setFormData] = useState({
    post:''
   });
+
   const checkScroll = () => {
     if (window.scrollY > 100) {
       setScrollInitialised(true);
     }
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -93,6 +93,7 @@ const Feed = () => {
        // console.log(response.data);
         
         setPosts(response.data.feeds);
+ 
       } catch (error) {
         console.log(error.response?.data);
       }
@@ -105,7 +106,7 @@ const Feed = () => {
       document.body.style.backgroundColor = "initial";
       window.removeEventListener("scroll", checkScroll);
     };
-  }, [handleSubmit]);
+  }, [newFeedPost]);
 
   const DisplayModal = () => {
     setShowModal(true);
@@ -116,7 +117,7 @@ const Feed = () => {
     clone[e.currentTarget.name] = e.currentTarget.value;
     setFormData(clone);
     console.log(formData);
-    
+
   };
 
   return (
@@ -224,11 +225,11 @@ const Feed = () => {
       </Container>
 
       <Modal
-        // size="md"
         show={showModal}
         className={styles.GistModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
+        size="lg"
       >
         <span className={styles.closeBtn}>
           {" "}

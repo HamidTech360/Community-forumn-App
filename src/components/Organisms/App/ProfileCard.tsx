@@ -18,7 +18,7 @@ interface IComponents {
   friends: ReactNode;
 }
 const Components: IComponents = {
-  timeline: <Timeline Posts={[]}/>,
+  timeline: <Timeline Posts={[]} />,
   about: <About />,
   media: <Media />,
   friends: <Friends />,
@@ -47,15 +47,15 @@ const ProfileCard = () => {
           }}
           roundedCircle
         />
-        <text className=" mt-4 bold text-center fs-7">
+        <div className=" mt-4 bold text-center fs-7">
           {data?.firstName} {data?.lastName}
-        </text>
-        <text className="text-muting">@{data?.firstName}</text>
-        <text className="text-muted text-center">
+        </div>
+        <div className="text-muting">@{data?.firstName}</div>
+        <div className="text-muted text-center">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
           illum quasi voluptatem explicabo, tempore enim!
-        </text>
-        <text
+        </div>
+        <div
           className="d-flex justify-content-between"
           style={{ width: "60%" }}
         >
@@ -67,7 +67,7 @@ const ProfileCard = () => {
             <span>{data.following?.length}</span>
             <span>following</span>
           </div>
-        </text>
+        </div>
       </Card.Body>
       <Card.Footer>
         {" "}
