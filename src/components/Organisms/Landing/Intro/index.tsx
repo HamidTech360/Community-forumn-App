@@ -24,7 +24,7 @@ const Intro = () => {
                 abroad community and get all the information that you need.
               </p>
 
-              <Link href="/login">
+              <Link href="/login" passHref>
                 <Button variant="primary" className="btn-lgs" size="lg">
                   Get Started
                 </Button>

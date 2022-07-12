@@ -6,6 +6,7 @@ import DOMPurify from "dompurify";
 
 const Comment = ({ comment }: Record<string, any>) => {
   const router = useRouter();
+  const sanitizer = DOMPurify.sanitize;
   return (
     <Card
       className="px-2"
@@ -34,20 +35,16 @@ const Comment = ({ comment }: Record<string, any>) => {
       </div>
       {router.asPath === "/blog-post" ? (
         <Card.Body
-          // dangerouslySetInnerHTML={{
-          //   __html: DOMPurify.sanitize(comment.content),
-          // }}
+          
           dangerouslySetInnerHTML={{
-            __html: comment.content,
+            __html: sanitizer(comment.content),
           }}
         />
       ) : (
         <Card.Body
-          // dangerouslySetInnerHTML={{
-          //   __html: DOMPurify.sanitize(comment.content.raw),
-          // }}
+        
           dangerouslySetInnerHTML={{
-            __html: comment.content.raw,
+            __html: sanitizer( comment.content.raw),
           }}
         />
       )}
