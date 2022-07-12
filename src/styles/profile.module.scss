@@ -34,14 +34,19 @@
     }
 
     span {
-      font-size: large;
+      font-size: medium;
+      font-weight: bold;
 
-      @media screen and (max-width: 1100px) {
-        font-size: 13px;
+      @media screen and (max-width: 800px) {
+        font-size: small;
+      }
+
+      @media screen and (max-width: 400px) {
+        font-size: smaller;
       }
 
       @media screen and (max-width: 300px) {
-        font-size: 10px;
+        font-size: x-small;
       }
     }
 

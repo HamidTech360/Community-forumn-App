@@ -53,6 +53,7 @@ const Feed = () => {
         const response = await axios.get(`${config.serverUrl}/api/posts`);
 
         setPosts(response.data.posts);
+        console.log(response.data.posts)
       } catch (error) {
         console.log(error.response?.data);
       }

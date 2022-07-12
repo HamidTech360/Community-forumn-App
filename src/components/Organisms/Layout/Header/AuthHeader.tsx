@@ -75,10 +75,6 @@ const AuthHeader = () => {
     }
   };
 
-  const directProfile = () => {
-    router.push('/profile/timeline')
-  }
-
   const LogOut = () => {
     dispatch(logout());
     router.push("/");
@@ -271,7 +267,7 @@ const AuthHeader = () => {
                       height={20}
                       roundedCircle
                     />
-                    <Link href='/profile/timeline' passHref>
+                    <Link href='/profile' passHref>
                       <span className="mx-2" style = {{cursor: "pointer"}}>
                         {data?.firstName}&nbsp; {data?.lastName}
                       </span> 

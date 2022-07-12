@@ -51,6 +51,16 @@ const PostCard = ({
     },
   ];
 
+  const redirectPage = () => {
+
+    router.push({
+      pathname: `/profile/[id]`,
+      query: { 
+        id: post?.author?._id,
+      },
+    })
+  }
+
   const handleLike = async () => {
     try {
       const { data } = await axios.get(
@@ -86,9 +96,11 @@ const PostCard = ({
           height={45}
           alt=""
           roundedCircle
+          style={{cursor: "pointer" }}
+          onClick={redirectPage}
         />
         <div className="d-flex flex-column">
-          <div className={styles.div}>
+          <div className={styles.div} onClick={redirectPage} style={{cursor: "pointer" }}>
            <small dangerouslySetInnerHTML={{
               __html: sanitizer(`${post.author?.firstName} ${post.author?.lastName}`),
             }} />

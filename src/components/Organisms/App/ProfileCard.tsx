@@ -1,6 +1,7 @@
 import Link from "next/link";
+import axios from 'axios'
 import { useRouter } from "next/router";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Card, CardImg, Image, Nav } from "react-bootstrap";
 import About from "../../Templates/Profile/About";
 import Bookmarks from "../../Templates/Profile/Bookmarks";
@@ -9,6 +10,8 @@ import Media from "../../Templates/Profile/Media";
 import Timeline from "../../Templates/Profile/Timeline";
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import config from "@/config";
+
 
 interface IComponents {
   about: ReactNode;
@@ -33,9 +36,11 @@ const ProfileCard = ({
   handlePath: (path: string) => void;
 }) => {
   // const {data} = useSelector(s=>s.user)
-  const data = useSelector(selectUser);
-  console.log(data);
 
+  const data = useSelector(selectUser);
+  // console.log(data);
+
+  
   return (
     <Card className="mt-2 mb-3">
       <CardImg src="/images/formbg.png" className="image3" />
