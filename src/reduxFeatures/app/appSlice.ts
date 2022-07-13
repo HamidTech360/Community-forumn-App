@@ -4,10 +4,14 @@ import type { RootState } from "../../redux/store";
 // declaring the types for our state
 export type App = {
   notificationOffcanvas: { show: boolean };
+  searchModal: { show: boolean };
 };
 
 const initialState: App = {
   notificationOffcanvas: {
+    show: false,
+  },
+  searchModal: {
     show: false,
   },
 };
@@ -19,14 +23,19 @@ export const appSlice = createSlice({
     notificationsOffcanvas: (state, action: PayloadAction<boolean>) => {
       state.notificationOffcanvas.show = action.payload;
     },
+    setSearchModal: (state, action: PayloadAction<boolean>) => {
+      state.searchModal.show = action.payload;
+    },
   },
 });
 // Here we are just exporting the actions from this slice, so that we can call them anywhere in our app.
-export const { notificationsOffcanvas } = appSlice.actions;
+export const { notificationsOffcanvas, setSearchModal } = appSlice.actions;
 
 // calling the above actions would be useless if we could not access the data in the state. So, we use something called a selector which allows us to select a value from the state.
 export const selectNotificationOffcanvas = (state: RootState) =>
   state.app.notificationOffcanvas.show;
+export const selectSearchModal = (state: RootState) =>
+  state.app.searchModal.show;
 
 // exporting the reducer here, as we need to add this to the store
 export default appSlice.reducer;

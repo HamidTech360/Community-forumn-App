@@ -19,6 +19,8 @@ import {
   selectMessages,
 } from "@/reduxFeatures/app/chatSlice";
 import { useRouter } from "next/router";
+import DOMPurify from "dompurify";
+import truncate from "trunc-html";
 
 const SideBar = ({ mainSidebar, mainDisplay }) => {
   const router = useRouter();
@@ -27,6 +29,8 @@ const SideBar = ({ mainSidebar, mainDisplay }) => {
   const messages = useSelector(selectMessages);
   const initMessages = useSelector(selectInitMessages);
   const selectUserToChatTimeline = useSelector(selectedUserInChatTimeline);
+
+  const sanitizer = DOMPurify.sanitize;
 
   const startChat = () => {
     dispatch(setUserToChatTimeline([{}, 0]));
@@ -242,28 +246,16 @@ const SideBar = ({ mainSidebar, mainDisplay }) => {
                               className="col-10"
                               data-nameid={message.id}
                               onClick={startChattingWithChild}
-                              // dangerouslySetInnerHTML={{
-                              //   __html: messageInt(message),
-                              // }}
-                              // dangerouslySetInnerHTML={{
-                              //   __html: message.message[
-                              //     message.message.length - 1
-                              //   ].message.substring(0, 26),
-                              // }}
-                            >
-                              {/* {messageInt(message)} */}
-                              {/* {console.log(
-                                    "+++",
-                                    message.message[
-                                      message.message.length - 1
-                                    ].message.substring(0, 26)
-                                  )} */}
-                              {message.message[
-                                message.message.length - 1
-                              ].message.substring(0, 26)}
-                              {message.message[message.message.length - 1]
-                                .message.length > 26 && <span>...</span>}
-                            </p>
+                              dangerouslySetInnerHTML={{
+                                __html: sanitizer(
+                                  truncate(
+                                    message.message[message.message.length - 1]
+                                      .message,
+                                    26
+                                  ).html
+                                ),
+                              }}
+                            ></p>
                             <small
                               className="col-2 text-center"
                               data-nameid={message.id}
