@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import { Card as BCard } from "react-bootstrap";
@@ -14,12 +15,17 @@ interface ICard {
 }
 
 const Card = ({ _id, image, title, author, body, size }) => {
-  // console.log( image, title, author, body, size );
-  // console.log("title", title);
-  // console.log("author", author);
-  // console.log("body", body);
-  // console.log("size", size);
   const sanitizer = DOMPurify.sanitize;
+  const router = useRouter();
+
+  const redirectPage = () => {
+    router.push({
+      pathname: `/profile/[id]`,
+      query: {
+        id: author?._id,
+      },
+    });
+  };
 
   return (
     <>
@@ -42,6 +48,7 @@ const Card = ({ _id, image, title, author, body, size }) => {
 
             objectFit: "cover",
           }}
+          onClick={redirectPage}
         />
         <BCard.Body>
           <div className="text p-3">
@@ -52,7 +59,14 @@ const Card = ({ _id, image, title, author, body, size }) => {
               {title?.toLowerCase()}
             </h6>
             <span className="text-muted">
-              <small style={{ marginTop: "-2rem", fontSize: "0.8rem" }}>
+              <small
+                style={{
+                  marginTop: "-2rem",
+                  fontSize: "0.8rem",
+                  cursor: "pointer",
+                }}
+                onClick={redirectPage}
+              >
                 by &nbsp;{author?.firstName}&nbsp;
                 {author?.lastName}
               </small>{" "}

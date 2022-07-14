@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-
+import { useRouter } from "next/router";
 import { Container, Card, FormControl } from "react-bootstrap";
 import { FiEdit } from "react-icons/fi";
 import {
@@ -15,8 +15,8 @@ import styles from '@/styles/profile.module.scss'
 
 const About = () => {
   const user = useSelector(selectUser)
-  console.log('user coming from profile about', user);
-  
+  const router = useRouter();
+
   const [activeTab, setActiveTab] = useState("bio");
   const [interests, setInterests] = useState([
     "Studying abroad",
@@ -51,20 +51,23 @@ const About = () => {
         <div className="row">
           <h5 className="col-10">Bio</h5>
           <h5 className="col-2 btn" style={{ marginTop: "-.5rem" }}>
-            <FiEdit size="15" />
+            {router.query.id ? ('') : (<FiEdit size="15" />)}
           </h5>
         </div>
         <div className="row">
           <p className="col-12 text-muted" id="bioText">
            
           </p>
-          <FormControl 
-              style={{color:'grey', fontWeight:'500'}} 
-              value= {user.bio?user.bio:`I am ${user.firstName} ${user.lastName}...`} 
-               as="textarea"
-              rows={3}
-              readOnly={true}
-          />
+          {router.query.id ? ('') : (
+            <FormControl 
+            style={{color:'grey', fontWeight:'500'}} 
+            value= {user.bio?user.bio:`I am ${user.firstName} ${user.lastName}...`} 
+             as="textarea"
+            rows={3}
+            readOnly={true}
+            />
+          )}
+          
         </div>
         <div className="row col-12 mt-4">
           <h5>Interest</h5>

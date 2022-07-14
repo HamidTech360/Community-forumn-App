@@ -17,6 +17,16 @@ const BlogPost = () => {
   const [blogPost, setBlogPost] = useState<Record<string, any>>({});
   const router = useRouter();
 
+  const redirectPage = () => {
+
+    router.push({
+      pathname: `/profile/[id]`,
+      query: { 
+        id: blogPost?.author?._id,
+      },
+    })
+  }
+
   const sanitizer = DOMPurify.sanitize;
   const FetchData = async () => {
     try {
@@ -26,14 +36,7 @@ const BlogPost = () => {
       setBlogPost(exploreResponse.data.post);
       console.log("exploreResponse.data.post:", exploreResponse.data.post);
 
-      // const userResponse = await axios.get("/api/auth", {
-      //   headers: {
-      //     authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      //   },
-      // });
-      // setUser(userResponse.data);
-      // console.log(userResponse.data);
-      // console.log("user:", user);
+      
     } catch (error) {
       router.back();
       // console.log(error.exploreResponse?.data);
@@ -89,7 +92,7 @@ const BlogPost = () => {
                 <div className="row">
                   <div className="col-md-9">
                     By{" "}
-                    <span>{`${blogPost.author?.firstName} ${blogPost.author?.lastName}`}</span>
+                    <span onClick={redirectPage} style={{cursor: "pointer" }}> {`${blogPost.author?.firstName} ${blogPost.author?.lastName}`}</span>
                     <small className="text-secondary ms-5">
                       <BsDot />
                       {<Age time={blogPost?.createdAt} />}

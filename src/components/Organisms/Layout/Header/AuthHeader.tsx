@@ -266,16 +266,26 @@ const AuthHeader = () => {
           >
             <div className={styles.navDrop}>
               <NavDropdown.Header className={styles.navHead}>
-                <Image
-                  src={data?.avatar?.url || "/images/formbg.png"}
-                  alt=""
-                  width={20}
-                  height={20}
-                  roundedCircle
-                />
-                <span className="mx-2">
-                  {data?.firstName}&nbsp; {data?.lastName}
-                </span>{" "}
+                {/* <div  
+                style={{
+                  cursor: "pointer",	
+                }}
+                onClick = {directProfile}> */}
+                  <Image
+                      src={data?.avatar?.url || "/images/formbg.png"}
+                      alt=""
+                      width={20}
+                      height={20}
+                      roundedCircle
+                    />
+                    <Link href='/profile' passHref>
+                      <span className="mx-2" style = {{cursor: "pointer"}}>
+                        {data?.firstName}&nbsp; {data?.lastName}
+                      </span> 
+                    </Link>{" "}  
+
+                {/* </div> */}
+                
               </NavDropdown.Header>
               <NavDropdown.Divider />
               <NavDropdown.Item className={styles.navMenu}>
