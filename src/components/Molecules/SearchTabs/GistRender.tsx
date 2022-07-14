@@ -17,7 +17,7 @@ function GistRender({ search, index }) {
         index % 2 === 0 && styles.tabLiBg
       }`}
       onClick={() => {
-        router.push(`/post/${search?._id}`);
+        router.push(`/gist/${search?._id}`);
         dispatch(setSearchModal(false));
       }}
     >
