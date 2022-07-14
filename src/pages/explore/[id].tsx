@@ -44,14 +44,8 @@ const BlogPost = () => {
       
     } catch (error) {
       router.back();
-      // console.log(error.exploreResponse?.data);
     }
   };
-
-  const handleChange = (e) => {
-    setCommentPost(e.target.value)
-
-  }
 
   const postComment = async () => {
     const body = {
@@ -67,40 +61,16 @@ const BlogPost = () => {
 
     })
 
-    console.log(res)
     let comments = blogPost?.comments;
     comments.unshift(res.data);
     setBlogPost({ ...blogPost, comments });
     setLoading(false)
   }
 
-
-
-  console.log(commentPost)
-  console.log('This is the router', router.query);
-
   useEffect(() => {
     FetchData();
   }, []);
-  const addComment = () => {
-    const content = (
-      document.getElementById("articleTextarea") as HTMLTextAreaElement
-    ).value;
-
-    let newComment = {
-      name: "Elisabet Lusi",
-      image: "/images/friends3.png",
-      date: new Date(),
-      content,
-      like: [],
-      reply: [],
-    };
-
-    let comments = blogPost.comments;
-    comments.unshift(newComment);
-    setBlogPost({ ...blogPost, comments });
-  };
-
+  
   const likeComment = () => {};
   const replyComment = () => {};
 
@@ -137,21 +107,7 @@ const BlogPost = () => {
                 </div>
                 <div className="row">
                   <div className="col">
-                    {/* {blogPost.keywords.map((keyword, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="d-inline-flex text-secondary me-2 p-1"
-                          style={{
-                            fontSize: "14px",
-                            backgroundColor: "lightgray",
-                            cursor: "pointer",
-                          }}
-                        >
-                          <small>{keyword}</small>
-                        </div>
-                      );
-                    })} */}
+                   
                   </div>
                 </div>
                 <Image
@@ -184,7 +140,6 @@ const BlogPost = () => {
                         className="form-control"
                         placeholder="."
                         style={{ height: "100px" }}
-                        // onChange={handleChange}
                       ></textarea>
                       <label htmlFor="articleTextarea">Comments</label>
                     </div>
