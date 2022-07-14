@@ -153,9 +153,9 @@ const PostCard = ({
             //       DOMPurify.sanitize(post?.postTitle),
             // }}
             dangerouslySetInnerHTML={{
-              __html: sanitizer(trimmed
-                ? post?.postBody || post?.post?.slice(0, 500) + "..."
-                : post?.postTitle || post?.postTitle),
+              __html: trimmed
+                ? post?.postBody?.slice(0, 500)  || post?.post?.slice(0, 500) + "..." || post?.postBody
+                : post?.post || post?.post 
             }}
           />
         )}
