@@ -47,6 +47,7 @@ const Feed = () => {
   const [formData, setFormData] = useState({
     post: "",
   });
+  const [newFeed, setNewFeed] = useState();
 
   const checkScroll = () => {
     if (window.scrollY > 100) {
@@ -79,6 +80,7 @@ const Feed = () => {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
       });
+      setNewFeed(response.data);
       setShowModal(false);
       setUploading(false);
       // fetchPost()
@@ -112,7 +114,8 @@ const Feed = () => {
       document.body.style.backgroundColor = "initial";
       window.removeEventListener("scroll", checkScroll);
     };
-  }, [handleSubmit]);
+    // }, [handleSubmit]);
+  }, [newFeed]);
 
   const DisplayModal = () => {
     setShowModal(true);
