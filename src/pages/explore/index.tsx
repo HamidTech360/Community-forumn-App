@@ -75,6 +75,7 @@ const Explore = ({}) => {
         dispatch(setPosts(response.data.posts));
         // setIsFetching(false);
         dispatch(setIsFetching(false));
+        console.log(response.data.posts)
       } catch (error) {
         console.log(error.response?.data);
       }

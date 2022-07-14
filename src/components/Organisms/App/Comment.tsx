@@ -15,7 +15,7 @@ const Comment = ({ comment }: Record<string, any>) => {
       <div className="d-flex align-items-center justify-content-start gap-2 mt-1">
         <Image
           // src={comment?._embedded?.user[0]?.avatar_urls?.full}
-          src={comment?.image && comment.image}
+          src="/images/friends3.png"
           alt="User avatar"
           width={50}
           height={50}
@@ -25,44 +25,35 @@ const Comment = ({ comment }: Record<string, any>) => {
         <div>
           <h6 style={{ fontWeight: "bold" }}>
             {/* {comment?._embedded?.user[0]?.name} */}
-            {comment?.name && comment.name}
+            {comment?.author?.firstName && comment?.author?.firstName} {comment?.author?.lastName && comment?.author?.lastName}
           </h6>
           <small>
             {/* <Age time={comment?.date} /> */}
-            <Age time={comment?.date && comment.date.toLocaleString()} />
+            <Age time={new Date().toLocaleString()} />
           </small>
         </div>
       </div>
-      {router.asPath === "/blog-post" ? (
-        <Card.Body
+      <Card.Body
           
           dangerouslySetInnerHTML={{
-            __html: sanitizer(comment.content),
+            __html: sanitizer(comment?.content),
           }}
         />
-      ) : (
-        <Card.Body
-        
-          dangerouslySetInnerHTML={{
-            __html: sanitizer( comment.content.raw),
-          }}
-        />
-      )}
-
+      
       <div className="buttons d-flex gap-2 justify-content-end mr-4">
         <small className="text-muted">
           Like{" "}
-          {comment.like.length > 0 && (
+          {comment.like?.length > 0 && (
             <small className="badge rounded-pill bg-primary px-2 py-1 text-white">
-              {comment.like.length}
+              {comment.like?.length}
             </small>
           )}
         </small>
         <small className="text-muted">
           Reply{" "}
-          {comment.reply.length > 0 && (
+          {comment.reply?.length > 0 && (
             <small className="badge rounded-pill bg-primary px-2 py-1 text-white">
-              {comment.reply.length}
+              {comment.reply?.length}
             </small>
           )}
         </small>

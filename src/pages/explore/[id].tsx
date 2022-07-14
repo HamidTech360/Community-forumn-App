@@ -15,7 +15,12 @@ import DOMPurify from "dompurify"
 
 const BlogPost = () => {
   const [blogPost, setBlogPost] = useState<Record<string, any>>({});
+
+  const [ commentPost, setCommentPost ] = useState('')
+  const [loading, setLoading ] = useState(false)
+
   const router = useRouter();
+
 
   const redirectPage = () => {
 
@@ -42,6 +47,37 @@ const BlogPost = () => {
       // console.log(error.exploreResponse?.data);
     }
   };
+
+  const handleChange = (e) => {
+    setCommentPost(e.target.value)
+
+  }
+
+  const postComment = async () => {
+    const body = {
+      content: commentPost
+    };
+
+    setLoading(true)
+    const res = await axios.post(`${config.serverUrl}/api/comments?type=post&id=${router.query.id}`, body, 
+    {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+
+    })
+
+    console.log(res)
+    let comments = blogPost?.comments;
+    comments.unshift(res.data);
+    setBlogPost({ ...blogPost, comments });
+    setLoading(false)
+  }
+
+
+
+  console.log(commentPost)
+  console.log('This is the router', router.query);
 
   useEffect(() => {
     FetchData();
@@ -148,6 +184,7 @@ const BlogPost = () => {
                         className="form-control"
                         placeholder="."
                         style={{ height: "100px" }}
+                        // onChange={handleChange}
                       ></textarea>
                       <label htmlFor="articleTextarea">Comments</label>
                     </div>
@@ -155,9 +192,15 @@ const BlogPost = () => {
                   <div className="col-3 col-md-2 ms-auto d-md-grid">
                     <button
                       className="btn btn-sm btn-primary mt-3 d-inline"
-                      onClick={addComment}
+                      onClick={postComment}
                     >
                       Send
+                      {loading && (
+                        <div
+                          className="spinner-grow spinner-grow-sm text-light"
+                          role="status"
+                        ></div>
+                      )}
                     </button>
                   </div>
                 </div>
@@ -168,7 +211,7 @@ const BlogPost = () => {
                 </h6>
                 <div className="row">
                   <div className="col-12 mt-4">
-                    {blogPost.comments?.length > 1 &&
+                    {blogPost.comments?.length > 0 &&
                       blogPost.comments?.map((comment, index) => {
                         return (
                           <Comment
