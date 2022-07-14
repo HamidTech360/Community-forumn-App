@@ -4,7 +4,14 @@ import Head from "next/head";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import config from "../../config";
-import { Container, Spinner, Modal, Form } from "react-bootstrap";
+import {
+  Container,
+  Spinner,
+  Modal,
+  Form,
+  Image,
+  Button,
+} from "react-bootstrap";
 import AuthContent from "@/components/Auth/AuthContent";
 import Discussions from "@/components/Organisms/App/Discussions/Discussions";
 import PostCard from "@/components/Organisms/App/PostCard";
@@ -36,10 +43,10 @@ const Feed = () => {
 
   const [isFetching, setIsFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
-
-  const dispatch = useDispatch();
-  const showModal = useSelector(selectFeedModal);
-  const newFeedPost = useSelector(selectNewFeed);
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    post: "",
+  });
 
   const checkScroll = () => {
     if (window.scrollY > 100) {
@@ -47,13 +54,52 @@ const Feed = () => {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.post == "")
+      return toast.error("Field cannot be empty", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1",
+      });
+    setUploading(true);
+    console.log(formData);
+
+    try {
+      const response = await axios.post(
+        `${config.serverUrl}/api/feeds`,
+        { ...formData },
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      console.log(response.data);
+      toast.success("Post uploaded successfully", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1",
+      });
+      setShowModal(false);
+      setUploading(false);
+      // fetchPost()
+    } catch (error) {
+      console.log(error.response?.data);
+      toast.error("Failed to upload post", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1",
+      });
+      setShowModal(false);
+      setUploading(false);
+    }
+  };
+
   useEffect(() => {
     (async function () {
       try {
-        const response = await axios.get(`${config.serverUrl}/api/posts`);
+        const response = await axios.get(`${config.serverUrl}/api/feeds`);
+        // console.log(response.data);
 
-        setPosts(response.data.posts);
-        console.log(response.data.posts)
+        setPosts(response.data.feeds);
       } catch (error) {
         console.log(error.response?.data);
       }
@@ -66,11 +112,17 @@ const Feed = () => {
       document.body.style.backgroundColor = "initial";
       window.removeEventListener("scroll", checkScroll);
     };
-  }, [newFeedPost]);
+  }, [handleSubmit]);
 
   const DisplayModal = () => {
-    // setShowModal(true);
-    dispatch(setShowFeedModal(true));
+    setShowModal(true);
+  };
+
+  const handleChange = (e) => {
+    const clone = { ...formData };
+    clone[e.currentTarget.name] = e.currentTarget.value;
+    setFormData(clone);
+    console.log(formData);
   };
 
   return (
@@ -92,7 +144,32 @@ const Feed = () => {
           </>
 
           <main className={styles.posts} id="posts">
-            <CreatePost DisplayModal={DisplayModal} />
+            <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
+              <>
+                <Image
+                  src={data?.avatar?.url || "/images/formbg.png"}
+                  width={50}
+                  height={50}
+                  alt=""
+                  roundedCircle
+                />
+              </>
+              <>
+                <Form style={{ width: "100%" }}>
+                  <Form.Control
+                    className={`radius-20  ${styles.form}`}
+                    style={{ width: "100%" }}
+                    placeholder={`Hey ${
+                      data?.firstName && data.firstName.split(" ")[0]
+                    }! wanna say something?`}
+                    //onClick={()=>handleModal()}
+                    onClick={() => setShowModal(true)}
+                  />
+                </Form>
+              </>
+            </div>
+
+            {/* <CreatePost DisplayModal={DisplayModal} /> */}
             <div
               id="instersection"
               style={{
@@ -163,11 +240,27 @@ const Feed = () => {
             color="#207681"
             style={{ cursor: "pointer" }}
             size={35}
-            onClick={() => dispatch(setShowFeedModal(false))}
+            onClick={() => setShowModal(false)}
           />{" "}
         </span>
-        <div className="col-12 px-4 mt-2 mb-4">
-          <Editor slim={false} />
+        <div className={styles.newGistModal}>
+          <Form onSubmit={(e) => handleSubmit(e)}>
+            <Form.Group className={formStyles.formGroup}>
+              <Form.Control
+                className={formStyles.bigForm}
+                as="textarea"
+                name="post"
+                type="text"
+                required
+                placeholder="Write something"
+                onChange={(e) => handleChange(e)}
+              />
+            </Form.Group>
+
+            <Button variant="primary" className="d-flex mx-auto" type="submit">
+              {uploading ? "uploading..." : "Continue"}
+            </Button>
+          </Form>
         </div>
       </Modal>
     </AuthContent>

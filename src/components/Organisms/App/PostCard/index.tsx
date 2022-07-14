@@ -1,16 +1,19 @@
 import Link from "next/link";
 import strip from "striptags";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Dropdown, Image, NavDropdown } from "react-bootstrap";
 import { HiDotsVertical } from "react-icons/hi";
 import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
-import { BsFolderFill, BsXCircleFill } from "react-icons/bs";
+import { BsFolderFill, BsXCircleFill, BsFillBookmarkFill } from "react-icons/bs";
+import {AiOutlineLike, AiFillLike, AiOutlineShareAlt} from 'react-icons/ai'
+import {FaCommentDots} from 'react-icons/fa'
 import Age from "../../../Atoms/Age";
 import DOMPurify from "dompurify";
 import styles from "@/styles/profile.module.scss";
 import axios from "axios";
 import config from "@/config";
 import { useDispatch } from "react-redux";
+
 import {
   selectPost,
   setIsFetching,
@@ -31,23 +34,28 @@ const PostCard = ({
   const user = useSelector(selectUser);
   const posts = useSelector(selectPost);
   const router = useRouter();
+  const [liked, setLiked] = useState(false)
   const sanitizer = DOMPurify.sanitize;
   const postButton = [
     {
       name: "Like",
       reaction: true,
+      icon:liked?<AiFillLike color="#086a6d " size={25} />:<AiOutlineLike size={25} onClick={()=>handleLike()} />
     },
     {
       name: "Share",
       reaction: true,
+      icon:<AiOutlineShareAlt size={25} />
     },
     {
       name: "Comment",
       reaction: true,
+      icon:<FaCommentDots size={20} />
     },
     {
       name: "Bookmark",
       reaction: true,
+      icon:<BsFillBookmarkFill/>
     },
   ];
 
@@ -62,9 +70,19 @@ const PostCard = ({
   }
 
   const handleLike = async () => {
+    let type;
+    const currentRoute = router.pathname
+    if(currentRoute=="/feed"){
+      type="feed"
+    }else if(currentRoute=="/groups" || currentRoute=="/groups/[id]/[path]"){
+      type="post"
+    }
+
+    console.log(type, currentRoute);
+    
     try {
       const { data } = await axios.get(
-        `${config.serverUrl}/api/posts/${post._id}/like`,
+        `${config.serverUrl}/api/likes/?type=${type}&id=${post._id}`,
         {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -74,9 +92,18 @@ const PostCard = ({
       // window.location.reload();
   
     } catch (error) {
-      console.log(error);
+      console.log(error.response?.data);
     }
   };
+
+  useEffect(()=>{
+   // console.log(router.pathname);
+    
+    if(post.likes?.includes(user._id)){
+      setLiked(true)
+      
+    }
+  },[])
 
   return (
     <Card
@@ -144,33 +171,13 @@ const PostCard = ({
         {Object.keys(post).length !== 0 && (
           <div
             className="post-content"
-            // dangerouslySetInnerHTML={{
-            //   __html: trimmed
-            //     ? (
-            //         DOMPurify.sanitize(post?.postBody) ||
-            //         DOMPurify.sanitize(post?.post)
-            //       )?.slice(0, 500) + "..."
-            //     : DOMPurify.sanitize(post?.postTitle) ||
-            //       DOMPurify.sanitize(post?.postTitle),
-            // }}
             dangerouslySetInnerHTML={{
-              __html: sanitizer(trimmed
-                ? post?.postBody || post?.post?.slice(0, 500) + "..."
-                : post?.postTitle || post?.postTitle),
+              __html: trimmed
+                ? post?.postBody?.slice(0, 500)  || post?.post?.slice(0, 500) + "..." || post?.postBody
+                : post?.post || post?.post 
             }}
           />
         )}
-        {/* <div
-          className="post-content"
-          dangerouslySetInnerHTML={{
-            __html: trimmed
-              ? strip(
-                  post?.postBody || post?.post,
-                  "<p> <strong> <b> <a> <em> <i>"
-                )?.slice(0, 500) + "..."
-              : post.postTitle || post.postTitle,
-          }}
-        /> */}
 
         {!trimmed && (
           <Image
@@ -187,25 +194,19 @@ const PostCard = ({
         {postButton.map((item, key) => (
           <Button
             key={key}
-            onClick={() => item.name === "Like" && handleLike()}
+            // onClick={() => item.name === "Like" && handleLike()}
             variant="none"
-            disabled={item.name === "Like" && post.likes?.includes(user._id)}
+            // disabled={item.name === "Like" && post.likes?.includes(user._id)}
             className="d-flex justify-content-center gap-1 align-items-center"
           >
-            <Image
-              src={`/assets/icons/${item.name.toLowerCase()}.svg`}
-              alt=""
-              width={20}
-              height={20}
-              className="post-img"
-            />
+            {item.icon}
             {item.name === "Like" && (
-              <span className="mx-2 text-secondary">
+              <span style={{marginLeft:'7px'}} className="mx-2 text-secondary">
                 {post.likes?.length || 0}
               </span>
             )}
 
-            <span className="d-none d-md-block">{item.name}</span>
+            <span className="d-none d-md-block" style={{marginLeft:'7px'}} >{item.name}</span>
           </Button>
         ))}
       </Card.Footer>
