@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import styles from "@/styles/searchTabs.module.scss";
 
 import {
   setPostSearch,
@@ -13,8 +12,6 @@ import {
 } from "@/reduxFeatures/api/searchSlice";
 
 import { Form, InputGroup, Spinner } from "react-bootstrap";
-import DOMPurify from "dompurify";
-import truncate from "trunc-html";
 
 import { useDispatch, useSelector } from "@/redux/store";
 import {
@@ -24,13 +21,12 @@ import {
 } from "@/components/Organisms/App/ApiSearch/globalApiSearch";
 import { FcSearch } from "react-icons/fc";
 import { MdOutlineSearchOff } from "react-icons/md";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { setSearchModal } from "@/reduxFeatures/app/appSlice";
+import PostRender from "./PostRender";
+import GistRender from "./GistRender";
+import UserRender from "./UserRender";
 
 function SearchTabs() {
-  const router = useRouter();
-  const sanitizer = DOMPurify.sanitize;
   useEffect(() => {
     // Remove Focus From Search input
     document.getElementById("navSearch").blur();
@@ -105,76 +101,23 @@ function SearchTabs() {
       >
         {postSearch?.length > 0 && (
           <Tab eventKey="post" title="Post">
-            <div>
-              {postSearch.map((search: any, keyIndex) => (
-                <li
-                  key={keyIndex}
-                  className={`${styles.tabLi} ${
-                    keyIndex % 2 === 0 && styles.tabLiBg
-                  } px-3`}
-                  style={{ margin: "-.3rem 0 -.3rem 0", paddingBottom: "4px" }}
-                  onClick={() => {
-                    router.push(`/explore/${search?._id}`);
-                    dispatch(setSearchModal(false));
-                  }}
-                >
-                  <span className="h6">{search?.postTitle}:</span>
-                  <div
-                    className="ms-5"
-                    dangerouslySetInnerHTML={{
-                      __html: sanitizer(truncate(search?.postBody, 50).html),
-                    }}
-                  />
-                </li>
-              ))}
-            </div>
+            {postSearch.map((search: any, keyIndex) => (
+              <PostRender search={search} key={keyIndex} index={keyIndex} />
+            ))}
           </Tab>
         )}
         {gistSearch?.length > 0 && (
           <Tab eventKey="gist" title="Gist">
-            <div>
-              {gistSearch.map((search: any, keyIndex) => (
-                <li
-                  key={keyIndex}
-                  className={`${styles.tabLi} ${
-                    keyIndex % 2 === 0 && styles.tabLiBg
-                  } px-3`}
-                  style={{ margin: "-.3rem 0 -.3rem 0", paddingBottom: "4px" }}
-                  onClick={() => {
-                    router.push(`/gist/${search?._id}`);
-                    dispatch(setSearchModal(false));
-                  }}
-                >
-                  <span className="h6">{search?.title}:</span>
-                  <div
-                    className="ms-5"
-                    dangerouslySetInnerHTML={{
-                      __html: sanitizer(truncate(search?.post, 50).html),
-                    }}
-                  />
-                </li>
-              ))}
-            </div>
+            {gistSearch.map((search: any, keyIndex) => (
+              <GistRender search={search} key={keyIndex} index={keyIndex} />
+            ))}
           </Tab>
         )}
         {userSearch?.length > 0 && (
           <Tab eventKey="user" title="User">
-            <div>
-              {userSearch.map((search: any, keyIndex) => (
-                <li
-                  key={keyIndex}
-                  className={`${styles.tabLi} ${
-                    keyIndex % 2 === 0 && styles.tabLiBg
-                  } px-3`}
-                  style={{ margin: "-.3rem 0 -.3rem 0", paddingBottom: "4px" }}
-                  onClick={() => console.log("SEARCH:", search)}
-                >
-                  <span className="h6">
-                    {search?.firstName} {search?.lastName}
-                  </span>
-                </li>
-              ))}
-            </div>
+            {userSearch.map((search: any, keyIndex) => (
+              <UserRender search={search} key={keyIndex} index={keyIndex} />
+            ))}
           </Tab>
         )}
       </Tabs>

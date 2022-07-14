@@ -153,35 +153,8 @@ const AuthHeader = () => {
           />
 
           <div className={styles.search}>
-            <BsSearch
-              className={styles.iconSearch}
-              // onClick={() => setShowModal(true)}
-              onClick={handleShowing}
-            />
+            <BsSearch className={styles.iconSearch} onClick={handleShowing} />
           </div>
-
-          {/* <Modal
-            show={showModal}
-            className={styles.modal}
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-          >
-            <FaTimes
-              className={styles.times}
-              onClick={() => setShowModal(false)}
-            />
-
-            <InputGroup className={styles.inputGroup}>
-              <FormControl
-                placeholder="Enter keyword here"
-                aria-label="Recipient's username"
-                aria-describedby="basic-addon2"
-              />
-              <Button className={styles.button} id="button-addon2">
-                Enter
-              </Button>
-            </InputGroup>
-          </Modal> */}
 
           <Nav className="d-flex justify-content-between gap-4 d-md-flex auth-nav">
             {links.map((link, key) => (
@@ -271,21 +244,19 @@ const AuthHeader = () => {
                   cursor: "pointer",	
                 }}
                 onClick = {directProfile}> */}
-                  <Image
-                      src={data?.avatar?.url || "/images/formbg.png"}
-                      alt=""
-                      width={20}
-                      height={20}
-                      roundedCircle
-                    />
-                    <Link href='/profile' passHref>
-                      <span className="mx-2" style = {{cursor: "pointer"}}>
-                        {data?.firstName}&nbsp; {data?.lastName}
-                      </span> 
-                    </Link>{" "}  
-
+                <Image
+                  src={data?.avatar?.url || "/images/formbg.png"}
+                  alt=""
+                  width={20}
+                  height={20}
+                  roundedCircle
+                />
+                <Link href="/profile" passHref>
+                  <span className="mx-2" style={{ cursor: "pointer" }}>
+                    {data?.firstName}&nbsp; {data?.lastName}
+                  </span>
+                </Link>{" "}
                 {/* </div> */}
-                
               </NavDropdown.Header>
               <NavDropdown.Divider />
               <NavDropdown.Item className={styles.navMenu}>
@@ -343,11 +314,16 @@ const AuthHeader = () => {
         </Navbar>
       )}
 
-      <Modal show={showing} onHide={handleClosing} scrollable>
+      <Modal
+        show={showing}
+        onHide={handleClosing}
+        scrollable
+        className="mt-3 pt-3 mt-lg-0 pt-lg-0"
+      >
         <Modal.Body>
           <SearchTabs />
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="py-lg-0">
           <Button variant="primary" onClick={handleClosing}>
             Close
           </Button>
