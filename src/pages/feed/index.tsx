@@ -4,7 +4,14 @@ import Head from "next/head";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import config from "../../config";
-import { Container, Spinner, Modal, Form, Image, Button } from "react-bootstrap";
+import {
+  Container,
+  Spinner,
+  Modal,
+  Form,
+  Image,
+  Button,
+} from "react-bootstrap";
 import AuthContent from "@/components/Auth/AuthContent";
 import Discussions from "@/components/Organisms/App/Discussions/Discussions";
 import PostCard from "@/components/Organisms/App/PostCard";
@@ -36,9 +43,9 @@ const Feed = () => {
 
   const [isFetching, setIsFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
-   post:''
+    post: "",
   });
 
   const checkScroll = () => {
@@ -47,13 +54,13 @@ const Feed = () => {
     }
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(formData.post=="") return toast.error("Field cannot be empty", {
-      position: toast.POSITION.TOP_RIGHT,
-      toastId: "1",
-    });
+    if (formData.post == "")
+      return toast.error("Field cannot be empty", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1",
+      });
     setUploading(true);
     console.log(formData);
 
@@ -90,10 +97,9 @@ const Feed = () => {
     (async function () {
       try {
         const response = await axios.get(`${config.serverUrl}/api/feeds`);
-       // console.log(response.data);
-        
+        // console.log(response.data);
+
         setPosts(response.data.feeds);
- 
       } catch (error) {
         console.log(error.response?.data);
       }
@@ -117,7 +123,6 @@ const Feed = () => {
     clone[e.currentTarget.name] = e.currentTarget.value;
     setFormData(clone);
     console.log(formData);
-
   };
 
   return (
@@ -128,19 +133,17 @@ const Feed = () => {
       </Head>
       <Container>
         <div className={`mt-3 ${styles.wrapper}`}>
-           <>
-              <div
-                style={{ width: 250 }}
-                className="position-fixed d-none d-lg-flex flex-column gap-4 vh-100"
-              >
-                <UserCard user={data!} />
-                <Discussions posts={posts} />
-              </div>
-            </>
+          <>
+            <div
+              style={{ width: 250 }}
+              className="position-fixed d-none d-lg-flex flex-column gap-4 vh-100"
+            >
+              <UserCard user={data!} />
+              <Discussions posts={posts} />
+            </div>
+          </>
 
-            <main className={styles.posts} id="posts">
-
-
+          <main className={styles.posts} id="posts">
             <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
               <>
                 <Image
@@ -159,8 +162,8 @@ const Feed = () => {
                     placeholder={`Hey ${
                       data?.firstName && data.firstName.split(" ")[0]
                     }! wanna say something?`}
-                      //onClick={()=>handleModal()}
-                   onClick={() => setShowModal(true)}
+                    //onClick={()=>handleModal()}
+                    onClick={() => setShowModal(true)}
                   />
                 </Form>
               </>

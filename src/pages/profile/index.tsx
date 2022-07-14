@@ -18,7 +18,6 @@ import Bookmarks from "../../components/Templates/Profile/Bookmarks";
 import Link from "next/link";
 import ProfileCard from "../../components/Organisms/App/ProfileCard";
 import AuthContent from "@/components/Auth/AuthContent";
-
 interface IComponents {
   about: ReactNode;
   timeline: ReactNode;
@@ -30,8 +29,7 @@ interface IComponents {
 const Profile = () => {
   //const { posts,  hasMore, isFetchingMore } = usePagination();
 
-  const router = useRouter();
-  const { path } = router.query;
+  const [path, setPath] = useState("timeline");
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -82,17 +80,9 @@ const Profile = () => {
           </>
 
           <main className={styles.profile}>
-            <ProfileCard />
+            <ProfileCard active={path} handlePath={setPath} />
 
-            {path !== "about" &&
-            path !== "timeline" &&
-            path !== "bookmarks" &&
-            path !== "media" &&
-            path !== "friends"
-              ? Components["timeline"]
-              : Components[path as unknown as string]}
-
-            {/* {Components[path as unknown as string]} */}
+            {Components[path as unknown as string]}
           </main>
         </div>
       </Container>

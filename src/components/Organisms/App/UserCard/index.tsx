@@ -36,7 +36,7 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
         </div>
       </div>
       <p className="text-center text-primary">
-        <Link href={`/profile/timeline`}>View Profile</Link>
+        <Link href={`/profile`}>View Profile</Link>
       </p>
     </Card>
   );
