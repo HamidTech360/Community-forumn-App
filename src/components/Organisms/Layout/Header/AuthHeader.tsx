@@ -24,10 +24,11 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "@/redux/store";
 import {
   notificationsOffcanvas,
+  setSearchModal,
   selectNotificationOffcanvas,
+  selectSearchModal,
 } from "@/reduxFeatures/app/appSlice";
-import styles from "@/styles/utils.module.scss";
-
+import { selectUser, logout } from "@/reduxFeatures/authState/authStateSlice";
 import {
   AiFillHome,
   AiOutlineHome,
@@ -43,10 +44,17 @@ import {
   MdOutlineNotificationsActive,
 } from "react-icons/md";
 
-import { selectUser, logout } from "@/reduxFeatures/authState/authStateSlice";
 import Head from "next/head";
+import styles from "@/styles/utils.module.scss";
+import SearchTabs from "@/components/Molecules/SearchTabs";
 
 const AuthHeader = () => {
+  const dispatch = useDispatch();
+  const showing = useSelector(selectSearchModal);
+
+  const handleClosing = () => dispatch(setSearchModal(false));
+  const handleShowing = () => dispatch(setSearchModal(true));
+
   const links = [
     { icon: "feed", name: "Home" },
     { icon: "explore", name: "Explore" },
@@ -54,11 +62,9 @@ const AuthHeader = () => {
     { icon: "groups", name: "Groups" },
   ];
 
-  const [showModal, setShowModal] = useState(false);
-  //const { user } = useUser();
+  // const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
-  const dispatch = useDispatch();
   const show = useSelector(selectNotificationOffcanvas);
   const data = useSelector(selectUser);
 
@@ -119,6 +125,7 @@ const AuthHeader = () => {
       }
     }
   };
+
   return (
     <>
       <Head>
@@ -136,41 +143,18 @@ const AuthHeader = () => {
             </Navbar.Brand>
           </Link>
           <Form.Control
+            id="navSearch"
             className={`mx-2 ${styles.formControl}`}
             type="search"
             style={{ maxWidth: 300 }}
             placeholder="Search"
+            onClick={handleShowing}
+            onChange={handleShowing}
           />
 
           <div className={styles.search}>
-            <BsSearch
-              onClick={() => setShowModal(true)}
-              className={styles.iconSearch}
-            />
+            <BsSearch className={styles.iconSearch} onClick={handleShowing} />
           </div>
-
-          <Modal
-            show={showModal}
-            className={styles.modal}
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-          >
-            <FaTimes
-              className={styles.times}
-              onClick={() => setShowModal(false)}
-            />
-
-            <InputGroup className={styles.inputGroup}>
-              <FormControl
-                placeholder="Enter keyword here"
-                aria-label="Recipient's username"
-                aria-describedby="basic-addon2"
-              />
-              <Button className={styles.button} id="button-addon2">
-                Enter
-              </Button>
-            </InputGroup>
-          </Modal>
 
           <Nav className="d-flex justify-content-between gap-4 d-md-flex auth-nav">
             {links.map((link, key) => (
@@ -260,21 +244,19 @@ const AuthHeader = () => {
                   cursor: "pointer",	
                 }}
                 onClick = {directProfile}> */}
-                  <Image
-                      src={data?.avatar?.url || "/images/formbg.png"}
-                      alt=""
-                      width={20}
-                      height={20}
-                      roundedCircle
-                    />
-                    <Link href='/profile' passHref>
-                      <span className="mx-2" style = {{cursor: "pointer"}}>
-                        {data?.firstName}&nbsp; {data?.lastName}
-                      </span> 
-                    </Link>{" "}  
-
+                <Image
+                  src={data?.avatar?.url || "/images/formbg.png"}
+                  alt=""
+                  width={20}
+                  height={20}
+                  roundedCircle
+                />
+                <Link href="/profile" passHref>
+                  <span className="mx-2" style={{ cursor: "pointer" }}>
+                    {data?.firstName}&nbsp; {data?.lastName}
+                  </span>
+                </Link>{" "}
                 {/* </div> */}
-                
               </NavDropdown.Header>
               <NavDropdown.Divider />
               <NavDropdown.Item className={styles.navMenu}>
@@ -331,6 +313,22 @@ const AuthHeader = () => {
           </Container>
         </Navbar>
       )}
+
+      <Modal
+        show={showing}
+        onHide={handleClosing}
+        scrollable
+        className="mt-3 pt-3 mt-lg-0 pt-lg-0"
+      >
+        <Modal.Body>
+          <SearchTabs />
+        </Modal.Body>
+        <Modal.Footer className="py-lg-0">
+          <Button variant="primary" onClick={handleClosing}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

@@ -6,6 +6,7 @@ import postReducer from "@/reduxFeatures/api/postSlice";
 import gistReducer from "@/reduxFeatures/api/gistSlice";
 import feedReducer from "@/reduxFeatures/api/feedSlice";
 import dragAndDropReducer from "@/reduxFeatures/app/dragAndDropSlice";
+import searchReducer from "@/reduxFeatures/api/searchSlice";
 
 import {
   useDispatch as useDispatchBase,
@@ -24,6 +25,7 @@ export const store = configureStore({
     chat: chatReducer,
     authState: authStateReducer,
     dragAndDrop: dragAndDropReducer,
+    search: searchReducer,
   },
 
   // Prevent Age (dateTime) from returning unSterilized error
