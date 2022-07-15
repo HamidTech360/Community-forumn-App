@@ -1,5 +1,6 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css");
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Display&family=Source+Sans+Pro:wght@200;400&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @font-face {
   font-family: "SF Pro";
@@ -63,7 +64,86 @@ body {
     margin-top: 0.5rem;
   }
 }
+.footer-logo{
+  width: 150px;
+  height: 50px;
+  margin-bottom: 20px;
+  @media screen and (max-width:768px) {
+    width: 100px;
+    height: 30px;
+    margin-bottom: 10px;
+  }
+}
+.footer-icons{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.mobile-only{
+  display: none;
+  @media screen and (max-width:768px) {
+    display: block;
+    margin-top: 20px;
+  }
+}
+.accordion-button {
+  background-color: #F0F0F1 !important;
+  color: #284D59 !important;
+  border-right: 0px !important;
+  border-left: 0px !important;
+}
+.accordion-button:focus {
+  box-shadow: none;
+}
+.desktop-only{
+  @media screen and (max-width:768px) {
+    display: none;
+  }
+}
+.footer-icon{
+  margin-right: 20px;
+  color: #71909b;
+  cursor: pointer;
+  @media screen and (max-width:500px) {
+    margin-right: 40px;
+  }
+}
+.footer-text{
+  line-height: 36px;
+}
+.fixed-bottom-navBar-text{
+  @media screen and (max-width:768px) {
+    font-weight: 700 !important;
+    font-size: 14px;
+  }
+}
+.message-icon-circle{
+  position: fixed;
+  z-index: 1000;
+  top: 80%;
+  left: 90%;
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  display: flex;
+  background: rgba(69, 90, 100, 0.49);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 
+  @media screen and (max-width:768px) {
+    left:80%;
+    top: 80%;
+    height: 50px;
+    width: 50px;
+  }
+}
+.heading{
+  font-size: 20px !important;
+  font-weight: 700;
+  @media screen and (max-width:768px) {
+    font-size: 18px !important;
+  }
+}
 a {
   text-decoration: none;
 }
@@ -74,7 +154,7 @@ nav a {
 }
 
 .footer a {
-  color: white;
+  color: #284D59;
 }
 
 .btn-primary {
@@ -302,12 +382,13 @@ nav {
 }
 .footer {
   position: absolute;
+  font-family: 'Work Sans', sans-serif;
   z-index: 3;
   margin-top: 2rem;
   width: 100%;
-  background: #052b29;
-  color: #ffffff;
-  padding: 1.5rem 0;
+  background: #F0F0F1;
+  color: #284D59;
+  padding: 3rem 0;
   h3 {
     font-weight: 700;
     font-size: 1.4rem;
