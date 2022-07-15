@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // import useUser from "@/hooks/useUser";
+import MessageButton from "@/components/Atoms/messageButton";
 import Head from "next/head";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -126,6 +127,7 @@ const Feed = () => {
       <Head>
         <title>Feed</title>
       </Head>
+      <MessageButton/>
       <Container>
         <div className={`mt-3 ${styles.wrapper}`}>
            <>

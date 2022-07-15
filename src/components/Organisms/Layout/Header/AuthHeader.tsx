@@ -183,7 +183,7 @@ const AuthHeader = () => {
                   } d-flex flex-column align-items-center gap-1 auth-gap btn`}
                 >
                   <span>{activeTab(link)}</span>
-                  <small>{link.name}</small>
+                  <small className="fixed-bottom-navBar-text" >{link.name}</small>
                 </div>
               </Link>
             ))}
@@ -313,7 +313,7 @@ const AuthHeader = () => {
                     } d-flex flex-column align-items-center gap-1 mobi-nav bg-white btn`}
                   >
                     <span>{activeTab(link)}</span>
-                    <small>{link.name}</small>
+                    <small className="fixed-bottom-navBar-text">{link.name}</small>
                   </div>
                 </Link>
               ))}
