@@ -17,7 +17,7 @@ import Media from "../../components/Templates/Profile/Media";
 import Bookmarks from "../../components/Templates/Profile/Bookmarks";
 import Link from "next/link";
 import ProfileCard from "../../components/Organisms/App/ProfileCard";
-import ProfileView from "../../components/Organisms/App/ProfileView"
+import ProfileView from "../../components/Organisms/App/ProfileView";
 import AuthContent from "@/components/Auth/AuthContent";
 
 interface IComponents {
@@ -60,7 +60,6 @@ const Profile = () => {
     };
   }, []);
 
-
   const Components: IComponents = {
     timeline: <Timeline Posts={data} />,
     about: <About />,
@@ -85,12 +84,11 @@ const Profile = () => {
           </>
 
           <main className={styles.profile}>
-            {router.query.id ?  
-              (<ProfileView active={path} handlePath={setPath} /> 
-              ): (
+            {router.query.id ? (
+              <ProfileView active={path} handlePath={setPath} />
+            ) : (
               <ProfileCard active={path} handlePath={setPath} />
             )}
-            
 
             {Components[path as unknown as string]}
           </main>
