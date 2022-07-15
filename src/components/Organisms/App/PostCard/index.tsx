@@ -4,9 +4,13 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Dropdown, Image, NavDropdown } from "react-bootstrap";
 import { HiDotsVertical } from "react-icons/hi";
 import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
-import { BsFolderFill, BsXCircleFill, BsFillBookmarkFill } from "react-icons/bs";
-import {AiOutlineLike, AiFillLike, AiOutlineShareAlt} from 'react-icons/ai'
-import {FaCommentDots} from 'react-icons/fa'
+import {
+  BsFolderFill,
+  BsXCircleFill,
+  BsFillBookmarkFill,
+} from "react-icons/bs";
+import { AiOutlineLike, AiFillLike, AiOutlineShareAlt } from "react-icons/ai";
+import { FaCommentDots } from "react-icons/fa";
 import Age from "../../../Atoms/Age";
 import DOMPurify from "dompurify";
 import styles from "@/styles/profile.module.scss";
@@ -34,52 +38,60 @@ const PostCard = ({
   const user = useSelector(selectUser);
   const posts = useSelector(selectPost);
   const router = useRouter();
-  const [liked, setLiked] = useState(false)
+  const [liked, setLiked] = useState(false);
   const sanitizer = DOMPurify.sanitize;
   const postButton = [
     {
       name: "Like",
       reaction: true,
-      icon:liked?<AiFillLike color="#086a6d " size={25} />:<AiOutlineLike size={25} onClick={()=>handleLike()} />
+      icon: liked ? (
+        <AiFillLike color="#086a6d " size={25} />
+      ) : (
+        <AiOutlineLike size={25} onClick={() => handleLike()} />
+      ),
     },
     {
       name: "Share",
       reaction: true,
-      icon:<AiOutlineShareAlt size={25} />
+      icon: <AiOutlineShareAlt size={25} />,
     },
     {
       name: "Comment",
       reaction: true,
-      icon:<FaCommentDots size={20} />
+      icon: <FaCommentDots size={20} />,
     },
     {
       name: "Bookmark",
       reaction: true,
-      icon:<BsFillBookmarkFill/>
+      icon: <BsFillBookmarkFill />,
     },
   ];
 
   const redirectPage = () => {
-
     router.push({
       pathname: `/profile/[id]`,
-      query: { 
+      query: {
         id: post?.author?._id,
       },
-    })
-  }
+    });
+  };
 
   const handleLike = async () => {
     let type;
-    const currentRoute = router.pathname
-    if(currentRoute=="/feed"){
-      type="feed"
-    }else if(currentRoute=="/groups" || currentRoute=="/groups/[id]/[path]"){
-      type="post"
+    const currentRoute = router.pathname;
+    if (currentRoute == "/feed") {
+      type = "feed";
+    } else if (
+      currentRoute == "/groups" ||
+      currentRoute == "/groups/[id]/[path]"
+    ) {
+      type = "post";
+    } else if (currentRoute.includes("profile")) {
+      type = "post";
     }
 
     console.log(type, currentRoute);
-    
+
     try {
       const { data } = await axios.get(
         `${config.serverUrl}/api/likes/?type=${type}&id=${post._id}`,
@@ -89,6 +101,13 @@ const PostCard = ({
           },
         }
       );
+<<<<<<< HEAD
+=======
+
+      console.log(data);
+      setLiked(true);
+
+>>>>>>> ad8a9a940718703ba452f40924b5b5b084edce07
       // window.location.reload();
   
     } catch (error) {
@@ -96,14 +115,13 @@ const PostCard = ({
     }
   };
 
-  useEffect(()=>{
-   // console.log(router.pathname);
-    
-    if(post.likes?.includes(user._id)){
-      setLiked(true)
-      
+  useEffect(() => {
+    // console.log(router.pathname);
+
+    if (post.likes?.includes(user._id)) {
+      setLiked(true);
     }
-  },[])
+  }, []);
 
   return (
     <Card
@@ -124,18 +142,29 @@ const PostCard = ({
           height={45}
           alt=""
           roundedCircle
-          style={{cursor: "pointer" }}
+          style={{ cursor: "pointer" }}
           onClick={redirectPage}
         />
         <div className="d-flex flex-column">
-          <div className={styles.div} onClick={redirectPage} style={{cursor: "pointer" }}>
-           <small dangerouslySetInnerHTML={{
-              __html: sanitizer(`${post.author?.firstName} ${post.author?.lastName}`),
-            }} />
+          <div
+            className={styles.div}
+            onClick={redirectPage}
+            style={{ cursor: "pointer" }}
+          >
+            <span
+              style={{ fontStyle: "italic" }}
+              dangerouslySetInnerHTML={{
+                __html: sanitizer(
+                  `${post.author?.firstName} ${post.author?.lastName}`
+                ),
+              }}
+            />
             <br />
-            <span style={{ marginTop: "10px" }}>
+            <small
+              style={{ marginTop: "10px", fontWeight: 400, fontSize: "0.9rem" }}
+            >
               <Age time={post?.createdAt} />
-            </span>
+            </small>
           </div>
           <NavDropdown
             className={`position-absolute end-0 ${styles.dropdown}`}
@@ -173,8 +202,10 @@ const PostCard = ({
             className="post-content"
             dangerouslySetInnerHTML={{
               __html: trimmed
-                ? post?.postBody?.slice(0, 500)  || post?.post?.slice(0, 500) + "..." || post?.postBody
-                : post?.post || post?.post 
+                ? post?.postBody?.slice(0, 500) ||
+                  post?.post?.slice(0, 500) + "..." ||
+                  post?.postBody
+                : post?.post || post?.post,
             }}
           />
         )}
@@ -201,12 +232,17 @@ const PostCard = ({
           >
             {item.icon}
             {item.name === "Like" && (
-              <span style={{marginLeft:'7px'}} className="mx-2 text-secondary">
+              <span
+                style={{ marginLeft: "7px" }}
+                className="mx-2 text-secondary"
+              >
                 {post.likes?.length || 0}
               </span>
             )}
 
-            <span className="d-none d-md-block" style={{marginLeft:'7px'}} >{item.name}</span>
+            <span className="d-none d-md-block" style={{ marginLeft: "7px" }}>
+              {item.name}
+            </span>
           </Button>
         ))}
       </Card.Footer>

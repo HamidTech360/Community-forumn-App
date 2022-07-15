@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // import useUser from "@/hooks/useUser";
+import MessageButton from "@/components/Atoms/messageButton";
 import Head from "next/head";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -47,6 +48,7 @@ const Feed = () => {
   const [formData, setFormData] = useState({
     post: "",
   });
+  const [newFeed, setNewFeed] = useState();
 
   const checkScroll = () => {
     if (window.scrollY > 100) {
@@ -79,6 +81,7 @@ const Feed = () => {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
       });
+      setNewFeed(response.data);
       setShowModal(false);
       setUploading(false);
       // fetchPost()
@@ -112,7 +115,8 @@ const Feed = () => {
       document.body.style.backgroundColor = "initial";
       window.removeEventListener("scroll", checkScroll);
     };
-  }, [handleSubmit]);
+    // }, [handleSubmit]);
+  }, [newFeed]);
 
   const DisplayModal = () => {
     setShowModal(true);
@@ -131,6 +135,7 @@ const Feed = () => {
       <Head>
         <title>Feed</title>
       </Head>
+      <MessageButton />
       <Container>
         <div className={`mt-3 ${styles.wrapper}`}>
           <>
@@ -144,13 +149,12 @@ const Feed = () => {
           </>
 
           <main className={styles.posts} id="posts">
-            <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
+            <div className="p-4 mx-2 d-flex gap-2 align-items-center bg-white radius-10">
               <>
                 <Image
                   src={data?.avatar?.url || "/images/formbg.png"}
                   width={50}
                   height={50}
-                  alt=""
                   roundedCircle
                 />
               </>

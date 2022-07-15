@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Head from "next/head";
+import MessageButton from "@/components/Atoms/messageButton";
 import { useEffect, useState } from "react";
 
 import axios from "axios";
@@ -121,7 +122,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
       <Head>
         <title>Gists</title>
       </Head>
-
+    <MessageButton/>
       <h1 className="d-flex justify-content-center align-center">Gist</h1>
       <Container>
         <h2>Popular Gists</h2>

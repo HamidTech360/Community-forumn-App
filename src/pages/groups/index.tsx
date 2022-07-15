@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import MessageButton from "@/components/Atoms/messageButton";
 import styles from "@/styles/groups.module.scss";
 import { Button, Card, CardImg, Container, Form, Image } from "react-bootstrap";
 import Timeline from "@/components/Templates/Profile/Timeline";
@@ -61,6 +62,7 @@ const Groups = () => {
       <Head>
         <title>Groups</title>
       </Head>
+      <MessageButton/>
       <div className="mt-5">
         <Container className={styles.wrapper}>
           <Card

@@ -23,9 +23,13 @@ const Gist = ({
   contributors: { name: string; avatar: string }[];
 }) => {
   const router = useRouter();
+  const { id } = router.query;
 
   const [data, setData] = useState({});
   // const [user, setUser] = useState({});
+  const [queryId, setQueryId] = useState(id);
+  // Allow Rerender Bases On ID Change Even When Route Is Same Path
+  if (id && id !== queryId) setQueryId(id);
 
   const user = useSelector(selectUser);
 
@@ -59,7 +63,7 @@ const Gist = ({
     return () => {
       document.body.style.backgroundColor = "initial";
     };
-  }, []);
+  }, [queryId]);
 
   return (
     <Container>

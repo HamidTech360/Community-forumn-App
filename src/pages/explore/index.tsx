@@ -1,5 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { GetStaticProps, InferGetStaticPropsType } from "next";
+import {RiMessage2Fill} from 'react-icons/ri'
+import MessageButton from "@/components/Atoms/messageButton";
 import Head from "next/head";
 import config from "../../config";
 import React, { useCallback, useEffect, useState } from "react";
@@ -124,13 +126,15 @@ const Explore = ({}) => {
 
   return (
     <div>
+      <MessageButton/>
       <ToastContainer />
-
+      
       <Head>
         <title>Explore</title>
       </Head>
-
+      
       <section className={`d-flex align-items-center ${styles.intro}`}>
+       
         <Container>
           <Row>
             <Col md={6}>

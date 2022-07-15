@@ -49,13 +49,18 @@ const MainDisplay = ({ unreadChat, readChat, mainSidebar, mainDisplay }) => {
             <div className="row">
               <h4 className="col-12 mt-2">
                 {JSON.stringify(selectUserToChatTimeline[0]) !== "{}" && (
-                  <BsArrowLeft
-                    className="me-2 d-inline d-md-none"
+                  <button
+                    className="btn btn-lg p-0"
                     onClick={backToSideMessages}
-                    style={{
-                      cursor: "pointer",
-                    }}
-                  />
+                  >
+                    <BsArrowLeft
+                      className="me-2 d-inline d-md-none"
+                      onClick={backToSideMessages}
+                      style={{
+                        cursor: "pointer",
+                      }}
+                    />
+                  </button>
                 )}
                 {selectUserToChatTimeline[0].name}
               </h4>
@@ -64,14 +69,18 @@ const MainDisplay = ({ unreadChat, readChat, mainSidebar, mainDisplay }) => {
               <div className="row">
                 <div className="col-12">
                   <h4>
-                    {" "}
-                    <BsArrowLeft
-                      className="me-2 d-inline d-md-none"
+                    <button
+                      className="btn btn-lg p-0"
                       onClick={backToSideMessages}
-                      style={{
-                        cursor: "pointer",
-                      }}
-                    />
+                    >
+                      <BsArrowLeft
+                        className="me-2 d-inline d-md-none"
+                        onClick={backToSideMessages}
+                        style={{
+                          cursor: "pointer",
+                        }}
+                      />
+                    </button>
                     New message
                   </h4>
                 </div>

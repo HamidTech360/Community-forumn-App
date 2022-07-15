@@ -35,7 +35,7 @@ const CreatePost = ({ DisplayModal }) => {
   //   dispatch(setShowPostModal(true));
   // };
   return (
-    <Card className="p-2 py-4" style={{ border: "none" }}>
+    <Card className="py-4" style={{ border: "none" }}>
       <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
         <>
           <Image

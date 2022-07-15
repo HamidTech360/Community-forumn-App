@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import Age from "@/components/Atoms/Age";
 import config from "@/config";
-import DOMPurify from "dompurify"
+import DOMPurify from "dompurify";
 
 const BlogPost = () => {
   const [blogPost, setBlogPost] = useState<Record<string, any>>({});
@@ -20,17 +20,16 @@ const BlogPost = () => {
   const [loading, setLoading ] = useState(false)
 
   const router = useRouter();
-
+  
 
   const redirectPage = () => {
-
     router.push({
       pathname: `/profile/[id]`,
-      query: { 
+      query: {
         id: blogPost?.author?._id,
       },
-    })
-  }
+    });
+  };
 
   const sanitizer = DOMPurify.sanitize;
   const FetchData = async () => {
@@ -98,7 +97,10 @@ const BlogPost = () => {
                 <div className="row">
                   <div className="col-md-9">
                     By{" "}
-                    <span onClick={redirectPage} style={{cursor: "pointer" }}> {`${blogPost.author?.firstName} ${blogPost.author?.lastName}`}</span>
+                    <span onClick={redirectPage} style={{ cursor: "pointer" }}>
+                      {" "}
+                      {`${blogPost.author?.firstName} ${blogPost.author?.lastName}`}
+                    </span>
                     <small className="text-secondary ms-5">
                       <BsDot />
                       {<Age time={blogPost?.createdAt} />}
@@ -118,7 +120,7 @@ const BlogPost = () => {
               </div>
               <article
                 className="my-3"
-                dangerouslySetInnerHTML={{ __html: blogPost.postBody}}
+                dangerouslySetInnerHTML={{ __html: blogPost.postBody }}
               />
               <section>
                 <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
