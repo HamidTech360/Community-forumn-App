@@ -135,7 +135,7 @@ const Feed = () => {
       <Head>
         <title>Feed</title>
       </Head>
-      <MessageButton/>
+      <MessageButton />
       <Container>
         <div className={`mt-3 ${styles.wrapper}`}>
           <>
@@ -149,13 +149,12 @@ const Feed = () => {
           </>
 
           <main className={styles.posts} id="posts">
-            <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
+            <div className="p-4 mx-2 d-flex gap-2 align-items-center bg-white radius-10">
               <>
                 <Image
                   src={data?.avatar?.url || "/images/formbg.png"}
                   width={50}
                   height={50}
-                  alt=""
                   roundedCircle
                 />
               </>
