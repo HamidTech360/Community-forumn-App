@@ -39,7 +39,7 @@ const BlogPost = () => {
         `${config.serverUrl}/api/posts/${router.query.id}`
       );
       setBlogPost(exploreResponse.data.post);
-      console.log("exploreResponse.data.post:", exploreResponse.data.post);
+      console.log("This is explore response", exploreResponse.data.post);
 
       
     } catch (error) {
@@ -60,7 +60,7 @@ const BlogPost = () => {
       },
 
     })
-
+    console.log(res)
     let comments = blogPost?.comments;
     comments.unshift(res.data);
     setBlogPost({ ...blogPost, comments });

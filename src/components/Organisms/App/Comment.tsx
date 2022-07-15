@@ -14,7 +14,6 @@ const Comment = ({ comment }: Record<string, any>) => {
     >
       <div className="d-flex align-items-center justify-content-start gap-2 mt-1">
         <Image
-          // src={comment?._embedded?.user[0]?.avatar_urls?.full}
           src="/images/friends3.png"
           alt="User avatar"
           width={50}
@@ -24,11 +23,9 @@ const Comment = ({ comment }: Record<string, any>) => {
         />
         <div>
           <h6 style={{ fontWeight: "bold" }}>
-            {/* {comment?._embedded?.user[0]?.name} */}
             {comment?.author?.firstName && comment?.author?.firstName} {comment?.author?.lastName && comment?.author?.lastName}
           </h6>
           <small>
-            {/* <Age time={comment?.date} /> */}
             <Age time={new Date().toLocaleString()} />
           </small>
         </div>
