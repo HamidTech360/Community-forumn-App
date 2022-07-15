@@ -11,26 +11,24 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import Age from "@/components/Atoms/Age";
 import config from "@/config";
-import DOMPurify from "dompurify"
+import DOMPurify from "dompurify";
 
 const BlogPost = () => {
   const [blogPost, setBlogPost] = useState<Record<string, any>>({});
 
-  const [ commentPost, setCommentPost ] = useState('')
-  const [loading, setLoading ] = useState(false)
+  const [commentPost, setCommentPost] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
-
   const redirectPage = () => {
-
     router.push({
       pathname: `/profile/[id]`,
-      query: { 
+      query: {
         id: blogPost?.author?._id,
       },
-    })
-  }
+    });
+  };
 
   const sanitizer = DOMPurify.sanitize;
   const FetchData = async () => {
@@ -40,8 +38,6 @@ const BlogPost = () => {
       );
       setBlogPost(exploreResponse.data.post);
       console.log("This is explore response", exploreResponse.data.post);
-
-      
     } catch (error) {
       router.back();
     }
@@ -49,28 +45,30 @@ const BlogPost = () => {
 
   const postComment = async () => {
     const body = {
-      content: commentPost
+      content: commentPost,
     };
 
-    setLoading(true)
-    const res = await axios.post(`${config.serverUrl}/api/comments?type=post&id=${router.query.id}`, body, 
-    {
-      headers: {
-        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-
-    })
-    console.log(res)
+    setLoading(true);
+    const res = await axios.post(
+      `${config.serverUrl}/api/comments?type=post&id=${router.query.id}`,
+      body,
+      {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+    console.log(res);
     let comments = blogPost?.comments;
     comments.unshift(res.data);
     setBlogPost({ ...blogPost, comments });
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   useEffect(() => {
     FetchData();
   }, []);
-  
+
   const likeComment = () => {};
   const replyComment = () => {};
 
@@ -98,7 +96,10 @@ const BlogPost = () => {
                 <div className="row">
                   <div className="col-md-9">
                     By{" "}
-                    <span onClick={redirectPage} style={{cursor: "pointer" }}> {`${blogPost.author?.firstName} ${blogPost.author?.lastName}`}</span>
+                    <span onClick={redirectPage} style={{ cursor: "pointer" }}>
+                      {" "}
+                      {`${blogPost.author?.firstName} ${blogPost.author?.lastName}`}
+                    </span>
                     <small className="text-secondary ms-5">
                       <BsDot />
                       {<Age time={blogPost?.createdAt} />}
@@ -106,9 +107,7 @@ const BlogPost = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col">
-                   
-                  </div>
+                  <div className="col"></div>
                 </div>
                 <Image
                   src={blogPost.blogImage || "/images/formbg.png"}
@@ -118,7 +117,7 @@ const BlogPost = () => {
               </div>
               <article
                 className="my-3"
-                dangerouslySetInnerHTML={{ __html: blogPost.postBody}}
+                dangerouslySetInnerHTML={{ __html: blogPost.postBody }}
               />
               <section>
                 <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
@@ -139,6 +138,7 @@ const BlogPost = () => {
                         id="articleTextarea"
                         className="form-control"
                         placeholder="."
+                        onChange={(e) => setCommentPost(e.target.value)}
                         style={{ height: "100px" }}
                       ></textarea>
                       <label htmlFor="articleTextarea">Comments</label>
