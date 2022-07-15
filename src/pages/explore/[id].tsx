@@ -20,6 +20,10 @@ const BlogPost = () => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+  const { id } = router.query;
+  const [queryId, setQueryId] = useState(id);
+  // Allow Rerender Bases On ID Change Even When Route Is Same Path
+  if (id && id !== queryId) setQueryId(id);
 
   const redirectPage = () => {
     router.push({

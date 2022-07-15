@@ -15,19 +15,17 @@ interface ICard {
 }
 
 const Card = ({ _id, image, title, author, body, size }) => {
- 
-  const sanitizer = DOMPurify.sanitize
+  const sanitizer = DOMPurify.sanitize;
   const router = useRouter();
 
   const redirectPage = () => {
-
     router.push({
       pathname: `/profile/[id]`,
-      query: { 
+      query: {
         id: author?._id,
       },
-    })
-  }
+    });
+  };
 
   return (
     <>
@@ -61,13 +59,19 @@ const Card = ({ _id, image, title, author, body, size }) => {
               {title?.toLowerCase()}
             </h6>
             <span className="text-muted">
-              <small style={{ marginTop: "-2rem", fontSize: "0.8rem", cursor: "pointer"}} onClick = {redirectPage}>
+              <small
+                style={{
+                  marginTop: "-2rem",
+                  fontSize: "0.8rem",
+                  cursor: "pointer",
+                }}
+                onClick={redirectPage}
+              >
                 by &nbsp;{author?.firstName}&nbsp;
                 {author?.lastName}
               </small>{" "}
             </span>
             <div
-    
               dangerouslySetInnerHTML={{ __html: sanitizer(body) }}
               style={{
                 height: "4.5rem",

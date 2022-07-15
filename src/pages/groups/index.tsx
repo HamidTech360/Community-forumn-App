@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import MessageButton from "@/components/Atoms/messageButton";
 import styles from "@/styles/groups.module.scss";
 import { Button, Card, CardImg, Container, Form, Image } from "react-bootstrap";
 import Timeline from "@/components/Templates/Profile/Timeline";
@@ -31,27 +32,32 @@ const posts = [
 ];
 const Groups = () => {
   const router = useRouter();
-  const [groups, setGroups] = useState([])
-  const [Posts, setPosts] = useState([])
+  const [groups, setGroups] = useState([]);
+  const [Posts, setPosts] = useState([]);
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
-    (async ()=>{
-        try{
-          const response = await axios.get(`${config.serverUrl}/api/groups/user`, {headers:{
-            authorization:`Bearer ${localStorage.getItem('accessToken')}`
-          }})
-          setGroups(response.data.groups)
-          console.log(response.data);
-          
-          
-          const randomPosts = await axios.get(`${config.serverUrl}/api/posts/group/random`)
-          console.log(randomPosts.data.posts);
-          setPosts(randomPosts.data.posts)
-         
-        }catch(error){
-          console.log(error.response?.data); 
-        }
-    })()
+    (async () => {
+      try {
+        const response = await axios.get(
+          `${config.serverUrl}/api/groups/user`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        setGroups(response.data.groups);
+        console.log(response.data);
+
+        const randomPosts = await axios.get(
+          `${config.serverUrl}/api/posts/group/random`
+        );
+        console.log(randomPosts.data.posts);
+        setPosts(randomPosts.data.posts);
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    })();
     return () => {
       document.body.style.backgroundColor = "initial";
     };
@@ -61,6 +67,7 @@ const Groups = () => {
       <Head>
         <title>Groups</title>
       </Head>
+      <MessageButton />
       <div className="mt-5">
         <Container className={styles.wrapper}>
           <Card
@@ -73,31 +80,40 @@ const Groups = () => {
               <p className="text-primary">See more</p>
             </div>
             <Form.Control placeholder="search" />
-            <div className={styles.groupLists}>
-                {groups.map((item, i)=>
-                   <Link href={`/groups/${item._id}/timeline`}>
-                      <div className={styles.groupCard}>
-                        <div >
-                            <img src="/images/groups2.png" className={styles.groupProfileImg} alt="" />
-                        </div>
-                        <div> 
-                          <div>{item.name} </div>
-                          <div className={styles.groupAdminName}>Admin: {item.admin?.firstName} </div>
-                        </div>
-
+            <div className={`${styles.groupLists}`}>
+              {groups.map((item, i) => (
+                <Link href={`/groups/${item._id}/timeline`}>
+                  <div className={styles.groupCard}>
+                    <div>
+                      <img
+                        src="/images/groups2.png"
+                        className={styles.groupProfileImg}
+                        alt=""
+                      />
+                    </div>
+                    <div>
+                      <div>{item.name} </div>
+                      <div className={styles.groupAdminName}>
+                        Admin: {item.admin?.firstName}{" "}
                       </div>
-                   </Link>
-                )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </Card>
 
           <div className={styles.posts}>
-            <div className={`d-none d-md-flex gap-3 mb-3`}>
-              {Posts.slice(0,4).map((post, index) => (
-                <Link key={`card-${index}`} href={`/groups/${post.groupId}/timeline`} passHref>
+            <div className={`d-none d-md-flex gap-3 mb-3 px-4`}>
+              {Posts.slice(0, 4).map((post, index) => (
+                <Link
+                  key={`card-${index}`}
+                  href={`/groups/${post.groupId}/timeline`}
+                  passHref
+                >
                   <Card style={{ height: "280px", border: "none" }}>
                     <CardImg
-                      src={'/images/article.png'}
+                      src={"/images/article.png"}
                       alt=""
                       style={{ height: "60%" }}
                     />
