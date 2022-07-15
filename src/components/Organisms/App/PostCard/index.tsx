@@ -101,13 +101,10 @@ const PostCard = ({
           },
         }
       );
-<<<<<<< HEAD
-=======
 
       console.log(data);
       setLiked(true);
 
->>>>>>> ad8a9a940718703ba452f40924b5b5b084edce07
       // window.location.reload();
   
     } catch (error) {
