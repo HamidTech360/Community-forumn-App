@@ -106,7 +106,6 @@ const PostCard = ({
       setLiked(true);
 
       // window.location.reload();
-  
     } catch (error) {
       console.log(error.response?.data);
     }
@@ -149,7 +148,7 @@ const PostCard = ({
             style={{ cursor: "pointer" }}
           >
             <span
-              style={{ fontStyle: "italic" }}
+              style={{ fontWeight: 500, color: "var(--bs-primary)" }}
               dangerouslySetInnerHTML={{
                 __html: sanitizer(
                   `${post.author?.firstName} ${post.author?.lastName}`

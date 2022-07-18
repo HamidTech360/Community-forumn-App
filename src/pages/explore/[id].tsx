@@ -16,11 +16,10 @@ import DOMPurify from "dompurify"
 const BlogPost = () => {
   const [blogPost, setBlogPost] = useState<Record<string, any>>({});
 
-  const [ commentPost, setCommentPost ] = useState('')
-  const [loading, setLoading ] = useState(false)
+  const [commentPost, setCommentPost] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-
 
   const redirectPage = () => {
 
@@ -40,8 +39,6 @@ const BlogPost = () => {
       );
       setBlogPost(exploreResponse.data.post);
       console.log("This is explore response", exploreResponse.data.post);
-
-      
     } catch (error) {
       router.back();
     }
@@ -49,28 +46,29 @@ const BlogPost = () => {
 
   const postComment = async () => {
     const body = {
-      content: commentPost
+      content: commentPost,
     };
 
-    setLoading(true)
-    const response = await axios.post(`${config.serverUrl}/api/comments?type=post&id=${router.query.id}`, body, 
-    {
-      headers: {
-        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-
-    })
-    console.log(response)
+    setLoading(true);
+    const res = await axios.post(
+      `${config.serverUrl}/api/comments?type=post&id=${router.query.id}`,
+      body,
+      {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+    console.log(res);
     let comments = blogPost?.comments;
-    comments.unshift(response.data);
+    comments.unshift(res.data);
     setBlogPost({ ...blogPost, comments });
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   useEffect(() => {
     FetchData();
   }, []);
-  
   const likeComment = () => {};
   const replyComment = () => {};
 
@@ -106,9 +104,7 @@ const BlogPost = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col">
-                   
-                  </div>
+                  <div className="col"></div>
                 </div>
                 <Image
                   src={blogPost.blogImage || "/images/formbg.png"}
@@ -139,6 +135,7 @@ const BlogPost = () => {
                         id="articleTextarea"
                         className="form-control"
                         placeholder="."
+                        onChange={(e) => setCommentPost(e.target.value)}
                         style={{ height: "100px" }}
                       ></textarea>
                       <label htmlFor="articleTextarea">Comments</label>

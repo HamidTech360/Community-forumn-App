@@ -23,20 +23,20 @@ const Comment = ({ comment }: Record<string, any>) => {
         />
         <div>
           <h6 style={{ fontWeight: "bold" }}>
-            {comment?.author?.firstName && comment?.author?.firstName} {comment?.author?.lastName && comment?.author?.lastName}
+            {comment?.author?.firstName && comment?.author?.firstName}{" "}
+            {comment?.author?.lastName && comment?.author?.lastName}
           </h6>
           <small>
-            <Age time={new Date().toLocaleString()} />
+            <Age time={comment.createdAt} />
           </small>
         </div>
       </div>
       <Card.Body
-          
-          dangerouslySetInnerHTML={{
-            __html: sanitizer(comment?.content),
-          }}
-        />
-      
+        dangerouslySetInnerHTML={{
+          __html: sanitizer(comment?.content),
+        }}
+      />
+
       <div className="buttons d-flex gap-2 justify-content-end mr-4">
         <small className="text-muted">
           Like{" "}
