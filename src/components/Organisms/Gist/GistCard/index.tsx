@@ -1,5 +1,6 @@
 import React from "react";
 import timeAge from "time-age";
+import { useRouter } from "next/router";
 import { Button, Card, Col, Row, Image } from "react-bootstrap";
 import { BsBookmarkDash } from "react-icons/bs";
 import Link from "next/link";
@@ -22,6 +23,18 @@ import styles from "@/styles/gist.module.scss";
 const GistCard = ({ gist, primary, trimmed }: any) => {
   console.log(gist);
   const sanitizer = DOMPurify.sanitize;
+  const router = useRouter();
+
+  const redirectPage = () => {
+
+    router.push({
+      pathname: `/profile/[id]`,
+      query: { 
+        id: gist?.author?._id,
+      },
+    })
+  }
+
   return (
     <Card
       className="mt-4 p-3 shadow-sm"
@@ -42,11 +55,15 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
               alt="Avatar"
               roundedCircle
               className={styles.img}
+              onClick= {redirectPage}
+              style={{cursor: "pointer" }}
             />
           </div>
           <div className={` ${styles.div}`}>
             <small
               className={`${styles.title} text-secondary text-capitalize `}
+              onClick={redirectPage}
+              style={{cursor: "pointer" }}
             >
               Started by {gist?.author?.firstName} {gist?.author?.lastName}
             </small>

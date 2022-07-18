@@ -1,13 +1,10 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css");
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Display&family=Source+Sans+Pro:wght@200;400&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
-@font-face {
-  font-family: "SF Pro";
-  src: url("/assets/fonts/SFPRODISPLAYREGULAR.OTF") format("opentype");
-  font-display: swap;
+* {
+  font-family: "Work Sans";
 }
-
 html,
 body {
   font-family: "SF Pro";
@@ -64,59 +61,59 @@ body {
     margin-top: 0.5rem;
   }
 }
-.footer-logo{
+.footer-logo {
   width: 150px;
   height: 50px;
   margin-bottom: 20px;
-  @media screen and (max-width:768px) {
+  @media screen and (max-width: 768px) {
     width: 100px;
     height: 30px;
     margin-bottom: 10px;
   }
 }
-.footer-icons{
+.footer-icons {
   margin-top: 20px;
   margin-bottom: 20px;
 }
-.mobile-only{
+.mobile-only {
   display: none;
-  @media screen and (max-width:768px) {
+  @media screen and (max-width: 768px) {
     display: block;
     margin-top: 20px;
   }
 }
 .accordion-button {
-  background-color: #F0F0F1 !important;
-  color: #284D59 !important;
+  background-color: #f0f0f1 !important;
+  color: #284d59 !important;
   border-right: 0px !important;
   border-left: 0px !important;
 }
 .accordion-button:focus {
   box-shadow: none;
 }
-.desktop-only{
-  @media screen and (max-width:768px) {
+.desktop-only {
+  @media screen and (max-width: 768px) {
     display: none;
   }
 }
-.footer-icon{
+.footer-icon {
   margin-right: 20px;
   color: #71909b;
   cursor: pointer;
-  @media screen and (max-width:500px) {
+  @media screen and (max-width: 500px) {
     margin-right: 40px;
   }
 }
-.footer-text{
+.footer-text {
   line-height: 36px;
 }
-.fixed-bottom-navBar-text{
-  @media screen and (max-width:768px) {
+.fixed-bottom-navBar-text {
+  @media screen and (max-width: 768px) {
     font-weight: 700 !important;
     font-size: 14px;
   }
 }
-.message-icon-circle{
+.message-icon-circle {
   position: fixed;
   z-index: 1000;
   top: 80%;
@@ -130,17 +127,17 @@ body {
   justify-content: center;
   cursor: pointer;
 
-  @media screen and (max-width:768px) {
-    left:80%;
+  @media screen and (max-width: 768px) {
+    left: 80%;
     top: 80%;
     height: 50px;
     width: 50px;
   }
 }
-.heading{
+.heading {
   font-size: 20px !important;
-  font-weight: 700;
-  @media screen and (max-width:768px) {
+  font-weight: bold;
+  @media screen and (max-width: 768px) {
     font-size: 18px !important;
   }
 }
@@ -154,7 +151,7 @@ nav a {
 }
 
 .footer a {
-  color: #284D59;
+  color: #284d59;
 }
 
 .btn-primary {
@@ -215,7 +212,7 @@ nav {
   box-sizing: border-box;
 }
 .bold {
-  font-weight: bold;
+  font-weight: 500;
 
   @media screen and (max-width: 1000px) {
     margin-left: 1.5rem;
@@ -232,7 +229,7 @@ nav {
 }
 
 .bolden {
-  font-weight: bold;
+  font-weight: 500;
 
   @media screen and (max-width: 500px) {
     font-weight: smaller;
@@ -378,16 +375,16 @@ nav {
   }
 }
 .text-primary {
-  font-weight: bold !important;
+  font-weight: 500 !important;
 }
 .footer {
   position: absolute;
-  font-family: 'Work Sans', sans-serif;
+  font-family: "Work Sans", sans-serif;
   z-index: 3;
   margin-top: 2rem;
   width: 100%;
-  background: #F0F0F1;
-  color: #284D59;
+  background: #f0f0f1;
+  color: #284d59;
   padding: 3rem 0;
   h3 {
     font-weight: 700;

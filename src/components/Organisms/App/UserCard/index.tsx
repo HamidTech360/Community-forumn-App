@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { Card, Image } from "react-bootstrap";
+import { Button, Card, Image } from "react-bootstrap";
 
 const UserCard = ({ user }: { user: Record<string, any> }) => {
   return (
@@ -35,9 +35,9 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
           <small>followers</small>
         </div>
       </div>
-      <p className="text-center text-primary">
-        <Link href={`/profile/timeline`}>View Profile</Link>
-      </p>
+      <Button variant="light" className="text-center mt-2">
+        <Link href={`/profile`}>View Profile</Link>
+      </Button>
     </Card>
   );
 };
