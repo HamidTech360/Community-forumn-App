@@ -12,6 +12,8 @@ import {
   Form,
   Image,
   Button,
+  Row,
+  Col,
 } from "react-bootstrap";
 import AuthContent from "@/components/Auth/AuthContent";
 import Discussions from "@/components/Organisms/App/Discussions/Discussions";
@@ -286,8 +288,21 @@ const Feed = () => {
             onClick={() => toggle()}
           />{" "}
         </span>
-        <PostCard post={selected} trimmed={false} />
-        <ModalCard />
+        {selected.images ? (
+          <Row>
+            <Col lg={6}></Col>
+            <Col lg={6}>
+              {" "}
+              <PostCard post={selected} />
+            </Col>
+          </Row>
+        ) : (
+          <Row>
+            <Col lg={12} className="px-5">
+              <PostCard post={selected} />
+            </Col>
+          </Row>
+        )}
       </Modal>
     </AuthContent>
   );
