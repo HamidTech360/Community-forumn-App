@@ -14,10 +14,8 @@ export const useModalWithData = () => {
   };
   return {
     modalOpen,
-    setModalOpen,
     toggle,
     selected,
     setSelected,
-    setModalState,
   };
 };

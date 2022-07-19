@@ -12,6 +12,8 @@ import {
   Form,
   Image,
   Button,
+  Row,
+  Col,
 } from "react-bootstrap";
 import AuthContent from "@/components/Auth/AuthContent";
 import Discussions from "@/components/Organisms/App/Discussions/Discussions";
@@ -21,20 +23,15 @@ import CreatePost from "@/components/Organisms/CreatePost";
 import { toast, ToastContainer } from "react-toastify";
 import { FaTimes } from "react-icons/fa";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-
+import { MdOutlineCancel } from "react-icons/md"
 import { usePagination } from "@/hooks/usePagination";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/feed.module.scss";
 import formStyles from "../../styles/templates/new-group/formField.module.css";
 import Follow from "@/components/Organisms/App/Follow";
 import Editor from "@/components/Organisms/SlateEditor/Editor";
-import ModalCard from '@/components/Organisms/App/ModalCard'
-import { useDispatch, useSelector } from "@/redux/store";
-import {
-  setShowFeedModal,
-  selectFeedModal,
-  selectNewFeed,
-} from "@/reduxFeatures/api/feedSlice";
+import { useSelector } from "@/redux/store";
+import { useModalWithData } from "@/hooks/useModalWithData";
 
 const Feed = () => {
   const data = useSelector(selectUser);
@@ -45,7 +42,7 @@ const Feed = () => {
   const [isFetching, setIsFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [showFeed, setShowFeed] = useState(false);
+  const { modalOpen, toggle, selected, setSelected } = useModalWithData();
 
   const [formData, setFormData] = useState({
     post: "",
@@ -97,7 +94,6 @@ const Feed = () => {
       setUploading(false);
     }
   };
-  
 
   useEffect(() => {
     (async function () {
@@ -120,10 +116,6 @@ const Feed = () => {
     };
     // }, [handleSubmit]);
   }, [newFeed]);
-
-  const DisplayModal = () => {
-    setShowModal(true);
-  };
 
   const handleChange = (e) => {
     const clone = { ...formData };
@@ -187,33 +179,20 @@ const Feed = () => {
                 bottom: 0,
               }}
             ></div>
-            {/* <InfiniteScroll
-              dataLength={Number(posts?.length)} //This is important field to render the next data
-              next={fetchData}
-              hasMore={true}
-              initialScrollY={0}
-              loader={
-                <div className="m-2 p-2 d-flex justify-content-center">
-                <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-                  </Spinner>
-                  </div>
-                }
-                endMessage={
-                  <p style={{ textAlign: "center" }}>
-                  <b>Yay! You have seen it all</b>
-                  </p>
-                }
-              > */}
+            
             {posts?.map((post, index) => (
-              <div onClick={() => setShowFeed(true)}>
+              <div
+                onClick={() => {
+                  setSelected(post);
+                  toggle();
+                }}
+              >
                 <PostCard
                   post={post}
                   key={`activity-post-${index}-${post.id}`}
                   trimmed
                 />
               </div>
-              
             ))}
             {isFetching && (
               <div className="m-2 p-2 d-flex justify-content-center">
@@ -276,22 +255,35 @@ const Feed = () => {
       </Modal>
 
       <Modal
-        show={showFeed}
-        className={styles.GistModal}
+        show={modalOpen}
+        className={styles.feedModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
-        size="lg"
+        size="xl"
       >
-        <span className={styles.closeBtn}>
+        <span className={styles.openBtn}>
           {" "}
-          <FaTimes
-            color="#207681"
+          <MdOutlineCancel
             style={{ cursor: "pointer" }}
             size={35}
-            onClick={() => setShowFeed(false)}
+            onClick={() => toggle()}
           />{" "}
         </span>
-       <ModalCard />
+        {selected.images ? (
+          <Row>
+            <Col lg={6}></Col>
+            <Col lg={6}>
+              {" "}
+              <PostCard post={selected} />
+            </Col>
+          </Row>
+        ) : (
+          <Row>
+            <Col lg={12} className="px-5">
+              <PostCard post={selected} />
+            </Col>
+          </Row>
+        )}
       </Modal>
     </AuthContent>
   );
