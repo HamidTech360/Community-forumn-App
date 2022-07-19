@@ -16,7 +16,7 @@ const Follow = () => {
   const handleFollow = async (id: string) => {
     try {
       const data = await makeSecuredRequest(
-        `${config.serverUrl}/api/users/${id}/follow`
+        `${config.serverUrl}/api/user/${id}/follow`
       );
       console.log(data);
       window.location.reload();
@@ -29,7 +29,7 @@ const Follow = () => {
 
     (async function () {
       try {
-        const { data } = await axios.get(`${config.serverUrl}/api/users`);
+        const { data } = await axios.get(`${config.serverUrl}/api/user`);
         console.log(user);
 
         setUsers(
