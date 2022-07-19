@@ -25,32 +25,32 @@ import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { usePagination } from "@/hooks/usePagination";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/feed.module.scss";
-import formStyles from "../../styles/templates/new-group/formField.module.css";
+// import formStyles from "../../styles/templates/new-group/formField.module.css";
 import Follow from "@/components/Organisms/App/Follow";
-import Editor from "@/components/Organisms/SlateEditor/Editor";
+// import Editor from "@/components/Organisms/SlateEditor/Editor";
 
 import { useDispatch, useSelector } from "@/redux/store";
 import {
-  setShowFeedModal,
-  selectFeedModal,
+  // setShowFeedModal,
+  // selectFeedModal,
   selectNewFeed,
 } from "@/reduxFeatures/api/feedSlice";
 
 const Feed = () => {
   const data = useSelector(selectUser);
   const dispatch = useDispatch();
-  const showModal = useSelector(selectFeedModal);
+  // const showModal = useSelector(selectFeedModal);
   const newFeed = useSelector(selectNewFeed);
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
   const [scrollInitialised, setScrollInitialised] = useState(false);
   const [posts, setPosts] = useState([]);
 
   const [isFetching, setIsFetching] = useState(true);
-  const [uploading, setUploading] = useState(false);
+  // const [uploading, setUploading] = useState(false);
   // const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({
-    post: "",
-  });
+  // const [formData, setFormData] = useState({
+  //   post: "",
+  // });
   // const [newFeed, setNewFeed] = useState();
 
   const checkScroll = () => {
@@ -109,7 +109,7 @@ const Feed = () => {
 
         setPosts(response.data.feeds);
       } catch (error) {
-        console.log(error.response?.data);
+        // console.log(error.response?.data);
       }
     })();
 
@@ -154,7 +154,7 @@ const Feed = () => {
           </>
 
           <main className={styles.posts} id="posts">
-            <div className="p-4 mx-2 d-flex gap-2 align-items-center bg-white radius-10">
+            {/* <div className="p-4 mx-2 d-flex gap-2 align-items-center bg-white radius-10">
               <>
                 <Image
                   src={data?.avatar?.url || "/images/formbg.png"}
@@ -172,15 +172,14 @@ const Feed = () => {
                     placeholder={`Hey ${
                       data?.firstName && data.firstName.split(" ")[0]
                     }! wanna say something?`}
-                    //onClick={()=>handleModal()}
-                    // onClick={() => setShowModal(true)}
                     onClick={() => dispatch(setShowFeedModal(true))}
                   />
                 </Form>
               </>
-            </div>
+            </div> */}
 
             {/* <CreatePost DisplayModal={DisplayModal} /> */}
+            <CreatePost pageAt="/feed" />
             <div
               id="instersection"
               style={{
@@ -238,7 +237,7 @@ const Feed = () => {
         </div>
       </Container>
 
-      <Modal
+      {/* <Modal
         show={showModal}
         className={styles.GistModal}
         aria-labelledby="contained-modal-title-vcenter"
@@ -251,11 +250,10 @@ const Feed = () => {
             color="#207681"
             style={{ cursor: "pointer" }}
             size={35}
-            // onClick={() => setShowModal(false)}
             onClick={() => dispatch(setShowFeedModal(false))}
           />{" "}
-        </span>
-        {/* <div className={styles.newGistModal}>
+        </span> */}
+      {/* <div className={styles.newGistModal}>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <Form.Group className={formStyles.formGroup}>
               <Form.Control
@@ -274,10 +272,10 @@ const Feed = () => {
             </Button>
           </Form>
         </div> */}
-        <div className="col-12 px-4 mt-2 mb-4">
+      {/* <div className="col-12 px-4 mt-2 mb-4">
           <Editor slim={false} pageAt="/feed" />
         </div>
-      </Modal>
+      </Modal> */}
     </AuthContent>
   );
 };

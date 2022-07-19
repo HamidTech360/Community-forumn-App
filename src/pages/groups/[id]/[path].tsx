@@ -20,11 +20,15 @@ import AuthContent from "@/components/Auth/AuthContent";
 import axios from "axios";
 
 import { useSelector } from "@/redux/store";
+import // selectCreatePostModal,
+// setShowCreatePostModal,
+// selectNewCreatePost,
+"@/reduxFeatures/app/createPost";
 import {
   // selectCreatePostModal,
   // setShowCreatePostModal,
-  selectNewCreatePost,
-} from "@/reduxFeatures/app/createPost";
+  selectNewGroupFeed,
+} from "@/reduxFeatures/api/groupSlice";
 
 interface IComponents {
   about: ReactNode;
@@ -39,7 +43,8 @@ const Group = () => {
   const router = useRouter();
   const { path, id } = router.query;
   const [groupData, setGroupData] = useState([]);
-  const newCreatePost = useSelector(selectNewCreatePost);
+  // const newCreatePost = useSelector(selectNewCreatePost);
+  const newCreatePost = useSelector(selectNewGroupFeed);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -54,16 +59,17 @@ const Group = () => {
     (async function () {
       try {
         const response = await axios.get(
-          `${config.serverUrl}/api/groups/group/${id}`
+          // `${config.serverUrl}/api/groups/group/${id}`
+          `${config.serverUrl}/api/feed/groups/${id}`
         );
-        console.log(response.data);
+        // console.log(response.data);
         setGroupData(response.data);
       } catch (error) {
-        console.log(error.response?.data);
+        // console.log(error.response?.data);
       }
     })();
   }, [router.isReady, newCreatePost]);
-  console.log(router.query);
+  // console.log(router.query);
 
   const Components: IComponents = {
     timeline: <Timeline groupId={id} />,

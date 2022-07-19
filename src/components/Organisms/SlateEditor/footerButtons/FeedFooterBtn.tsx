@@ -4,8 +4,9 @@ import config from "../../../../config";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useDispatch, useSelector } from "@/redux/store";
-import { setShowFeedModal, setNewFeed } from "@/reduxFeatures/api/feedSlice";
+import { useDispatch } from "@/redux/store";
+import { setNewFeed } from "@/reduxFeatures/api/feedSlice";
+import { setShowCreatePostModal } from "@/reduxFeatures/app/createPost";
 
 function FeedFooterBtn({ editorID }) {
   const [uploading, setUploading] = useState(false);
@@ -35,9 +36,7 @@ function FeedFooterBtn({ editorID }) {
 
       try {
         const response = await axios.post(
-          // `${config.serverUrl}/api/posts`,
           `${config.serverUrl}/api/feed`,
-          // { postTitle: " ", postBody: editorInnerHtml },
           { post: editorInnerHtml },
           {
             headers: {
@@ -45,17 +44,17 @@ function FeedFooterBtn({ editorID }) {
             },
           }
         );
-        console.log(response.data);
+        // console.log(response.data);
         toast.success("Post uploaded successfully", {
           position: toast.POSITION.TOP_RIGHT,
           toastId: "1",
         });
         // Auto update feeds in /feed
         dispatch(setNewFeed(response.data));
-        dispatch(setShowFeedModal(false));
+        dispatch(setShowCreatePostModal(false));
         setUploading(false);
       } catch (error) {
-        console.log(error.response?.data);
+        // console.error(error.response?.data);
         toast.error("Failed to upload post", {
           position: toast.POSITION.TOP_RIGHT,
           toastId: "1",

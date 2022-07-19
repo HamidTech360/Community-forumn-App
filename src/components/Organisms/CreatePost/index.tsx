@@ -1,6 +1,6 @@
 //import useUser from "@/hooks/useUser";
 import React, { useState } from "react";
-import { Card, Col, Form, Image, Row } from "react-bootstrap";
+import { Card, Form, Image } from "react-bootstrap";
 import { Modal } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
 import { useSelector, useDispatch } from "@/redux/store";
@@ -8,15 +8,14 @@ import { useRouter } from "next/router";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import styles from "@/styles/utils.module.scss";
 import styles2 from "@/styles/feed.module.scss";
-import formStyles from "../../../styles/templates/new-group/formField.module.css";
+// import formStyles from "../../../styles/templates/new-group/formField.module.css";
 import Editor from "@/components/Organisms/SlateEditor/Editor";
 
 import {
-  // newCreatePost,
   selectCreatePostModal,
   setShowCreatePostModal,
-  selectNewCreatePost,
 } from "@/reduxFeatures/app/createPost";
+import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
 
 // const CreatePost = ({ DisplayModal }) => {
 const CreatePost = ({ pageAt }) => {
@@ -26,7 +25,8 @@ const CreatePost = ({ pageAt }) => {
   const data = useSelector(selectUser);
   const showModal = useSelector(selectCreatePostModal);
   const dispatch = useDispatch();
-  const newCreatePost = useSelector(selectNewCreatePost);
+  // const newCreatePost = useSelector(selectNewCreatePost);
+  const newCreatePost = useSelector(selectNewGroupFeed);
   // const [showModal, setShowModal] = useState(false);
   // const handleChange = (e) => {
   //   dispatch(setPostTitle(e.currentTarget.value));
