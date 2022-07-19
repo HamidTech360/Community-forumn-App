@@ -1,38 +1,37 @@
-import React, { useEffect, useState} from 'react'
-import { useRouter } from 'next/router';
-import axios from 'axios';
-import config from '@/config'
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import axios from "axios";
+import config from "@/config";
 
 const ModalCard = () => {
-  const [ feedModal, setFeedModal ] = useState({})
+  const [feedModal, setFeedModal] = useState({});
 
   const router = useRouter();
-  
-
 
   const handleOneFeed = async () => {
     try {
-      const modalResponse = await axios.get(`${config.serverUrl}/api/feed/${router?.query?.id}`,
-      {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      const modalResponse = await axios.get(
+        `${config.serverUrl}/api/feed/${router?.query?.id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
         }
-      })
-      console.log(router.query.id)
-      console.log(modalResponse.data)
+      );
+      console.log(router.query.id);
+      console.log(modalResponse.data);
     } catch (error) {
       // router.back();
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
-    handleOneFeed()
-  }, [])
+    console.log(router.query.id);
+    handleOneFeed();
+  }, []);
 
-  return (
-    <div>ModalCard</div>
-  )
-}
+  return <div>ModalCard</div>;
+};
 
-export default ModalCard
+export default ModalCard;

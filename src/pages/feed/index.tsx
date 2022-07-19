@@ -28,13 +28,9 @@ import styles from "@/styles/feed.module.scss";
 import formStyles from "../../styles/templates/new-group/formField.module.css";
 import Follow from "@/components/Organisms/App/Follow";
 import Editor from "@/components/Organisms/SlateEditor/Editor";
-import ModalCard from '@/components/Organisms/App/ModalCard'
-import { useDispatch, useSelector } from "@/redux/store";
-import {
-  setShowFeedModal,
-  selectFeedModal,
-  selectNewFeed,
-} from "@/reduxFeatures/api/feedSlice";
+import ModalCard from "@/components/Organisms/App/ModalCard";
+import { useSelector } from "@/redux/store";
+import { useModalWithData } from "@/hooks/useModalWithData";
 
 const Feed = () => {
   const data = useSelector(selectUser);
@@ -45,7 +41,7 @@ const Feed = () => {
   const [isFetching, setIsFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [showFeed, setShowFeed] = useState(false);
+  const { modalOpen, toggle, selected, setSelected } = useModalWithData();
 
   const [formData, setFormData] = useState({
     post: "",
@@ -97,7 +93,6 @@ const Feed = () => {
       setUploading(false);
     }
   };
-  
 
   useEffect(() => {
     (async function () {
@@ -120,10 +115,6 @@ const Feed = () => {
     };
     // }, [handleSubmit]);
   }, [newFeed]);
-
-  const DisplayModal = () => {
-    setShowModal(true);
-  };
 
   const handleChange = (e) => {
     const clone = { ...formData };
@@ -206,14 +197,18 @@ const Feed = () => {
                 }
               > */}
             {posts?.map((post, index) => (
-              <div onClick={() => setShowFeed(true)}>
+              <div
+                onClick={() => {
+                  setSelected(post);
+                  toggle();
+                }}
+              >
                 <PostCard
                   post={post}
                   key={`activity-post-${index}-${post.id}`}
                   trimmed
                 />
               </div>
-              
             ))}
             {isFetching && (
               <div className="m-2 p-2 d-flex justify-content-center">
@@ -276,11 +271,11 @@ const Feed = () => {
       </Modal>
 
       <Modal
-        show={showFeed}
+        show={modalOpen}
         className={styles.GistModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
-        size="lg"
+        size="xl"
       >
         <span className={styles.closeBtn}>
           {" "}
@@ -288,10 +283,11 @@ const Feed = () => {
             color="#207681"
             style={{ cursor: "pointer" }}
             size={35}
-            onClick={() => setShowFeed(false)}
+            onClick={() => toggle()}
           />{" "}
         </span>
-       <ModalCard />
+        <PostCard post={selected} trimmed={false} />
+        <ModalCard />
       </Modal>
     </AuthContent>
   );
