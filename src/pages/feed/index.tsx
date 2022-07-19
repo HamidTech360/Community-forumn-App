@@ -71,7 +71,7 @@ const Feed = () => {
 
   //   try {
   //     const response = await axios.post(
-  //       `${config.serverUrl}/api/feeds`,
+  //       `${config.serverUrl}/api/feed`,
   //       { ...formData },
   //       {
   //         headers: {
@@ -104,7 +104,7 @@ const Feed = () => {
   useEffect(() => {
     (async function () {
       try {
-        const response = await axios.get(`${config.serverUrl}/api/feeds`);
+        const response = await axios.get(`${config.serverUrl}/api/feed`);
         // console.log(response.data);
 
         setPosts(response.data.feeds);

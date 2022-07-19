@@ -36,7 +36,7 @@ function FeedFooterBtn({ editorID }) {
       try {
         const response = await axios.post(
           // `${config.serverUrl}/api/posts`,
-          `${config.serverUrl}/api/feeds`,
+          `${config.serverUrl}/api/feed`,
           // { postTitle: " ", postBody: editorInnerHtml },
           { post: editorInnerHtml },
           {
