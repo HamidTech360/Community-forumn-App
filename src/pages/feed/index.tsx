@@ -256,12 +256,12 @@ const Feed = () => {
 
       <Modal
         show={modalOpen}
-        className={styles.feedModal}
+        className={styles.GistModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
         size="xl"
       >
-        <span className={styles.openBtn}>
+        <span className={styles.closeBtn}>
           {" "}
           <MdOutlineCancel
             style={{ cursor: "pointer" }}

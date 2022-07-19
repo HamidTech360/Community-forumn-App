@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import config from '../../../config'
+import config from "../../../config";
 import axios from "axios";
-import joi from 'joi-browser'
+import joi from "joi-browser";
 import Head from "next/head";
 import { BsArrowLeft } from "react-icons/bs";
 import styles from "@/styles/new-group.module.css";
@@ -18,18 +18,18 @@ import "react-toastify/dist/ReactToastify.css";
 
 const CreateNewGroup = () => {
   const router = useRouter();
-  const user = useSelector(s=>s.authState.user)
-  const [isLoading, setIsLoading] = useState(false)
+  const user = useSelector((s) => s.authState.user);
+  const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({
-    name:"",
-    description:"",
-    privacy:"",
-    invite:"",
-    allowedToPost:"",
-    groupMembers:[]
-  })
+    name: "",
+    description: "",
+    privacy: "",
+    invite: "",
+    allowedToPost: "",
+    groupMembers: [],
+  });
 
-  const [activeTab, setActiveTab] = useState(0)
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -39,88 +39,91 @@ const CreateNewGroup = () => {
     };
   }, []);
 
+  const moveToNewTab = (tabIndex) => {
+    setActiveTab(tabIndex);
+  };
 
-  const moveToNewTab = (tabIndex)=>{
-    setActiveTab(tabIndex)
-  }
+  const handleChange = (e) => {
+    const clone = { ...data };
+    clone[e.currentTarget.name] = e.currentTarget.value;
+    setData(clone);
+  };
 
-  const handleChange = (e)=>{
-    const clone = {...data}
-    clone[e.currentTarget.name] = e.currentTarget.value
-    setData(clone)
-  
-  }
-
-  const handleSelectOption = (arrayName, value)=>{
-   const clone = {...data}
-   if(arrayName==="privacy"){
-    clone['privacy'] = value
-    setData(clone)
-   }else if(arrayName==="invite"){
-    clone['invite'] = value
-    setData(clone)
-   }else if(arrayName==="allowedToPost"){
-    clone['allowedToPost'] = value
-    setData(clone)
-   }
-  }
-
-  const chooseConnections = (connectionIds)=>{
-    const clone = {...data}
-    clone['groupMembers'] = connectionIds
-    setData(clone)
-  }
-
-  const validateGroupData = (data)=>{
-    const schema = {
-      name:joi.string().required(),
-      description:joi.string().required(),
-      privacy:joi.string().required(),
-      invite:joi.string().required(),
-      allowedToPost:joi.string().required(),
-      groupMembers:joi.array()
+  const handleSelectOption = (arrayName, value) => {
+    const clone = { ...data };
+    if (arrayName === "privacy") {
+      clone["privacy"] = value;
+      setData(clone);
+    } else if (arrayName === "invite") {
+      clone["invite"] = value;
+      setData(clone);
+    } else if (arrayName === "allowedToPost") {
+      clone["allowedToPost"] = value;
+      setData(clone);
     }
-    return joi.validate(data, schema)
-  }
+  };
 
-  const handleSubmit = async ()=>{
-    
-    const {error} = validateGroupData(data)
-    if(error) {
+  const chooseConnections = (connectionIds) => {
+    const clone = { ...data };
+    clone["groupMembers"] = connectionIds;
+    setData(clone);
+  };
+
+  const validateGroupData = (data) => {
+    const schema = {
+      name: joi.string().required(),
+      description: joi.string().required(),
+      privacy: joi.string().required(),
+      invite: joi.string().required(),
+      allowedToPost: joi.string().required(),
+      groupMembers: joi.array(),
+    };
+    return joi.validate(data, schema);
+  };
+
+  const handleSubmit = async () => {
+    const { error } = validateGroupData(data);
+    if (error) {
       toast.error(error.details[0].message, {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: '2',
+        toastId: "2",
       });
       return console.log(error.details[0].message);
     }
-    
-    setIsLoading(true)
 
-    console.log('Final group data is ',data);
-    
-    try{
-      const response = await axios.post(`${config.serverUrl}/api/groups`, {...data}, {headers:{
-        authorization:`Bearer ${localStorage.getItem('accessToken')}`
-      }})
-      console.log(response.data);
-      setIsLoading(false)
+    setIsLoading(true);
+
+    // console.log("Final group data is ", data);
+
+    try {
+      const response = await axios.post(
+        `${config.serverUrl}/api/groups`,
+        { ...data },
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      // console.log(response.data);
+      setIsLoading(false);
       toast.success("Group created successfully", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: '1',
-        autoClose:7000
+        toastId: "1",
+        autoClose: 7000,
       });
-      setTimeout(()=>{
-        router.push('/groups')
-      }, 3000)
-    }catch(error){
-      console.log(error.response?.data);
-      setIsLoading(false)
+      setTimeout(() => {
+        router.push("/groups");
+      }, 3000);
+    } catch (error) {
+      // console.log(error.response?.data);
+      setIsLoading(false);
       toast.error("Failed to create group", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: '2',
+        toastId: "2",
       });
     }
-  }
+  };
 
   const goBack = () => {
     if (sessionStorage.getItem("newGroup_coming4rm")) {
@@ -132,56 +135,56 @@ const CreateNewGroup = () => {
     }
   };
 
-
   const tabs = [
     {
-      index:0,
+      index: 0,
       label: "Details",
-      component: <FormField 
-                        data={data} 
-                        handleChange ={handleChange}
-                        moveToNewTab = {moveToNewTab}
-                   />,
+      component: (
+        <FormField
+          data={data}
+          handleChange={handleChange}
+          moveToNewTab={moveToNewTab}
+        />
+      ),
       active: true,
     },
-    { 
-      index:1,
+    {
+      index: 1,
       label: "Settings",
-      component: <Settings 
-                    data={data} 
-                    handleSelectOption={handleSelectOption} 
-                  />,
+      component: (
+        <Settings data={data} handleSelectOption={handleSelectOption} />
+      ),
       active: false,
     },
     {
-      index:2,
+      index: 2,
       label: "Add members",
-      component: <AddConnections 
-                      chooseConnections={chooseConnections} 
-                      isLoading={isLoading} 
-                      handleSubmit ={handleSubmit} 
-                      data={data}
-                  />,
+      component: (
+        <AddConnections
+          chooseConnections={chooseConnections}
+          isLoading={isLoading}
+          handleSubmit={handleSubmit}
+          data={data}
+        />
+      ),
       active: false,
     },
-  ]
+  ];
 
   const handleSelectTabs = (tab, i) => {
     tabs.map((item) => (item.active = false));
     tabs[i].active = true;
-    console.log(tabs);
-    setActiveTab(tabs[i].index)
-    console.log(tabs[i]);
-  
+    // console.log(tabs);
+    setActiveTab(tabs[i].index);
+    // console.log(tabs[i]);
   };
-  
 
   return (
     <AuthContent>
       <Head>
         <title>New group</title>
       </Head>
-      <ToastContainer/>
+      <ToastContainer />
       <div className={styles.createGroupFlex}>
         <div className={styles.createGroupLayout}>
           <div className={styles.ArrowBox}>
@@ -200,7 +203,7 @@ const CreateNewGroup = () => {
                   <Badge
                     onClick={() => handleSelectTabs(item, i)}
                     className={`${styles.stepperBadge} ${
-                      item.index==activeTab
+                      item.index == activeTab
                         ? styles.stepperBadgeActive
                         : styles.stepperBadgePassive
                     }`}

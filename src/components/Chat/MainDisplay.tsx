@@ -187,7 +187,7 @@ const MainDisplay = ({ unreadChat, readChat, mainSidebar, mainDisplay }) => {
             style={{ backgroundColor: "transparent" }}
           >
             <div className="col-10 col-lg-11">
-              <Editor slim={true} />
+              <Editor slim={true} pageAt="/chat" />
             </div>
           </Card.Footer>
         </Card>

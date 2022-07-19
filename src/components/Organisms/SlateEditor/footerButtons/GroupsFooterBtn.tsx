@@ -5,10 +5,13 @@ import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch } from "@/redux/store";
-import { setNewFeed } from "@/reduxFeatures/api/feedSlice";
 import { setShowCreatePostModal } from "@/reduxFeatures/app/createPost";
+import { setNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
+import { useRouter } from "next/router";
 
-function FeedFooterBtn({ editorID }) {
+function GroupsFooterBtn({ editorID }) {
+  const router = useRouter();
+
   const [uploading, setUploading] = useState(false);
 
   const dispatch = useDispatch();
@@ -37,24 +40,22 @@ function FeedFooterBtn({ editorID }) {
       try {
         const response = await axios.post(
           `${config.serverUrl}/api/feed`,
-          { post: editorInnerHtml },
+          { post: editorInnerHtml, group: router?.query?.id },
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
           }
         );
-        // console.log(response.data);
         toast.success("Post uploaded successfully", {
           position: toast.POSITION.TOP_RIGHT,
           toastId: "1",
         });
         // Auto update feeds in /feed
-        dispatch(setNewFeed(response.data));
+        dispatch(setNewGroupFeed(response.data));
         dispatch(setShowCreatePostModal(false));
         setUploading(false);
       } catch (error) {
-        // console.error(error.response?.data);
         toast.error("Failed to upload post", {
           position: toast.POSITION.TOP_RIGHT,
           toastId: "1",
@@ -78,4 +79,4 @@ function FeedFooterBtn({ editorID }) {
   );
 }
 
-export default FeedFooterBtn;
+export default GroupsFooterBtn;
