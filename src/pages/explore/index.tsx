@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { GetStaticProps, InferGetStaticPropsType } from "next";
-import {RiMessage2Fill} from 'react-icons/ri'
+import { RiMessage2Fill } from "react-icons/ri";
 import MessageButton from "@/components/Atoms/messageButton";
 import Head from "next/head";
 import config from "../../config";
@@ -77,7 +77,7 @@ const Explore = ({}) => {
         dispatch(setPosts(response.data.posts));
         // setIsFetching(false);
         dispatch(setIsFetching(false));
-        console.log(response.data.posts)
+        console.log(response.data.posts);
       } catch (error) {
         console.log(error.response?.data);
       }
@@ -126,15 +126,14 @@ const Explore = ({}) => {
 
   return (
     <div>
-      <MessageButton/>
+      <MessageButton />
       <ToastContainer />
-      
+
       <Head>
         <title>Explore</title>
       </Head>
-      
+
       <section className={`d-flex align-items-center ${styles.intro}`}>
-       
         <Container>
           <Row>
             <Col md={6}>
@@ -292,7 +291,7 @@ const Explore = ({}) => {
             </Form>
           </div>
           <div className="col-12 mt-2 mb-4 px-lg-4">
-            <Editor slim={false} />
+            <Editor slim={false} pageAt='/explore' />
           </div>
         </div>
       </Modal>

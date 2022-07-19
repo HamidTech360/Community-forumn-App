@@ -51,7 +51,9 @@ const Leaf = ({ attributes, children, leaf }) => {
   return <span {...attributes}>{children}</span>;
 };
 
-const Editor = ({ slim }: { slim: boolean }) => {
+// const Editor = ({ slim }: { slim: boolean }) => {
+const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
+  console.log("Editor pageAt:", pageAt);
   const router = useRouter();
   const editorID = `${router.asPath}-slateRefId`;
   const editor = useMemo(
@@ -81,8 +83,6 @@ const Editor = ({ slim }: { slim: boolean }) => {
   const renderLeaf = useCallback((props) => {
     return <Leaf {...props} />;
   }, []);
-
-  
 
   return (
     <div className={slim ? "container-fluid px-0 mx-0" : "container"}>
@@ -132,7 +132,7 @@ const Editor = ({ slim }: { slim: boolean }) => {
                     >
                       <Toolbar position="bottom" />
                     </div>
-                    <FooterButtons editorID={editorID} />
+                    <FooterButtons editorID={editorID} pageAt={pageAt} />
                   </div>
                 )}
               </div>
@@ -147,7 +147,7 @@ const Editor = ({ slim }: { slim: boolean }) => {
               marginBottom: "1rem",
             }}
           >
-            <FooterButtons editorID={editorID} />
+            <FooterButtons editorID={editorID} pageAt={pageAt} />
           </div>
         )}
       </div>
