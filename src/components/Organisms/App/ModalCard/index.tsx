@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState} from 'react'
 import { useRouter } from 'next/router';
 import axios from 'axios';
@@ -7,27 +8,27 @@ const ModalCard = () => {
   const [ feedModal, setFeedModal ] = useState({})
 
   const router = useRouter();
-  
+  const { id } = router.query
 
 
-  const handleOneFeed = async () => {
-    try {
-      const modalResponse = await axios.get(`${config.serverUrl}/api/feed/${router?.query?.id}`,
-      {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        }
-      })
-      console.log(router.query.id)
-      console.log(modalResponse.data)
-    } catch (error) {
-      // router.back();
-      console.log(error)
-    }
-  }
 
   useEffect(() => {
-    handleOneFeed()
+    (async function () {
+      try {
+        const modalResponse = await axios.get(`${config.serverUrl}/api/feed/${id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          }
+        })
+        console.log(modalResponse.data)
+
+      } catch (error) {
+        // router.back();
+        console.log(error)
+      }
+    })()
+  
   }, [])
 
   return (
