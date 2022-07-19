@@ -100,7 +100,6 @@ const PostCard = ({
         }
       );
 
-      console.log(data);
       setLiked(true);
 
       // window.location.reload();
