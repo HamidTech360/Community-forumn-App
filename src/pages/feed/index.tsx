@@ -4,7 +4,6 @@ import MessageButton from "@/components/Atoms/messageButton";
 import Head from "next/head";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useRouter } from 'next/router'
 import config from "../../config";
 import {
   Container,
@@ -46,17 +45,12 @@ const Feed = () => {
   const [isFetching, setIsFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showFeed, setShowFeed] = useState(false);
 
   const [formData, setFormData] = useState({
     post: "",
   });
   const [newFeed, setNewFeed] = useState();
-
-  // ? to view one feed
-  const router = useRouter();
-  const [oneFeed, setOneFeed ] =useState<Record<string, any>>({})
-  const [showFeed, setShowFeed] = useState(false);
-
 
   const checkScroll = () => {
     if (window.scrollY > 100) {
@@ -104,16 +98,6 @@ const Feed = () => {
     }
   };
 
-  const handleOneFeed = async () => {
-    try {
-      const modalResponse = await axios.get(`${config.serverUrl}/api/feed/${router.query.id}`)
-
-      console.log(modalResponse.data.feed)
-      console.log('router', router.query.id)
-    } catch (error) {
-      console.log(error.response?.data)
-    }
-  }
   useEffect(() => {
     (async function () {
       try {
@@ -125,8 +109,6 @@ const Feed = () => {
         console.log(error.response?.data);
       }
     })();
-
-    handleOneFeed()
 
     document.body.style.backgroundColor = "#f6f6f6";
     window.addEventListener("scroll", checkScroll);
@@ -308,7 +290,7 @@ const Feed = () => {
             onClick={() => setShowFeed(false)}
           />{" "}
         </span>
-       <ModalCard feed= {oneFeed} trimmed/>
+       <ModalCard />
       </Modal>
     </AuthContent>
   );
