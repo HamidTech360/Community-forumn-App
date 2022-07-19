@@ -40,6 +40,7 @@ const Groups = () => {
       try {
         const response = await axios.get(
           `${config.serverUrl}/api/groups/user`,
+          // `${config.serverUrl}/api/feed/groups`,
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -47,15 +48,16 @@ const Groups = () => {
           }
         );
         setGroups(response.data.groups);
-        console.log(response.data);
+        console.log("response:", response.data);
 
         const randomPosts = await axios.get(
-          `${config.serverUrl}/api/posts/group/random`
+          // `${config.serverUrl}/api/posts/group/random`
+          `${config.serverUrl}/api/feed/groups`
         );
-        console.log(randomPosts.data.posts);
+        console.log("randomPosts:", randomPosts.data);
         setPosts(randomPosts.data.posts);
       } catch (error) {
-        console.log(error.response?.data);
+        console.error(error.response?.data);
       }
     })();
     return () => {
@@ -82,10 +84,11 @@ const Groups = () => {
             <Form.Control placeholder="search" />
             <div className={`${styles.groupLists}`}>
               {groups.map((item, i) => (
-                <Link href={`/groups/${item._id}/timeline`}>
+                <Link href={`/groups/${item._id}/timeline`} passHref>
                   <div className={styles.groupCard}>
                     <div>
-                      <img
+                      {/* <img */}
+                      <Image
                         src="/images/groups2.png"
                         className={styles.groupProfileImg}
                         alt=""

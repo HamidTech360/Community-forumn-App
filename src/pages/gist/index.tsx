@@ -122,7 +122,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
       <Head>
         <title>Gists</title>
       </Head>
-    <MessageButton/>
+      <MessageButton />
       <h1 className="d-flex justify-content-center align-center">Gist</h1>
       <Container>
         <h2>Popular Gists</h2>
@@ -247,7 +247,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             </Form>
           </div>
           <div className="col-12 mt-2 mb-4 px-lg-4">
-            <Editor slim={false} />
+            <Editor slim={false} pageAt="/gist" />
           </div>
         </div>
       </Modal>

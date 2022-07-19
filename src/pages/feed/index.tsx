@@ -25,30 +25,33 @@ import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { usePagination } from "@/hooks/usePagination";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/feed.module.scss";
-import formStyles from "../../styles/templates/new-group/formField.module.css";
+// import formStyles from "../../styles/templates/new-group/formField.module.css";
 import Follow from "@/components/Organisms/App/Follow";
-import Editor from "@/components/Organisms/SlateEditor/Editor";
+// import Editor from "@/components/Organisms/SlateEditor/Editor";
 
 import { useDispatch, useSelector } from "@/redux/store";
 import {
-  setShowFeedModal,
-  selectFeedModal,
+  // setShowFeedModal,
+  // selectFeedModal,
   selectNewFeed,
 } from "@/reduxFeatures/api/feedSlice";
 
 const Feed = () => {
   const data = useSelector(selectUser);
+  const dispatch = useDispatch();
+  // const showModal = useSelector(selectFeedModal);
+  const newFeed = useSelector(selectNewFeed);
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
   const [scrollInitialised, setScrollInitialised] = useState(false);
   const [posts, setPosts] = useState([]);
 
   const [isFetching, setIsFetching] = useState(true);
-  const [uploading, setUploading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({
-    post: "",
-  });
-  const [newFeed, setNewFeed] = useState();
+  // const [uploading, setUploading] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
+  // const [formData, setFormData] = useState({
+  //   post: "",
+  // });
+  // const [newFeed, setNewFeed] = useState();
 
   const checkScroll = () => {
     if (window.scrollY > 100) {
@@ -56,45 +59,47 @@ const Feed = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (formData.post == "")
-      return toast.error("Field cannot be empty", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
-      });
-    setUploading(true);
-    console.log(formData);
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (formData.post == "")
+  //     return toast.error("Field cannot be empty", {
+  //       position: toast.POSITION.TOP_RIGHT,
+  //       toastId: "1",
+  //     });
+  //   setUploading(true);
+  //   console.log(formData);
 
-    try {
-      const response = await axios.post(
-        `${config.serverUrl}/api/feed`,
-        { ...formData },
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
-      console.log(response.data);
-      toast.success("Post uploaded successfully", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
-      });
-      setNewFeed(response.data);
-      setShowModal(false);
-      setUploading(false);
-      // fetchPost()
-    } catch (error) {
-      console.log(error.response?.data);
-      toast.error("Failed to upload post", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
-      });
-      setShowModal(false);
-      setUploading(false);
-    }
-  };
+  //   try {
+  //     const response = await axios.post(
+  //       `${config.serverUrl}/api/feed`,
+  //       { ...formData },
+  //       {
+  //         headers: {
+  //           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  //         },
+  //       }
+  //     );
+  //     console.log(response.data);
+  //     toast.success("Post uploaded successfully", {
+  //       position: toast.POSITION.TOP_RIGHT,
+  //       toastId: "1",
+  //     });
+  //     setNewFeed(response.data);
+  //     // setShowModal(false);
+  //     dispatch(setShowFeedModal(false));
+  //     setUploading(false);
+  //     // fetchPost()
+  //   } catch (error) {
+  //     console.log(error.response?.data);
+  //     toast.error("Failed to upload post", {
+  //       position: toast.POSITION.TOP_RIGHT,
+  //       toastId: "1",
+  //     });
+  //     // setShowModal(false);
+  //     dispatch(setShowFeedModal(false));
+  //     setUploading(false);
+  //   }
+  // };
 
   useEffect(() => {
     (async function () {
@@ -104,7 +109,7 @@ const Feed = () => {
 
         setPosts(response.data.feeds);
       } catch (error) {
-        console.log(error.response?.data);
+        // console.log(error.response?.data);
       }
     })();
 
@@ -118,16 +123,16 @@ const Feed = () => {
     // }, [handleSubmit]);
   }, [newFeed]);
 
-  const DisplayModal = () => {
-    setShowModal(true);
-  };
+  // const DisplayModal = () => {
+  //   // setShowModal(true);
+  // };
 
-  const handleChange = (e) => {
-    const clone = { ...formData };
-    clone[e.currentTarget.name] = e.currentTarget.value;
-    setFormData(clone);
-    console.log(formData);
-  };
+  // const handleChange = (e) => {
+  //   const clone = { ...formData };
+  //   clone[e.currentTarget.name] = e.currentTarget.value;
+  //   setFormData(clone);
+  //   console.log(formData);
+  // };
 
   return (
     <AuthContent>
@@ -149,10 +154,11 @@ const Feed = () => {
           </>
 
           <main className={styles.posts} id="posts">
-            <div className="p-4 mx-2 d-flex gap-2 align-items-center bg-white radius-10">
+            {/* <div className="p-4 mx-2 d-flex gap-2 align-items-center bg-white radius-10">
               <>
                 <Image
                   src={data?.avatar?.url || "/images/formbg.png"}
+                  alt="image"
                   width={50}
                   height={50}
                   roundedCircle
@@ -166,14 +172,14 @@ const Feed = () => {
                     placeholder={`Hey ${
                       data?.firstName && data.firstName.split(" ")[0]
                     }! wanna say something?`}
-                    //onClick={()=>handleModal()}
-                    onClick={() => setShowModal(true)}
+                    onClick={() => dispatch(setShowFeedModal(true))}
                   />
                 </Form>
               </>
-            </div>
+            </div> */}
 
             {/* <CreatePost DisplayModal={DisplayModal} /> */}
+            <CreatePost pageAt="/feed" />
             <div
               id="instersection"
               style={{
@@ -224,14 +230,14 @@ const Feed = () => {
           </main>
           <div
             style={{ width: 270 }}
-            className="position-fixed d-none d-xxl-flex  end-0 me-5  vh-100 "
+            className="position-fixed d-none d-xxl-flex end-0 me-5 vh-100 "
           >
             <Follow />
           </div>
         </div>
       </Container>
 
-      <Modal
+      {/* <Modal
         show={showModal}
         className={styles.GistModal}
         aria-labelledby="contained-modal-title-vcenter"
@@ -244,10 +250,10 @@ const Feed = () => {
             color="#207681"
             style={{ cursor: "pointer" }}
             size={35}
-            onClick={() => setShowModal(false)}
+            onClick={() => dispatch(setShowFeedModal(false))}
           />{" "}
-        </span>
-        <div className={styles.newGistModal}>
+        </span> */}
+      {/* <div className={styles.newGistModal}>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <Form.Group className={formStyles.formGroup}>
               <Form.Control
@@ -265,8 +271,11 @@ const Feed = () => {
               {uploading ? "uploading..." : "Continue"}
             </Button>
           </Form>
+        </div> */}
+      {/* <div className="col-12 px-4 mt-2 mb-4">
+          <Editor slim={false} pageAt="/feed" />
         </div>
-      </Modal>
+      </Modal> */}
     </AuthContent>
   );
 };

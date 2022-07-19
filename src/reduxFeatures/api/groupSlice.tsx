@@ -3,34 +3,30 @@ import { KeyedMutator } from "swr";
 import type { RootState } from "../../redux/store";
 
 // declaring the types for our state
-export type FeedState = {
-  // modal: boolean;
-  newFeed: object;
+export type GroupState = {
+  newGroupFeed: object;
 };
 
-const initialState: FeedState = {
-  // modal: false,
-  newFeed: {},
+const initialState: GroupState = {
+  newGroupFeed: {},
 };
 
-export const feedSlice = createSlice({
-  name: "feedState",
+export const groupSlice = createSlice({
+  name: "groupState",
   initialState,
   reducers: {
-    // setShowFeedModal: (state, action: PayloadAction<boolean>) => {
-    //   state.modal = action.payload;
-    // },
-    setNewFeed: (state, action: PayloadAction<object>) => {
-      state.newFeed = action.payload;
+    setNewGroupFeed: (state, action: PayloadAction<object>) => {
+      state.newGroupFeed = action.payload;
     },
   },
 });
 // Here we are just exporting the actions from this slice, so that we can call them anywhere in our app.
-export const { setNewFeed } = feedSlice.actions;
+export const { setNewGroupFeed } = groupSlice.actions;
 
 // calling the above actions would be useless if we could not access the data in the state. So, we use something called a selector which allows us to select a value from the state.
 // export const selectFeedModal = (state: RootState) => state.feed.modal;
-export const selectNewFeed = (state: RootState) => state.feed.newFeed;
+export const selectNewGroupFeed = (state: RootState) =>
+  state.group.newGroupFeed;
 
 // exporting the reducer here, as we need to add this to the store
-export default feedSlice.reducer;
+export default groupSlice.reducer;
