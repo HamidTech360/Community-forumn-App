@@ -16,32 +16,15 @@
   }
 
   .div {
+    font-weight: 200;
     small {
-      font-size: large;
       // margin-right: 0.3rem;
-
-      @media screen and (max-width: 1100px) {
-        font-size: medium;
-      }
-
       @media screen and (max-width: 800px) {
         margin-right: 0 !important;
       }
 
       @media screen and (max-width: 300px) {
         font-size: small;
-      }
-    }
-
-    span {
-      font-size: large;
-
-      @media screen and (max-width: 1100px) {
-        font-size: 13px;
-      }
-
-      @media screen and (max-width: 300px) {
-        font-size: 10px;
       }
     }
 

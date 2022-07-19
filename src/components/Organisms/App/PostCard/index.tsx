@@ -41,36 +41,55 @@ const PostCard = ({
     {
       name: "Like",
       reaction: true,
-      icon:liked?<AiFillLike color="#086a6d " size={25} />:<AiOutlineLike size={25} onClick={()=>handleLike()} />
+      icon: liked ? (
+        <AiFillLike color="#086a6d " size={25} />
+      ) : (
+        <AiOutlineLike size={25} onClick={() => handleLike()} />
+      ),
     },
     {
       name: "Share",
       reaction: true,
-      icon:<AiOutlineShareAlt size={25} />
+      icon: <AiOutlineShareAlt size={25} />,
     },
     {
       name: "Comment",
       reaction: true,
-      icon:<FaCommentDots size={20} />
+      icon: <FaCommentDots size={20} />,
     },
     {
       name: "Bookmark",
       reaction: true,
       icon:bookmarked?<BsFillBookmarkFill color="#086a6d " onClick={()=>removeBookMark()} />:<BsBookmark onClick={()=>handleBookMark()} />
+
     },
   ];
 
+  const redirectPage = () => {
+    router.push({
+      pathname: `/profile/[id]`,
+      query: {
+        id: post?.author?._id,
+      },
+    });
+  };
+
   const handleLike = async () => {
     let type;
-    const currentRoute = router.pathname
-    if(currentRoute=="/feed"){
-      type="feed"
-    }else if(currentRoute=="/groups" || currentRoute=="/groups/[id]/[path]"){
-      type="post"
+    const currentRoute = router.pathname;
+    if (currentRoute == "/feed") {
+      type = "feed";
+    } else if (
+      currentRoute == "/groups" ||
+      currentRoute == "/groups/[id]/[path]"
+    ) {
+      type = "post";
+    } else if (currentRoute.includes("profile")) {
+      type = "post";
     }
 
     console.log(type, currentRoute);
-    
+
     try {
       const { data } = await axios.get(
         `${config.serverUrl}/api/likes/?type=${type}&id=${post._id}`,
@@ -81,14 +100,14 @@ const PostCard = ({
         }
       );
 
-      console.log(data);
-      setLiked(true)
-      
+      setLiked(true);
+
       // window.location.reload();
     } catch (error) {
       console.log(error.response?.data);
     }
   };
+
 
   const handleBookMark = async ()=>{
     try{
@@ -128,6 +147,7 @@ const PostCard = ({
     
   },[])
 
+
   return (
     <Card
       id={post?.id}
@@ -147,16 +167,29 @@ const PostCard = ({
           height={45}
           alt=""
           roundedCircle
+          style={{ cursor: "pointer" }}
+          onClick={redirectPage}
         />
         <div className="d-flex flex-column">
-          <div className={styles.div}>
-           <small dangerouslySetInnerHTML={{
-              __html: sanitizer(`${post.author?.firstName} ${post.author?.lastName}`),
-            }} />
+          <div
+            className={styles.div}
+            onClick={redirectPage}
+            style={{ cursor: "pointer" }}
+          >
+            <span
+              style={{ fontWeight: 500, color: "var(--bs-primary)" }}
+              dangerouslySetInnerHTML={{
+                __html: sanitizer(
+                  `${post.author?.firstName} ${post.author?.lastName}`
+                ),
+              }}
+            />
             <br />
-            <span style={{ marginTop: "10px" }}>
+            <small
+              style={{ marginTop: "10px", fontWeight: 400, fontSize: "0.9rem" }}
+            >
               <Age time={post?.createdAt} />
-            </span>
+            </small>
           </div>
           <NavDropdown
             className={`position-absolute end-0 ${styles.dropdown}`}
@@ -194,8 +227,10 @@ const PostCard = ({
             className="post-content"
             dangerouslySetInnerHTML={{
               __html: trimmed
-                ? post?.postBody?.slice(0, 500)  || post?.post?.slice(0, 500) + "..." || post?.postBody
-                : post?.post || post?.post 
+                ? post?.postBody?.slice(0, 500) ||
+                  post?.post?.slice(0, 500) + "..." ||
+                  post?.postBody
+                : post?.post || post?.post,
             }}
           />
         )}
@@ -222,12 +257,17 @@ const PostCard = ({
           >
             {item.icon}
             {item.name === "Like" && (
-              <span style={{marginLeft:'7px'}} className="mx-2 text-secondary">
+              <span
+                style={{ marginLeft: "7px" }}
+                className="mx-2 text-secondary"
+              >
                 {post.likes?.length || 0}
               </span>
             )}
 
-            <span className="d-none d-md-block" style={{marginLeft:'7px'}} >{item.name}</span>
+            <span className="d-none d-md-block" style={{ marginLeft: "7px" }}>
+              {item.name}
+            </span>
           </Button>
         ))}
       </Card.Footer>

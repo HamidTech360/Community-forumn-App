@@ -10,13 +10,10 @@ function ChatBubble(message) {
   const borderRadiusBubble =
     message.sender === "self" ? "35px 0 15px 35px" : "0 35px 35px 15px";
 
-    const sanitizer = DOMPurify.sanitize;
+  const sanitizer = DOMPurify.sanitize;
 
   return (
-    <div
-      // className="d-flex"
-      style={{ fontSize: "14px" }}
-    >
+    <div style={{ fontSize: "14px" }}>
       <div
         style={{
           width: "20%",

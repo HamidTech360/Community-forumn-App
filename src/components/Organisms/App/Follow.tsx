@@ -65,14 +65,14 @@ const Follow = () => {
           <ListGroup.Item key={`author-${key}`}>
             <div className="d-flex gap-2 py-1 align-items-center justify-content-center w-100">
               <Image
-                width={30}
-                height={30}
+                width={20}
+                height={20}
                 src={`/images/friends${key + 1}.png`}
                 roundedCircle
                 alt={user?.firstName}
               />
 
-              <small className="mt-1" style={{ width: "70%" }}>
+              <small className="mt-1" style={{ width: "90%" }}>
                 {user?.firstName} {user?.lastName.split(" ")[0]}
               </small>
 
