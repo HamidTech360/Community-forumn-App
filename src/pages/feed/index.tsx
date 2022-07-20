@@ -142,18 +142,23 @@ const Feed = () => {
       </Head>
       <MessageButton />
       <Container>
-        <div className={`mt-3 ${styles.wrapper}`}>
-          <>
+        <div className="row mt-lg-5">
+          {/* <div className={`mt-3 ${styles.wrapper}`}> */}
+          <div className="d-none d-lg-flex col-lg-3 col-xl-2 me-xl-4">
             <div
-              style={{ width: 250 }}
-              className="position-fixed d-none d-lg-flex flex-column gap-4 vh-100"
+              // style={{ width: 250 }}
+              // className="position-fixed d-none d-lg-flex flex-column vh-100"
+              className="position-fixed d-flex flex-column vh-100"
             >
               <UserCard user={data!} />
               <Discussions posts={posts} />
             </div>
-          </>
+          </div>
 
-          <main className={styles.posts} id="posts">
+          <main
+            className={`${styles.posts} col-12 col-lg-7 col-xl-7 ms-xl-5 ms-xxl-4`}
+            id="posts"
+          >
             {/* <div className="p-4 mx-2 d-flex gap-2 align-items-center bg-white radius-10">
               <>
                 <Image
@@ -229,11 +234,13 @@ const Feed = () => {
             {/* </InfiniteScroll> */}
           </main>
           <div
-            style={{ width: 270 }}
-            className="position-fixed d-none d-xxl-flex end-0 me-5 vh-100 "
+            // style={{ width: 270 }}
+            // className="position-fixed d-none d-xxl-flex end-0 me-5 vh-100 "
+            className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-0 me-xl-2 vh-100 ms-xl-5 ms-xxl-4"
           >
             <Follow />
           </div>
+          {/* </div> */}
         </div>
       </Container>
 

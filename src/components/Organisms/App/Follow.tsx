@@ -18,10 +18,10 @@ const Follow = () => {
       const data = await makeSecuredRequest(
         `${config.serverUrl}/api/user/${id}/follow`
       );
-      console.log(data);
+      console.log("follow:", data);
       window.location.reload();
     } catch (error) {
-      console.log(error);
+      console.log("follow Error:", error);
     }
   };
   useEffect(() => {
@@ -29,8 +29,9 @@ const Follow = () => {
 
     (async function () {
       try {
-        const { data } = await axios.get(`${config.serverUrl}/api/user`);
-        console.log(user);
+        const { data } = await axios.get(`${config.serverUrl}/api/users`);
+        // console.log(user);
+        console.log("User data:", data);
 
         setUsers(
           data
@@ -43,13 +44,13 @@ const Follow = () => {
             .slice(0, 10)
         );
       } catch (error) {
-        console.log(error.ressponse?.data);
+        console.log(error.response?.data);
       }
     })();
   }, []);
   return (
     <ListGroup
-      className="p-2 radius-10"
+      className="container p-0 radius-10"
       as={Card}
       variant="flush"
       style={{
@@ -60,22 +61,31 @@ const Follow = () => {
     >
       <h6 className="text-center">Suggested connections</h6>
 
-      <>
-        {users.map((user, key) => (
-          <ListGroup.Item key={`author-${key}`}>
-            <div className="d-flex gap-2 py-1 align-items-center justify-content-center w-100">
+      {/* <> */}
+      {users.map((user, key) => (
+        <div className="row align-items-center justify-content-center radius-10 border-0">
+          <ListGroup.Item
+            key={`author-${key}`}
+            className="radius-10 d-flex align-items-center gap-1 w-100 justify-content-between"
+          >
+            {/* <div className="d-flex gap-2 py-1 align-items-center justify-content-center w-100"> */}
+            <div className="col-xs-2">
               <Image
-                width={20}
-                height={20}
+                width={35}
+                height={35}
                 src={`/images/friends${key + 1}.png`}
                 roundedCircle
                 alt={user?.firstName}
               />
+            </div>
 
+            <div className="col-xs-7">
               <small className="mt-1" style={{ width: "90%" }}>
                 {user?.firstName} {user?.lastName.split(" ")[0]}
               </small>
+            </div>
 
+            <div className="col-xs-3 justify-content-end">
               <Button
                 variant="outline-primary"
                 size="sm"
@@ -85,8 +95,9 @@ const Follow = () => {
               </Button>
             </div>
           </ListGroup.Item>
-        ))}
-      </>
+        </div>
+      ))}
+      {/* </> */}
     </ListGroup>
   );
 };
