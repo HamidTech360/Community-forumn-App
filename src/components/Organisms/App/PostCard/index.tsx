@@ -266,9 +266,9 @@ const PostCard = ({
       <Card.Footer className="justify-content-between bg-white px-0">
         <div className="row">
           {postButton.map((item, key) => (
-            <div className="col-3">
+            <div className="col-3" key={key}>
               <Button
-                key={key}
+                // key={key}
                 // onClick={() => item.name === "Like" && handleLike()}
                 variant="none"
                 // disabled={item.name === "Like" && post.likes?.includes(user._id)}

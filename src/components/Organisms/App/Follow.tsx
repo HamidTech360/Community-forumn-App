@@ -63,10 +63,13 @@ const Follow = () => {
 
       {/* <> */}
       {users.map((user, key) => (
-        <div className="row align-items-center justify-content-center radius-10 border-0">
+        <div
+          className="row align-items-center justify-content-center border-0"
+          key={`author-${key}`}
+        >
           <ListGroup.Item
-            key={`author-${key}`}
-            className="radius-10 d-flex align-items-center gap-1 w-100 justify-content-between"
+            // key={`author-${key}`}
+            className="d-flex align-items-center gap-1 w-100 justify-content-between border-0 bg-transparent"
           >
             {/* <div className="d-flex gap-2 py-1 align-items-center justify-content-center w-100"> */}
             <div className="col-xs-2">
@@ -95,6 +98,7 @@ const Follow = () => {
               </Button>
             </div>
           </ListGroup.Item>
+          <hr style={{ width: "90%" }} />
         </div>
       ))}
       {/* </> */}

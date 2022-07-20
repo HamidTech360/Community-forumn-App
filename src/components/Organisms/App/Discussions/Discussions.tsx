@@ -18,7 +18,7 @@ const Discussions = ({ posts }: any) => {
   return (
     <Card
       // style={{ border: "none", overflowY: "scroll", height: "450px" }}
-      style={{ border: "none", overflowY: "scroll", height: "40%" }}
+      style={{ border: "none", overflowY: "scroll", height: "18%" }}
       className="pb-5 mb-4 mt-4"
     >
       <Card.Header

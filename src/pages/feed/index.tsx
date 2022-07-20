@@ -146,12 +146,16 @@ const Feed = () => {
           {/* <div className={`mt-3 ${styles.wrapper}`}> */}
           <div className="d-none d-lg-flex col-lg-3 col-xl-2 me-xl-4">
             <div
-              // style={{ width: 250 }}
+              // style={{ width: 230 }}
               // className="position-fixed d-none d-lg-flex flex-column vh-100"
-              className="position-fixed d-flex flex-column vh-100"
+              className={`${styles.userCardDiscussion} position-fixed d-flex flex-column vh-100`}
             >
-              <UserCard user={data!} />
-              <Discussions posts={posts} />
+              <div className="col-xs-12">
+                <UserCard user={data!} />
+              </div>
+              <div className="col-xs-12">
+                <Discussions posts={posts} />
+              </div>
             </div>
           </div>
 
@@ -236,7 +240,7 @@ const Feed = () => {
           <div
             // style={{ width: 270 }}
             // className="position-fixed d-none d-xxl-flex end-0 me-5 vh-100 "
-            className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-0 me-xl-2 vh-100 ms-xl-5 ms-xxl-4"
+            className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-3 me-xl-2 ms-xxl-4 vh-100"
           >
             <Follow />
           </div>
