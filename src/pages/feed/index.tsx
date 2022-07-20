@@ -100,9 +100,8 @@ const Feed = () => {
     (async function () {
       try {
         const response = await axios.get(`${config.serverUrl}/api/feed`);
-        console.log(response.data);
 
-        setPosts(response.data.feeds);
+        setPosts(response.data.feed);
       } catch (error) {
         console.log(error.response?.data);
       }
