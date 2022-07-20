@@ -5,7 +5,6 @@ import axios from "axios";
 import { Image } from "react-bootstrap";
 import { HiOutlineArrowLeft } from "react-icons/hi";
 import { BsDot } from "react-icons/bs";
-import { dummyData } from "@/components/BlogPost/dummyData";
 import Comment from "@/components/Organisms/App/Comment";
 import { useRouter } from "next/router";
 import Head from "next/head";

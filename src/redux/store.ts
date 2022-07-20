@@ -5,6 +5,8 @@ import authStateReducer from "@/reduxFeatures/authState/authStateSlice";
 import postReducer from "@/reduxFeatures/api/postSlice";
 import gistReducer from "@/reduxFeatures/api/gistSlice";
 import feedReducer from "@/reduxFeatures/api/feedSlice";
+import groupReducer from "@/reduxFeatures/api/groupSlice";
+import createPostReducer from "@/reduxFeatures/app/createPost";
 import dragAndDropReducer from "@/reduxFeatures/app/dragAndDropSlice";
 import searchReducer from "@/reduxFeatures/api/searchSlice";
 
@@ -21,6 +23,8 @@ export const store = configureStore({
     post: postReducer,
     gist: gistReducer,
     feed: feedReducer,
+    group: groupReducer,
+    createPost: createPostReducer,
     app: appReducer,
     chat: chatReducer,
     authState: authStateReducer,

@@ -246,7 +246,7 @@ const PostCard = ({
         )}
       </Card.Body>
 
-      <Card.Footer className="mx-1 d-flex justify-content-between bg-white">
+      <Card.Footer className={`mx-1 d-flex justify-content-between bg-white ${styles.footer}`}>
         {postButton.map((item, key) => (
           <Button
             key={key}

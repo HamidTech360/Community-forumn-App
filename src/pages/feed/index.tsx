@@ -17,20 +17,20 @@ import {
 } from "react-bootstrap";
 import AuthContent from "@/components/Auth/AuthContent";
 import Discussions from "@/components/Organisms/App/Discussions/Discussions";
+import ModalCard from "@/components/Organisms/App/ModalCard";
 import PostCard from "@/components/Organisms/App/PostCard";
 import UserCard from "@/components/Organisms/App/UserCard";
 import CreatePost from "@/components/Organisms/CreatePost";
 import { toast, ToastContainer } from "react-toastify";
 import { FaTimes } from "react-icons/fa";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-
+import { MdOutlineCancel } from 'react-icons/md'
 import { usePagination } from "@/hooks/usePagination";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/feed.module.scss";
 import formStyles from "../../styles/templates/new-group/formField.module.css";
 import Follow from "@/components/Organisms/App/Follow";
 import Editor from "@/components/Organisms/SlateEditor/Editor";
-import ModalCard from "@/components/Organisms/App/ModalCard";
 import { useSelector } from "@/redux/store";
 import { useModalWithData } from "@/hooks/useModalWithData";
 
@@ -273,17 +273,16 @@ const Feed = () => {
 
       <Modal
         show={modalOpen}
-        className={styles.GistModal}
+        className={styles.FeedModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
         size="xl"
       >
-        <span className={styles.closeBtn}>
+        <span className={styles.openBtn}>
           {" "}
-          <FaTimes
-            color="#207681"
+          <MdOutlineCancel
             style={{ cursor: "pointer" }}
-            size={35}
+            size={30}
             onClick={() => toggle()}
           />{" "}
         </span>
@@ -292,13 +291,13 @@ const Feed = () => {
             <Col lg={6}></Col>
             <Col lg={6}>
               {" "}
-              <PostCard post={selected} />
+              <ModalCard post={selected} />
             </Col>
           </Row>
         ) : (
           <Row>
             <Col lg={12} className="px-5">
-              <PostCard post={selected} />
+              <ModalCard post={selected} />
             </Col>
           </Row>
         )}

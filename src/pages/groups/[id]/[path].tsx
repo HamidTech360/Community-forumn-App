@@ -17,7 +17,18 @@ import Bookmarks from "@/components/Templates/Profile/Bookmarks";
 import Link from "next/link";
 import GroupInfoCard from "@/components/Organisms/App/GroupInfoCard";
 import AuthContent from "@/components/Auth/AuthContent";
-import axios from 'axios'
+import axios from "axios";
+
+import { useSelector } from "@/redux/store";
+import // selectCreatePostModal,
+// setShowCreatePostModal,
+// selectNewCreatePost,
+"@/reduxFeatures/app/createPost";
+import {
+  // selectCreatePostModal,
+  // setShowCreatePostModal,
+  selectNewGroupFeed,
+} from "@/reduxFeatures/api/groupSlice";
 
 interface IComponents {
   about: ReactNode;
@@ -28,15 +39,13 @@ interface IComponents {
 }
 
 const Group = () => {
-
- 
-  
-
   const { posts, setPage, hasMore, isFetchingMore } = usePagination();
   const router = useRouter();
   const { path, id } = router.query;
-  const [groupData, setGroupData] = useState([])
-  
+  const [groupData, setGroupData] = useState([]);
+  // const newCreatePost = useSelector(selectNewCreatePost);
+  const newCreatePost = useSelector(selectNewGroupFeed);
+
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
 
@@ -45,29 +54,31 @@ const Group = () => {
     };
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     //console.log('current group id is ' + id + router.isReady);
-    (async function (){
-        try{
-          const response = await axios.get(`${config.serverUrl}/api/groups/group/${id}`)
-          console.log(response.data);
-          setGroupData(response.data)
-        }catch(error){
-          console.log(error.response?.data);       
-        }
-    })()
-  },[router.isReady])
-  console.log(router.query);
-
+    (async function () {
+      try {
+        const response = await axios.get(
+          // `${config.serverUrl}/api/groups/group/${id}`
+          `${config.serverUrl}/api/feed/groups/${id}`
+        );
+        // console.log(response.data);
+        setGroupData(response.data);
+      } catch (error) {
+        // console.log(error.response?.data);
+      }
+    })();
+  }, [router.isReady, newCreatePost]);
+  // console.log(router.query);
 
   const Components: IComponents = {
     timeline: <Timeline groupId={id} />,
-    about: <About type={'group'} data={groupData}  />,
+    about: <About type={"group"} data={groupData} />,
     photos: <Media />,
     members: <Friends data={groupData} />,
     videos: <Media />,
   };
-  
+
   return (
     <AuthContent>
       <Head>
@@ -86,6 +97,8 @@ const Group = () => {
 
           <main className={styles.profile}>
             <GroupInfoCard data={groupData} />
+            {/* <CreatePost DisplayModal="DisplayModal" /> */}
+            <CreatePost pageAt="/groups" />
 
             {Components[path as unknown as string]}
           </main>

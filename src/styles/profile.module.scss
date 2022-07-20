@@ -81,3 +81,19 @@
     }
   }
 }
+.imgModal {
+  margin-bottom: 2rem;
+  height: 90%;
+}
+
+.cardFooter{
+  @media screen and (max-width: 1000px) {
+    margin-left: -2.5rem !important;
+  }
+
+  .footerName {
+    @media screen and (max-width: 1200px) {
+      display: none !important;
+    }
+  }
+} 
