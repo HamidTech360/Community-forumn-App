@@ -6,7 +6,9 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
   return (
     <Card
       className="bg-white radius-10 p-3 mt-4 user-card position-relative"
-      style={{ border: "none", height: "200px" }}
+      // style={{ border: "none", height: "200px" }}
+      style={{ border: "none", height: "230px" }}
+      // style={{ border: "none", height: "34%" }}
     >
       <div
         className="d-flex justify-content-center  "
@@ -25,6 +27,16 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
       <p className="text-center bold" style={{ marginTop: "-2rem" }}>
         {user?.firstName}&nbsp; {user?.lastName}
       </p>
+      <small
+        className="text-center text-muted"
+        style={{ marginTop: "-1.2rem" }}
+      >
+        @{user?.firstName}
+        {(user?.lastName).substring(0, 1)}
+      </small>
+      <small className="row text-muted mx-auto mt-2">
+        Lorem ipsum, dolor sit amet.
+      </small>
       <div className="d-flex justify-content-between">
         <div className="d-flex flex-column align-items-center">
           <span>{user.following?.length}</span>
