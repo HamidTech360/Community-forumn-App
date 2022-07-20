@@ -564,9 +564,7 @@ textarea {
 }
 
 .nav-item {
-  @media screen and (max-width: 1000px) {
-    margin-bottom: 2.5rem;
-  }
+  
   a {
     color: inherit;
     margin-right: 3rem;
@@ -576,8 +574,12 @@ textarea {
       font-size: large;
     }
 
+    @media screen and (max-width: 1000px){
+      margin-right: 1.5rem;
+    }
+
     @media screen and (max-width: 900px) {
-      font-size: large;
+      font-size: medium;
     }
   }
 }

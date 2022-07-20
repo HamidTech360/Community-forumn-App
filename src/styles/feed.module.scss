@@ -15,7 +15,7 @@
   .posts,
   .profile {
     margin-left: 270px;
-    @media screen and (max-width: 960px) {
+    @media screen and (max-width:991px) {
       margin-left: 0;
       margin-top: 2rem;
     }
@@ -29,14 +29,7 @@
   margin-bottom: 2rem !important;
   padding-bottom: 2rem !important;
 
-  .posts,
-  .profile {
-    margin-left: 270px;
-    @media screen and (max-width: 960px) {
-      margin-left: 0;
-      margin-top: 2rem;
-    }
-  }
+ 
 }
 
 .FeedModal{
