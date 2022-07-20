@@ -17,13 +17,14 @@ import {
 } from "react-bootstrap";
 import AuthContent from "@/components/Auth/AuthContent";
 import Discussions from "@/components/Organisms/App/Discussions/Discussions";
+import ModalCard from "@/components/Organisms/App/ModalCard";
 import PostCard from "@/components/Organisms/App/PostCard";
 import UserCard from "@/components/Organisms/App/UserCard";
 import CreatePost from "@/components/Organisms/CreatePost";
 import { toast, ToastContainer } from "react-toastify";
 import { FaTimes } from "react-icons/fa";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-import { MdOutlineCancel } from "react-icons/md"
+import { MdOutlineCancel } from 'react-icons/md'
 import { usePagination } from "@/hooks/usePagination";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/feed.module.scss";
@@ -179,7 +180,24 @@ const Feed = () => {
                 bottom: 0,
               }}
             ></div>
-            
+            {/* <InfiniteScroll
+              dataLength={Number(posts?.length)} //This is important field to render the next data
+              next={fetchData}
+              hasMore={true}
+              initialScrollY={0}
+              loader={
+                <div className="m-2 p-2 d-flex justify-content-center">
+                <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                  </div>
+                }
+                endMessage={
+                  <p style={{ textAlign: "center" }}>
+                  <b>Yay! You have seen it all</b>
+                  </p>
+                }
+              > */}
             {posts?.map((post, index) => (
               <div
                 onClick={() => {
@@ -256,16 +274,16 @@ const Feed = () => {
 
       <Modal
         show={modalOpen}
-        className={styles.GistModal}
+        className={styles.FeedModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
         size="xl"
       >
-        <span className={styles.closeBtn}>
+        <span className={styles.openBtn}>
           {" "}
           <MdOutlineCancel
             style={{ cursor: "pointer" }}
-            size={35}
+            size={30}
             onClick={() => toggle()}
           />{" "}
         </span>
@@ -274,13 +292,13 @@ const Feed = () => {
             <Col lg={6}></Col>
             <Col lg={6}>
               {" "}
-              <PostCard post={selected} />
+              <ModalCard post={selected} />
             </Col>
           </Row>
         ) : (
           <Row>
             <Col lg={12} className="px-5">
-              <PostCard post={selected} />
+              <ModalCard post={selected} />
             </Col>
           </Row>
         )}

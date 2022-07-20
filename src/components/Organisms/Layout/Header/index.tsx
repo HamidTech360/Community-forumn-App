@@ -86,7 +86,7 @@ const Header = () => {
                     </Nav.Item>
                   ))}
                 </Nav>
-                <div className="buttons ms-auto d-flex mt-lg-3 align-items-center gap-3 justify-content-center">
+                <div className="buttons ms-auto d-flex mt-lg-3 align-items-center gap-3 justify-content-center login">
                   <Nav.Item as={Link} href="/login">
                     <Button variant="outline-primary">Sign In</Button>
                   </Nav.Item>

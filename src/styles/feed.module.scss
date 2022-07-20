@@ -39,10 +39,16 @@
   }
 }
 
-.feedModal{
-  width: 70%;
-  height: 90%;
-  margin: 2rem 9rem;
+.FeedModal{
+  
+
+  .openBtn{
+    margin: 10px;
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  
 }
 .newGistModal {
   padding: 40px;

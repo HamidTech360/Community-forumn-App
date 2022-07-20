@@ -138,7 +138,7 @@ const AuthHeader = () => {
       >
         <Container className="d-flex justify-content-between">
           <Link href="/feed" passHref>
-            <Navbar.Brand>
+            <Navbar.Brand className = {styles.brand}>
               <Logo />
             </Navbar.Brand>
           </Link>
