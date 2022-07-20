@@ -31,10 +31,10 @@ const Follow = () => {
       try {
         const { data } = await axios.get(`${config.serverUrl}/api/users`);
         // console.log(user);
-        console.log("User data:", data);
+        // console.log("User data:", data);
 
         setUsers(
-          data
+          data.users
             .filter((person) => {
               return (
                 !person.followers.includes(user._id) &&
@@ -62,6 +62,7 @@ const Follow = () => {
       <h6 className="text-center">Suggested connections</h6>
 
       {/* <> */}
+      {/* {console.log("users:::", users)} */}
       {users.map((user, key) => (
         <div
           className="row align-items-center justify-content-center border-0"
@@ -69,6 +70,7 @@ const Follow = () => {
         >
           <ListGroup.Item
             // key={`author-${key}`}
+            // style={{ boxSizing: "border-box" }}
             className="d-flex align-items-center gap-1 w-100 justify-content-between border-0 bg-transparent"
           >
             {/* <div className="d-flex gap-2 py-1 align-items-center justify-content-center w-100"> */}
