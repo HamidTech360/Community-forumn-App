@@ -4,6 +4,21 @@
   height: auto !important;
 }
 
+.column{
+  @media screen and (max-width:992px){
+    display: none;
+  }
+}
+
+.trimmed {
+  display: none;
+
+  @media screen and (max-width: 992px){
+    display: block;
+    margin-top: 1rem;
+  }
+}
+
 .profileWrapper {
   padding-bottom: 2rem;
 }
@@ -17,23 +32,31 @@
 
   .div {
     font-weight: 200;
+    line-height: 1.5rem;
     small {
-      // margin-right: 0.3rem;
       @media screen and (max-width: 800px) {
         margin-right: 0 !important;
       }
 
-      @media screen and (max-width: 300px) {
+      @media screen and (max-width: 400px) {
         font-size: small;
       }
     }
 
-    @media screen and (max-width: 1100px) {
-      line-height: 1rem;
+   
+    @media screen and (max-width: 330px) {
+      line-height: 1.5rem;
+      font-size: smaller !important;
+    }
+  }
+
+  span{
+    @media screen and (max-width: 400px){
+      font-size: medium;
     }
 
-    @media screen and (max-width: 300px) {
-      line-height: 0.8rem;
+    @media screen and (max-width: 330px){
+      font-size: 0.85rem;
     }
   }
 
@@ -88,11 +111,18 @@
 
 .cardFooter{
   @media screen and (max-width: 1000px) {
-    margin-left: -2.5rem !important;
+    margin-left: -1.5rem !important;
   }
 
   .footerName {
     @media screen and (max-width: 1200px) {
+      display: none !important;
+    }
+    @media screen and (max-width: 768px){
+      display: block !important;
+      font-size: 0.9rem;
+    }
+    @media screen and (max-width: 600px) {
       display: none !important;
     }
   }

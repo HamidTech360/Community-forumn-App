@@ -24,6 +24,7 @@ import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { useRouter } from "next/router";
 
+
 const ModalCard = ({
   post,
   trimmed,
@@ -151,7 +152,8 @@ const ModalCard = ({
 
   return (
     <Row>
-      <Col sm={12} md={12} lg={5}>
+      <Col sm={12} md={12} lg={5} className = {styles.column}>
+        
           {!trimmed && (
               <Image
                 src={"/images/formbg.png"}
@@ -200,7 +202,7 @@ const ModalCard = ({
                 />
                 <br />
                 <small
-                  style={{ marginTop: "10px", fontWeight: 400, fontSize: "0.9rem" }}
+                  style={{ marginTop: "10px", fontWeight: 400 }}
                 >
                   <Age time={post?.createdAt} />
                 </small>
@@ -248,6 +250,17 @@ const ModalCard = ({
                 }}
               />
             )}
+
+            <div className = {styles.trimmed}>
+              {!trimmed && (
+                <Image
+                  src={"/images/formbg.png"}
+                  alt={""}
+                  fluid
+                  className = { styles.imgModal}
+                />
+              )}
+            </div>
           </Card.Body>
 
           <Card.Footer className={`mx-1 d-flex justify-content-between bg-white ${styles.cardFooter}`}>
