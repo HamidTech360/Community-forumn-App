@@ -4,9 +4,14 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Dropdown, Image, NavDropdown } from "react-bootstrap";
 import { HiDotsVertical } from "react-icons/hi";
 import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
-import { BsFolderFill, BsXCircleFill, BsFillBookmarkFill, BsBookmark } from "react-icons/bs";
-import {AiOutlineLike, AiFillLike, AiOutlineShareAlt} from 'react-icons/ai'
-import {FaCommentDots} from 'react-icons/fa'
+import {
+  BsFolderFill,
+  BsXCircleFill,
+  BsFillBookmarkFill,
+  BsBookmark,
+} from "react-icons/bs";
+import { AiOutlineLike, AiFillLike, AiOutlineShareAlt } from "react-icons/ai";
+import { FaCommentDots } from "react-icons/fa";
 import Age from "../../../Atoms/Age";
 import DOMPurify from "dompurify";
 import styles from "@/styles/profile.module.scss";
@@ -34,8 +39,8 @@ const PostCard = ({
   const user = useSelector(selectUser);
   const posts = useSelector(selectPost);
   const router = useRouter();
-  const [liked, setLiked] = useState(false)
-  const [bookmarked, setBookMarked] = useState(false)
+  const [liked, setLiked] = useState(false);
+  const [bookmarked, setBookMarked] = useState(false);
   const sanitizer = DOMPurify.sanitize;
   const postButton = [
     {
@@ -60,8 +65,11 @@ const PostCard = ({
     {
       name: "Bookmark",
       reaction: true,
-      icon:bookmarked?<BsFillBookmarkFill color="#086a6d " onClick={()=>removeBookMark()} />:<BsBookmark onClick={()=>handleBookMark()} />
-
+      icon: bookmarked ? (
+        <BsFillBookmarkFill color="#086a6d " onClick={() => removeBookMark()} />
+      ) : (
+        <BsBookmark onClick={() => handleBookMark()} />
+      ),
     },
   ];
 
@@ -108,45 +116,53 @@ const PostCard = ({
     }
   };
 
-
-  const handleBookMark = async ()=>{
-    try{
-      const {data} = await axios.post(`${config.serverUrl}/api/bookmarks/?id=${post._id}`, {}, {headers:{
-        authorization:`Bearer ${localStorage.getItem('accessToken')}`
-      }})
+  const handleBookMark = async () => {
+    try {
+      const { data } = await axios.post(
+        `${config.serverUrl}/api/bookmarks/?id=${post._id}`,
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
       //console.log(data);
-      setBookMarked(true)
-    }catch(error){
-      console.log(error.response?.data); 
-    }
-  }
-
-  const removeBookMark = async ()=>{
-    try{
-      const {data} = await axios.delete(`${config.serverUrl}/api/bookmarks/?id=${post._id}`, {headers:{
-        authorization:`Bearer ${localStorage.getItem('accessToken')}`
-      }})
-      //console.log(data);
-      setBookMarked(false)
-    }catch(error){
+      setBookMarked(true);
+    } catch (error) {
       console.log(error.response?.data);
     }
-  }
+  };
 
-  useEffect(()=>{
-   // console.log(router.pathname);
-    
-    if(post.likes?.includes(user._id)){
-      setLiked(true) 
+  const removeBookMark = async () => {
+    try {
+      const { data } = await axios.delete(
+        `${config.serverUrl}/api/bookmarks/?id=${post._id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      //console.log(data);
+      setBookMarked(false);
+    } catch (error) {
+      console.log(error.response?.data);
     }
-    if(user.bookmarks?.includes(post._id)){
-      setBookMarked(true)
-    }else{
-      setBookMarked(false)
-    }
-    
-  },[])
+  };
 
+  useEffect(() => {
+    // console.log(router.pathname);
+
+    if (post.likes?.includes(user._id)) {
+      setLiked(true);
+    }
+    if (user.bookmarks?.includes(post._id)) {
+      setBookMarked(true);
+    } else {
+      setBookMarked(false);
+    }
+  }, []);
 
   return (
     <Card
@@ -246,30 +262,39 @@ const PostCard = ({
         )}
       </Card.Body>
 
-      <Card.Footer className="mx-1 d-flex justify-content-between bg-white">
-        {postButton.map((item, key) => (
-          <Button
-            key={key}
-            // onClick={() => item.name === "Like" && handleLike()}
-            variant="none"
-            // disabled={item.name === "Like" && post.likes?.includes(user._id)}
-            className="d-flex justify-content-center gap-1 align-items-center"
-          >
-            {item.icon}
-            {item.name === "Like" && (
-              <span
-                style={{ marginLeft: "7px" }}
-                className="mx-2 text-secondary"
+      {/* <Card.Footer className="mx-1 d-flex justify-content-between bg-white"> */}
+      <Card.Footer className="justify-content-between bg-white px-0">
+        <div className="row">
+          {postButton.map((item, key) => (
+            <div className="col-3" key={key}>
+              <Button
+                // key={key}
+                // onClick={() => item.name === "Like" && handleLike()}
+                variant="none"
+                // disabled={item.name === "Like" && post.likes?.includes(user._id)}
+                // className="d-flex justify-content-center gap-1 align-items-center"
+                className="d-flex justify-content-center align-items-center"
               >
-                {post.likes?.length || 0}
-              </span>
-            )}
+                {item.icon}
+                {item.name === "Like" && (
+                  <span
+                    style={{ marginLeft: "7px" }}
+                    className="mx-2 text-secondary"
+                  >
+                    {post.likes?.length || 0}
+                  </span>
+                )}
 
-            <span className="d-none d-md-block" style={{ marginLeft: "7px" }}>
-              {item.name}
-            </span>
-          </Button>
-        ))}
+                <span
+                  className="d-none d-md-block"
+                  style={{ marginLeft: "7px" }}
+                >
+                  {item.name}
+                </span>
+              </Button>
+            </div>
+          ))}
+        </div>
       </Card.Footer>
     </Card>
   );
