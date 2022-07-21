@@ -22,7 +22,7 @@ import UserCard from "@/components/Organisms/App/UserCard";
 import CreatePost from "@/components/Organisms/CreatePost";
 import { toast, ToastContainer } from "react-toastify";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-
+import { MdOutlineCancel } from "react-icons/md";
 // import { usePagination } from "@/hooks/usePagination";
 import usePagination, { Loader } from "@/hooks/usePagination2";
 import "react-toastify/dist/ReactToastify.css";
@@ -245,7 +245,7 @@ const Feed = () => {
               // >
               <PostCard
                 post={post}
-                key={`activity-post-${index}-${post?.id}`}
+                key={`activity-post-${index}-${post.id}`}
                 trimmed
               />
               // </div>
