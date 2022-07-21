@@ -5,15 +5,48 @@
 }
 
 .column{
-  @media screen and (max-width:992px){
+  // max-height: 60vh;
+  @media screen and (max-width:991px){
     display: none;
   }
+}
+
+.FeedModal{
+  .openBtn{
+    margin: 10px;
+    display: flex;
+    flex-direction: row-reverse;
+
+      @media screen and (max-width:991px){
+        display: none;
+      }
+  }
+
+  .closeBtn{
+    margin: 10px;
+    display: none;
+
+
+      @media screen and (max-width:991px){
+        display: flex;
+      }
+  }
+  
+}
+.cardColumn{
+  max-height: 60vh !important;
+  overflow-y: scroll;
+  padding-bottom: 2rem;
+
+    @media screen and (max-width:991px) {
+      max-height: 100vh !important;
+    }
 }
 
 .trimmed {
   display: none;
 
-  @media screen and (max-width: 992px){
+  @media screen and (max-width: 991px){
     display: block;
     margin-top: 1rem;
   }

@@ -7,6 +7,9 @@ import { HiDotsVertical } from "react-icons/hi";
 import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
 import { BsFolderFill, BsXCircleFill, BsFillBookmarkFill, BsBookmark } from "react-icons/bs";
 import {AiOutlineLike, AiFillLike, AiOutlineShareAlt} from 'react-icons/ai'
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import {FaCommentDots} from 'react-icons/fa'
 import Age from "../../../Atoms/Age";
 import DOMPurify from "dompurify";
@@ -23,6 +26,7 @@ import {
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { useRouter } from "next/router";
+import Comment from "@/components/Organisms/App/Comment";
 
 
 const ModalCard = ({
@@ -39,6 +43,14 @@ const ModalCard = ({
   const [liked, setLiked] = useState(false)
   const [bookmarked, setBookMarked] = useState(false)
   const sanitizer = DOMPurify.sanitize;
+
+  // - comment section
+  const [modalPost, setModalPost] = useState<Record<string, any>>({});
+  const [commentPost, setCommentPost] = useState("");
+  const [loading, setLoading] = useState(false)
+
+ 
+
   const postButton = [
     {
       name: "Like",
@@ -110,6 +122,32 @@ const ModalCard = ({
     }
   };
 
+  const postComment = async () => {
+    const body = {
+      content: commentPost,
+    };
+
+    if((body.content == "")){
+      return toast.error('Comment cannot be empty', {
+      position: toast.POSITION.TOP_RIGHT,
+      toastId: "1",})
+    }
+    setLoading(true);
+    const res = await axios.post(
+      `${config.serverUrl}/api/comments?type=feed&id=${post._id}`,
+      body,
+      {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+    console.log(res);
+    let comments = post?.comments;
+    comments?.unshift(res.data);
+    setModalPost({ ...post, comments });
+    setLoading(false);
+  };
 
   const handleBookMark = async ()=>{
     try{
@@ -158,13 +196,13 @@ const ModalCard = ({
               <Image
                 src={"/images/formbg.png"}
                 alt={""}
-                fluid
                 className = { styles.imgModal}
+                fluid
               />
             )}
       </Col>
 
-      <Col sm={12} md={12} lg={7}>
+      <Col sm={12} md={12} lg={7} className = {styles.cardColumn}>
           <Card
           id={post?.id}
           className="my-3 cards"
@@ -282,12 +320,83 @@ const ModalCard = ({
                   </span>
                 )}
 
+            {item.name === "Comment" && (
+              <span
+                style={{ marginLeft: "7px" }}
+                className="mx-2 text-secondary"
+                
+              >
+                {post.comments?.length || 0}
+              </span>
+            )}
+
+
                 <span className={`d-none d-md-block ${styles.footerName}`} style={{ marginLeft: "7px" }}>
                   {item.name}
                 </span>
               </Button>
             ))}
           </Card.Footer>
+
+          <section>
+                <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
+                <div className="row">
+                  <div className="col-2 col-md-2">
+                    <Image
+                      src={
+                        modalPost.authorImage || "/images/imagePlaceholder.jpg"
+                      }
+                      className="img-fluid"
+                      roundedCircle={true}
+                      alt="Author's Image"
+                    />
+                  </div>
+                  <div className="col-7 col-md-10">
+                    <div className="form-floating shadow">
+                      <textarea
+                        id="articleTextarea"
+                        className="form-control"
+                        placeholder="."
+                        onChange={(e) => setCommentPost(e.target.value)}
+                        style={{ height: "100px" }}
+                      ></textarea>
+                      <label htmlFor="articleTextarea">Comments</label>
+                    </div>
+                  </div>
+                  <div className="col-3 col-md-2 ms-auto d-md-grid">
+                    <button
+                      className="btn btn-sm btn-primary mt-3 d-inline"
+                      onClick={postComment}
+                    >
+                      Send
+                      {loading && (
+                        <div
+                          className="spinner-grow spinner-grow-sm text-light"
+                          role="status"
+                        ></div>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </section>
+              <section>
+                <h6 style={{ fontWeight: "bolder" }}>
+                  Comments ({post.comments?.length})
+                </h6>
+                <div className="row">
+                  <div className="col-12 mt-4">
+                    {post.comments?.length > 0 &&
+                      post.comments?.map((comment, index) => {
+                        return (
+                          <Comment
+                            key={`post_${index}`}
+                            comment={comment}
+                          />
+                        );
+                      })}
+                  </div>
+                </div>
+              </section> 
         </Card>
       </Col>
     </Row>

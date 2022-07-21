@@ -198,18 +198,18 @@ const Feed = () => {
                 }
               > */}
             {posts?.map((post, index) => (
-              <div
-                onClick={() => {
-                  setSelected(post);
-                  toggle();
-                }}
-              >
+              // <div
+              //   onClick={() => {
+              //     setSelected(post);
+              //     toggle();
+              //   }}
+              // >
                 <PostCard
                   post={post}
                   key={`activity-post-${index}-${post.id}`}
                   trimmed
                 />
-              </div>
+              // </div>
             ))}
             {isFetching && (
               <div className="m-2 p-2 d-flex justify-content-center">
@@ -277,7 +277,8 @@ const Feed = () => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
         size="xl"
-      >
+        scrollable={true}>
+      
         <span className={styles.openBtn}>
           {" "}
           <MdOutlineCancel
