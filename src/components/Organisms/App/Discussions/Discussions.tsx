@@ -30,9 +30,9 @@ const Discussions = ({ posts }: any) => {
       </Card.Header>
       <Card.Body>
         {posts &&
-          posts?.map((post) => (
+          posts?.map((post, index) => (
             <div
-              key={`discussion-${post?._id}`}
+              key={`discussion-${post?._id}-${index}`}
               className="d-flex gap-3 mt-2 py-1 border-bottom"
             >
               <div>

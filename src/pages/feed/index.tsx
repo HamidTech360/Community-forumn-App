@@ -34,6 +34,7 @@ import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 // import formStyles from "../../styles/templates/new-group/formField.module.css";
 // import Editor from "@/components/Organisms/SlateEditor/Editor";
 import { useModalWithData } from "@/hooks/useModalWithData";
+import InfiniteScroll from "react-infinite-scroll-component";
 // import { FaTimes } from "react-icons/fa";
 
 const Feed = () => {
@@ -43,11 +44,6 @@ const Feed = () => {
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
   const [scrollInitialised, setScrollInitialised] = useState(false);
   const [posts, setPosts] = useState([]);
-  // const [numPages, setNumPages] = useState(0);
-  const [errorState, setErrorState] = useState(null);
-  const [loadingMoreState, setLoadingMoreState] = useState(null);
-  const [sizeState, setSizeState] = useState(0);
-
   const [isFetching, setIsFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
   // const [showModal, setShowModal] = useState(false);
@@ -64,56 +60,17 @@ const Feed = () => {
   //   }
   // };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (formData.post == "")
-  //     return toast.error("Field cannot be empty", {
-  //       position: toast.POSITION.TOP_RIGHT,
-  //       toastId: "1",
-  //     });
-  //   setUploading(true);
-  //   console.log(formData);
-
-  //   try {
-  //     const response = await axios.post(
-  //       `${config.serverUrl}/api/feeds`,
-  //       { ...formData },
-  //       {
-  //         headers: {
-  //           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  //         },
-  //       }
-  //     );
-  //     console.log(response.data);
-  //     toast.success("Post uploaded successfully", {
-  //       position: toast.POSITION.TOP_RIGHT,
-  //       toastId: "1",
-  //     });
-  //     setNewFeed(response.data);
-  //     setShowModal(false);
-  //     setUploading(false);
-  //     // fetchPost()
-  //   } catch (error) {
-  //     console.log(error.response?.data);
-  //     toast.error("Failed to upload post", {
-  //       position: toast.POSITION.TOP_RIGHT,
-  //       toastId: "1",
-  //     });
-  //     setShowModal(false);
-  //     setUploading(false);
-  //   }
-  // };
-
   const {
     paginatedData,
     isReachedEnd,
     loadingMore,
-    size,
-    setSize,
+    // size,
+    // setSize,
     error,
     mutate,
     isValidating,
-  } = usePagination("/api/feed", sizeState);
+    fetchNextPage,
+  } = usePagination("/api/feed");
 
   // useEffect(() => {
   //   // Auto-Update new post to feed
@@ -123,60 +80,11 @@ const Feed = () => {
 
   useEffect(() => {
     if (paginatedData) {
-      // console.log("POSTS:", posts);
-      // let newPost = [...posts, ...paginatedData[0]?.feed];
-      // console.log("newPost:", newPost);
-      // console.log("posts:", posts);
-      // console.log("paginatedData[0]?.feed:", paginatedData[0]?.feed);
-      // setPosts(newPost);
-      setPosts((pre) => {
-        // console.log("PRE:", pre);
-        return paginatedData[0]?.feed;
-      });
-      // setPosts(newPost);
-      // setPosts([...paginatedData[0]?.feed]);
-      // setPosts((pre) => [...paginatedData[0]?.feed]);
-      // console.log("paginatedData CHANGED", paginatedData);
+      if (JSON.stringify(posts) !== JSON.stringify(paginatedData)) {
+        setPosts(paginatedData);
+      }
     }
-    // if (size) {
-    //   setSizeState(size);
-    //   // console.log("SIZZZZE");
-    //   if (paginatedData) {
-    //     setPosts(paginatedData[0]?.feed);
-    //   }
-    // }
-    if (loadingMore) {
-      setLoadingMoreState(loadingMore);
-    }
-    if (error) {
-      // console.log("ERROR:", error);
-      setErrorState(error);
-    }
-    // (async function () {
-    //   try {
-    //     const response = await axios.get(`${config.serverUrl}/api/feed`);
-    //     setPosts(response.data.feed);
-    //   } catch (error) {
-    //     console.log(error.response?.data);
-    //   }
-    // })();
-    // document.body.style.backgroundColor = "#f6f6f6";
-    // window.addEventListener("scroll", checkScroll);
-    // return () => {
-    //   document.body.style.backgroundColor = "initial";
-    //   window.removeEventListener("scroll", checkScroll);
-    // };
-    // // }, [handleSubmit]);
-    // }, []);
   }, [paginatedData]);
-  // }, [paginatedData, error, loadingMore, size, sizeState]);
-
-  // const handleChange = (e) => {
-  //   const clone = { ...formData };
-  //   clone[e.currentTarget.name] = e.currentTarget.value;
-  //   setFormData(clone);
-  //   console.log(formData);
-  // };
 
   return (
     <AuthContent>
@@ -236,26 +144,25 @@ const Feed = () => {
                 }
               > */}
 
-            {posts?.map((post, index) => (
-              // <div
-              //   onClick={() => {
-              //     setSelected(post);
-              //     toggle();
-              //   }}
-              // >
-              <PostCard
-                post={post}
-                key={`activity-post-${index}-${post?.id}`}
-                trimmed
-              />
-              // </div>
-            ))}
-
-            {errorState && (
-              <p style={{ textAlign: "center" }}>
-                <b>Oops! Something went wrong (STATE)</b>
-              </p>
-            )}
+            <InfiniteScroll
+              next={fetchNextPage}
+              hasMore={!isReachedEnd}
+              loader={<Loader />}
+              endMessage={
+                <p style={{ textAlign: "center" }}>
+                  <b>Yay! You have seen it all</b>
+                </p>
+              }
+              dataLength={paginatedData?.length}
+            >
+              {posts?.map((post, index) => (
+                <PostCard
+                  post={post}
+                  key={`activity-post-${index}-${post?.id}`}
+                  trimmed
+                />
+              ))}
+            </InfiniteScroll>
 
             {error && (
               <p style={{ textAlign: "center" }}>
@@ -263,21 +170,17 @@ const Feed = () => {
               </p>
             )}
 
-            {!posts && <Loader />}
+            {/* {!posts && !isReachedEnd ? <Loader /> : null}
+            {!posts && isReachedEnd ? (
+              <p style={{ textAlign: "center" }}>
+                <b>WELCOME! Initialize The First Post</b>
+              </p>
+            ) : null}
             {!paginatedData && <Loader />}
 
-            {/* {loadingMoreState && <Loader />} */}
             {loadingMore && <Loader />}
 
-            {/* {isFetching && (
-              <div className="m-2 p-2 d-flex justify-content-center">
-                <Spinner animation="border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              </div>
-            )} */}
-
-            {/* {!hasMore && (
+            {isReachedEnd && (
               <p style={{ textAlign: "center" }}>
                 <b>Yay! You have seen it all</b>
               </p>
@@ -291,60 +194,12 @@ const Feed = () => {
           >
             <Follow />
             {!isReachedEnd && (
-              // <button onClick={() => setSize(size + 1)}>Load More</button>
-              <button
-                onClick={() => {
-                  setSizeState(sizeState + 1);
-                  setSize(sizeState);
-                }}
-              >
-                Load More
-              </button>
+              <button onClick={fetchNextPage}>Load More</button>
             )}
-            {/* {console.log("size:", size)}
-            {console.log("isReachedEnd:", isReachedEnd)} */}
-            {/* {console.log("loadingMore:", loadingMore)} */}
           </div>
           {/* </div> */}
         </div>
       </Container>
-
-      {/* <Modal
-        show={showModal}
-        className={styles.GistModal}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        size="lg"
-      >
-        <span className={styles.closeBtn}>
-          {" "}
-          <FaTimes
-            color="#207681"
-            style={{ cursor: "pointer" }}
-            size={35}
-            onClick={() => setShowModal(false)}
-          />{" "}
-        </span>
-        <div className={styles.newGistModal}>
-          <Form onSubmit={(e) => handleSubmit(e)}>
-            <Form.Group className={formStyles.formGroup}>
-              <Form.Control
-                className={formStyles.bigForm}
-                as="textarea"
-                name="post"
-                type="text"
-                required
-                placeholder="Write something"
-                onChange={(e) => handleChange(e)}
-              />
-            </Form.Group>
-
-            <Button variant="primary" className="d-flex mx-auto" type="submit">
-              {uploading ? "uploading..." : "Continue"}
-            </Button>
-          </Form>
-        </div>
-      </Modal> */}
 
       <Modal
         show={modalOpen}
