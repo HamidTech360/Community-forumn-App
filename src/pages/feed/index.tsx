@@ -24,7 +24,7 @@ import CreatePost from "@/components/Organisms/CreatePost";
 import { toast, ToastContainer } from "react-toastify";
 import { FaTimes } from "react-icons/fa";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-import { MdOutlineCancel } from 'react-icons/md'
+import { MdOutlineCancel } from "react-icons/md";
 import { usePagination } from "@/hooks/usePagination";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/feed.module.scss";
@@ -153,32 +153,7 @@ const Feed = () => {
             className={`${styles.posts} col-12 col-lg-7 col-xl-7 ms-xl-5 ms-xxl-4`}
             id="posts"
           >
-            {/* <div className="p-4 mx-2 d-flex gap-2 align-items-center bg-white radius-10">
-              <>
-                <Image
-                  src={data?.avatar?.url || "/images/formbg.png"}
-                  alt="avatar"
-                  width={50}
-                  height={50}
-                  roundedCircle
-                />
-              </>
-              <>
-                <Form style={{ width: "100%" }}>
-                  <Form.Control
-                    className={`radius-20  ${styles.form}`}
-                    style={{ width: "100%" }}
-                    placeholder={`Hey ${
-                      data?.firstName && data.firstName.split(" ")[0]
-                    }! wanna say something?`}
-                    //onClick={()=>handleModal()}
-                    onClick={() => setShowModal(true)}
-                  />
-                </Form>
-              </>
-            </div>
-
-            {/* <CreatePost DisplayModal={DisplayModal} /> */}
+            <CreatePost pageAt={"/feed"} />
             <div
               id="instersection"
               style={{
@@ -213,11 +188,11 @@ const Feed = () => {
               //     toggle();
               //   }}
               // >
-                <PostCard
-                  post={post}
-                  key={`activity-post-${index}-${post.id}`}
-                  trimmed
-                />
+              <PostCard
+                post={post}
+                key={`activity-post-${index}-${post.id}`}
+                trimmed
+              />
               // </div>
             ))}
             {isFetching && (
@@ -288,8 +263,8 @@ const Feed = () => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
         size="xl"
-        scrollable={true}>
-      
+        scrollable={true}
+      >
         <span className={styles.openBtn}>
           {" "}
           <MdOutlineCancel
