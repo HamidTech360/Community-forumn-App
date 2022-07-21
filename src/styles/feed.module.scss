@@ -32,17 +32,7 @@
  
 }
 
-.FeedModal{
-  
 
-  .openBtn{
-    margin: 10px;
-    display: flex;
-    flex-direction: row-reverse;
-  }
-
-  
-}
 .newGistModal {
   padding: 40px;
 }
@@ -61,5 +51,19 @@
   // }
   .closeBtn {
     margin-top: 40px;
+  }
+}
+
+.userCardDiscussion {
+  width: 225px;
+
+  @media screen and (min-width: 1090px) {
+    width: 240px;
+  }
+  @media screen and (min-width: 1500px) {
+    width: 270px;
+  }
+  @media screen and (min-width: 1900px) {
+    width: 320px;
   }
 }

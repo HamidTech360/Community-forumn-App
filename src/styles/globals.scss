@@ -75,6 +75,12 @@ body {
     height: 30px;
     // margin-bottom: 10px;
   }
+
+  @media screen and (max-width: 300px) {
+    width: 70px;
+    height: 25px;
+    margin-left: -0.5rem;
+  }
 }
 .footer-icons {
   margin-top: 20px;
@@ -354,6 +360,10 @@ nav {
 }
 
 .post-content {
+
+  @media screen and (max-width: 400px) {
+    font-size: small;
+  }
   p {
     font-size: large;
 
@@ -637,7 +647,7 @@ textarea {
 
   .modal-content {
     position: absolute;
-    margin-top: -2rem;
+    // margin-top: -2rem;
     top: 0;
     min-height: 100vh;
     width: 100%;
