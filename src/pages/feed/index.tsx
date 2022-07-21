@@ -31,11 +31,10 @@ import Follow from "@/components/Organisms/App/Follow";
 import { useDispatch, useSelector } from "@/redux/store";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 
-import { MdOutlineCancel } from "react-icons/md";
-import formStyles from "../../styles/templates/new-group/formField.module.css";
-import Editor from "@/components/Organisms/SlateEditor/Editor";
+// import formStyles from "../../styles/templates/new-group/formField.module.css";
+// import Editor from "@/components/Organisms/SlateEditor/Editor";
 import { useModalWithData } from "@/hooks/useModalWithData";
-import { FaTimes } from "react-icons/fa";
+// import { FaTimes } from "react-icons/fa";
 
 const Feed = () => {
   const data = useSelector(selectUser);
@@ -116,10 +115,11 @@ const Feed = () => {
     isValidating,
   } = usePagination("/api/feed", sizeState);
 
-  useEffect(() => {
-    // Auto-Update new post to feed
-    setPosts([newFeed.feed, ...posts]);
-  }, [newFeed]);
+  // useEffect(() => {
+  //   // Auto-Update new post to feed
+  //   console.log("newFeed:", newFeed);
+  //   setPosts([newFeed?.feed, ...posts]);
+  // }, [newFeed]);
 
   useEffect(() => {
     if (paginatedData) {
@@ -245,7 +245,7 @@ const Feed = () => {
               // >
               <PostCard
                 post={post}
-                key={`activity-post-${index}-${post.id}`}
+                key={`activity-post-${index}-${post?.id}`}
                 trimmed
               />
               // </div>
