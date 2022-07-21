@@ -7,7 +7,7 @@ const pageSize = 25;
 const usePagination = (url: string, pageIndex) => {
   let numPages;
 
-  const getKey = (pageIndexX: number, previousPageData: any) => {
+  const getKey = (pageIndex: number, previousPageData: any) => {
     // pageIndex = pageIndex + 1;
     console.log("pageIndex:", pageIndex);
     console.log("previousPageData:", previousPageData);

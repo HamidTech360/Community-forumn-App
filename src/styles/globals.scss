@@ -62,13 +62,24 @@ body {
   }
 }
 .footer-logo {
-  width: 150px;
+  width: 140px;
   height: 50px;
-  margin-bottom: 20px;
+
+  @media screen and (max-width: 1100px){
+    width: 120px;
+    height: 45px;
+  }
+
   @media screen and (max-width: 768px) {
     width: 100px;
     height: 30px;
-    margin-bottom: 10px;
+    // margin-bottom: 10px;
+  }
+
+  @media screen and (max-width: 300px) {
+    width: 70px;
+    height: 25px;
+    margin-left: -0.5rem;
   }
 }
 .footer-icons {
@@ -198,6 +209,7 @@ nav a {
     }
   }
 }
+
 nav {
   a:hover {
     color: #069197 !important;
@@ -205,6 +217,10 @@ nav {
 
   button {
     width: 120px;
+
+    @media screen and (max-width: 1100px) {
+      width: 100px;
+    }
   }
 }
 
@@ -344,6 +360,10 @@ nav {
 }
 
 .post-content {
+
+  @media screen and (max-width: 400px) {
+    font-size: small;
+  }
   p {
     font-size: large;
 
@@ -554,19 +574,22 @@ textarea {
 }
 
 .nav-item {
-  @media screen and (max-width: 1000px) {
-    margin-bottom: 2.5rem;
-  }
+  
   a {
     color: inherit;
     margin-right: 3rem;
 
-    @media screen and (max-width: 1100px) {
+    @media screen and (max-width: 1200px) {
+      margin-right: 2rem;
+      font-size: large;
+    }
+
+    @media screen and (max-width: 1000px){
       margin-right: 1.5rem;
     }
 
     @media screen and (max-width: 900px) {
-      font-size: large;
+      font-size: medium;
     }
   }
 }
@@ -624,7 +647,7 @@ textarea {
 
   .modal-content {
     position: absolute;
-    margin-top: -2rem;
+    // margin-top: -2rem;
     top: 0;
     min-height: 100vh;
     width: 100%;
