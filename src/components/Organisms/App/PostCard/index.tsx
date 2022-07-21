@@ -407,8 +407,7 @@ const { modalOpen, toggle, selected, setSelected } = useModalWithData();
 
                 />{" "}
               </span>
-
-              <span className={styles.closeBtn}>
+                <span className={styles.closeBtn}>
                 {" "}
                 <BiArrowBack
                   style={{ cursor: "pointer" }}

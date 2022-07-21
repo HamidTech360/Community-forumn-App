@@ -149,16 +149,11 @@ const Feed = () => {
             </div>
           </div>
 
-<<<<<<< HEAD
-          <main className={styles.posts} id="posts">
-            <div className="p-4 mx-2 d-flex gap-2 align-items-center bg-white radius-10">
-=======
           <main
             className={`${styles.posts} col-12 col-lg-7 col-xl-7 ms-xl-5 ms-xxl-4`}
             id="posts"
           >
             {/* <div className="p-4 mx-2 d-flex gap-2 align-items-center bg-white radius-10">
->>>>>>> 666793d49a5c21415ff9aed985eeb33f3f398762
               <>
                 <Image
                   src={data?.avatar?.url || "/images/formbg.png"}
@@ -240,14 +235,9 @@ const Feed = () => {
             {/* </InfiniteScroll> */}
           </main>
           <div
-<<<<<<< HEAD
-            style={{ width: 270 }}
-            className="position-fixed d-none d-xxl-flex  end-0 me-5  vh-100 "
-=======
             // style={{ width: 270 }}
             // className="position-fixed d-none d-xxl-flex end-0 me-5 vh-100 "
             className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-3 me-xl-2 ms-xxl-4 vh-100"
->>>>>>> 666793d49a5c21415ff9aed985eeb33f3f398762
           >
             <Follow />
           </div>
