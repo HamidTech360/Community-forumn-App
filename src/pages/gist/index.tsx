@@ -82,7 +82,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         // console.log("userResponse:", userResponse.data.users);
 
         // setUsers(userResponse.data.users);
-        setAllGists(gistResponse.data);
+        setAllGists(gistResponse.data.gists);
         setIsFetching(false);
         // console.log(gistResponse.data);
       } catch (error) {
