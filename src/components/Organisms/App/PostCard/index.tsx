@@ -1,20 +1,34 @@
 import Link from "next/link";
 import strip from "striptags";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Dropdown, Image, Modal, NavDropdown, Row } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Col,
+  Dropdown,
+  Image,
+  Modal,
+  NavDropdown,
+  Row,
+} from "react-bootstrap";
 import { HiDotsVertical } from "react-icons/hi";
 
-import { MdOutlineCancel } from 'react-icons/md'
-import { BiArrowBack } from 'react-icons/bi'
+import { MdOutlineCancel } from "react-icons/md";
+import { BiArrowBack } from "react-icons/bi";
 import { useModalWithData } from "@/hooks/useModalWithData";
 import ModalCard from "@/components/Organisms/App/ModalCard";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
-import { BsFolderFill, BsXCircleFill, BsFillBookmarkFill, BsBookmark } from "react-icons/bs";
-import {AiOutlineLike, AiFillLike, AiOutlineShareAlt} from 'react-icons/ai'
-import {FaCommentDots} from 'react-icons/fa'
+import {
+  BsFolderFill,
+  BsXCircleFill,
+  BsFillBookmarkFill,
+  BsBookmark,
+} from "react-icons/bs";
+import { AiOutlineLike, AiFillLike, AiOutlineShareAlt } from "react-icons/ai";
+import { FaCommentDots } from "react-icons/fa";
 import Age from "../../../Atoms/Age";
 import DOMPurify from "dompurify";
 import styles from "@/styles/profile.module.scss";
@@ -32,7 +46,6 @@ import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { useRouter } from "next/router";
 import Comment from "@/components/Organisms/App/Comment";
 
-
 const PostCard = ({
   post,
   trimmed,
@@ -44,25 +57,26 @@ const PostCard = ({
   const user = useSelector(selectUser);
   const posts = useSelector(selectPost);
   const router = useRouter();
-  const [liked, setLiked] = useState(false)
-  const [bookmarked, setBookMarked] = useState(false)
+  const [liked, setLiked] = useState(false);
+  const [bookmarked, setBookMarked] = useState(false);
   const sanitizer = DOMPurify.sanitize;
-  
-   // - comment section
-   const [modalPost, setModalPost] = useState<Record<string, any>>({});
-   const [commentPost, setCommentPost] = useState("");
-   const [showComment, setShowComment ] = useState(false)
-   const [loading, setLoading] = useState(false);
 
-   const postComment = async () => {
+  // - comment section
+  const [modalPost, setModalPost] = useState<Record<string, any>>({});
+  const [commentPost, setCommentPost] = useState("");
+  const [showComment, setShowComment] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const postComment = async () => {
     const body = {
       content: commentPost,
     };
 
-    if((body.content == "")){
-      return toast.error('Comment cannot be empty', {
-      position: toast.POSITION.TOP_RIGHT,
-      toastId: "1",})
+    if (body.content == "") {
+      return toast.error("Comment cannot be empty", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1",
+      });
     }
     setLoading(true);
     const res = await axios.post(
@@ -87,9 +101,8 @@ const PostCard = ({
     setShowComment(false);
   };
 
-// modal 
-const { modalOpen, toggle, selected, setSelected } = useModalWithData();
-
+  // modal
+  const { modalOpen, toggle, selected, setSelected } = useModalWithData();
 
   const postButton = [
     {
@@ -114,8 +127,11 @@ const { modalOpen, toggle, selected, setSelected } = useModalWithData();
     {
       name: "Bookmark",
       reaction: true,
-      icon:bookmarked?<BsFillBookmarkFill color="#086a6d " onClick={()=>removeBookMark()} />:<BsBookmark onClick={()=>handleBookMark()} />
-
+      icon: bookmarked ? (
+        <BsFillBookmarkFill color="#086a6d " onClick={() => removeBookMark()} />
+      ) : (
+        <BsBookmark onClick={() => handleBookMark()} />
+      ),
     },
   ];
 
@@ -146,7 +162,7 @@ const { modalOpen, toggle, selected, setSelected } = useModalWithData();
 
     try {
       const { data } = await axios.get(
-        `${config.serverUrl}/api/likes/?type=${type}&id=${post._id}`,
+        `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
         {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -162,45 +178,53 @@ const { modalOpen, toggle, selected, setSelected } = useModalWithData();
     }
   };
 
-
-  const handleBookMark = async ()=>{
-    try{
-      const {data} = await axios.post(`${config.serverUrl}/api/bookmarks/?id=${post._id}`, {}, {headers:{
-        authorization:`Bearer ${localStorage.getItem('accessToken')}`
-      }})
+  const handleBookMark = async () => {
+    try {
+      const { data } = await axios.post(
+        `${config.serverUrl}/api/bookmarks/?id=${post?._id}`,
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
       //console.log(data);
-      setBookMarked(true)
-    }catch(error){
-      console.log(error.response?.data); 
-    }
-  }
-
-  const removeBookMark = async ()=>{
-    try{
-      const {data} = await axios.delete(`${config.serverUrl}/api/bookmarks/?id=${post._id}`, {headers:{
-        authorization:`Bearer ${localStorage.getItem('accessToken')}`
-      }})
-      //console.log(data);
-      setBookMarked(false)
-    }catch(error){
+      setBookMarked(true);
+    } catch (error) {
       console.log(error.response?.data);
     }
-  }
+  };
 
-  useEffect(()=>{
-   // console.log(router.pathname);
-    
-    if(post.likes?.includes(user._id)){
-      setLiked(true) 
+  const removeBookMark = async () => {
+    try {
+      const { data } = await axios.delete(
+        `${config.serverUrl}/api/bookmarks/?id=${post?._id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      //console.log(data);
+      setBookMarked(false);
+    } catch (error) {
+      console.log(error.response?.data);
     }
-    if(user.bookmarks?.includes(post._id)){
-      setBookMarked(true)
-    }else{
-      setBookMarked(false)
-    }
-    
-  },[])
+  };
 
+  useEffect(() => {
+    // console.log(router.pathname);
+
+    if (post?.likes?.includes(user._id)) {
+      setLiked(true);
+    }
+    if (user.bookmarks?.includes(post?._id)) {
+      setBookMarked(true);
+    } else {
+      setBookMarked(false);
+    }
+  }, []);
 
   return (
     <Card
@@ -234,7 +258,7 @@ const { modalOpen, toggle, selected, setSelected } = useModalWithData();
               style={{ fontWeight: 500, color: "var(--bs-primary)" }}
               dangerouslySetInnerHTML={{
                 __html: sanitizer(
-                  `${post.author?.firstName} ${post.author?.lastName}`
+                  `${post?.author?.firstName} ${post?.author?.lastName}`
                 ),
               }}
             />
@@ -266,7 +290,7 @@ const { modalOpen, toggle, selected, setSelected } = useModalWithData();
             </NavDropdown.Item>
             <NavDropdown.Item className={styles.item}>
               <BsXCircleFill /> &nbsp; Unfollow &nbsp;
-              {/* {post.name.split(" ")[0]} */}
+              {/* {post?.name.split(" ")[0]} */}
             </NavDropdown.Item>
           </NavDropdown>
         </div>
@@ -276,26 +300,25 @@ const { modalOpen, toggle, selected, setSelected } = useModalWithData();
           cursor: "pointer",
         }}
       >
-               <div
-                onClick={() => {
-                  setSelected(post);
-                  toggle();
-                }}
-              >
-                 {Object.keys(post).length !== 0 && (
-                    <div
-                      className="post-content"
-                      dangerouslySetInnerHTML={{
-                        __html: trimmed
-                          ? post?.postBody?.slice(0, 500) ||
-                            post?.post?.slice(0, 500) + "..." ||
-                            post?.postBody
-                          : post?.post || post?.post,
-                      }}
-                    />
-                  )}
-              </div>
-       
+        <div
+          onClick={() => {
+            setSelected(post);
+            toggle();
+          }}
+        >
+          {Object.keys(post).length !== 0 && (
+            <div
+              className="post-content"
+              dangerouslySetInnerHTML={{
+                __html: trimmed
+                  ? post?.postBody?.slice(0, 500) ||
+                    post?.post?.slice(0, 500) + "..." ||
+                    post?.postBody
+                  : post?.post || post?.post,
+              }}
+            />
+          )}
+        </div>
 
         {!trimmed && (
           <Image
@@ -308,13 +331,15 @@ const { modalOpen, toggle, selected, setSelected } = useModalWithData();
         )}
       </Card.Body>
 
-      <Card.Footer className={`mx-1 d-flex justify-content-between bg-white ${styles.footer}`}>
+      <Card.Footer
+        className={`mx-1 d-flex justify-content-between bg-white ${styles.footer}`}
+      >
         {postButton.map((item, key) => (
           <Button
             key={key}
             // onClick={() => item.name === "Like" && handleLike()}
             variant="none"
-            // disabled={item.name === "Like" && post.likes?.includes(user._id)}
+            // disabled={item.name === "Like" && post?.likes?.includes(user._id)}
             className="d-flex justify-content-center gap-1 align-items-center"
           >
             {item.icon}
@@ -323,7 +348,7 @@ const { modalOpen, toggle, selected, setSelected } = useModalWithData();
                 style={{ marginLeft: "7px" }}
                 className="mx-2 text-secondary"
               >
-                {post.likes?.length || 0}
+                {post?.likes?.length || 0}
               </span>
             )}
 
@@ -331,108 +356,100 @@ const { modalOpen, toggle, selected, setSelected } = useModalWithData();
               <span
                 style={{ marginLeft: "7px" }}
                 className="mx-2 text-secondary"
-                onClick={() => setShowComment(!showComment) }
+                onClick={() => setShowComment(!showComment)}
               >
-                {post.comments?.length || 0}
+                {post?.comments?.length || 0}
               </span>
             )}
 
             <span className="d-none d-md-block" style={{ marginLeft: "7px" }}>
               {item.name}
             </span>
-           
           </Button>
         ))}
       </Card.Footer>
-              {showComment && (
-                  <section>
-                  <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
-                  <div className="row">
-                    <div className="col-2 col-md-2">
-                      <Image
-                        src={
-                          modalPost.authorImage || "/images/imagePlaceholder.jpg"
-                        }
-                        className="img-fluid"
-                        roundedCircle={true}
-                        alt="Author's Image"
-                      />
-                    </div>
-                    <div className="col-7 col-md-10">
-                      <div className="form-floating shadow">
-                        <textarea
-                          id="articleTextarea"
-                          className="form-control"
-                          placeholder="."
-                          onChange={(e) => setCommentPost(e.target.value)}
-                          style={{ height: "100px" }}
-                        ></textarea>
-                        <label htmlFor="articleTextarea">Comments</label>
-                      </div>
-                    </div>
-                    <div className="col-3 col-md-2 ms-auto d-md-grid">
-                      <button
-                        className="btn btn-sm btn-primary mt-3 d-inline"
-                        onClick={postComment}
-                      >
-                        Send
-                        {loading && (
-                          <div
-                            className="spinner-grow spinner-grow-sm text-light"
-                            role="status"
-                          ></div>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </section>
-              )}
-              
-              
-              <Modal
-                show={modalOpen}
-                className={styles.FeedModal}
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-                size="xl"
-                scrollable={true}>
-          
-              <span className={styles.openBtn}>
-                {" "}
-                <MdOutlineCancel
-                  style={{ cursor: "pointer" }}
-                  size={30}
-                  onClick={() => toggle()}
+      {showComment && (
+        <section>
+          <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
+          <div className="row">
+            <div className="col-2 col-md-2">
+              <Image
+                src={modalPost.authorImage || "/images/imagePlaceholder.jpg"}
+                className="img-fluid"
+                roundedCircle={true}
+                alt="Author's Image"
+              />
+            </div>
+            <div className="col-7 col-md-10">
+              <div className="form-floating shadow">
+                <textarea
+                  id="articleTextarea"
+                  className="form-control"
+                  placeholder="."
+                  onChange={(e) => setCommentPost(e.target.value)}
+                  style={{ height: "100px" }}
+                ></textarea>
+                <label htmlFor="articleTextarea">Comments</label>
+              </div>
+            </div>
+            <div className="col-3 col-md-2 ms-auto d-md-grid">
+              <button
+                className="btn btn-sm btn-primary mt-3 d-inline"
+                onClick={postComment}
+              >
+                Send
+                {loading && (
+                  <div
+                    className="spinner-grow spinner-grow-sm text-light"
+                    role="status"
+                  ></div>
+                )}
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
 
-
-                />{" "}
-              </span>
-                <span className={styles.closeBtn}>
-                {" "}
-                <BiArrowBack
-                  style={{ cursor: "pointer" }}
-                  size={30}
-                  onClick={() => toggle()}
-
-
-                />{" "}
-              </span>
-              {selected.images ? (
-                <Row>
-                  <Col lg={6}></Col>
-                  <Col lg={6}>
-                    {" "}
-                    <ModalCard post={selected} />
-                  </Col>
-                </Row>
-              ) : (
-                <Row>
-                  <Col lg={12} className="px-5">
-                    <ModalCard post={selected} />
-                  </Col>
-                </Row>
-              )}
-          </Modal>
+      <Modal
+        show={modalOpen}
+        className={styles.FeedModal}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        size="xl"
+        scrollable={true}
+      >
+        <span className={styles.openBtn}>
+          {" "}
+          <MdOutlineCancel
+            style={{ cursor: "pointer" }}
+            size={30}
+            onClick={() => toggle()}
+          />{" "}
+        </span>
+        <span className={styles.closeBtn}>
+          {" "}
+          <BiArrowBack
+            style={{ cursor: "pointer" }}
+            size={30}
+            onClick={() => toggle()}
+          />{" "}
+        </span>
+        {selected.images ? (
+          <Row>
+            <Col lg={6}></Col>
+            <Col lg={6}>
+              {" "}
+              <ModalCard post={selected} />
+            </Col>
+          </Row>
+        ) : (
+          <Row>
+            <Col lg={12} className="px-5">
+              <ModalCard post={selected} />
+            </Col>
+          </Row>
+        )}
+      </Modal>
     </Card>
   );
 };

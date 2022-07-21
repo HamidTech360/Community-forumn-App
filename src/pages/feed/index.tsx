@@ -40,7 +40,7 @@ import { FaTimes } from "react-icons/fa";
 const Feed = () => {
   const data = useSelector(selectUser);
   const dispatch = useDispatch();
-  const newFeedState = useSelector(selectNewFeed);
+  const newFeed = useSelector(selectNewFeed);
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
   const [scrollInitialised, setScrollInitialised] = useState(false);
   const [posts, setPosts] = useState([]);
@@ -51,59 +51,59 @@ const Feed = () => {
 
   const [isFetching, setIsFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
   const { modalOpen, toggle, selected, setSelected } = useModalWithData();
 
   const [formData, setFormData] = useState({
     post: "",
   });
-  const [newFeed, setNewFeed] = useState();
+  // const [newFeed, setNewFeed] = useState();
 
-  const checkScroll = () => {
-    if (window.scrollY > 100) {
-      setScrollInitialised(true);
-    }
-  };
+  // const checkScroll = () => {
+  //   if (window.scrollY > 100) {
+  //     setScrollInitialised(true);
+  //   }
+  // };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (formData.post == "")
-      return toast.error("Field cannot be empty", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
-      });
-    setUploading(true);
-    console.log(formData);
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (formData.post == "")
+  //     return toast.error("Field cannot be empty", {
+  //       position: toast.POSITION.TOP_RIGHT,
+  //       toastId: "1",
+  //     });
+  //   setUploading(true);
+  //   console.log(formData);
 
-    try {
-      const response = await axios.post(
-        `${config.serverUrl}/api/feeds`,
-        { ...formData },
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
-      console.log(response.data);
-      toast.success("Post uploaded successfully", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
-      });
-      setNewFeed(response.data);
-      setShowModal(false);
-      setUploading(false);
-      // fetchPost()
-    } catch (error) {
-      console.log(error.response?.data);
-      toast.error("Failed to upload post", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
-      });
-      setShowModal(false);
-      setUploading(false);
-    }
-  };
+  //   try {
+  //     const response = await axios.post(
+  //       `${config.serverUrl}/api/feeds`,
+  //       { ...formData },
+  //       {
+  //         headers: {
+  //           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  //         },
+  //       }
+  //     );
+  //     console.log(response.data);
+  //     toast.success("Post uploaded successfully", {
+  //       position: toast.POSITION.TOP_RIGHT,
+  //       toastId: "1",
+  //     });
+  //     setNewFeed(response.data);
+  //     setShowModal(false);
+  //     setUploading(false);
+  //     // fetchPost()
+  //   } catch (error) {
+  //     console.log(error.response?.data);
+  //     toast.error("Failed to upload post", {
+  //       position: toast.POSITION.TOP_RIGHT,
+  //       toastId: "1",
+  //     });
+  //     setShowModal(false);
+  //     setUploading(false);
+  //   }
+  // };
 
   const {
     paginatedData,
@@ -117,16 +117,34 @@ const Feed = () => {
   } = usePagination("/api/feed", sizeState);
 
   useEffect(() => {
+    // Auto-Update new post to feed
+    setPosts([newFeed.feed, ...posts]);
+  }, [newFeed]);
+
+  useEffect(() => {
     if (paginatedData) {
-      setPosts(paginatedData[0]?.feed);
+      // console.log("POSTS:", posts);
+      // let newPost = [...posts, ...paginatedData[0]?.feed];
+      // console.log("newPost:", newPost);
+      // console.log("posts:", posts);
+      // console.log("paginatedData[0]?.feed:", paginatedData[0]?.feed);
+      // setPosts(newPost);
+      setPosts((pre) => {
+        // console.log("PRE:", pre);
+        return paginatedData[0]?.feed;
+      });
+      // setPosts(newPost);
+      // setPosts([...paginatedData[0]?.feed]);
+      // setPosts((pre) => [...paginatedData[0]?.feed]);
+      // console.log("paginatedData CHANGED", paginatedData);
     }
-    if (size) {
-      setSizeState(size);
-      // console.log("SIZZZZE");
-      if (paginatedData) {
-        setPosts(paginatedData[0]?.feed);
-      }
-    }
+    // if (size) {
+    //   setSizeState(size);
+    //   // console.log("SIZZZZE");
+    //   if (paginatedData) {
+    //     setPosts(paginatedData[0]?.feed);
+    //   }
+    // }
     if (loadingMore) {
       setLoadingMoreState(loadingMore);
     }
@@ -137,29 +155,28 @@ const Feed = () => {
     // (async function () {
     //   try {
     //     const response = await axios.get(`${config.serverUrl}/api/feed`);
-
     //     setPosts(response.data.feed);
     //   } catch (error) {
     //     console.log(error.response?.data);
     //   }
     // })();
-
     // document.body.style.backgroundColor = "#f6f6f6";
     // window.addEventListener("scroll", checkScroll);
-
     // return () => {
     //   document.body.style.backgroundColor = "initial";
     //   window.removeEventListener("scroll", checkScroll);
     // };
     // // }, [handleSubmit]);
-  }, [newFeedState, paginatedData, error, loadingMore, size, sizeState]);
+    // }, []);
+  }, [paginatedData]);
+  // }, [paginatedData, error, loadingMore, size, sizeState]);
 
-  const handleChange = (e) => {
-    const clone = { ...formData };
-    clone[e.currentTarget.name] = e.currentTarget.value;
-    setFormData(clone);
-    console.log(formData);
-  };
+  // const handleChange = (e) => {
+  //   const clone = { ...formData };
+  //   clone[e.currentTarget.name] = e.currentTarget.value;
+  //   setFormData(clone);
+  //   console.log(formData);
+  // };
 
   return (
     <AuthContent>
@@ -190,33 +207,7 @@ const Feed = () => {
             className={`${styles.posts} col-12 col-lg-7 col-xl-7 ms-xl-5 ms-xxl-4`}
             id="posts"
           >
-            <CreatePost pageAt="/feed" />
-            {/* <div className="p-4 mx-2 d-flex gap-2 align-items-center bg-white radius-10">
-              <>
-                <Image
-                  src={data?.avatar?.url || "/images/formbg.png"}
-                  alt="avatar"
-                  width={50}
-                  height={50}
-                  roundedCircle
-                />
-              </>
-              <>
-                <Form style={{ width: "100%" }}>
-                  <Form.Control
-                    className={`radius-20  ${styles.form}`}
-                    style={{ width: "100%" }}
-                    placeholder={`Hey ${
-                      data?.firstName && data.firstName.split(" ")[0]
-                    }! wanna say something?`}
-                    //onClick={()=>handleModal()}
-                    onClick={() => setShowModal(true)}
-                  />
-                </Form>
-              </>
-            </div>
-
-            {/* <CreatePost DisplayModal={DisplayModal} /> */}
+            <CreatePost pageAt={"/feed"} />
             <div
               id="instersection"
               style={{
@@ -245,6 +236,21 @@ const Feed = () => {
                 }
               > */}
 
+            {posts?.map((post, index) => (
+              // <div
+              //   onClick={() => {
+              //     setSelected(post);
+              //     toggle();
+              //   }}
+              // >
+              <PostCard
+                post={post}
+                key={`activity-post-${index}-${post?.id}`}
+                trimmed
+              />
+              // </div>
+            ))}
+
             {errorState && (
               <p style={{ textAlign: "center" }}>
                 <b>Oops! Something went wrong (STATE)</b>
@@ -259,21 +265,6 @@ const Feed = () => {
 
             {!posts && <Loader />}
             {!paginatedData && <Loader />}
-
-            {posts?.map((post, index) => (
-              // <div
-              //   onClick={() => {
-              //     setSelected(post);
-              //     toggle();
-              //   }}
-              // >
-              <PostCard
-                post={post}
-                key={`activity-post-${index}-${post.id}`}
-                trimmed
-              />
-              // </div>
-            ))}
 
             {/* {loadingMoreState && <Loader />} */}
             {loadingMore && <Loader />}
@@ -299,10 +290,17 @@ const Feed = () => {
             className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-3 me-xl-2 ms-xxl-4 vh-100"
           >
             <Follow />
-            {/* {!isReachedEnd && (
+            {!isReachedEnd && (
               // <button onClick={() => setSize(size + 1)}>Load More</button>
-              <button onClick={() => setSize(sizeState + 1)}>Load More</button>
-            )} */}
+              <button
+                onClick={() => {
+                  setSizeState(sizeState + 1);
+                  setSize(sizeState);
+                }}
+              >
+                Load More
+              </button>
+            )}
             {/* {console.log("size:", size)}
             {console.log("isReachedEnd:", isReachedEnd)} */}
             {/* {console.log("loadingMore:", loadingMore)} */}
@@ -311,7 +309,7 @@ const Feed = () => {
         </div>
       </Container>
 
-      <Modal
+      {/* <Modal
         show={showModal}
         className={styles.GistModal}
         aria-labelledby="contained-modal-title-vcenter"
@@ -346,7 +344,7 @@ const Feed = () => {
             </Button>
           </Form>
         </div>
-      </Modal>
+      </Modal> */}
 
       <Modal
         show={modalOpen}

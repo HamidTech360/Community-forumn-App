@@ -45,7 +45,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
           },
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
 
       toast.success("Post uploaded successfully", {
         position: toast.POSITION.TOP_RIGHT,
@@ -59,7 +59,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
       // };
       // fetchPost();
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data);
       if (!localStorage.getItem("accessToken")) {
         toast.error("You must login to create a  post", {
           position: toast.POSITION.TOP_RIGHT,

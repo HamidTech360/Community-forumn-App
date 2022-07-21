@@ -32,7 +32,7 @@ const Discussions = ({ posts }: any) => {
         {posts &&
           posts?.map((post) => (
             <div
-              key={`discussion-${post._id}`}
+              key={`discussion-${post?._id}`}
               className="d-flex gap-3 mt-2 py-1 border-bottom"
             >
               <div>
@@ -48,11 +48,11 @@ const Discussions = ({ posts }: any) => {
                 <small
                   className="bolden"
                   dangerouslySetInnerHTML={{
-                    __html: sanitizer(post.postTitle),
+                    __html: sanitizer(post?.postTitle),
                   }}
                 />
                 <small className="text-muted">
-                  By {`${post.author?.firstName} ${post.author?.lastName}`}
+                  By {`${post?.author?.firstName} ${post?.author?.lastName}`}
                 </small>
               </div>
             </div>
