@@ -79,10 +79,7 @@ const PostCard = ({
     comments?.unshift(res.data);
     setModalPost({ ...post, comments });
 
-    toast.success("Comment uploaded successfully", {
-      position: toast.POSITION.TOP_RIGHT,
-      toastId: "1",
-    });
+   
     setLoading(false);
     setShowComment(false);
   };
