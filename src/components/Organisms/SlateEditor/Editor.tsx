@@ -56,6 +56,8 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   console.log("Editor pageAt:", pageAt);
   const router = useRouter();
   const editorID = `${router.asPath}-slateRefId`;
+  console.log((editorID));
+  
   const editor = useMemo(
     () => withHistory(withEmbeds(withLinks(withReact(createEditor())))),
     []
