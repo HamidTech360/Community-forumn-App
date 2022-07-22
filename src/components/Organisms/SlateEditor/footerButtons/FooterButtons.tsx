@@ -43,7 +43,7 @@ function FooterButtons({
       ) : pageAt === "/gist" ? (
         <GistFooterBtn editorID={editorID} />
       ) : pageAt === "/chat" ? (
-        <ChatFooterBtn editorID={editorID} />
+        null
       ) : pageAt === "/feed" ? (
         <FeedFooterBtn editorID={editorID} />
       ) : pageAt === "/groups" ? (

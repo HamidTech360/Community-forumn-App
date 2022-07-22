@@ -16,7 +16,7 @@ const Follow = () => {
   const handleFollow = async (id: string) => {
     try {
       const data = await makeSecuredRequest(
-        `${config.serverUrl}/api/user/${id}/follow`
+        `${config.serverUrl}/api/users/${id}/follow`
       );
       console.log("follow:", data);
       window.location.reload();
