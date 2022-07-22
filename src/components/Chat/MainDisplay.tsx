@@ -26,7 +26,7 @@ const MainDisplay = ({  mainSidebar, mainDisplay, currentChat, messages, sendMes
   };
 
   useEffect(()=>{
-    scrollRef.current?.scrollIntoView()
+    scrollRef.current?.scrollIntoView({behavior:'smooth'})
     if(scrollRef) console.log(scrollRef);
     
   },[messages, scrollRef])
@@ -115,7 +115,9 @@ const MainDisplay = ({  mainSidebar, mainDisplay, currentChat, messages, sendMes
             {currentChat && 
               <>
                 {messages.map((message, index) => 
-                    <ChatBubble ref={scrollRef} message={message} />
+                    <div ref={scrollRef}>
+                      <ChatBubble message={message} />
+                    </div>
                 )}
              
               </>

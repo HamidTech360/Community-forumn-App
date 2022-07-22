@@ -16,8 +16,6 @@ import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 
 const Chat = () => {
   const user = useSelector(selectUser)
-  const unreadChat = useRef();
-  const readChat = useRef();
   const mainDisplay = useRef();
   const mainSidebar = useRef();
   const [conversations, setConversations] = useState([])
