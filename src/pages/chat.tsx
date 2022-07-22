@@ -2,129 +2,138 @@
 //@ts-nocheck
 import AuthContent from "@/components/Auth/AuthContent";
 import React, { useState, useRef, useEffect } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { ToastContainer } from "react-toastify";
-import { dummyData } from "../components/Chat/dummyData";
-
+import axios from 'axios'
 import "react-toastify/dist/ReactToastify.css";
-
 import Head from "next/head";
-
 import Editor from "@/components/Organisms/SlateEditor/Editor";
-import { useDispatch, useSelector } from "@/redux/store";
-import {
-  setUserToChatTimeline,
-  selectedUserInChatTimeline,
-  setInitMessages,
-  selectInitMessages,
-  setMessages,
-  selectMessages,
-} from "@/reduxFeatures/app/chatSlice";
+import config from "@/config";
+import {  useSelector } from "@/redux/store";
 import SideBar from "@/components/Chat/SideBar";
 import MainDisplay from "@/components/Chat/MainDisplay";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 
 const Chat = () => {
-  const [open, setOpen] = useState(true);
-  const dispatch = useDispatch();
-  const messages = useSelector(selectMessages);
-  const initMessages = useSelector(selectInitMessages);
-  const selectUserToChatTimeline = useSelector(selectedUserInChatTimeline);
-
+  const user = useSelector(selectUser)
   const unreadChat = useRef();
   const readChat = useRef();
   const mainDisplay = useRef();
   const mainSidebar = useRef();
+  const [conversations, setConversations] = useState([])
+  const [currentChat, setCurrentChat] = useState(null)
+  const [messages, setMessages] = useState([])
+  const [showConversationList, setShowConversationList] = useState(true)
+  const [showMsgArea, setShowMsgArea] = useState(true)
+  const [newMsg, setNewMsg] = useState('')
 
   useEffect(() => {
-    // Change dummyData data to data from backend
-    dispatch(setInitMessages(dummyData));
-    dispatch(setMessages(dummyData));
+    
+    if(typeof window === "undefined") return
+    console.log(window?.innerWidth);
+    if(window.innerWidth <=768 ){
+      setShowMsgArea(false)
+
+    }
   }, []);
 
   useEffect(() => {
     // Focus Unread Message
-    if (unreadChat.current) {
-      unreadChat.current.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "start",
-      });
+   
+  }, []);
+
+
+
+
+  useEffect(()=>{
+    (async ()=>{
+      try{
+        const {data} = await axios.get(`${config.serverUrl}/api/chats/conversations`, {headers:{
+          authorization:`Bearer ${localStorage.getItem('accessToken')}`
+        }})
+        console.log(data);
+        setConversations(data.conversations)
+      }catch(error){
+        console.log(error.response?.data); 
+      }
+    })()
+  },[])
+
+  const selectChat = async (activeChat)=>{
+    console.log(activeChat);
+    setCurrentChat(activeChat)
+    setMessages([])
+    try{
+        const {data} = await axios.get(`${config.serverUrl}/api/chats/?mate=${activeChat._id}`, {headers:{
+            authorization:`Bearer ${localStorage.getItem('accessToken')}`
+        }})
+        console.log(data);
+        setMessages(data.messages)
+        if ( window.innerWidth <= 768){
+          setShowConversationList(false)
+          setShowMsgArea(true)
+        }
+        
+    }catch(error){
+        console.log(error.response?.data);
     }
-    // Focus read Message
-    if (readChat.current) {
-      readChat.current.scrollIntoView({
-        behavior: "auto",
-        block: "nearest",
-        inline: "start",
-      });
-    }
-  }, [selectUserToChatTimeline, messages]);
+}
+const handleChange = (e)=>{
+  setNewMsg(e.currentTarget.value)
+  console.log(newMsg);
+  
+}
+const sendMessage = async ()=>{
+  
+  if(!currentChat) return
+  
+  // socket.current.emit("sendMessage", {
+  //     senderId:user?._id,
+  //     receiverId:currentChat,
+  //     message:newMsg
+  // })
+  try{
+      const {data}= await axios.post(`${config.serverUrl}/api/chats/?mate=${currentChat._id}`, {message:newMsg}, {headers:{
+          authorization:`Bearer ${localStorage.getItem('accessToken')}`
+      }})
+      console.log(data);
+      setMessages([...messages, data.newMessage])
+      setNewMsg('')
+  }catch(error){
+      console.log(error.response?.data);
+      
+  }
+}
 
-  // const messageInt = (message) => {
-  //   // const init = {
-  //   //   messageInit: message.message[
-  //   //     message.message.length - 1
-  //   //   ].message.substring(0, 26),
-  //   //   continue:
-  //   //     message.message[message.message.length - 1].message.length > 26 &&
-  //   //     "...",
-  //   // 26 && <span>...</span>,
 
-  //   // const tip = messageTip(message)
-
-  //   // console.log('tip:'tip)
-  //   // };
-
-  //   // console.log("init.messageInit:", init.messageInit);
-
-  //   // // return init.messageInit + init.continue;
-  //   // return init.messageInit;
-
-  //   const newMessage = messageTip(message);
-  //   const displayMessage = newMessage.props.dangerouslySetInnerHTML.__html;
-  //   console.log("newMessage:", newMessage.props.dangerouslySetInnerHTML.__html);
-  //   // if (displayMessage.length > 26) {
-  //   //   console.log(
-  //   //     'displayMessage.substring(0, 26) + "...":',
-  //   //     displayMessage.substring(0, 26) + "..."
-  //   //   );
-  //   //   return displayMessage.substring(0, 26) + "...";
-  //   // } else {
-  //   //   console.log("displayMessage:", displayMessage);
-  //   //   return displayMessage;
-  //   // }
-  // };
-
-  const messageTip = (message) => {
-    return (
-      <div
-        dangerouslySetInnerHTML={{
-          __html: message.message[message.message.length - 1].message,
-        }}
-      ></div>
-    );
-  };
 
   return (
     <AuthContent>
       <Head>
         <title>Chat</title>
       </Head>
-      <Container className="mt-lg-3" style={{ marginBottom: "-9.3vh" }}>
+      <div className="mt-lg-3" style={{ marginBottom: "-9.3vh" }}>
         <ToastContainer />
         <div className="row" style={{ minHeight: "87vh" }}>
           {/* SideBar */}
-          <SideBar mainSidebar={mainSidebar} mainDisplay={mainDisplay} />
+          {showConversationList && 
+          <SideBar 
+              conversations={conversations} 
+              selectChat={selectChat} 
+          />}
 
           {/* Main Display */}
-          <MainDisplay
-            unreadChat={unreadChat}
-            readChat={readChat}
+         {showMsgArea && 
+           <MainDisplay
+            currentChat={currentChat}
+            messages={messages}
             mainSidebar={mainSidebar}
             mainDisplay={mainDisplay}
+            handleChange={handleChange}
           />
+         }
         </div>
-      </Container>
+      </div>
     </AuthContent>
   );
 };
