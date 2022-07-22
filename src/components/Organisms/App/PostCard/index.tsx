@@ -165,7 +165,7 @@ const { modalOpen, toggle, selected, setSelected } = useModalWithData();
       const {data} = await axios.post(`${config.serverUrl}/api/bookmarks/?id=${post._id}`, {}, {headers:{
         authorization:`Bearer ${localStorage.getItem('accessToken')}`
       }})
-      //console.log(data);
+      console.log(data);
       setBookMarked(true)
     }catch(error){
       console.log(error.response?.data); 
@@ -177,7 +177,7 @@ const { modalOpen, toggle, selected, setSelected } = useModalWithData();
       const {data} = await axios.delete(`${config.serverUrl}/api/bookmarks/?id=${post._id}`, {headers:{
         authorization:`Bearer ${localStorage.getItem('accessToken')}`
       }})
-      //console.log(data);
+      console.log(data);
       setBookMarked(false)
     }catch(error){
       console.log(error.response?.data);

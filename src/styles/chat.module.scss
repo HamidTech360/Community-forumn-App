@@ -24,7 +24,29 @@
     margin-left: -3.6rem;
   }
 }
-
+.messageItem{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  cursor: pointer;
+}
+.imageBox{
+  // border: 1px solid red;
+  margin-right: 10px;
+}
+.messageTexts{
+  //  border: 1px solid red;
+    min-width: 50%;
+  flex-wrap: wrap;
+  // width: 100%;
+}
+.lastmessage{
+  font-size: 13px;
+  margin-top: 6px;
+}
+.date{
+  font-size: 12px;
+}
 .activeChat {
   background-color: rgb(235, 233, 233);
   padding-top: 7px;
