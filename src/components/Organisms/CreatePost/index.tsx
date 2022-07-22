@@ -1,32 +1,36 @@
 //import useUser from "@/hooks/useUser";
 import React, { useState } from "react";
-import { Card, Col, Form, Image, Row } from "react-bootstrap";
+import { Card, Form, Image } from "react-bootstrap";
 import { Modal } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
 import { useSelector, useDispatch } from "@/redux/store";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import styles from "@/styles/utils.module.scss";
-import formStyles from "../../../styles/templates/new-group/formField.module.css";
+import styles2 from "@/styles/feed.module.scss";
+// import formStyles from "../../../styles/templates/new-group/formField.module.css";
 import Editor from "@/components/Organisms/SlateEditor/Editor";
 
 import {
-  setPostTitle,
-  selectShowPostModal,
-  setShowPostModal,
-} from "@/reduxFeatures/api/postSlice";
+  selectCreatePostModal,
+  setShowCreatePostModal,
+} from "@/reduxFeatures/app/createPost";
+import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
 
-const CreatePost = ({ DisplayModal }) => {
-  // const router = useRouter();
+// const CreatePost = ({ DisplayModal }) => {
+const CreatePost = ({ pageAt }) => {
+  const router = useRouter();
   // const { user } = useUser();
   // const { data } = useSelector((s) => s.user);
   const data = useSelector(selectUser);
-  const showPostModal = useSelector(selectShowPostModal);
+  const showModal = useSelector(selectCreatePostModal);
   const dispatch = useDispatch();
-  const [showModal, setShowModal] = useState(false);
-  const handleChange = (e) => {
-    dispatch(setPostTitle(e.currentTarget.value));
-  };
+  // const newCreatePost = useSelector(selectNewCreatePost);
+  const newCreatePost = useSelector(selectNewGroupFeed);
+  // const [showModal, setShowModal] = useState(false);
+  // const handleChange = (e) => {
+  //   dispatch(setPostTitle(e.currentTarget.value));
+  // };
 
   // const handleModal = () => {
   //   // console.log(router.pathname);
@@ -35,14 +39,14 @@ const CreatePost = ({ DisplayModal }) => {
   //   dispatch(setShowPostModal(true));
   // };
   return (
-    <Card className="py-4" style={{ border: "none" }}>
+    <Card className="p-4" style={{ border: "none" }}>
       <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
         <>
           <Image
             src={data?.avatar?.url || "/images/formbg.png"}
             width={50}
             height={50}
-            alt=""
+            alt="image"
             roundedCircle
           />
         </>
@@ -54,32 +58,33 @@ const CreatePost = ({ DisplayModal }) => {
               placeholder={`Hey ${
                 data?.firstName && data.firstName.split(" ")[0]
               }! wanna say something?`}
-              onClick={() => DisplayModal()}
+              // onClick={() => DisplayModal()}
+              onClick={() => dispatch(setShowCreatePostModal(true))}
             />
           </Form>
         </>
       </div>
 
       <Modal
-        show={showModal && showPostModal}
+        // show={showModal && showPostModal}
+        show={showModal}
+        className={styles2.GistModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
         size="lg"
-        className="p-3"
       >
-        <span className={styles.closeBtn}>
+        {/* <span className={styles.closeBtn}> */}
+        <span className={styles2.closeBtn}>
           {" "}
           <FaTimes
             color="#207681"
             style={{ cursor: "pointer" }}
             size={35}
-            onClick={() => setShowModal(false)}
+            onClick={() => dispatch(setShowCreatePostModal(false))}
           />{" "}
         </span>
-        <div className="col-12 px-5">
-          {/* <div className={styles.newGistModal}> */}
+        {/* <div className="col-12 px-5">
           <Form
-            // onSubmit={(e) => handleSubmit(e)}
             className={styles.newGistModal}
           >
             <Form.Group className={formStyles.formGroup}>
@@ -99,9 +104,12 @@ const CreatePost = ({ DisplayModal }) => {
           </Form>
 
           <div style={{ marginTop: "40px" }}>
-            <Editor slim={false} />
+            <Editor slim={false} pageAt={pageAt} />
           </div>
           <div className="mb-4"></div>
+        </div> */}
+        <div className="col-12 px-4 mt-2 mb-4">
+          <Editor slim={false} pageAt={pageAt} />
         </div>
       </Modal>
     </Card>

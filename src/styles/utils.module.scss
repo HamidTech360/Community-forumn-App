@@ -12,6 +12,17 @@
     @media screen and (max-width: 800px){
         justify-content: space-between !important;
     }
+
+    .brand{
+        margin-left: -1.5rem;
+
+        @media screen and (max-width: 700px){
+            margin-left: 0.5rem;
+        }
+        @media screen and (max-width: 300px){
+            margin-left: 0;
+        }
+    }
 }
 
 .formControl{
@@ -26,20 +37,18 @@
         margin-left: -1rem !important;
     }
 
-    @media screen and (max-width:840px), screen and (max-width: 400px){
+    @media screen and (max-width:890px), screen and (max-width: 400px){
         display: none;
     }
 
     @media screen and (max-width:740px){
         display: block;
-    }
-
-    @media screen and (max-width: 500px){
         width: 10rem;
+
     }
 
     
-    @media screen and (max-width: 420px){
+    @media screen and (max-width: 520px){
         width: 8rem;
     }
 
@@ -56,7 +65,7 @@
 
 
     .iconSearch{
-            @media screen and (max-width:840px), screen and (max-width: 400px){
+            @media screen and (max-width:890px), screen and (max-width: 400px){
                 font-size: large;
             }
     
@@ -69,7 +78,7 @@
             }
     }
 
-    @media screen and (max-width:840px), screen and (max-width: 400px){
+    @media screen and (max-width:890px), screen and (max-width: 400px){
         display: block;
     }
 
@@ -82,9 +91,9 @@
     }
 
     @media screen and (max-width:300px){
-        padding: 0.3rem 0.7rem;
-        margin-right: 0.7rem;
-        margin-left: -1.3rem;
+        padding: 0.3rem 0.75rem;
+        // margin-right: 0.5rem;
+        margin-left: -2.5rem !important;
     }
 }
 
@@ -177,15 +186,17 @@
 }
 
 .header{
+    margin-right: -2rem;
     .navDrop{
         background-color: rgba(255,255,255, 0.7);
+        margin-left: -1rem;
 
         @media screen and (max-width: 1100px) {
-            margin-left: -5rem !important;
+            margin-left: -6rem !important;
         }
 
-        @media screen and (max-width: 450px) {
-            margin-left: -5.5rem !important;
+        @media screen and (max-width: 500px) {
+            margin-left: -9.5rem !important;
         }
 
         @media screen and (max-width: 300px) {
@@ -231,6 +242,7 @@
         @media screen and (max-width:300px){
             height: 25px;
             width: 25px;
+            margin-right: 1rem;
         }
     }
 
@@ -243,7 +255,7 @@
             font-size: 0.8rem;
         }
 
-        @media screen and (max-width:300px){
+        @media screen and (max-width:500px){
             display: none;
         }
     }

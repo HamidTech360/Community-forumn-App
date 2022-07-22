@@ -30,7 +30,7 @@ function ChatBubble({message}) {
       </div>
       <div className="d-flex">
         <div
-          className={message.sender?._id===user._id?'bg-primary text-light mb-3 p-3 ms-auto':'bg-secondary text-light mb-3 p-3'}
+          className={message.sender?._id===user._id || message.sender===user._id?'bg-primary text-light mb-3 p-3 ms-auto':'bg-secondary text-light mb-3 p-3'}
           style={{
             letterSpacing: "1px",
             maxWidth: "80%",

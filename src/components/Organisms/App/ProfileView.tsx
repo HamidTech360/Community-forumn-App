@@ -33,10 +33,6 @@ const ProfileView = ({
   handlePath: (path: string) => void;
 }) => {
   const router = useRouter();
-  const { id } = router.query;
-  const [queryId, setQueryId] = useState(id);
-  // Allow Rerender Bases On ID Change Even When Route Is Same Path
-  if (id && id !== queryId) setQueryId(id);
 
   const [profile, setProfile] = useState<Record<string, any>>({});
 
@@ -60,7 +56,7 @@ const ProfileView = ({
 
   useEffect(() => {
     fetchData();
-  }, [queryId]);
+  }, []);
   return (
     <>
       <Card className="mt-2 mb-3">

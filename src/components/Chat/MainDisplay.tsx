@@ -11,12 +11,13 @@ import { useDispatch, useSelector } from "@/redux/store";
 import {
   selectedUserInChatTimeline,
 } from "@/reduxFeatures/app/chatSlice";
-import { useRouter } from "next/router";
+import {Button} from 'react-bootstrap'
+import {FiSend} from 'react-icons/fi'
 
-const MainDisplay = ({  mainSidebar, mainDisplay, currentChat, messages, handleChange }) => {
+const MainDisplay = ({  mainSidebar, mainDisplay, currentChat, messages, sendMessage }) => {
 
   const selectUserToChatTimeline = useSelector(selectedUserInChatTimeline);
-  
+  const scrollRef = useRef();
   const backToSideMessages = (e) => {
     if (window.innerWidth < 768) {
       mainDisplay.current.classList.add("d-none");
@@ -25,8 +26,11 @@ const MainDisplay = ({  mainSidebar, mainDisplay, currentChat, messages, handleC
   };
 
   useEffect(()=>{
-
-  },[])
+    scrollRef.current?.scrollIntoView()
+    if(scrollRef) console.log(scrollRef);
+    
+  },[messages, scrollRef])
+  
 
   return (
     <>
@@ -111,7 +115,7 @@ const MainDisplay = ({  mainSidebar, mainDisplay, currentChat, messages, handleC
             {currentChat && 
               <>
                 {messages.map((message, index) => 
-                    <ChatBubble message={message} />
+                    <ChatBubble ref={scrollRef} message={message} />
                 )}
              
               </>
@@ -121,8 +125,9 @@ const MainDisplay = ({  mainSidebar, mainDisplay, currentChat, messages, handleC
             className="row border-0 pb-5 pb-md-2"
             style={{ backgroundColor: "transparent" }}
           >
-            <div className="col-10 col-lg-11">
-              <Editor slim={true} />
+            <div className="col-10 col-lg-11 d-flex">
+              <Editor slim={true} pageAt="/chat" /> 
+              <Button onClick={()=>sendMessage()} style={{minWidth:'70px'}}> <FiSend size={22} /> </Button>
             </div>
           </Card.Footer>
         </Card>
