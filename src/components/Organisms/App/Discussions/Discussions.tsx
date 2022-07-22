@@ -19,7 +19,7 @@ const Discussions = ({ posts }: any) => {
     <Card
       // style={{ border: "none", overflowY: "scroll", height: "450px" }}
       style={{ border: "none", overflowY: "scroll", height: "18%" }}
-      className="pb-5 mb-4 mt-4"
+      className="pb-5 mb-4 mt-4 shadow"
     >
       <Card.Header
         className="d-flex justify-content-between gap-2 align-items-center bg-white shadow-sm sticky-top"

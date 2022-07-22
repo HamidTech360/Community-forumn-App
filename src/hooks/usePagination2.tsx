@@ -4,7 +4,7 @@ import axios from "axios";
 import { Spinner } from "react-bootstrap";
 
 const usePagination = (url: string) => {
-  const pageSize = 5;
+  const pageSize = 25;
 
   const getKey = (pageIndex: number, previousPageData: any) => {
     if (previousPageData && !previousPageData?.feed?.length) return null; // reached the end

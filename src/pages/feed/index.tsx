@@ -27,11 +27,11 @@ import { MdOutlineCancel } from "react-icons/md";
 import usePagination, { Loader } from "@/hooks/usePagination2";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/feed.module.scss";
+// import formStyles from "../../styles/templates/new-group/formField.module.css";
 import Follow from "@/components/Organisms/App/Follow";
 import { useDispatch, useSelector } from "@/redux/store";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 
-// import formStyles from "../../styles/templates/new-group/formField.module.css";
 // import Editor from "@/components/Organisms/SlateEditor/Editor";
 import { useModalWithData } from "@/hooks/useModalWithData";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -52,7 +52,9 @@ const Feed = () => {
   const [formData, setFormData] = useState({
     post: "",
   });
-  // const [newFeed, setNewFeed] = useState();
+
+  const { paginatedData, isReachedEnd, error, fetchNextPage } =
+    usePagination("/api/feed");
 
   // const checkScroll = () => {
   //   if (window.scrollY > 100) {
@@ -60,22 +62,22 @@ const Feed = () => {
   //   }
   // };
 
-  const {
-    paginatedData,
-    isReachedEnd,
-    loadingMore,
-    // size,
-    // setSize,
-    error,
-    mutate,
-    isValidating,
-    fetchNextPage,
-  } = usePagination("/api/feed");
+  useEffect(() => {
+    document.body.style.backgroundColor = "#f6f6f6";
+    // window.addEventListener("scroll", checkScroll);
+
+    return () => {
+      document.body.style.backgroundColor = "initial";
+      // window.removeEventListener("scroll", checkScroll);
+    };
+  }, []);
 
   // useEffect(() => {
   //   // Auto-Update new post to feed
   //   console.log("newFeed:", newFeed);
+  //   // if (newFeed) {
   //   setPosts([newFeed?.feed, ...posts]);
+  //   // }
   // }, [newFeed]);
 
   useEffect(() => {
@@ -125,24 +127,6 @@ const Feed = () => {
                 bottom: 0,
               }}
             ></div>
-            {/* <InfiniteScroll
-              dataLength={Number(posts?.length)} //This is important field to render the next data
-              next={fetchData}
-              hasMore={true}
-              initialScrollY={0}
-              loader={
-                <div className="m-2 p-2 d-flex justify-content-center">
-                <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-                  </Spinner>
-                  </div>
-                }
-                endMessage={
-                  <p style={{ textAlign: "center" }}>
-                  <b>Yay! You have seen it all</b>
-                  </p>
-                }
-              > */}
 
             <InfiniteScroll
               next={fetchNextPage}
@@ -153,7 +137,9 @@ const Feed = () => {
                   <b>Yay! You have seen it all</b>
                 </p>
               }
-              dataLength={paginatedData?.length}
+              dataLength={paginatedData?.length ?? 0}
+              initialScrollY={0}
+              className="shadow"
             >
               {posts?.map((post, index) => (
                 <PostCard
@@ -169,23 +155,6 @@ const Feed = () => {
                 <b>Oops! Something went wrong</b>
               </p>
             )}
-
-            {/* {!posts && !isReachedEnd ? <Loader /> : null}
-            {!posts && isReachedEnd ? (
-              <p style={{ textAlign: "center" }}>
-                <b>WELCOME! Initialize The First Post</b>
-              </p>
-            ) : null}
-            {!paginatedData && <Loader />}
-
-            {loadingMore && <Loader />}
-
-            {isReachedEnd && (
-              <p style={{ textAlign: "center" }}>
-                <b>Yay! You have seen it all</b>
-              </p>
-            )} */}
-            {/* </InfiniteScroll> */}
           </main>
           <div
             // style={{ width: 270 }}
@@ -193,11 +162,7 @@ const Feed = () => {
             className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-3 me-xl-2 ms-xxl-4 vh-100"
           >
             <Follow />
-            {!isReachedEnd && (
-              <button onClick={fetchNextPage}>Load More</button>
-            )}
           </div>
-          {/* </div> */}
         </div>
       </Container>
 
