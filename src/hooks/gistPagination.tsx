@@ -5,7 +5,7 @@ import axios from "axios";
 import { Spinner } from "react-bootstrap";
 
 const gistPagination = (url: string) => {
-    const pageSize = 1;
+    const pageSize = 5;
 
     const getKey = (pageIndex: number, previousPageData: any) => {
         if (previousPageData && !previousPageData?.gists?.length) return null; // reached the end
@@ -29,7 +29,7 @@ const gistPagination = (url: string) => {
         persistSize: true,
       });
 
-      const fetchNextPage = () => setSize((size) => size + 1);
+      const fetchNextPage = () => setSize((size) => size + 2);
 
   const paginatedData: any = gist?.flatMap((page) => page?.gists) ?? [];
 
