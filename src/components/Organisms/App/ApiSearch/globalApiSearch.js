@@ -113,10 +113,10 @@ export const GroupApiSearch = async (e) => {
       }
     );
 
-    console.log("GROUPS response.data:", response.data);
+    // console.log("GROUPS response.data:", response.data);
     return response.data;
   } catch (error) {
-    console.error("GROUPS response.data:", error);
+    // console.error("GROUPS response.data:", error);
     // console.error("User Search Error:");
   }
 };

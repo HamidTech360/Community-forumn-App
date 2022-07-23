@@ -7,7 +7,6 @@ import truncate from "trunc-html";
 import styles from "@/styles/searchTabs.module.scss";
 
 function GroupRender({ search, index }) {
-  console.log("GROUP search:", search);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -18,19 +17,18 @@ function GroupRender({ search, index }) {
         index % 2 === 0 && styles.tabLiBg
       }`}
       onClick={() => {
-        // router.push(`/gist/${search?._id}`);
-        router.push(`/group/${search?._id}/timeline`);
+        router.push(`/groups/${search?._id}/timeline`);
         dispatch(setSearchModal(false));
       }}
     >
       <div className="row align-items-center">
         <span className="col-4 h6" style={{ borderRight: "1px solid gray" }}>
-          {search?.title}{" "}
+          {search?.name}{" "}
         </span>
         <small
           className="col-8 text-muted"
           dangerouslySetInnerHTML={{
-            __html: sanitizer(truncate(search?.post, 50).html),
+            __html: sanitizer(truncate(search?.description, 50).html),
           }}
         />
       </div>

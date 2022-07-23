@@ -142,6 +142,7 @@ function SearchTabs() {
       {postSearch?.length === 0 &&
       gistSearch?.length === 0 &&
       userSearch?.length === 0 &&
+      groupSearch?.length === 0 &&
       searchInput.trim() !== "" ? (
         <div className="container">
           <div className="row">
