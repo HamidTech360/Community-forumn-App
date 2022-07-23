@@ -8,13 +8,19 @@ import config from "@/config";
 import { useSelector } from "@/redux/store";
 // import { selectNewCreatePost } from "@/reduxFeatures/app/createPost";
 import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
+import { useRouter } from "next/router";
 
 const Timeline = ({ groupId }: any) => {
   const [timeLinePosts, setTimeLinePosts] = useState([]);
   //console.log('group Id from timeline is '+ groupId);
 
-  // const newCreatePost = useSelector(selectNewCreatePost);
   const newCreatePost = useSelector(selectNewGroupFeed);
+
+  const router = useRouter();
+  const { id } = router.query;
+  const [queryId, setQueryId] = useState(id);
+  // Allow Rerender Bases On ID Change Even When Route Is Same Path
+  if (id && id !== queryId) setQueryId(id);
 
   useEffect(() => {
     (async function () {
@@ -30,7 +36,7 @@ const Timeline = ({ groupId }: any) => {
       // console.log("+++:", response.data);
       setTimeLinePosts(response.data.posts);
     })();
-  }, [newCreatePost]);
+  }, [newCreatePost, queryId]);
   return (
     <>
       <div>

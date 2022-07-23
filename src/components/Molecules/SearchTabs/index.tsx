@@ -24,7 +24,7 @@ import {
 } from "@/components/Organisms/App/ApiSearch/globalApiSearch";
 import { FcSearch } from "react-icons/fc";
 import { MdOutlineSearchOff } from "react-icons/md";
-import { setSearchModal } from "@/reduxFeatures/app/appSlice";
+// import { setSearchModal } from "@/reduxFeatures/app/appSlice";
 import PostRender from "./PostRender";
 import GistRender from "./GistRender";
 import UserRender from "./UserRender";
