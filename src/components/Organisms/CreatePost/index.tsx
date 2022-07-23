@@ -60,6 +60,7 @@ const CreatePost = ({ pageAt }) => {
               }! wanna say something?`}
               // onClick={() => DisplayModal()}
               onClick={() => dispatch(setShowCreatePostModal(true))}
+              onChange={() => dispatch(setShowCreatePostModal(true))}
             />
           </Form>
         </>

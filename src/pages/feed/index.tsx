@@ -138,7 +138,6 @@ const Feed = () => {
                 </p>
               }
               dataLength={paginatedData?.length ?? 0}
-              initialScrollY={0}
               className="shadow"
             >
               {posts?.map((post, index) => (
