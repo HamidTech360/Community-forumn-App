@@ -22,7 +22,7 @@ const usePaginationExplore = (url: string) => {
     size,
     setSize,
     error,
-    mutate,
+    // mutate,
     isValidating,
   } = useSWRInfinite(getKey, fetcher, {
     persistSize: true,
@@ -49,7 +49,7 @@ const usePaginationExplore = (url: string) => {
     // size,
     // setSize,
     // mutate,
-    // isValidating,
+    isValidating,
     // loadingMore,
   };
 };

@@ -63,7 +63,7 @@ const Explore = ({}) => {
     postBody: "",
   });
 
-  const { paginatedData, isReachedEnd, error, fetchNextPage } =
+  const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
     usePaginationExplore("/api/posts");
 
   useEffect(() => {
@@ -211,8 +211,8 @@ const Explore = ({}) => {
               hasMore={!isReachedEnd}
               loader={<Loader />}
               endMessage={
-                <p style={{ textAlign: "center" }}>
-                  <b>Yay! You have seen it all</b>
+                <p style={{ textAlign: "center", color: "gray" }}>
+                  <b>Yay! You have seen it all...</b>
                 </p>
               }
               dataLength={paginatedData?.length ?? 0}
@@ -235,13 +235,23 @@ const Explore = ({}) => {
                   </Col>
                 ))}
               </Row>
+              {isValidating && (
+                <p style={{ textAlign: "center", color: "gray" }}>
+                  <b>Fetching Post...</b>
+                </p>
+              )}
+              {error && (
+                <p
+                  style={{
+                    textAlign: "center",
+                    color: "gray",
+                    marginTop: "1.2rem",
+                  }}
+                >
+                  <b>Oops! Something went wrong</b>
+                </p>
+              )}
             </InfiniteScroll>
-
-            {error && (
-              <p style={{ textAlign: "center" }}>
-                <b>Oops! Something went wrong</b>
-              </p>
-            )}
             {/* {!showPost?.length && <p>No posts under this category </p>} */}
           </div>
         </Container>

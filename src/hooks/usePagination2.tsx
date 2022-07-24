@@ -22,11 +22,13 @@ const usePagination = (url: string) => {
     size,
     setSize,
     error,
-    mutate,
+    // mutate,
     isValidating,
   } = useSWRInfinite(getKey, fetcher, {
     persistSize: true,
   });
+
+  // console.log("isValidating:", isValidating);
 
   const fetchNextPage = () => setSize((size) => size + 1);
 
@@ -49,7 +51,7 @@ const usePagination = (url: string) => {
     // size,
     // setSize,
     // mutate,
-    // isValidating,
+    isValidating,
     // loadingMore,
   };
 };
