@@ -1,12 +1,16 @@
 .continueWith {
   margin-top: 3rem;
   text-align: center;
+
   position: relative;
   .buttons {
     margin-top: 0.5rem;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     button {
-      width: 40px;
+      width: 220px;
       height: 40px;
       padding: 0;
       display: flex;
@@ -24,7 +28,7 @@
     border: 1px solid #afafaf;
     position: absolute;
     left: 10px;
-    bottom: 80px;
+    bottom: 160px;
     @media screen and (max-width: 1199px) {
       left: -15px;
       width: 25%;
@@ -36,7 +40,7 @@
     border: 1px solid #afafaf;
     position: absolute;
     right: 10px;
-    bottom: 80px;
+    bottom: 160px;
     @media screen and (max-width: 1199px) {
       right: -15px;
       width: 25%;

@@ -1,32 +1,71 @@
 /* eslint-disable @next/next/no-img-element */
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import Image from "next/image";
+
 import styles from "../../../../styles/form.module.scss";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { GoogleLogin } from "react-google-login";
+
 import axios from "axios";
 import { setAccessToken } from "@/misc/token";
+import config from "@/config";
+
+import jwt from "jsonwebtoken";
+import jwtDecode from "jwt-decode";
+import Script from "next/script";
+
 const FormWrapper = ({ form }: { form: ReactNode }) => {
+  useEffect(() => {
+    //@ts-ignore
+    // console.log(window.google?.accounts);
+    //@ts-ignore
+    window.google?.accounts.id.initialize({
+      client_id:
+        "491147804580-d58i9u8jsblukvmvg9jan7ve2cvn0qqa.apps.googleusercontent.com",
+      callback: (response: Record<string, any>) => responseGoogle(response),
+    });
+    //@ts-ignore
+    window.google!.accounts.id.renderButton(
+      document.getElementById("google-button"),
+      {
+        theme: "outline",
+        size: "large",
+        shape: "square",
+      }
+    );
+  }, []);
   const { pathname, push } = useRouter();
 
   const responseGoogle = async (response: Record<string, any>) => {
-    if (response.accessToken) {
-      const { profileObj } = response;
+    console.log(response);
+    // console.log(jwt.decode(response.credential));
+    if (response.credential) {
+      const profileObj = jwt.decode(response.credential);
+      console.log(profileObj);
       try {
-        const { data } = await axios.post("/auth/oauth/google", profileObj);
+        const { data } = await axios.post(
+          `http://localhost:8080/api/auth/oauth?provider=google`,
+          profileObj
+        );
         if (data.refreshToken) {
-          sessionStorage.setItem("token", data.refreshToken);
+          localStorage.setItem("accessToken", data.accessToken);
         }
 
         setAccessToken(data.accessToken);
+        // toast.success("Authenticated", {
+        //   position: toast.POSITION.TOP_RIGHT,
+        //   autoClose: 7000,
+        // });
         push("/feed");
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
-          // setMessage(error.response.data.message);
-          console.log(error);
+          toast.error((error.response.data as Record<string, any>).message, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 7000,
+          });
         }
       }
     }
@@ -53,6 +92,7 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
   return (
     <>
       <Container>
+        <ToastContainer />
         <Row className={styles.formWrapper}>
           <Col md={6} className="desktop-only">
             <div className={styles.imgWrapper}>
@@ -96,22 +136,21 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
                     quality={100}
                   />
                 </Button>
-                <GoogleLogin
-                  clientId="250767377397-68p1knjngdur342c3qcs993994otnhar.apps.googleusercontent.com"
-                  render={(renderProps: Record<string, any>) => (
-                    <Button variant="outline-primary" size="sm">
-                      <Image
-                        width={25}
-                        height={25}
-                        src="/images/google.png"
-                        alt="google"
-                        quality={100}
-                      />
-                    </Button>
-                  )}
-                  onSuccess={responseGoogle}
-                  onFailure={responseGoogle}
-                />
+                <div id="google-button"></div>
+                {/* <Button
+                  variant="outline-primary"
+                  color="error"
+                  onClick={handleButton}
+                >
+                  <Image
+                    width={25}
+                    height={25}
+                    src="/images/google.png"
+                    alt="google"
+                    quality={100}
+                  />
+                </Button> */}
+                <div id="loginBtn"></div>
                 <Button variant="outline-primary" size="sm">
                   <Image
                     width={25}
