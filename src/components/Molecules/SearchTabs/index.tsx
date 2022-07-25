@@ -9,6 +9,8 @@ import {
   selectGistSearch,
   setUserSearch,
   selectUserSearch,
+  setGroupSearch,
+  selectGroupSearch,
 } from "@/reduxFeatures/api/searchSlice";
 
 import { Form, InputGroup, Spinner } from "react-bootstrap";
@@ -18,13 +20,15 @@ import {
   PostApiSearch,
   GistApiSearch,
   UserApiSearch,
+  GroupApiSearch,
 } from "@/components/Organisms/App/ApiSearch/globalApiSearch";
 import { FcSearch } from "react-icons/fc";
 import { MdOutlineSearchOff } from "react-icons/md";
-import { setSearchModal } from "@/reduxFeatures/app/appSlice";
+// import { setSearchModal } from "@/reduxFeatures/app/appSlice";
 import PostRender from "./PostRender";
 import GistRender from "./GistRender";
 import UserRender from "./UserRender";
+import GroupRender from "./GroupRender";
 
 function SearchTabs() {
   useEffect(() => {
@@ -36,6 +40,7 @@ function SearchTabs() {
       dispatch(setPostSearch([]));
       dispatch(setGistSearch([]));
       dispatch(setUserSearch([]));
+      dispatch(setGroupSearch([]));
     };
   }, []);
 
@@ -43,6 +48,7 @@ function SearchTabs() {
   const postSearch = useSelector(selectPostSearch);
   const gistSearch = useSelector(selectGistSearch);
   const userSearch = useSelector(selectUserSearch);
+  const groupSearch = useSelector(selectGroupSearch);
 
   const [key, setKey] = useState("");
   const [searchInput, setSearchInput] = useState("");
@@ -55,20 +61,24 @@ function SearchTabs() {
       ? setKey("gist")
       : userSearch?.length > 0
       ? setKey("user")
+      : groupSearch?.length > 0
+      ? setKey("group")
       : null;
-  }, [postSearch, gistSearch, userSearch]);
+  }, [postSearch, gistSearch, userSearch, groupSearch]);
 
   const apiSearch = async (e) => {
     setIsFetching(true);
     const postSearchResult = await PostApiSearch(e);
     const gistSearchResult = await GistApiSearch(e);
     const userSearchResult = await UserApiSearch(e);
+    const groupSearchResult = await GroupApiSearch(e);
 
     setIsFetching(false);
 
     dispatch(setPostSearch(postSearchResult));
     dispatch(setGistSearch(gistSearchResult));
     dispatch(setUserSearch(userSearchResult));
+    dispatch(setGroupSearch(groupSearchResult));
 
     setSearchInput(e.target.value);
   };
@@ -120,10 +130,19 @@ function SearchTabs() {
             ))}
           </Tab>
         )}
+        {groupSearch?.length > 0 && (
+          <Tab eventKey="group" title="Group">
+            {/* // <Tab eventKey="user" title="User"> */}
+            {groupSearch.map((search: any, keyIndex) => (
+              <GroupRender search={search} key={keyIndex} index={keyIndex} />
+            ))}
+          </Tab>
+        )}
       </Tabs>
       {postSearch?.length === 0 &&
       gistSearch?.length === 0 &&
       userSearch?.length === 0 &&
+      groupSearch?.length === 0 &&
       searchInput.trim() !== "" ? (
         <div className="container">
           <div className="row">

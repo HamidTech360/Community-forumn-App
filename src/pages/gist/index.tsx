@@ -24,6 +24,7 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { toast, ToastContainer } from "react-toastify";
 import { FaTimes } from "react-icons/fa";
 import config from "../../config";
+import gistPagination, {Loader} from '@/hooks/gistPagination';
 
 //STYLES
 import styles from "../../styles/gist.module.scss";
@@ -45,6 +46,7 @@ import {
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import Editor from "@/components/Organisms/SlateEditor/Editor";
 import { useRouter } from "next/router";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   const router = useRouter();
@@ -66,34 +68,18 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     post: "",
   });
 
+  const { paginatedData, isReachedEnd, error, fetchNextPage } =
+    gistPagination("/api/gists");
+
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
-    (async function () {
-      try {
-        // const gistResponse = await axios.get("/api/gists");
-        const gistResponse = await axios.get(`${config.serverUrl}/api/gists`);
 
-        // const userResponse = await axios.get("/api/user", {
-        //   headers: {
-        //     authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        //   },
-        // });
-        // console.log("gistResponse:", gistResponse.data);
-        // console.log("userResponse:", userResponse.data.users);
-
-        // setUsers(userResponse.data.users);
-        setAllGists(gistResponse.data.gists);
-        setIsFetching(false);
-        // console.log(gistResponse.data);
-      } catch (error) {
-        console.error(error.response?.data);
-        setIsFetching(false);
+    if (paginatedData) {
+      if (JSON.stringify(allGists) !== JSON.stringify(paginatedData)) {
+        setAllGists(paginatedData);
       }
-    })();
-    return () => {
-      document.body.style.backgroundColor = "initial";
-    };
-  }, []);
+    }
+  }, [paginatedData]);
 
   useEffect(() => {
     if (gistIsSuccess) {
@@ -195,11 +181,37 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                 </Spinner>
               </div>
             )}
-            <div className="w-100 justify-content-center">
+
+            <InfiniteScroll
+              next={fetchNextPage}
+              hasMore={!isReachedEnd}
+              loader={<Loader />}
+              endMessage={
+                <p style={{ textAlign: "center" }}>
+                  <b>Yay! You have seen it all</b>
+                </p>
+              }
+              dataLength={paginatedData?.length ?? 0}
+              initialScrollY={0}
+              className="shadow"
+            >
+              <div className="w-100 justify-content-center">
               {allGists.map((post, key) => (
                 <GistCard gist={post} key={`gist-${key}`} trimmed />
               ))}
             </div>
+          </InfiniteScroll>
+
+            {error && (
+              <p style={{ textAlign: "center" }}>
+                <b>Oops! Something went wrong</b>
+              </p>
+            )}
+            {/* <div className="w-100 justify-content-center">
+              {allGists.map((post, key) => (
+                <GistCard gist={post} key={`gist-${key}`} trimmed />
+              ))}
+            </div> */}
           </Col>
         </Row>
       </Container>

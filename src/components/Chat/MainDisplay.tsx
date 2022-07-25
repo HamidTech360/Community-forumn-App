@@ -127,9 +127,11 @@ const MainDisplay = ({  mainSidebar, mainDisplay, currentChat, messages, sendMes
             className="row border-0 pb-5 pb-md-2"
             style={{ backgroundColor: "transparent" }}
           >
+
             <div className="col-10 col-lg-11 d-flex">
               <Editor slim={true} pageAt="/chat" /> 
               <Button onClick={()=>sendMessage()} style={{minWidth:'70px'}}> <FiSend size={22} /> </Button>
+
             </div>
           </Card.Footer>
         </Card>

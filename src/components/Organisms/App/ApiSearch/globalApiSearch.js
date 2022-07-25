@@ -98,3 +98,25 @@ export const UserApiSearch = async (e) => {
     // console.error("User Search Error:");
   }
 };
+
+export const GroupApiSearch = async (e) => {
+  e.preventDefault();
+  if (e.target.value.trim() === "") return [];
+  try {
+    // const response = await axios.get(
+    const response = await search(
+      `${config.serverUrl}/api/search?keyword=${e.target.value}&type=group`,
+      {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+
+    // console.log("GROUPS response.data:", response.data);
+    return response.data;
+  } catch (error) {
+    // console.error("GROUPS response.data:", error);
+    // console.error("User Search Error:");
+  }
+};
