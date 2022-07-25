@@ -53,7 +53,7 @@ const Feed = () => {
     post: "",
   });
 
-  const { paginatedData, isReachedEnd, error, fetchNextPage } =
+  const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
     usePagination("/api/feed");
 
   // const checkScroll = () => {
@@ -118,7 +118,7 @@ const Feed = () => {
             id="posts"
           >
             <CreatePost pageAt={"/feed"} />
-            <div
+            {/* <div
               id="instersection"
               style={{
                 height: "30vh",
@@ -126,20 +126,18 @@ const Feed = () => {
                 position: "fixed",
                 bottom: 0,
               }}
-            ></div>
+            ></div> */}
 
             <InfiniteScroll
               next={fetchNextPage}
               hasMore={!isReachedEnd}
               loader={<Loader />}
               endMessage={
-                <p style={{ textAlign: "center" }}>
-                  <b>Yay! You have seen it all</b>
+                <p style={{ textAlign: "center", color: "gray" }}>
+                  <b>Yay! You have seen it all...</b>
                 </p>
               }
               dataLength={paginatedData?.length ?? 0}
-              initialScrollY={0}
-              className="shadow"
             >
               {posts?.map((post, index) => (
                 <PostCard
@@ -148,13 +146,23 @@ const Feed = () => {
                   trimmed
                 />
               ))}
+              {isValidating && (
+                <p style={{ textAlign: "center", color: "gray" }}>
+                  <b>Fetching Post...</b>
+                </p>
+              )}
+              {error && (
+                <p
+                  style={{
+                    textAlign: "center",
+                    color: "gray",
+                    marginTop: "1.2rem",
+                  }}
+                >
+                  <b>Oops! Something went wrong</b>
+                </p>
+              )}
             </InfiniteScroll>
-
-            {error && (
-              <p style={{ textAlign: "center" }}>
-                <b>Oops! Something went wrong</b>
-              </p>
-            )}
           </main>
           <div
             // style={{ width: 270 }}

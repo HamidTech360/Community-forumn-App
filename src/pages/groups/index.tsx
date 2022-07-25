@@ -84,7 +84,7 @@ const Groups = () => {
             <Form.Control placeholder="search" />
             <div className={`${styles.groupLists}`}>
               {groups.map((item, i) => (
-                <Link href={`/groups/${item._id}/timeline`} passHref>
+                <Link href={`/groups/${item._id}/timeline`} key={i} passHref>
                   <div className={styles.groupCard}>
                     <div>
                       {/* <img */}

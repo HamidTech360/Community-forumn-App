@@ -175,27 +175,37 @@ const PostCard = ({
     }
   };
 
-
-  const handleBookMark = async ()=>{
-    try{
-      const {data} = await axios.post(`${config.serverUrl}/api/bookmarks/?id=${post._id}`, {}, {headers:{
-        authorization:`Bearer ${localStorage.getItem('accessToken')}`
-      }})
+  const handleBookMark = async () => {
+    try {
+      const { data } = await axios.post(
+        `${config.serverUrl}/api/bookmarks/?id=${post._id}`,
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
       console.log(data);
-      setBookMarked(true)
-    }catch(error){
-      console.log(error.response?.data); 
+      setBookMarked(true);
+    } catch (error) {
+      console.log(error.response?.data);
     }
   };
 
-  const removeBookMark = async ()=>{
-    try{
-      const {data} = await axios.delete(`${config.serverUrl}/api/bookmarks/?id=${post._id}`, {headers:{
-        authorization:`Bearer ${localStorage.getItem('accessToken')}`
-      }})
+  const removeBookMark = async () => {
+    try {
+      const { data } = await axios.delete(
+        `${config.serverUrl}/api/bookmarks/?id=${post._id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
       console.log(data);
-      setBookMarked(false)
-    }catch(error){
+      setBookMarked(false);
+    } catch (error) {
       console.log(error.response?.data);
     }
   };
