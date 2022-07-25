@@ -7,7 +7,7 @@ import Head from "next/head";
 import config from "@/config";
 import UserCard from "@/components/Organisms/App/UserCard";
 import Discussions from "@/components/Organisms/App/Discussions/Discussions";
-import { usePagination } from "@/hooks/usePagination";
+import { usePagination } from "@/hooks/usePagination-old";
 import { useRouter } from "next/router";
 import About from "@/components/Templates/Groups/About";
 import Timeline from "@/components/Templates/Groups/Timeline";
@@ -46,6 +46,10 @@ const Group = () => {
   // const newCreatePost = useSelector(selectNewCreatePost);
   const newCreatePost = useSelector(selectNewGroupFeed);
 
+  const [queryId, setQueryId] = useState(id);
+  // Allow Rerender Bases On ID Change Even When Route Is Same Path
+  if (id && id !== queryId) setQueryId(id);
+
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
 
@@ -68,7 +72,7 @@ const Group = () => {
         // console.log(error.response?.data);
       }
     })();
-  }, [router.isReady, newCreatePost]);
+  }, [router.isReady, newCreatePost, queryId]);
   // console.log(router.query);
 
   const Components: IComponents = {

@@ -322,12 +322,12 @@ const AuthHeader = () => {
         show={showing}
         onHide={handleClosing}
         scrollable
-        className="mt-3 pt-3 mt-lg-0 pt-lg-0"
+        // className="mt-lg-3 pt-lg-3 mt-lg-0 pt-lg-0"
       >
         <Modal.Body>
           <SearchTabs />
         </Modal.Body>
-        <Modal.Footer className="py-lg-0">
+        <Modal.Footer>
           <Button variant="primary" onClick={handleClosing}>
             Close
           </Button>

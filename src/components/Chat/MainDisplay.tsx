@@ -1,32 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 //@ts-nocheck
-import AuthContent from "@/components/Auth/AuthContent";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Card } from "react-bootstrap";
 import ChatBubble from "./ChatBubble";
-
 import styles from "../../styles/chat.module.scss";
 import "react-toastify/dist/ReactToastify.css";
-
 import { BsDot, BsArrowLeft } from "react-icons/bs";
-
 import Editor from "@/components/Organisms/SlateEditor/Editor";
 import { useDispatch, useSelector } from "@/redux/store";
 import {
   selectedUserInChatTimeline,
-  selectInitMessages,
-  selectMessages,
 } from "@/reduxFeatures/app/chatSlice";
-import { useRouter } from "next/router";
+import {Button} from 'react-bootstrap'
+import {FiSend} from 'react-icons/fi'
 
-const MainDisplay = ({ unreadChat, readChat, mainSidebar, mainDisplay }) => {
-  const router = useRouter();
-  const [open, setOpen] = useState(true);
-  const dispatch = useDispatch();
-  const messages = useSelector(selectMessages);
-  const initMessages = useSelector(selectInitMessages);
+const MainDisplay = ({  mainSidebar, mainDisplay, currentChat, messages, sendMessage }) => {
+
   const selectUserToChatTimeline = useSelector(selectedUserInChatTimeline);
-
+  const scrollRef = useRef();
   const backToSideMessages = (e) => {
     if (window.innerWidth < 768) {
       mainDisplay.current.classList.add("d-none");
@@ -34,16 +25,23 @@ const MainDisplay = ({ unreadChat, readChat, mainSidebar, mainDisplay }) => {
     }
   };
 
+  // useEffect(()=>{
+  //   scrollRef.current?.scrollIntoView({behavior:'smooth'})
+  //   if(scrollRef) console.log(scrollRef);
+    
+  // },[messages, scrollRef])
+  
+
   return (
     <>
       {/* Main Display */}
       <div
-        ref={mainDisplay}
-        className="d-none d-md-block col-12 col-md-8 shadow"
+       
+        className="col-12 col-md-8 shadow"
       >
         <Card
-          className="border-0 d-flex flex-column"
-          style={{ height: "95vh" }}
+          // className="border-0 d-flex flex-column"
+          style={{ height: "90vh", paddingRight:'0' }}
         >
           <Card.Header>
             <div className="row">
@@ -62,10 +60,10 @@ const MainDisplay = ({ unreadChat, readChat, mainSidebar, mainDisplay }) => {
                     />
                   </button>
                 )}
-                {selectUserToChatTimeline[0].name}
+                {currentChat?.firstName}
               </h4>
             </div>
-            {JSON.stringify(selectUserToChatTimeline[0]) === "{}" ? (
+            {!currentChat? (
               <div className="row">
                 <div className="col-12">
                   <h4>
@@ -93,101 +91,47 @@ const MainDisplay = ({ unreadChat, readChat, mainSidebar, mainDisplay }) => {
                   />
                 </div>
               </div>
-            ) : selectUserToChatTimeline[0].online === false ? (
-              <div className="row">
-                <h1
-                  className="col-1 me-2"
-                  style={{
-                    fontSize: "3rem",
-                    marginTop: "-1.2rem",
-                    marginBottom: "-1.6rem",
-                    color: "gray",
-                  }}
-                >
-                  <span>
-                    <BsDot />
-                  </span>
-                </h1>
-                <div className={`col-3 ${styles.reduceMargin}`}>
-                  <span className="h6 text-muted">offline</span>
-                </div>
-              </div>
-            ) : selectUserToChatTimeline[0].online === true ? (
-              <div className="row">
-                <h1
-                  className="col-1 me-2"
-                  style={{
-                    fontSize: "3rem",
-                    marginTop: "-1.2rem",
-                    marginBottom: "-1.6rem",
-                    color: "#4c959f",
-                  }}
-                >
+            ) :       
+            <div className="row">
+              <h1
+                className="col-1 me-2"
+                style={{
+                  fontSize: "3rem",
+                  marginTop: "-1.2rem",
+                  marginBottom: "-1.6rem",
+                  color: "gray",
+                }}
+              >
+                <span>
                   <BsDot />
-                </h1>
-                <div className={`col-3 ${styles.reduceMargin}`}>
-                  <span className="h6 text-muted">online</span>
-                </div>
+                </span>
+              </h1>
+              <div className={`col-3 ${styles.reduceMargin}`}>
+                <span className="h6 text-muted">offline</span>
               </div>
-            ) : null}
+            </div>}
           </Card.Header>
-          <Card.Body style={{ overflowY: "auto", overflowX: "hidden" }}>
-            {JSON.stringify(selectUserToChatTimeline[0]) !== "{}" && (
+          <Card.Body style={{ overflowY: "scroll" }}>
+            {currentChat && 
               <>
-                {selectUserToChatTimeline[0].message.map((message, index) => {
-                  const unreadMessagePoint = selectUserToChatTimeline[1];
-
-                  const readMessagesFromPoint =
-                    selectUserToChatTimeline[0].message.length -
-                    unreadMessagePoint;
-
-                  if (readMessagesFromPoint === index) {
-                    return (
-                      // Focus unread messages
-                      <div key={index}>
-                        <div className="row justify-content-center text-muted">
-                          <div className="col-3">
-                            <hr />
-                          </div>
-                          <div ref={unreadChat} className="col-5 text-center">
-                            <p>{unreadMessagePoint} unread messages</p>
-                          </div>
-                          <div className="col-3">
-                            <hr />
-                          </div>
-                        </div>
-                        {ChatBubble(message)}
-                      </div>
-                    );
-                  } else {
-                    if (
-                      selectUserToChatTimeline[1] === 0 &&
-                      selectUserToChatTimeline[0].message.length === index + 1
-                    ) {
-                      // No unread message
-                      return (
-                        <div key={index} ref={readChat}>
-                          {ChatBubble(message)}
-                        </div>
-                      );
-                    } else {
-                      /*
-                       ** No need to Focus as focus has already been made above
-                       ** Maintain Read State
-                       */
-                      return <div key={index}>{ChatBubble(message)}</div>;
-                    }
-                  }
-                })}
+                {messages.map((message, index) => 
+                    <div>
+                      <ChatBubble message={message} />
+                    </div>
+                )}
+             
               </>
-            )}
+            }
           </Card.Body>
           <Card.Footer
             className="row border-0 pb-5 pb-md-2"
             style={{ backgroundColor: "transparent" }}
           >
-            <div className="col-10 col-lg-11">
-              <Editor slim={true} pageAt="/chat" />
+
+            <div className="col-10 col-lg-11 d-flex">
+              <Editor slim={true} pageAt="/chat" /> 
+              <Button onClick={()=>sendMessage()} style={{minWidth:'70px'}}> <FiSend size={22} /> </Button>
+
             </div>
           </Card.Footer>
         </Card>

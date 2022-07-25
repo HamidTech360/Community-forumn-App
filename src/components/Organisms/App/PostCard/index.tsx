@@ -93,10 +93,6 @@ const PostCard = ({
     comments?.unshift(res.data);
     setModalPost({ ...post, comments });
 
-    toast.success("Comment uploaded successfully", {
-      position: toast.POSITION.TOP_RIGHT,
-      toastId: "1",
-    });
     setLoading(false);
     setShowComment(false);
   };
@@ -162,7 +158,7 @@ const PostCard = ({
 
     try {
       const { data } = await axios.get(
-        `${config.serverUrl}/api/likes/?type=${type}&id=${post._id}`,
+        `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
         {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -189,7 +185,6 @@ const PostCard = ({
           },
         }
       );
-      //console.log(data);
       setBookMarked(true);
     } catch (error) {
       console.log(error.response?.data);
@@ -206,7 +201,7 @@ const PostCard = ({
           },
         }
       );
-      //console.log(data);
+
       setBookMarked(false);
     } catch (error) {
       console.log(error.response?.data);
@@ -216,10 +211,10 @@ const PostCard = ({
   useEffect(() => {
     // console.log(router.pathname);
 
-    if (post.likes?.includes(user._id)) {
+    if (post?.likes?.includes(user._id)) {
       setLiked(true);
     }
-    if (user.bookmarks?.includes(post._id)) {
+    if (user.bookmarks?.includes(post?._id)) {
       setBookMarked(true);
     } else {
       setBookMarked(false);
@@ -258,7 +253,7 @@ const PostCard = ({
               style={{ fontWeight: 500, color: "var(--bs-primary)" }}
               dangerouslySetInnerHTML={{
                 __html: sanitizer(
-                  `${post.author?.firstName} ${post.author?.lastName}`
+                  `${post?.author?.firstName} ${post?.author?.lastName}`
                 ),
               }}
             />
@@ -290,7 +285,7 @@ const PostCard = ({
             </NavDropdown.Item>
             <NavDropdown.Item className={styles.item}>
               <BsXCircleFill /> &nbsp; Unfollow &nbsp;
-              {/* {post.name.split(" ")[0]} */}
+              {/* {post?.name.split(" ")[0]} */}
             </NavDropdown.Item>
           </NavDropdown>
         </div>
@@ -339,7 +334,7 @@ const PostCard = ({
             key={key}
             // onClick={() => item.name === "Like" && handleLike()}
             variant="none"
-            // disabled={item.name === "Like" && post.likes?.includes(user._id)}
+            // disabled={item.name === "Like" && post?.likes?.includes(user._id)}
             className="d-flex justify-content-center gap-1 align-items-center"
           >
             {item.icon}
@@ -348,7 +343,7 @@ const PostCard = ({
                 style={{ marginLeft: "7px" }}
                 className="mx-2 text-secondary"
               >
-                {post.likes?.length || 0}
+                {post?.likes?.length || 0}
               </span>
             )}
 
@@ -358,7 +353,7 @@ const PostCard = ({
                 className="mx-2 text-secondary"
                 onClick={() => setShowComment(!showComment)}
               >
-                {post.comments?.length || 0}
+                {post?.comments?.length || 0}
               </span>
             )}
 

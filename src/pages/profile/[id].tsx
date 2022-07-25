@@ -8,7 +8,7 @@ import styles from "../../styles/feed.module.scss";
 import Head from "next/head";
 import UserCard from "../../components/Organisms/App/UserCard";
 import Discussions from "../../components/Organisms/App/Discussions/Discussions";
-import { usePagination } from "../../hooks/usePagination";
+import { usePagination } from "../../hooks/usePagination-old";
 import { useRouter } from "next/router";
 import About from "../../components/Templates/Profile/About";
 import Timeline from "../../components/Templates/Profile/Timeline";
@@ -32,6 +32,11 @@ const Profile = () => {
   //const { posts,  hasMore, isFetchingMore } = usePagination();
 
   const router = useRouter();
+  const { id } = router.query;
+  const [queryId, setQueryId] = useState(id);
+  // Allow Rerender Bases On ID Change Even When Route Is Same Path
+  if (id && id !== queryId) setQueryId(id);
+
   const [path, setPath] = useState("timeline");
 
   const [data, setData] = useState([]);
@@ -47,10 +52,10 @@ const Profile = () => {
             },
           }
         );
-        console.log(response.data);
+        // console.log(response.data);
         setData(response.data.posts);
       } catch (error) {
-        console.log(error.response?.data);
+        // console.log(error.response?.data);
       }
     })();
     document.body.style.backgroundColor = "#f6f6f6";
@@ -58,7 +63,7 @@ const Profile = () => {
     return () => {
       document.body.style.backgroundColor = "initial";
     };
-  }, []);
+  }, [queryId]);
 
   const Components: IComponents = {
     timeline: <Timeline Posts={data} />,
