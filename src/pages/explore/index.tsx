@@ -165,7 +165,12 @@ const Explore = ({}) => {
                   >
                     Start writing
                   </Button>
-                  <Button variant="light">Explore</Button>
+                  <a href="#explore">
+                    <Button variant="light">
+                      Explore
+                    </Button>
+                  </a>
+                
                 </div>
               </div>
             </Col>
@@ -181,7 +186,7 @@ const Explore = ({}) => {
           </Row>
         </Container>
       </section>
-      <section className={styles.topicsSection}>
+      <section id="explore" className={styles.topicsSection}>
         <Container>
           <h1 className="d-flex justify-content-center">
             Topics that matter to you
