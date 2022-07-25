@@ -34,7 +34,7 @@ function FooterButtons({
   editorID: any;
   pageAt: string;
 }) {
-  console.log("pageAt:", pageAt);
+  // console.log("pageAt:", pageAt);
 
   return (
     <>

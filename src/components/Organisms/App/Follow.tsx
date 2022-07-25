@@ -50,7 +50,7 @@ const Follow = () => {
   }, []);
   return (
     <ListGroup
-      className="container p-0 radius-10"
+      className="container p-0 p-xl-2 radius-10 shadow"
       as={Card}
       variant="flush"
       style={{
