@@ -38,7 +38,7 @@ import {
   selectIsFetching,
 } from "@/reduxFeatures/api/postSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-import usePaginationExplore, { Loader } from "@/hooks/usePaginationExplore";
+import usePagination, { Loader } from "@/hooks/usePagination";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const Explore = ({}) => {
@@ -64,7 +64,7 @@ const Explore = ({}) => {
   });
 
   const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
-    usePaginationExplore("/api/posts");
+    usePagination("/api/posts", "posts");
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";

@@ -26,18 +26,17 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
   const router = useRouter();
 
   const redirectPage = () => {
-
     router.push({
       pathname: `/profile/[id]`,
-      query: { 
+      query: {
         id: gist?.author?._id,
       },
-    })
-  }
+    });
+  };
 
   return (
     <Card
-      className="mt-4 p-3 shadow-sm"
+      className="mt-4 p-3 shadow-sm w-100"
       style={{
         border: "none",
         borderRadius: "10px",
@@ -55,15 +54,15 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
               alt="Avatar"
               roundedCircle
               className={styles.img}
-              onClick= {redirectPage}
-              style={{cursor: "pointer" }}
+              onClick={redirectPage}
+              style={{ cursor: "pointer" }}
             />
           </div>
           <div className={` ${styles.div}`}>
             <small
               className={`${styles.title} text-secondary text-capitalize `}
               onClick={redirectPage}
-              style={{cursor: "pointer" }}
+              style={{ cursor: "pointer" }}
             >
               Started by {gist?.author?.firstName} {gist?.author?.lastName}
             </small>
@@ -82,11 +81,12 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
 
       {gist?.post && (
         <Card.Body
-         
           dangerouslySetInnerHTML={{
-            __html: sanitizer(trimmed
-              ? gist.post.slice(0, 500) || gist.post.slice(0, 500)
-              : gist.post || gist.post),
+            __html: sanitizer(
+              trimmed
+                ? gist.post.slice(0, 500) || gist.post.slice(0, 500)
+                : gist.post || gist.post
+            ),
           }}
           style={{
             marginTop: "-1rem",
