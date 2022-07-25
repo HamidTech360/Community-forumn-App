@@ -12,7 +12,7 @@ import {  useSelector } from "@/redux/store";
 import SideBar from "@/components/Chat/SideBar";
 import MainDisplay from "@/components/Chat/MainDisplay";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-
+import { io } from 'socket.io-client';
 
 const Chat = () => {
   const user = useSelector(selectUser)
@@ -21,27 +21,62 @@ const Chat = () => {
   const [conversations, setConversations] = useState([])
   const [currentChat, setCurrentChat] = useState(null)
   const [messages, setMessages] = useState([])
+  const [receivedMessage, setReceivedMessage] = useState(null)
   const [showConversationList, setShowConversationList] = useState(true)
-  const [showMsgArea, setShowMsgArea] = useState(true)
-  const [editorText, setEditorText] = useState('')
+  const [showMsgArea, setShowMsgArea] = useState(false)
+  const socket:any = useRef()
 
   let emptyEditorInnerHtml =
       '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
 
+  useEffect(()=>{
+    socket.current = io("ws://localhost:8900")
+  },[])
+
   useEffect(() => { 
+    
     if(typeof window === "undefined") return
     console.log(window?.innerWidth);
     if(window.innerWidth <=768 ){
       setShowMsgArea(false)
-
+    }else{
+      setShowMsgArea(true)
     }
   }, []);
 
+  useEffect(()=>{
+    socket.current.on("getMessage", data=>{
+       //console.log('get message emission received');   
+       setReceivedMessage({
+           sender:data.senderId,
+           message:data.message,
+           createdAt:'Just now'
+       })
+       // console.log('new data', data);    
+   })
+},[])
+
+
+useEffect(()=>{
+  console.log(receivedMessage);
+  
+  const currentConversation = conversations.find(item=>item.sender._id===currentChat?._id || item.receiver._id===currentChat?._id)
+  console.log(`current conversation is`, currentConversation);
+  receivedMessage && currentConversation?.members.includes(receivedMessage.sender) &&
+  setMessages((prev)=>[...prev, receivedMessage])
+  
+  //receivedMessage
+},[receivedMessage, user])
 
   useEffect(() => {
-    // Focus Unread Message
+    if(!user?._id) return
+    
+    socket.current.emit("addUser", user?._id)
+    socket.current.on("getUsers", users=>{
+        console.log('connected users are ', users );   
+    })
    
-  }, []);
+  }, [user]);
 
 
 
@@ -82,17 +117,18 @@ const Chat = () => {
 
 const sendMessage = async ()=>{
   
-  // if(!currentChat) return
+  if(!currentChat) return
   const newMsg = document.getElementById('/chat-slateRefId').innerHTML
   if(newMsg===emptyEditorInnerHtml) return 
   
   
   
-  // socket.current.emit("sendMessage", {
-  //     senderId:user?._id,
-  //     receiverId:currentChat,
-  //     message:newMsg
-  // })
+  socket.current.emit("sendMessage", {
+      senderId:user?._id,
+      receiverId:currentChat._id,
+      message:newMsg
+  })
+
   try{
       const {data}= await axios.post(`${config.serverUrl}/api/chats/?mate=${currentChat._id}`, {message:newMsg}, {headers:{
           authorization:`Bearer ${localStorage.getItem('accessToken')}`
@@ -114,7 +150,7 @@ const sendMessage = async ()=>{
       <Head>
         <title>Chat</title>
       </Head>
-      <div className="mt-lg-3" style={{ marginBottom: "-9.3vh" }}>
+      <div className="" style={{  }}>
         <ToastContainer />
         <div className="row" style={{ minHeight: "87vh" }}>
           {/* SideBar */}
@@ -125,7 +161,7 @@ const sendMessage = async ()=>{
           />}
 
           {/* Main Display */}
-         {showMsgArea && 
+         { showMsgArea && 
            <MainDisplay
             currentChat={currentChat}
             messages={messages}

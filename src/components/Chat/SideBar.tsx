@@ -80,7 +80,7 @@ const SideBar = ({ conversations, selectChat }) => {
               >
                 {conversations.map((message, index) => {
                   return (
-                    <>
+                    < >
                       <div onClick={()=>selectChat(message.sender._id==user?._id?message.receiver:message.sender)} className={styles.messageItem} style={{paddingLeft:'20px'}}>
                         <div className={styles.imageBox} >
                           <Image

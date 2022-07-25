@@ -25,23 +25,23 @@ const MainDisplay = ({  mainSidebar, mainDisplay, currentChat, messages, sendMes
     }
   };
 
-  useEffect(()=>{
-    scrollRef.current?.scrollIntoView({behavior:'smooth'})
-    if(scrollRef) console.log(scrollRef);
+  // useEffect(()=>{
+  //   scrollRef.current?.scrollIntoView({behavior:'smooth'})
+  //   if(scrollRef) console.log(scrollRef);
     
-  },[messages, scrollRef])
+  // },[messages, scrollRef])
   
 
   return (
     <>
       {/* Main Display */}
       <div
-        ref={mainDisplay}
+       
         className="col-12 col-md-8 shadow"
       >
         <Card
           // className="border-0 d-flex flex-column"
-          style={{ height: "95vh", paddingRight:'0' }}
+          style={{ height: "90vh", paddingRight:'0' }}
         >
           <Card.Header>
             <div className="row">
@@ -111,11 +111,11 @@ const MainDisplay = ({  mainSidebar, mainDisplay, currentChat, messages, sendMes
               </div>
             </div>}
           </Card.Header>
-          <Card.Body style={{ overflowY: "auto", overflowX: "hidden" }}>
+          <Card.Body style={{ overflowY: "scroll" }}>
             {currentChat && 
               <>
                 {messages.map((message, index) => 
-                    <div ref={scrollRef}>
+                    <div>
                       <ChatBubble message={message} />
                     </div>
                 )}
