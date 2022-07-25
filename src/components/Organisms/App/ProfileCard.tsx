@@ -1,30 +1,29 @@
 import Link from "next/link";
-import axios from 'axios'
+import axios from "axios";
 import { useRouter } from "next/router";
 import React, { ReactNode, useEffect, useState } from "react";
 import { Card, CardImg, Image, Nav } from "react-bootstrap";
 import About from "../../Templates/Profile/About";
 import Bookmarks from "../../Templates/Profile/Bookmarks";
-import Friends from "../../Templates/Profile/Friends";
+import Articles from "../../Templates/Profile/Articles";
 import Media from "../../Templates/Profile/Media";
 import Timeline from "../../Templates/Profile/Timeline";
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import config from "@/config";
 
-
 interface IComponents {
   about: ReactNode;
   timeline: ReactNode;
   bookmarks: ReactNode;
   media: ReactNode;
-  friends: ReactNode;
+  articles: ReactNode;
 }
 const Components: IComponents = {
   timeline: <Timeline Posts={[]} />,
   about: <About />,
   media: <Media />,
-  friends: <Friends />,
+  articles: <Friends />,
   bookmarks: <Bookmarks />,
 };
 
@@ -40,7 +39,6 @@ const ProfileCard = ({
   const data = useSelector(selectUser);
   // console.log(data);
 
-  
   return (
     <Card className="mt-2 mb-3">
       <CardImg src="/images/formbg.png" className="image3" />
@@ -71,7 +69,7 @@ const ProfileCard = ({
         >
           <div className="d-flex flex-column align-items-center">
             <span>{data.followers?.length}</span>
-            <span>following</span>
+            <span>followers</span>
           </div>
           <div className="d-flex flex-column align-items-center">
             <span>{data.following?.length}</span>

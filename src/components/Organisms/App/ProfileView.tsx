@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import config from "@/config";
 import About from "@/components/Templates/Profile/About";
 import Timeline from "@/components/Templates/Profile/Timeline";
-import Friends from "@/components/Templates/Profile/Friends";
+import Friends from "@/components/Templates/Profile/Articles";
 import Media from "@/components/Templates/Profile/Media";
 import Bookmarks from "@/components/Templates/Profile/Bookmarks";
 import { Card, CardImg, Image, Nav } from "react-bootstrap";
