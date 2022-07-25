@@ -23,7 +23,7 @@ const Components: IComponents = {
   timeline: <Timeline Posts={[]} />,
   about: <About />,
   media: <Media />,
-  articles: <Friends />,
+  articles: <Articles />,
   bookmarks: <Bookmarks />,
 };
 
