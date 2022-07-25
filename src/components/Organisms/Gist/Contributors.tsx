@@ -15,7 +15,7 @@ const Contributors = ({ contributors }: any) => {
             fontSize: "0.9rem",
           }}
         >
-          &nbsp; <Link href={`/gist/contributors`}>See more</Link>
+          &nbsp; < href={`/gist/contributors`}>See more</>
         </span>
       </Card.Title>
       {contributors?.map((item, key) => (
