@@ -69,7 +69,7 @@ const ProfileView = ({
           <Image
             width={130}
             height={130}
-            src={profile?.avatar?.url || "/images/formbg.png"}
+            src={profile?.images?.avater || "/images/formbg.png"}
             alt="avatar"
             className="top-0 position-absolute"
             style={{
