@@ -138,7 +138,7 @@ const AuthHeader = () => {
       >
         <Container className="d-flex justify-content-between">
           <Link href="/feed" passHref>
-            <Navbar.Brand className = {styles.brand}>
+            <Navbar.Brand className={styles.brand}>
               <Logo />
             </Navbar.Brand>
           </Link>
@@ -167,7 +167,9 @@ const AuthHeader = () => {
                   } d-flex flex-column align-items-center gap-1 auth-gap btn`}
                 >
                   <span>{activeTab(link)}</span>
-                  <small className="fixed-bottom-navBar-text" >{link.name}</small>
+                  <small className="fixed-bottom-navBar-text">
+                    {link.name}
+                  </small>
                 </div>
               </Link>
             ))}
@@ -226,7 +228,7 @@ const AuthHeader = () => {
             title={
               <>
                 <Image
-                  src={data?.avatar?.url || "/images/formbg.png"}
+                  src={data?.images.avatar || "/images/formbg.png"}
                   alt=""
                   className={styles.img}
                   roundedCircle
@@ -245,7 +247,7 @@ const AuthHeader = () => {
                 }}
                 onClick = {directProfile}> */}
                 <Image
-                  src={data?.avatar?.url || "/images/formbg.png"}
+                  src={data?.images?.avatar || "/images/formbg.png"}
                   alt=""
                   width={20}
                   height={20}
@@ -305,7 +307,9 @@ const AuthHeader = () => {
                     } d-flex flex-column align-items-center gap-1 mobi-nav bg-white btn`}
                   >
                     <span>{activeTab(link)}</span>
-                    <small className="fixed-bottom-navBar-text">{link.name}</small>
+                    <small className="fixed-bottom-navBar-text">
+                      {link.name}
+                    </small>
                   </div>
                 </Link>
               ))}
