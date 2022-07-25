@@ -38,6 +38,8 @@ import {
   selectIsFetching,
 } from "@/reduxFeatures/api/postSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import usePaginationExplore, { Loader } from "@/hooks/usePaginationExplore";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Explore = ({}) => {
   const router = useRouter();
@@ -45,7 +47,7 @@ const Explore = ({}) => {
   const showPost = useSelector(selectPost);
   const showPostModal = useSelector(selectShowPostModal);
   const user = useSelector(selectUser);
-  const isFetching = useSelector(selectIsFetching);
+  // const isFetching = useSelector(selectIsFetching);
 
   const [categories, setCategories] = useState([
     { name: "How to work abroad" },
@@ -60,9 +62,11 @@ const Explore = ({}) => {
     postTitle: "",
     postBody: "",
   });
-  useEffect(() => {
-    //console.log(users);
 
+  const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
+    usePaginationExplore("/api/posts");
+
+  useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
 
     return () => {
@@ -71,31 +75,39 @@ const Explore = ({}) => {
   }, []);
 
   useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const response = await axios.get(`${config.serverUrl}/api/posts`);
-        dispatch(setPosts(response.data.posts));
-        // setIsFetching(false);
-        dispatch(setIsFetching(false));
-        console.log(response.data.posts);
-      } catch (error) {
-        console.log(error.response?.data);
+    if (paginatedData) {
+      if (JSON.stringify(showPost) !== JSON.stringify(paginatedData)) {
+        dispatch(setPosts(paginatedData));
       }
-    };
-    fetchPost();
-    //(async function () {
-    //   try {
-    //     const response = await axios.get(`${config.serverUrl}/api/users`, {});
-    //     // console.log("response.data+++:", response.data.users);
-    //     setUsers(response.data.users);
-    //     dispatch(setIsFetching(false));
-    //   } catch (error) {
-    //     //console.error(error.response?.data);
-    //     // setIsFetching(false);
-    //     dispatch(setIsFetching(false));
-    //   }
-    // })();
-  }, [dispatch]);
+    }
+  }, [paginatedData]);
+
+  // useEffect(() => {
+  //   const fetchPost = async () => {
+  //     try {
+  //       const response = await axios.get(`${config.serverUrl}/api/posts`);
+  //       dispatch(setPosts(response.data.posts));
+  //       // setIsFetching(false);
+  //       dispatch(setIsFetching(false));
+  //       console.log(response.data.posts);
+  //     } catch (error) {
+  //       console.log(error.response?.data);
+  //     }
+  //   };
+  //   fetchPost();
+  //   //(async function () {
+  //   //   try {
+  //   //     const response = await axios.get(`${config.serverUrl}/api/users`, {});
+  //   //     // console.log("response.data+++:", response.data.users);
+  //   //     setUsers(response.data.users);
+  //   //     dispatch(setIsFetching(false));
+  //   //   } catch (error) {
+  //   //     //console.error(error.response?.data);
+  //   //     // setIsFetching(false);
+  //   //     dispatch(setIsFetching(false));
+  //   //   }
+  //   // })();
+  // }, [dispatch]);
 
   const handleChange = (e) => {
     dispatch(setPostTitle(e.currentTarget.value));
@@ -187,34 +199,60 @@ const Explore = ({}) => {
                 <Tab eventKey={i} title={category.name} key={i} />
               ))}
             </Tabs>
-            {isFetching && (
+            {/* {isFetching && (
               <div className="m-2 p-2 d-flex justify-content-center">
                 <Spinner animation="border" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </Spinner>
               </div>
-            )}
-            <Row className="d-flex justify-content-start">
-              {/* {posts?.map((post, key) => ( */}
-              {showPost?.map((post, key) => (
-                <Col
-                  key={`posts_${key}`}
-                  md={4}
-                  className={`my-4 ${styles.card}`}
+            )} */}
+            <InfiniteScroll
+              next={fetchNextPage}
+              hasMore={!isReachedEnd}
+              loader={<Loader />}
+              endMessage={
+                <p style={{ textAlign: "center", color: "gray" }}>
+                  <b>Yay! You have seen it all...</b>
+                </p>
+              }
+              dataLength={paginatedData?.length ?? 0}
+            >
+              <Row className="d-flex justify-content-start w-100">
+                {showPost?.map((post, key) => (
+                  <Col
+                    key={`posts_${key}`}
+                    md={4}
+                    className={`my-4 ${styles.card}`}
+                  >
+                    <Card
+                      _id={post._id}
+                      image={"/images/postPlaceholder.jpg"}
+                      title={post.postTitle}
+                      body={post.postBody}
+                      author={post.author}
+                      size="any"
+                    />
+                  </Col>
+                ))}
+              </Row>
+              {isValidating && (
+                <p style={{ textAlign: "center", color: "gray" }}>
+                  <b>Fetching Post...</b>
+                </p>
+              )}
+              {error && (
+                <p
+                  style={{
+                    textAlign: "center",
+                    color: "gray",
+                    marginTop: "1.2rem",
+                  }}
                 >
-                  <Card
-                    _id={post._id}
-                    image={"/images/postPlaceholder.jpg"}
-                    title={post.postTitle}
-                    body={post.postBody}
-                    author={post.author}
-                    size="any"
-                  />
-                </Col>
-              ))}
-              {/* {!posts.length && <p>No posts under this category </p>} */}
-              {!showPost?.length && <p>No posts under this category </p>}
-            </Row>
+                  <b>Oops! Something went wrong</b>
+                </p>
+              )}
+            </InfiniteScroll>
+            {/* {!showPost?.length && <p>No posts under this category </p>} */}
           </div>
         </Container>
       </section>
@@ -291,7 +329,7 @@ const Explore = ({}) => {
             </Form>
           </div>
           <div className="col-12 mt-2 mb-4 px-lg-4">
-            <Editor slim={false} pageAt='/explore' />
+            <Editor slim={false} pageAt="/explore" />
           </div>
         </div>
       </Modal>

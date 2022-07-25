@@ -19,7 +19,7 @@ const Discussions = ({ posts }: any) => {
     <Card
       // style={{ border: "none", overflowY: "scroll", height: "450px" }}
       style={{ border: "none", overflowY: "scroll", height: "18%" }}
-      className="pb-5 mb-4 mt-4"
+      className="pb-5 mb-4 mt-4 shadow"
     >
       <Card.Header
         className="d-flex justify-content-between gap-2 align-items-center bg-white shadow-sm sticky-top"
@@ -30,9 +30,9 @@ const Discussions = ({ posts }: any) => {
       </Card.Header>
       <Card.Body>
         {posts &&
-          posts?.map((post) => (
+          posts?.map((post, index) => (
             <div
-              key={`discussion-${post._id}`}
+              key={`discussion-${post?._id}-${index}`}
               className="d-flex gap-3 mt-2 py-1 border-bottom"
             >
               <div>
@@ -48,11 +48,11 @@ const Discussions = ({ posts }: any) => {
                 <small
                   className="bolden"
                   dangerouslySetInnerHTML={{
-                    __html: sanitizer(post.postTitle),
+                    __html: sanitizer(post?.postTitle),
                   }}
                 />
                 <small className="text-muted">
-                  By {`${post.author?.firstName} ${post.author?.lastName}`}
+                  By {`${post?.author?.firstName} ${post?.author?.lastName}`}
                 </small>
               </div>
             </div>

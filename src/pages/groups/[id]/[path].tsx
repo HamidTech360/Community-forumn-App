@@ -46,6 +46,10 @@ const Group = () => {
   // const newCreatePost = useSelector(selectNewCreatePost);
   const newCreatePost = useSelector(selectNewGroupFeed);
 
+  const [queryId, setQueryId] = useState(id);
+  // Allow Rerender Bases On ID Change Even When Route Is Same Path
+  if (id && id !== queryId) setQueryId(id);
+
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
 
@@ -68,7 +72,7 @@ const Group = () => {
         // console.log(error.response?.data);
       }
     })();
-  }, [router.isReady, newCreatePost]);
+  }, [router.isReady, newCreatePost, queryId]);
   // console.log(router.query);
 
   const Components: IComponents = {
