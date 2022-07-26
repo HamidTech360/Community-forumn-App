@@ -47,7 +47,7 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
       console.log(profileObj);
       try {
         const { data } = await axios.post(
-          `http://localhost:8080/api/auth/oauth?provider=google`,
+          `${config.serverUrl}/api/auth/oauth?provider=google`,
           profileObj
         );
         if (data.refreshToken) {
