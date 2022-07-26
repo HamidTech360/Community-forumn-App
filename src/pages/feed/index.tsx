@@ -33,9 +33,12 @@ import { useDispatch, useSelector } from "@/redux/store";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 
 // import Editor from "@/components/Organisms/SlateEditor/Editor";
-import { useModalWithData } from "@/hooks/useModalWithData";
+import { ModalRow, useModalWithData } from "@/hooks/useModalWithData";
 import InfiniteScroll from "react-infinite-scroll-component";
 // import { FaTimes } from "react-icons/fa";
+
+// import { FacebookShareButton, TwitterShareButton } from "react-share";
+// import { FacebookIcon, TwitterIcon } from "react-share";
 
 const Feed = () => {
   const data = useSelector(selectUser);
@@ -105,7 +108,9 @@ const Feed = () => {
               className={`${styles.userCardDiscussion} position-fixed d-flex flex-column vh-100`}
             >
               <div className="col-xs-12">
-                <UserCard user={data!} />
+                {/* <UserCard user={data!} /> */}
+                {/* <UserCard data={data!} /> */}
+                <UserCard />
               </div>
               <div className="col-xs-12">
                 <Discussions posts={posts} />
@@ -190,7 +195,7 @@ const Feed = () => {
             onClick={() => toggle()}
           />{" "}
         </span>
-        {selected.images ? (
+        {/* {selected.images ? (
           <Row>
             <Col lg={6}></Col>
             <Col lg={6}>
@@ -204,7 +209,8 @@ const Feed = () => {
               <ModalCard post={selected} />
             </Col>
           </Row>
-        )}
+        )} */}
+        <ModalRow selected={selected} />
       </Modal>
     </AuthContent>
   );

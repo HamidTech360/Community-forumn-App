@@ -1,5 +1,5 @@
 import Link from "next/link";
-import axios from 'axios'
+import axios from "axios";
 import { useRouter } from "next/router";
 import React, { ReactNode, useEffect, useState } from "react";
 import { Card, CardImg, Image, Nav } from "react-bootstrap";
@@ -11,7 +11,6 @@ import Timeline from "../../Templates/Profile/Timeline";
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import config from "@/config";
-
 
 interface IComponents {
   about: ReactNode;
@@ -40,7 +39,6 @@ const ProfileCard = ({
   const data = useSelector(selectUser);
   // console.log(data);
 
-  
   return (
     <Card className="mt-2 mb-3">
       <CardImg src="/images/formbg.png" className="image3" />
@@ -71,7 +69,7 @@ const ProfileCard = ({
         >
           <div className="d-flex flex-column align-items-center">
             <span>{data.followers?.length}</span>
-            <span>following</span>
+            <span>followers</span>
           </div>
           <div className="d-flex flex-column align-items-center">
             <span>{data.following?.length}</span>

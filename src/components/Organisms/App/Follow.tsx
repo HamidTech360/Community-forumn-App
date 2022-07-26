@@ -3,35 +3,61 @@ import config from "@/config";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Image, ListGroup } from "react-bootstrap";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-import { useSelector } from "react-redux";
-import makeSecuredRequest from "@/utils/makeSecuredRequest";
-import { useDispatch } from "@/redux/store";
+import {
+  user as userAuth,
+  selectUser,
+} from "@/reduxFeatures/authState/authStateSlice";
+// import { useSelector } from "react-redux";
+import makeSecuredRequest, {
+  deleteSecuredRequest,
+} from "@/utils/makeSecuredRequest";
+import { useDispatch, useSelector } from "@/redux/store";
 import appSlice from "@/reduxFeatures/app/appSlice";
 
 const Follow = () => {
   const [users, setUsers] = useState([]);
   const user = useSelector(selectUser);
+  const userMapper = useSelector(selectUser);
   const dispatch = useDispatch();
+
   const handleFollow = async (id: string) => {
     try {
-      const data = await makeSecuredRequest(
-        `${config.serverUrl}/api/users/${id}/follow`
-      );
-      console.log("follow:", data);
-      window.location.reload();
+      await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
+
+      // Update Auth User State
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
     } catch (error) {
-      console.log("follow Error:", error);
+      // console.error("follow Error:", error);
     }
   };
   useEffect(() => {
-    //alert('fetching');
-
     (async function () {
       try {
         const { data } = await axios.get(`${config.serverUrl}/api/users`);
         // console.log(user);
         // console.log("User data:", data);
+
+        let sliceNum = 0;
+        if (window.innerHeight > 777) {
+          sliceNum = 10;
+        } else {
+          sliceNum = 5;
+        }
+
+        await data.users.sort(function () {
+          return 0.5 - Math.random();
+        });
 
         setUsers(
           data.users
@@ -41,13 +67,14 @@ const Follow = () => {
                 person._id.toString() !== user._id.toString()
               );
             })
-            .slice(0, 10)
+            // .slice(0, 10)
+            .slice(0, sliceNum)
         );
       } catch (error) {
         console.log(error.response?.data);
       }
     })();
-  }, []);
+  }, [window.innerHeight]);
   return (
     <ListGroup
       className="container p-0 p-xl-2 radius-10 shadow"
@@ -94,8 +121,39 @@ const Follow = () => {
               <Button
                 variant="outline-primary"
                 size="sm"
-                onClick={() => handleFollow(user._id)}
+                onClick={() => handleFollow(user?._id)}
               >
+                {/* {console.log("user._id", user?._id)} */}
+                {/* {user?._id === user?.following} */}
+                {/* {user?._id} */}
+                {/* {userMapper?.following?.map((obj) =>
+                  obj?._id === user?._id ? (
+                    <span>Followed</span>
+                  ) : (
+                    <span>Follow</span>
+                  )
+                )} */}
+                {/* {userMapper?.following?.some((item) => {
+                // console.log("item?._id:", item?._id);
+                // console.log("user?._id:", user?._id);
+                item?._id === user?._id ? (
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    onClick={() => handleFollow(user?._id)}
+                  >
+                    Following
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    onClick={() => handleFollow(user?._id)}
+                  >
+                    Follow
+                  </Button>
+                );
+              })} */}
                 Follow
               </Button>
             </div>

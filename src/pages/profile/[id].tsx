@@ -6,7 +6,7 @@ import axios from "axios";
 import config from "@/config";
 import styles from "../../styles/feed.module.scss";
 import Head from "next/head";
-import UserCard from "../../components/Organisms/App/UserCard";
+// import UserCard from "../../components/Organisms/App/UserCard";
 import Discussions from "../../components/Organisms/App/Discussions/Discussions";
 import { usePagination } from "../../hooks/usePagination-old";
 import { useRouter } from "next/router";
