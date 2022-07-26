@@ -26,7 +26,8 @@ const UserCard = () => {
         <Image
           className="user-img"
           // src={data?.avatar?.url || "/images/formbg.png"}
-          src={user?.images?.avatar || "/images/formbg.png"}
+          // src={user?.images?.avatar || "/images/formbg.png"}
+          src={data?.images?.avatar || "/images/formbg.png"}
           alt=""
           width={70}
           height={70}
