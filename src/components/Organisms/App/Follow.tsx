@@ -15,8 +15,12 @@ const Follow = () => {
   const dispatch = useDispatch();
   const handleFollow = async (id: string) => {
     try {
-      const data = await makeSecuredRequest(
-        `${config.serverUrl}/api/users/${id}/follow`
+      const data = await axios.get(
+        `${config.serverUrl}/api/users/${id}/follow`, {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          }
+        }
       );
       console.log("follow:", data);
       // window.location.reload();

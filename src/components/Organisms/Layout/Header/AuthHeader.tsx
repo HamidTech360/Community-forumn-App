@@ -228,7 +228,7 @@ const AuthHeader = () => {
             title={
               <>
                 <Image
-                  src={data?.images.avatar || "/images/formbg.png"}
+                  src={data?.images?.avatar || "/images/formbg.png"}
                   alt=""
                   className={styles.img}
                   roundedCircle

@@ -23,14 +23,37 @@ const Followers = () => {
 
 
     const [users, setUsers] = useState([]);
+    const [ follow, setFollow ] = useState();
 
-    const postFollowers = async (id: string) => {
+
+    const postFollow = async (id: string) => {
         try {
-          const data = await makeSecuredRequest(
-            `${config.serverUrl}/api/users/${id}/follow`
+            const { data} = await axios.get(
+                `${config.serverUrl}/api/users/${id}/follow`, {
+                    headers: {
+                        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    },
+                }
+              );
+        //   window.location.reload();
+        setFollow(true)
+        console.log("follow:", data);
+        } catch (error) {
+          console.log("follow Error:", error);
+        }
+      };
+
+      const postUnfollow = async (id: string) => {
+        try {
+          const { data} = await axios.delete(
+            `${config.serverUrl}/api/users/${id}/follow`, {
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+            }
           );
-          console.log("follow:", data);
-          window.location.reload();
+            setFollow(false)
+            console.log("follow:", data);
         } catch (error) {
           console.log("follow Error:", error);
         }
@@ -46,7 +69,7 @@ const Followers = () => {
                 !person.followers.includes(user._id) &&
                 person._id.toString() !== user._id.toString()
               );
-            }) .slice(0, 6));
+            }) .slice(0, 10));
             dispatch(setIsFetching(false));
           } catch (error) {
             //console.error(error.response?.data);
@@ -78,13 +101,26 @@ const Followers = () => {
                   <span className="mt-1">
                     {user?.firstName} {user?.lastName}
                   </span>
-
-                  <Button 
-                  variant="outline-primary"
-                  onClick= {() => postFollowers(user?._id)}
+                   {!follow ? (
+                    <Button 
+                    variant="outline-primary"
+                    onClick= {() => postFollow(user?._id)}
+                    >
+                      Follow
+                  </Button>
+                  ) : <Button 
+                  variant="primary"
+                  onClick= {() => postUnfollow(user?._id)}
                   >
-                    Follow
-                </Button>
+                    Unfollow
+                </Button>} 
+                  
+                  {/* <Button 
+                    variant="outline-primary"
+                    onClick= {() => postFollow(user?._id)}
+                    >
+                      Follow
+                  </Button> */}
                 </div>
                 <hr />
               </Col>
