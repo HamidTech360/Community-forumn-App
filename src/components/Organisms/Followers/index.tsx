@@ -23,7 +23,7 @@ const Followers = () => {
 
 
     const [users, setUsers] = useState([]);
-    const [ follow, setFollow ] = useState();
+    const [ follow, setFollow ] = useState(false);
 
 
     const postFollow = async (id: string) => {
@@ -88,6 +88,7 @@ const Followers = () => {
           </h1>
           <Row>
             {users?.map((user, key) => (
+                
               <Col md={6} lg={4} sm={12} key={`author-${key}`} className="mt-4">
                 <div className="d-flex gap-3 align-items-center justify-content-evenly">
                   <Image
