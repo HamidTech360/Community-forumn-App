@@ -1,32 +1,71 @@
 /* eslint-disable @next/next/no-img-element */
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import Image from "next/image";
+
 import styles from "../../../../styles/form.module.scss";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { GoogleLogin } from "react-google-login";
+
 import axios from "axios";
 import { setAccessToken } from "@/misc/token";
+import config from "@/config";
+
+import jwt from "jsonwebtoken";
+import { TiSocialFacebookCircular } from "react-icons/ti";
+
 const FormWrapper = ({ form }: { form: ReactNode }) => {
+  useEffect(() => {
+    //@ts-ignore
+    // console.log(window.google?.accounts);
+    //@ts-ignore
+    window.google?.accounts.id.initialize({
+      client_id:
+        "491147804580-d58i9u8jsblukvmvg9jan7ve2cvn0qqa.apps.googleusercontent.com",
+      callback: (response: Record<string, any>) => responseGoogle(response),
+    });
+    //@ts-ignore
+    window.google!.accounts.id.renderButton(
+      document.getElementById("google-button"),
+      {
+        theme: "outline",
+        size: "large",
+        shape: "square",
+      }
+    );
+  }, []);
   const { pathname, push } = useRouter();
 
   const responseGoogle = async (response: Record<string, any>) => {
-    if (response.accessToken) {
-      const { profileObj } = response;
+    console.log(response);
+    // console.log(jwt.decode(response.credential));
+    if (response.credential) {
+      const profileObj = jwt.decode(response.credential);
+      console.log(profileObj);
       try {
-        const { data } = await axios.post("/auth/oauth/google", profileObj);
+        const { data } = await axios.post(
+          `${config.serverUrl}/api/auth/oauth?provider=google`,
+          profileObj
+        );
         if (data.refreshToken) {
-          sessionStorage.setItem("token", data.refreshToken);
+          localStorage.setItem("accessToken", data.accessToken);
         }
 
         setAccessToken(data.accessToken);
+        // toast.success("Authenticated", {
+        //   position: toast.POSITION.TOP_RIGHT,
+        //   autoClose: 7000,
+        // });
         push("/feed");
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
-          // setMessage(error.response.data.message);
-          console.log(error);
+          toast.error((error.response.data as Record<string, any>).message, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 7000,
+          });
         }
       }
     }
@@ -37,15 +76,21 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
     if (response.accessToken) {
       const { profileObj } = response;
       try {
-        const { data } = await axios.post("/auth/oauth/facebook", profileObj);
-        if (data.refreshToken) {
-          sessionStorage.setItem("token", data.refreshToken);
+        const { data } = await axios.post(
+          `${config.serverUrl}/api/auth/oauth?provider=facebook`,
+          profileObj
+        );
+        if (data.accessToken) {
+          localStorage.setItem("token", data.accessToken);
         }
 
         setAccessToken(data.accessToken);
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
-          console.log(error);
+          toast.error((error.response.data as Record<string, any>).message, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 7000,
+          });
         }
       }
     }
@@ -53,6 +98,7 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
   return (
     <>
       <Container>
+        <ToastContainer />
         <Row className={styles.formWrapper}>
           <Col md={6} className="desktop-only">
             <div className={styles.imgWrapper}>
@@ -87,7 +133,28 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
               <div
                 className={`${styles.buttons} buttons d-flex gap-3 justify-content-center`}
               >
-                <Button variant="outline-primary" size="sm">
+                <FacebookLogin
+                  appId="620307832639763"
+                  callback={responseFacebook}
+                  scope="email public_profile"
+                  render={(renderProps: Record<string, any>) => (
+                    <Button
+                      onClick={renderProps.onClick}
+                      style={{ backgroundColor: "#3b5998" }}
+                    >
+                      <Image
+                        width={25}
+                        height={25}
+                        src="/images/facebook.png"
+                        alt="facebook"
+                        quality={100}
+                      />
+                      <span className="ms-2 py-3">Sign in</span>
+                    </Button>
+                  )}
+                />
+
+                {/* <Button variant="outline-primary" size="sm">
                   <Image
                     width={25}
                     height={25}
@@ -95,32 +162,21 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
                     alt="facebook"
                     quality={100}
                   />
-                </Button>
-                <GoogleLogin
-                  clientId="250767377397-68p1knjngdur342c3qcs993994otnhar.apps.googleusercontent.com"
-                  render={(renderProps: Record<string, any>) => (
-                    <Button variant="outline-primary" size="sm">
-                      <Image
-                        width={25}
-                        height={25}
-                        src="/images/google.png"
-                        alt="google"
-                        quality={100}
-                      />
-                    </Button>
-                  )}
-                  onSuccess={responseGoogle}
-                  onFailure={responseGoogle}
-                />
-                <Button variant="outline-primary" size="sm">
+                </Button> */}
+                <div id="google-button"></div>
+                {/* <Button
+                  variant="outline-primary"
+                  color="error"
+                  onClick={handleButton}
+                >
                   <Image
                     width={25}
                     height={25}
-                    src="/images/linkedin.png"
+                    src="/images/google.png"
                     alt="google"
                     quality={100}
                   />
-                </Button>
+                </Button> */}
               </div>
               <div className="mt-4">
                 {pathname === "/login" ? (

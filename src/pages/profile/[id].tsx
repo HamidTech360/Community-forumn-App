@@ -12,7 +12,7 @@ import { usePagination } from "../../hooks/usePagination-old";
 import { useRouter } from "next/router";
 import About from "../../components/Templates/Profile/About";
 import Timeline from "../../components/Templates/Profile/Timeline";
-import Friends from "../../components/Templates/Profile/Friends";
+import Friends from "../../components/Templates/Profile/Articles";
 import Media from "../../components/Templates/Profile/Media";
 import Bookmarks from "../../components/Templates/Profile/Bookmarks";
 import Link from "next/link";

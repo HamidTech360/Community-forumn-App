@@ -63,7 +63,7 @@ const Follow = () => {
           data.users
             .filter((person) => {
               return (
-                !person.followers.includes(user._id) &&
+                !person.followers.includes(user._id) ||
                 person._id.toString() !== user._id.toString()
               );
             })

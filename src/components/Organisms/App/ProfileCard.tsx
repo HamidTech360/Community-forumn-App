@@ -5,7 +5,7 @@ import React, { ReactNode, useEffect, useState } from "react";
 import { Card, CardImg, Image, Nav } from "react-bootstrap";
 import About from "../../Templates/Profile/About";
 import Bookmarks from "../../Templates/Profile/Bookmarks";
-import Friends from "../../Templates/Profile/Friends";
+import Articles from "../../Templates/Profile/Articles";
 import Media from "../../Templates/Profile/Media";
 import Timeline from "../../Templates/Profile/Timeline";
 import { useSelector } from "@/redux/store";
@@ -17,13 +17,13 @@ interface IComponents {
   timeline: ReactNode;
   bookmarks: ReactNode;
   media: ReactNode;
-  friends: ReactNode;
+  articles: ReactNode;
 }
 const Components: IComponents = {
   timeline: <Timeline Posts={[]} />,
   about: <About />,
   media: <Media />,
-  friends: <Friends />,
+  articles: <Articles />,
   bookmarks: <Bookmarks />,
 };
 

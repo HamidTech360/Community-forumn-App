@@ -1,13 +1,17 @@
 .continueWith {
   margin-top: 3rem;
   text-align: center;
+
   position: relative;
   .buttons {
     margin-top: 0.5rem;
+    display: flex;
 
+    justify-content: center;
+    align-items: center;
     button {
-      width: 40px;
-      height: 40px;
+      width: 220px;
+      height: 45px;
       padding: 0;
       display: flex;
       align-items: center;
@@ -15,33 +19,33 @@
     }
 
     button:hover {
-      background: none !important;
+      background: none;
     }
   }
-  &::before {
-    content: "";
-    width: 30%;
-    border: 1px solid #afafaf;
-    position: absolute;
-    left: 10px;
-    bottom: 80px;
-    @media screen and (max-width: 1199px) {
-      left: -15px;
-      width: 25%;
-    }
-  }
-  &::after {
-    content: "";
-    width: 30%;
-    border: 1px solid #afafaf;
-    position: absolute;
-    right: 10px;
-    bottom: 80px;
-    @media screen and (max-width: 1199px) {
-      right: -15px;
-      width: 25%;
-    }
-  }
+  // &::before {
+  //   content: "";
+  //   width: 30%;
+  //   border: 1px solid #afafaf;
+  //   position: absolute;
+  //   left: 10px;
+  //   bottom: 160px;
+  //   @media screen and (max-width: 1199px) {
+  //     left: -15px;
+  //     width: 25%;
+  //   }
+  // }
+  // &::after {
+  //   content: "";
+  //   width: 30%;
+  //   border: 1px solid #afafaf;
+  //   position: absolute;
+  //   right: 10px;
+  //   bottom: 160px;
+  //   @media screen and (max-width: 1199px) {
+  //     right: -15px;
+  //     width: 25%;
+  //   }
+  // }
 }
 .imgWrapper {
   position: relative;
