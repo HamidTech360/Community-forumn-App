@@ -19,7 +19,7 @@ const Follow = () => {
         `${config.serverUrl}/api/users/${id}/follow`
       );
       console.log("follow:", data);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.log("follow Error:", error);
     }
