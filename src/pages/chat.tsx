@@ -2,8 +2,9 @@
 //@ts-nocheck
 import AuthContent from "@/components/Auth/AuthContent";
 import React, { useState, useRef, useEffect } from "react";
-import { Container, Row, Col } from "react-bootstrap";
-import { ToastContainer } from "react-toastify";
+import { Container, Row, Button } from "react-bootstrap";
+import {FiSend} from 'react-icons/fi'
+import Editor from "@/components/Organisms/SlateEditor/Editor";
 import axios from 'axios'
 import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
@@ -14,10 +15,12 @@ import MainDisplay from "@/components/Chat/MainDisplay";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { io } from 'socket.io-client';
 
+import styles from '@/styles/templates/chatEditor.module.scss'
+
 const Chat = () => {
   const user = useSelector(selectUser)
-  const mainDisplay = useRef();
-  const mainSidebar = useRef();
+  // const mainDisplay = useRef();
+  // const mainSidebar = useRef();
   const [conversations, setConversations] = useState([])
   const [currentChat, setCurrentChat] = useState(null)
   const [messages, setMessages] = useState([])
@@ -151,25 +154,34 @@ const sendMessage = async ()=>{
         <title>Chat</title>
       </Head>
       <div className="" style={{  }}>
-        <ToastContainer />
-        <div className="row" style={{ minHeight: "87vh" }}>
-          {/* SideBar */}
-          {showConversationList && 
-          <SideBar 
-              conversations={conversations} 
-              selectChat={selectChat} 
-          />}
+        
+        <div className="row" style={{minHeight:'60vh'}} >
+           
+          {showConversationList &&
+          <div className="col-lg-4 col-md-4 col-sm-12 col-xs-12 shadow">
+            <SideBar 
+                conversations={conversations} 
+                selectChat={selectChat} 
+            />
+          </div>
+          }
 
-          {/* Main Display */}
-         { showMsgArea && 
-           <MainDisplay
-            currentChat={currentChat}
-            messages={messages}
-            mainSidebar={mainSidebar}
-            mainDisplay={mainDisplay}
-            sendMessage={sendMessage}
-          />
-         }
+      
+          {showMsgArea &&
+          <div className="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            <MainDisplay
+                currentChat={currentChat}
+                messages={messages}
+                sendMessage={sendMessage}
+            />
+              <div className={styles.chatBox} style={{marginTop:'10px', marginRight:'20px'}}>
+                <Editor slim={true} pageAt="/chat" /> 
+                <Button onClick={()=>sendMessage()} style={{minWidth:'70px'}}> <FiSend size={22} /> </Button>
+              </div>
+          </div>
+          }
+           
+         
         </div>
       </div>
     </AuthContent>

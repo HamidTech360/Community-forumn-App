@@ -33,7 +33,7 @@ const usePagination = (url: string, dotTitle: string) => {
   const paginatedData: any = post?.flatMap((page) => page[dotTitle]) ?? [];
 
   const isReachedEnd =
-    post && post[post.length - 1][dotTitle].length < pageSize; // got last batch of data
+    post && post[post.length - 1][dotTitle]?.length < pageSize; // got last batch of data
 
   const isLoadingInitialData = !post && !error;
 

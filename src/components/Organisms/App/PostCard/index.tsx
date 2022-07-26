@@ -301,7 +301,7 @@ const PostCard = ({
             toggle();
           }}
         >
-          {Object.keys(post).length !== 0 && (
+          {Object.keys(post)?.length !== 0 && (
             <div
               className="post-content"
               dangerouslySetInnerHTML={{

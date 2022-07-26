@@ -43,7 +43,7 @@ const CreatePost = ({ pageAt }) => {
       <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
         <>
           <Image
-            src={data?.images.avatar || "/images/formbg.png"}
+            src={data?.images?.avatar || "/images/formbg.png"}
             width={50}
             height={50}
             alt="image"
