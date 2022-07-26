@@ -6,6 +6,7 @@ import { Button, Col, Container, Row } from "react-bootstrap";
 import Image from "next/image";
 
 import styles from "../../../../styles/form.module.scss";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
@@ -14,8 +15,7 @@ import { setAccessToken } from "@/misc/token";
 import config from "@/config";
 
 import jwt from "jsonwebtoken";
-import jwtDecode from "jwt-decode";
-import Script from "next/script";
+import { TiSocialFacebookCircular } from "react-icons/ti";
 
 const FormWrapper = ({ form }: { form: ReactNode }) => {
   useEffect(() => {
@@ -76,15 +76,21 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
     if (response.accessToken) {
       const { profileObj } = response;
       try {
-        const { data } = await axios.post("/auth/oauth/facebook", profileObj);
-        if (data.refreshToken) {
-          sessionStorage.setItem("token", data.refreshToken);
+        const { data } = await axios.post(
+          `${config.serverUrl}/api/auth/oauth?provider=facebook`,
+          profileObj
+        );
+        if (data.accessToken) {
+          localStorage.setItem("token", data.accessToken);
         }
 
         setAccessToken(data.accessToken);
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
-          console.log(error);
+          toast.error((error.response.data as Record<string, any>).message, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 7000,
+          });
         }
       }
     }
@@ -127,7 +133,28 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
               <div
                 className={`${styles.buttons} buttons d-flex gap-3 justify-content-center`}
               >
-                <Button variant="outline-primary" size="sm">
+                <FacebookLogin
+                  appId="620307832639763"
+                  callback={responseFacebook}
+                  scope="email public_profile"
+                  render={(renderProps: Record<string, any>) => (
+                    <Button
+                      onClick={renderProps.onClick}
+                      style={{ backgroundColor: "#3b5998" }}
+                    >
+                      <Image
+                        width={25}
+                        height={25}
+                        src="/images/facebook.png"
+                        alt="facebook"
+                        quality={100}
+                      />
+                      <span className="ms-2 py-3">Sign in</span>
+                    </Button>
+                  )}
+                />
+
+                {/* <Button variant="outline-primary" size="sm">
                   <Image
                     width={25}
                     height={25}
@@ -135,7 +162,7 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
                     alt="facebook"
                     quality={100}
                   />
-                </Button>
+                </Button> */}
                 <div id="google-button"></div>
                 {/* <Button
                   variant="outline-primary"
@@ -150,16 +177,6 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
                     quality={100}
                   />
                 </Button> */}
-                <div id="loginBtn"></div>
-                <Button variant="outline-primary" size="sm">
-                  <Image
-                    width={25}
-                    height={25}
-                    src="/images/linkedin.png"
-                    alt="google"
-                    quality={100}
-                  />
-                </Button>
               </div>
               <div className="mt-4">
                 {pathname === "/login" ? (
