@@ -24,7 +24,7 @@ const Contributors = ({ contributors }: any) => {
           className="d-flex align-items-center justify-content-start gap-2 m-2"
         >
           <Image
-            src={item?.avatar}
+            src={item?.images?.avatar || "/images/imagePlaceholder.jpg"}
             fluid
             alt={item?.firstName}
             roundedCircle
