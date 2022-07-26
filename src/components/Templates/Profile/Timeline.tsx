@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Button, Spinner } from "react-bootstrap";
-import { usePagination } from "../../../hooks/usePagination";
+import { usePagination } from "../../../hooks/usePagination-old";
 import PostCard from "../../Organisms/App/PostCard";
 import CreatePost from "../../Organisms/CreatePost";
 import styles from "@/styles/profile.module.scss";

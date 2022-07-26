@@ -24,7 +24,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { MdOutlineCancel } from "react-icons/md";
 // import { usePagination } from "@/hooks/usePagination";
-import usePagination, { Loader } from "@/hooks/usePagination2";
+import usePagination, { Loader } from "@/hooks/usePagination";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/feed.module.scss";
 // import formStyles from "../../styles/templates/new-group/formField.module.css";
@@ -54,7 +54,7 @@ const Feed = () => {
   });
 
   const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
-    usePagination("/api/feed");
+    usePagination("/api/feed", "feed");
 
   // const checkScroll = () => {
   //   if (window.scrollY > 100) {

@@ -228,7 +228,7 @@ const AuthHeader = () => {
             title={
               <>
                 <Image
-                  src={data?.avatar?.url || "/images/formbg.png"}
+                  src={data?.images.avatar || "/images/formbg.png"}
                   alt=""
                   className={styles.img}
                   roundedCircle
@@ -247,7 +247,7 @@ const AuthHeader = () => {
                 }}
                 onClick = {directProfile}> */}
                 <Image
-                  src={data?.avatar?.url || "/images/formbg.png"}
+                  src={data?.images?.avatar || "/images/formbg.png"}
                   alt=""
                   width={20}
                   height={20}

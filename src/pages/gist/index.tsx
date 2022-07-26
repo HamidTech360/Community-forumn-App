@@ -24,7 +24,7 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { toast, ToastContainer } from "react-toastify";
 import { FaTimes } from "react-icons/fa";
 import config from "../../config";
-import gistPagination, {Loader} from '@/hooks/gistPagination';
+import usePagination, { Loader } from "@/hooks/usePagination";
 
 //STYLES
 import styles from "../../styles/gist.module.scss";
@@ -68,8 +68,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     post: "",
   });
 
-  const { paginatedData, isReachedEnd, error, fetchNextPage } =
-    gistPagination("/api/gists");
+  const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
+    usePagination("/api/gists", "gists");
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -187,31 +187,36 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
               hasMore={!isReachedEnd}
               loader={<Loader />}
               endMessage={
-                <p style={{ textAlign: "center" }}>
-                  <b>Yay! You have seen it all</b>
+                <p style={{ textAlign: "center", color: "gray" }}>
+                  <b>Yay! You have seen it all...</b>
                 </p>
               }
               dataLength={paginatedData?.length ?? 0}
               initialScrollY={0}
-              className="shadow"
             >
-              <div className="w-100 justify-content-center">
-              {allGists.map((post, key) => (
-                <GistCard gist={post} key={`gist-${key}`} trimmed />
-              ))}
-            </div>
-          </InfiniteScroll>
+              <div className="justify-content-center">
+                {allGists.map((post, key) => (
+                  <GistCard gist={post} key={`gist-${key}`} trimmed />
+                ))}
+              </div>
 
-            {error && (
-              <p style={{ textAlign: "center" }}>
-                <b>Oops! Something went wrong</b>
-              </p>
-            )}
-            {/* <div className="w-100 justify-content-center">
-              {allGists.map((post, key) => (
-                <GistCard gist={post} key={`gist-${key}`} trimmed />
-              ))}
-            </div> */}
+              {isValidating && (
+                <p style={{ textAlign: "center", color: "gray" }}>
+                  <b>Fetching Post...</b>
+                </p>
+              )}
+              {error && (
+                <p
+                  style={{
+                    textAlign: "center",
+                    color: "gray",
+                    marginTop: "1.2rem",
+                  }}
+                >
+                  <b>Oops! Something went wrong</b>
+                </p>
+              )}
+            </InfiniteScroll>
           </Col>
         </Row>
       </Container>

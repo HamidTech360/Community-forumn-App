@@ -94,7 +94,6 @@ const PostCard = ({
     comments?.unshift(res.data);
     setModalPost({ ...post, comments });
 
-   
     setLoading(false);
     setShowComment(false);
   };
@@ -187,7 +186,6 @@ const PostCard = ({
           },
         }
       );
-      console.log(data);
       setBookMarked(true);
     } catch (error) {
       console.log(error.response?.data);
@@ -204,7 +202,7 @@ const PostCard = ({
           },
         }
       );
-      console.log(data);
+
       setBookMarked(false);
     } catch (error) {
       console.log(error.response?.data);
