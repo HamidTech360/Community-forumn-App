@@ -2,7 +2,7 @@
 //@ts-nocheck
 import AuthContent from "@/components/Auth/AuthContent";
 import React, { useState, useRef, useEffect } from "react";
-import { Container, Row, Button } from "react-bootstrap";
+import { Form, Row, Button } from "react-bootstrap";
 import {FiSend} from 'react-icons/fi'
 import Editor from "@/components/Organisms/SlateEditor/Editor";
 import axios from 'axios'
@@ -27,6 +27,7 @@ const Chat = () => {
   const [receivedMessage, setReceivedMessage] = useState(null)
   const [showConversationList, setShowConversationList] = useState(true)
   const [showMsgArea, setShowMsgArea] = useState(false)
+  const [newMsg, setNewMsg] = useState('')
   const socket:any = useRef()
 
   let emptyEditorInnerHtml =
@@ -117,13 +118,23 @@ useEffect(()=>{
         console.log(error.response?.data);
     }
 }
-
-const sendMessage = async ()=>{
+const handleChange = (e)=>{
+  setNewMsg(e.currentTarget.value)
+  console.log(newMsg);
+  
+}
+const sendMessage = async (e)=>{
+  e.preventDefault()
+  console.log(newMsg);
+  // alert(newMsg)
+  
   
   if(!currentChat) return
-  const newMsg = document.getElementById('/chat-slateRefId').innerHTML
-  if(newMsg===emptyEditorInnerHtml) return 
-  
+  // const newMsg = document.getElementById('/chat-slateRefId').innerHTML
+  // if(newMsg===emptyEditorInnerHtml) return 
+  if(newMsg===""){
+    return
+  }
   
   
   socket.current.emit("sendMessage", {
@@ -138,8 +149,8 @@ const sendMessage = async ()=>{
       }})
       console.log(data);
       setMessages([...messages, data.newMessage])
-      document.getElementById('/chat-slateRefId').innerHTML = emptyEditorInnerHtml
-      // setNewMsg('')
+     // document.getElementById('/chat-slateRefId').innerHTML = emptyEditorInnerHtml
+       setNewMsg('')
   }catch(error){
       console.log(error.response?.data);
       
@@ -155,7 +166,7 @@ const sendMessage = async ()=>{
       </Head>
       <div className="" style={{  }}>
         
-        <div className="row" style={{minHeight:'60vh'}} >
+        <div className="row" >
            
           {showConversationList &&
           <div className="col-lg-4 col-md-4 col-sm-12 col-xs-12 shadow">
@@ -174,9 +185,16 @@ const sendMessage = async ()=>{
                 messages={messages}
                 sendMessage={sendMessage}
             />
-              <div className={styles.chatBox} style={{marginTop:'10px', marginRight:'20px'}}>
-                <Editor slim={true} pageAt="/chat" /> 
-                <Button onClick={()=>sendMessage()} style={{minWidth:'70px'}}> <FiSend size={22} /> </Button>
+              <div className={styles.chatBox} style={{marginTop:'10px'}}>
+                {/* <Editor slim={true} pageAt="/chat" />  */}
+                <Form.Control
+                   as="textarea" 
+                   style={{marginRight:'10px'}}
+                   placeholder="Write something"
+                   value={newMsg}
+                   onChange={(e)=>handleChange(e)}
+                 />
+                <Button onClick={(e)=>sendMessage(e)} style={{minWidth:'70px'}}> <FiSend size={22} /> </Button>
               </div>
           </div>
           }

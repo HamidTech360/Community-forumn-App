@@ -1,4 +1,5 @@
 import useSWRInfinite from "swr/infinite";
+import React, {useEffect} from 'react'
 import config from "@/config";
 import axios from "axios";
 import { Spinner } from "react-bootstrap";
@@ -16,6 +17,7 @@ const usePagination = (url: string, dotTitle: string) => {
     const response = await axios.get(`${url}`);
     return response.data;
   };
+  
 
   const {
     data: post,

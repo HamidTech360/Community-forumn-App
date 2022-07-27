@@ -28,7 +28,7 @@ const MainDisplay = ({   currentChat, messages }) => {
    
      
       <>
-        <Card className={styles.cardBody} style={{ height: "77vh", marginRight:'0px', overflow:'scroll', overflowX:'hidden' }}>
+        <Card className={styles.cardBody} style={{  marginRight:'0px', overflow:'scroll', overflowX:'hidden' }}>
           <Card.Header className={styles.messageHeader}>
             {/* <div className="row">
           
