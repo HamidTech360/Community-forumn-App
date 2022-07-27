@@ -36,7 +36,7 @@ import {
   BsBookmark,
 } from "react-icons/bs";
 import { AiOutlineLike, AiFillLike, AiOutlineShareAlt } from "react-icons/ai";
-import { FaCommentDots } from "react-icons/fa";
+import { FaRegCommentDots } from "react-icons/fa";
 import Age from "../../../Atoms/Age";
 import DOMPurify from "dompurify";
 import styles from "@/styles/profile.module.scss";
@@ -129,15 +129,19 @@ const PostCard = ({
     {
       name: "Comment",
       reaction: true,
-      icon: <FaCommentDots size={20} />,
+      icon: <FaRegCommentDots size={24} />,
     },
     {
       name: "Bookmark",
       reaction: true,
       icon: bookmarked ? (
-        <BsFillBookmarkFill color="#086a6d " onClick={() => removeBookMark()} />
+        <BsFillBookmarkFill
+          color="#086a6d "
+          onClick={() => removeBookMark()}
+          size={22}
+        />
       ) : (
-        <BsBookmark onClick={() => handleBookMark()} />
+        <BsBookmark onClick={() => handleBookMark()} size={22} />
       ),
     },
   ];
@@ -181,7 +185,7 @@ const PostCard = ({
 
       // window.location.reload();
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data);
     }
   };
 
@@ -198,7 +202,7 @@ const PostCard = ({
       );
       setBookMarked(true);
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data);
     }
   };
 
@@ -225,7 +229,7 @@ const PostCard = ({
     if (post?.likes?.includes(user._id)) {
       setLiked(true);
     }
-    if (user.bookmarks?.includes(post?._id)) {
+    if (user?.bookmarks?.includes(post?._id)) {
       setBookMarked(true);
     } else {
       setBookMarked(false);
@@ -380,13 +384,15 @@ const PostCard = ({
           style={{
             cursor: "pointer",
           }}
+          onClick={() => {
+            if (showComment) {
+              setShowComment(!showComment);
+            }
+            setSelected(post);
+            toggle();
+          }}
         >
-          <div
-            onClick={() => {
-              setSelected(post);
-              toggle();
-            }}
-          >
+          <div>
             {/* {Object.keys(post).length !== 0 && (
             <div
               className="post-content"
@@ -444,7 +450,6 @@ const PostCard = ({
                     }
 
                     if (item.name === "Share") {
-                      console.log("SHARE");
                       // modalOpen;
                       toggleShare();
                       setSelectedShare(post);

@@ -32,44 +32,64 @@ function GistFooterBtn({ editorID }) {
 
   const createGist = async (e) => {
     e.preventDefault();
-    const editorInnerHtml = document.getElementById(editorID).innerHTML;
-    setUploading(true);
-    try {
-      const response = await axios.post(
-        `${config.serverUrl}/api/gists`,
-        {
-          title: showGistTitle,
-          post: editorInnerHtml,
-          categories: "Migration",
-          country: "Ghana",
-        },
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
-      toast.success("Gist uploaded successfully", {
+
+    const editorInnerHtml = (
+      document.getElementById(editorID) as HTMLInputElement
+    ).innerHTML;
+
+    let emptyEditorInnerHtml =
+      '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
+
+    if (
+      showGistTitle.trim() === "" ||
+      editorInnerHtml === emptyEditorInnerHtml
+    ) {
+      toast.warn("Type your message to proceed", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
       });
+      return;
+    }
 
-      setUploading(false);
-      dispatch(uploadSuccess(response.data));
-    } catch (error) {
-      if (!localStorage.getItem("accessToken")) {
-        toast.error("You must login to create a  Gist", {
+    if (editorInnerHtml.trim() !== "") {
+      setUploading(true);
+      try {
+        const response = await axios.post(
+          `${config.serverUrl}/api/gists`,
+          {
+            title: showGistTitle,
+            post: editorInnerHtml,
+            categories: "Migration",
+            country: "Ghana",
+          },
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        toast.success("Gist uploaded successfully", {
           position: toast.POSITION.TOP_RIGHT,
           toastId: "1",
         });
-      } else {
-        toast.error("Failed to upload Gist: Try Again", {
-          position: toast.POSITION.TOP_RIGHT,
-          toastId: "1",
-        });
+
+        setUploading(false);
+        dispatch(uploadSuccess(response.data));
+      } catch (error) {
+        if (!localStorage.getItem("accessToken")) {
+          toast.error("You must login to create a Gist", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+        } else {
+          toast.error("Failed to upload Gist: Try Again", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+        }
         dispatch(uploadFailed(error.response?.data));
+        setUploading(false);
       }
-      setUploading(false);
     }
   };
 

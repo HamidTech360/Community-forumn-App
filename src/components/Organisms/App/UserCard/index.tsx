@@ -60,12 +60,12 @@ const UserCard = () => {
       >
         <div className="d-flex flex-column align-items-center">
           {/* <span>{user.following?.length}</span> */}
-          <span>{data.following?.length}</span>
+          <span>{data?.following?.length}</span>
           <small>following</small>
         </div>
         <div className="d-flex flex-column align-items-center ">
           {/* <span>{user.followers?.length}</span> */}
-          <span>{data.followers?.length}</span>
+          <span>{data?.followers?.length}</span>
           <small>followers</small>
         </div>
       </div>

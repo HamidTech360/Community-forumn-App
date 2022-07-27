@@ -14,6 +14,7 @@ import {
   selectShowPostModal,
   selectPost,
 } from "@/reduxFeatures/api/postSlice";
+import { setNewPost } from "@/reduxFeatures/api/postSlice";
 
 function BlogPostFooterBtn({ editorID, handleClick }: any) {
   const router = useRouter();
@@ -32,46 +33,64 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
 
   const createPost = async (e) => {
     e.preventDefault();
-    const editorInnerHtml = document.getElementById(editorID).innerHTML;
 
-    setUploading(true);
-    try {
-      const response = await axios.post(
-        `${config.serverUrl}/api/posts`,
-        { postTitle: showPostTitle, postBody: editorInnerHtml, groupId },
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
-      // console.log(response.data);
+    const editorInnerHtml = (
+      document.getElementById(editorID) as HTMLInputElement
+    ).innerHTML;
 
-      toast.success("Post uploaded successfully", {
+    let emptyEditorInnerHtml =
+      '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
+
+    if (
+      showPostTitle.trim() === "" ||
+      editorInnerHtml === emptyEditorInnerHtml
+    ) {
+      toast.warn("Type your Message Title and Message to proceed", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
       });
-      setUploading(false);
-      dispatch(setShowPostModal(false));
+      return;
+    }
 
-      // const fetchPost = async () => {
+    if (editorInnerHtml.trim() !== "") {
+      setUploading(true);
 
-      // };
-      // fetchPost();
-    } catch (error) {
-      // console.log(error.response?.data);
-      if (!localStorage.getItem("accessToken")) {
-        toast.error("You must login to create a  post", {
+      try {
+        const response = await axios.post(
+          `${config.serverUrl}/api/posts`,
+          { postTitle: showPostTitle, postBody: editorInnerHtml, groupId },
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        // console.log(response.data);
+
+        toast.success("Post uploaded successfully", {
           position: toast.POSITION.TOP_RIGHT,
           toastId: "1",
         });
-      } else {
-        toast.error("Failed to upload post: Try Again", {
-          position: toast.POSITION.TOP_RIGHT,
-          toastId: "1",
-        });
+
+        // Auto update Blog Post in /explore
+        dispatch(setNewPost(response.data));
+        setUploading(false);
+        dispatch(setShowPostModal(false));
+      } catch (error) {
+        // console.log(error.response?.data);
+        if (!localStorage.getItem("accessToken")) {
+          toast.error("You must login to create a post", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+        } else {
+          toast.error("Failed to upload post: Try Again", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+        }
+        setUploading(false);
       }
-      setUploading(false);
     }
   };
 

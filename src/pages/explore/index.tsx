@@ -36,6 +36,7 @@ import {
   selectPostTitle,
   setIsFetching,
   selectIsFetching,
+  selectNewPost,
 } from "@/reduxFeatures/api/postSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import usePagination, { Loader } from "@/hooks/usePagination";
@@ -48,6 +49,8 @@ const Explore = ({}) => {
   const showPostModal = useSelector(selectShowPostModal);
   const user = useSelector(selectUser);
   // const isFetching = useSelector(selectIsFetching);
+
+  const newPost = useSelector(selectNewPost);
 
   const [categories, setCategories] = useState([
     { name: "How to work abroad" },
@@ -81,6 +84,11 @@ const Explore = ({}) => {
       }
     }
   }, [paginatedData]);
+
+  useEffect(() => {
+    fetchNextPage();
+    setPosts(paginatedData);
+  }, [newPost]);
 
   // useEffect(() => {
   //   const fetchPost = async () => {

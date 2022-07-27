@@ -5,6 +5,7 @@ import type { RootState } from "../../redux/store";
 // declaring the types for our state
 export type PostState = {
   post: any;
+  newPost: object;
   modal: boolean;
   postFormData: {
     postTitle: string;
@@ -14,6 +15,7 @@ export type PostState = {
 
 const initialState: PostState = {
   post: null,
+  newPost: {},
   modal: false,
   postFormData: {
     postTitle: "",
@@ -43,12 +45,16 @@ export const postSlice = createSlice({
     setIsFetching: (state, action: PayloadAction<boolean>) => {
       state.isFetching = action.payload;
     },
+    setNewPost: (state, action: PayloadAction<object>) => {
+      state.newPost = action.payload;
+    },
   },
 });
 // Here we are just exporting the actions from this slice, so that we can call them anywhere in our app.
 export const {
   uploadPost,
   setPosts,
+  setNewPost,
   setShowPostModal,
   setPostTitle,
   setIsFetching,
@@ -57,6 +63,7 @@ export const {
 
 // calling the above actions would be useless if we could not access the data in the state. So, we use something called a selector which allows us to select a value from the state.
 export const selectPost = (state: RootState) => state.post.post;
+export const selectNewPost = (state: RootState) => state.post.newPost;
 export const selectShowPostModal = (state: RootState) => state.post.modal;
 export const selectPostTitle = (state: RootState) =>
   state.post.postFormData.postTitle;

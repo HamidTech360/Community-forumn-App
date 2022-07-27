@@ -79,7 +79,7 @@ export function ModalRow({ selected }) {
 }
 
 export function ModalRowShare({ selectedShare }) {
-  console.log("selectedShare++:", selectedShare);
+  // console.log("selectedShare++:", selectedShare);
   const router = useRouter();
 
   // const shareUrl = `${config.serverUrl}/feed/${selectedShare?._id}`
@@ -97,63 +97,54 @@ export function ModalRowShare({ selectedShare }) {
   };
   return (
     <>
-      {/* {selectedShare.images ? (
-        <Row>
-          <Col lg={6}></Col>
-          <Col lg={6}>
-            {" "}
-            <ModalCard post={selectedShare} />
-          </Col>
-        </Row>
-      ) : (
-        <Row>
-          <Col lg={12} className="px-5">
-            <ModalCard post={selectedShare} />
-          </Col>
-        </Row>
-      )} */}
-
       <div className="container">
-        <div className="row">
-          <div className="col-3">
+        <h6>
+          <em>
+            <u>Share Post On</u>
+          </em>
+          :
+        </h6>
+        <div className="row justify-content-between align-items-center m-3">
+          {/* <div className="col-3">
             <button className="btm" onClick={changeRoute}>
               hi
             </button>
-          </div>
+          </div> */}
 
-          <div className="col-9">
+          <div className="col-3 mb-3">
             <FacebookShareButton
               url={shareUrl}
-              quote={"Facebook share"}
-              hashtag={"#hashtag"}
-              // description={"aiueo"}
-              // className="Demo__some-network__share-button"
+              quote={"Connect, Explore & Share"}
+              hashtag={"#setlinn"}
+              // description={"Connect, Explore & Share"}
             >
               <FacebookShareCount url={shareUrl}>
                 {(shareCount) => (
                   <span className="myShareCountWrapper">{shareCount}</span>
                 )}
               </FacebookShareCount>
-              <FacebookIcon size={40} round /> Facebook share
+              <FacebookIcon size={40} round />
             </FacebookShareButton>
-            <br />
+          </div>
+
+          <div className="col-3 mb-3">
             <TwitterShareButton
-              title={"test"}
               url={shareUrl}
-              hashtags={["hashtag1", "hashtag2"]}
+              title={"Connect, Explore & Share"}
+              hashtags={["setlinn", "AskSetlinn"]}
             >
               <TwitterIcon size={40} round />
-              Facebook share
             </TwitterShareButton>
-            <br />
+          </div>
+
+          <div className="col-3 mb-3">
             <WhatsappShareButton
-              title={"test"}
+              title={"Connect, Explore & Share"}
               url={shareUrl}
-              // hashtags={["hashtag1", "hashtag2"]}
+              // hashtags={["setlinn", "AskSetlinn"]}
             >
               <WhatsappIcon size={40} round />
-              WhatsApp share
-            </WhatsappShareButton>
+            </WhatsappShareButton>{" "}
           </div>
         </div>
       </div>

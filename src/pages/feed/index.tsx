@@ -41,20 +41,20 @@ import InfiniteScroll from "react-infinite-scroll-component";
 // import { FacebookIcon, TwitterIcon } from "react-share";
 
 const Feed = () => {
-  const data = useSelector(selectUser);
-  const dispatch = useDispatch();
+  // const data = useSelector(selectUser);
+  // const dispatch = useDispatch();
   const newFeed = useSelector(selectNewFeed);
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
-  const [scrollInitialised, setScrollInitialised] = useState(false);
+  // const [scrollInitialised, setScrollInitialised] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [isFetching, setIsFetching] = useState(true);
-  const [uploading, setUploading] = useState(false);
+  // const [isFetching, setIsFetching] = useState(true);
+  // const [uploading, setUploading] = useState(false);
   // const [showModal, setShowModal] = useState(false);
   const { modalOpen, toggle, selected, setSelected } = useModalWithData();
 
-  const [formData, setFormData] = useState({
-    post: "",
-  });
+  // const [formData, setFormData] = useState({
+  //   post: "",
+  // });
 
   const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
     usePagination("/api/feed", "feed");
@@ -75,13 +75,10 @@ const Feed = () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   // Auto-Update new post to feed
-  //   console.log("newFeed:", newFeed);
-  //   // if (newFeed) {
-  //   setPosts([newFeed?.feed, ...posts]);
-  //   // }
-  // }, [newFeed]);
+  useEffect(() => {
+    fetchNextPage();
+    setPosts(paginatedData);
+  }, [newFeed]);
 
   useEffect(() => {
     if (paginatedData) {
@@ -113,7 +110,7 @@ const Feed = () => {
                 <UserCard />
               </div>
               <div className="col-xs-12">
-                <Discussions posts={posts} />
+                <Discussions />
               </div>
             </div>
           </div>

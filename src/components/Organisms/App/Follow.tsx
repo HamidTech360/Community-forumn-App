@@ -36,11 +36,14 @@ const Follow = () => {
         } catch (error) {
           localStorage.removeItem("accessToken");
         }
+
+        document.getElementById(`followBtn-${id}`).style.display = "none";
       })();
     } catch (error) {
       // console.error("follow Error:", error);
     }
   };
+
   useEffect(() => {
     (async function () {
       try {
@@ -55,7 +58,8 @@ const Follow = () => {
           sliceNum = 5;
         }
 
-        await data.users.sort(function () {
+        await data.users.sort(function (newUser) {
+          console.log("newUser:", newUser?._id);
           return 0.5 - Math.random();
         });
 
@@ -63,7 +67,7 @@ const Follow = () => {
           data.users
             .filter((person) => {
               return (
-                !person.followers.includes(user._id) ||
+                // !person.followers.includes(user._id) ||
                 person._id.toString() !== user._id.toString()
               );
             })
@@ -119,6 +123,7 @@ const Follow = () => {
 
             <div className="col-xs-3 justify-content-end">
               <Button
+                id={`followBtn-${user?._id}`}
                 variant="outline-primary"
                 size="sm"
                 onClick={() => handleFollow(user?._id)}
@@ -134,26 +139,26 @@ const Follow = () => {
                   )
                 )} */}
                 {/* {userMapper?.following?.some((item) => {
-                // console.log("item?._id:", item?._id);
-                // console.log("user?._id:", user?._id);
-                item?._id === user?._id ? (
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    onClick={() => handleFollow(user?._id)}
-                  >
-                    Following
-                  </Button>
-                ) : (
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    onClick={() => handleFollow(user?._id)}
-                  >
-                    Follow
-                  </Button>
-                );
-              })} */}
+                  // console.log("item?._id:", item?._id);
+                  // console.log("user?._id:", user?._id);
+                  item?._id === user?._id ? (
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => handleFollow(user?._id)}
+                    >
+                      Following
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => handleFollow(user?._id)}
+                    >
+                      Follow
+                    </Button>
+                  );
+                })} */}
                 Follow
               </Button>
             </div>

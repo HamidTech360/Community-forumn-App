@@ -8,6 +8,7 @@ import {
   Col,
   Dropdown,
   Image,
+  Modal,
   NavDropdown,
   Row,
 } from "react-bootstrap";
@@ -25,7 +26,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { user as userAuth } from "@/reduxFeatures/authState/authStateSlice";
 
-import { FaCommentDots } from "react-icons/fa";
+import { FaRegCommentDots } from "react-icons/fa";
 import Age from "../../../Atoms/Age";
 import DOMPurify from "dompurify";
 import styles from "@/styles/profile.module.scss";
@@ -44,6 +45,9 @@ import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { useRouter } from "next/router";
 import Comment from "@/components/Organisms/App/Comment";
 import { deleteSecuredRequest } from "@/utils/makeSecuredRequest";
+import { ModalRowShare, useModalWithShare } from "@/hooks/useModalWithData";
+import { MdOutlineCancel } from "react-icons/md";
+import { BiArrowBack } from "react-icons/bi";
 
 const ModalCard = ({
   post,
@@ -66,6 +70,9 @@ const ModalCard = ({
   // const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
+    useModalWithShare();
+
   const postButton = [
     {
       name: "Like",
@@ -84,15 +91,19 @@ const ModalCard = ({
     {
       name: "Comment",
       reaction: true,
-      icon: <FaCommentDots size={20} />,
+      icon: <FaRegCommentDots size={24} />,
     },
     {
       name: "Bookmark",
       reaction: true,
       icon: bookmarked ? (
-        <BsFillBookmarkFill color="#086a6d " onClick={() => removeBookMark()} />
+        <BsFillBookmarkFill
+          color="#086a6d "
+          onClick={() => removeBookMark()}
+          size={22}
+        />
       ) : (
-        <BsBookmark onClick={() => handleBookMark()} />
+        <BsBookmark onClick={() => handleBookMark()} size={22} />
       ),
     },
   ];
@@ -239,300 +250,334 @@ const ModalCard = ({
   };
 
   return (
-    <Row>
-      <Col sm={12} md={12} lg={5} className={styles.column}>
-        {!trimmed && (
-          <Image
-            src={"/images/formbg.png"}
-            alt={""}
-            className={styles.imgModal}
-            fluid
-          />
-        )}
-      </Col>
+    <>
+      <Row>
+        <Col sm={12} md={12} lg={5} className={styles.column}>
+          {!trimmed && (
+            <Image
+              src={"/images/formbg.png"}
+              alt={""}
+              className={styles.imgModal}
+              fluid
+            />
+          )}
+        </Col>
 
-      <Col sm={12} md={12} lg={7} className={styles.cardColumn}>
-        <Card
-          id={post?.id}
-          className="my-3 cards"
-          style={{
-            border: "none",
-            width: "100%",
-            // padding: "-3rem",
-          }}
-        >
-          <Card.Title
-            // className={`position-relative d-flex justify-content-start gap-2 pb-2 border-bottom ${styles.title}`}
-            className={`border-bottom ${styles.title}`}
+        <Col sm={12} md={12} lg={7} className={styles.cardColumn}>
+          <Card
+            id={post?.id}
+            className="my-3 cards"
+            style={{
+              border: "none",
+              width: "100%",
+              // padding: "-3rem",
+            }}
           >
-            <div className="row">
-              <div className="col-1">
-                <Image
-                  src={"/images/imagePlaceholder.jpg"}
-                  width={45}
-                  height={45}
-                  alt=""
-                  roundedCircle
-                  style={{ cursor: "pointer" }}
-                  onClick={redirectPage}
-                />
-              </div>
-
-              {/* <div className="d-flex flex-column"> */}
-              <div className="col-5 col-sm-10 col-md-8 ms-4 me-xl-0">
-                <div
-                  className={styles.div}
-                  // onClick={redirectPage}
-                  // style={{ cursor: "pointer" }}
-                >
-                  <span
-                    style={{
-                      fontWeight: 500,
-                      cursor: "pointer",
-                      color: "var(--bs-primary)",
-                    }}
+            <Card.Title
+              // className={`position-relative d-flex justify-content-start gap-2 pb-2 border-bottom ${styles.title}`}
+              className={`border-bottom ${styles.title}`}
+            >
+              <div className="row">
+                <div className="col-1">
+                  <Image
+                    src={"/images/imagePlaceholder.jpg"}
+                    width={45}
+                    height={45}
+                    alt=""
+                    roundedCircle
+                    style={{ cursor: "pointer" }}
                     onClick={redirectPage}
-                    dangerouslySetInnerHTML={{
-                      __html: sanitizer(
-                        `${post.author?.firstName} ${post.author?.lastName}`
-                      ),
-                    }}
                   />
-                  <br />
-                  {post?.postTitle || post?.title ? (
-                    <>
-                      <span
-                        style={{
-                          marginTop: "5px",
-                          fontWeight: 500,
-                          fontSize: "18px",
-                          color: "black",
-                        }}
-                        dangerouslySetInnerHTML={{
-                          __html: trimmed
-                            ? sanitizer(truncate(post?.postTitle, 250).html) ||
-                              sanitizer(truncate(post?.title, 250).html)
-                            : sanitizer(truncate(post?.postTitle, 250).html) ||
-                              sanitizer(truncate(post?.title, 250).html),
-                        }}
-                      />
-                      <br />
-                    </>
-                  ) : null}
-                  <small
-                    style={{
-                      marginTop: "5px",
-                      fontWeight: 400,
-                      fontSize: "13px",
-                      color: "gray",
-                    }}
-                  >
-                    <Age time={post?.createdAt} />
-                  </small>
                 </div>
-              </div>
 
-              <div className="col-1 col-md-2" style={{ marginTop: "-.8rem" }}>
-                <NavDropdown
-                  // className={`position-absolute end-0 ${styles.dropdown}`}
-                  drop="down"
-                  title={
-                    <Button
-                      variant="link"
-                      // className="dot-btn"
-                      className="text-dark"
-                      size="lg"
+                {/* <div className="d-flex flex-column"> */}
+                <div className="col-5 col-sm-10 col-md-8 ms-4 me-xl-0">
+                  <div
+                    className={styles.div}
+                    // onClick={redirectPage}
+                    // style={{ cursor: "pointer" }}
+                  >
+                    <span
+                      style={{
+                        fontWeight: 500,
+                        cursor: "pointer",
+                        color: "var(--bs-primary)",
+                      }}
+                      onClick={redirectPage}
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizer(
+                          `${post.author?.firstName} ${post.author?.lastName}`
+                        ),
+                      }}
+                    />
+                    <br />
+                    {post?.postTitle || post?.title ? (
+                      <>
+                        <span
+                          style={{
+                            marginTop: "5px",
+                            fontWeight: 500,
+                            fontSize: "18px",
+                            color: "black",
+                          }}
+                          dangerouslySetInnerHTML={{
+                            __html: trimmed
+                              ? sanitizer(
+                                  truncate(post?.postTitle, 250).html
+                                ) || sanitizer(truncate(post?.title, 250).html)
+                              : sanitizer(
+                                  truncate(post?.postTitle, 250).html
+                                ) || sanitizer(truncate(post?.title, 250).html),
+                          }}
+                        />
+                        <br />
+                      </>
+                    ) : null}
+                    <small
+                      style={{
+                        marginTop: "5px",
+                        fontWeight: 400,
+                        fontSize: "13px",
+                        color: "gray",
+                      }}
                     >
-                      <HiDotsVertical size={25} />
-                    </Button>
-                  }
-                >
-                  {/* <NavDropdown.Item className={styles.item}>
+                      <Age time={post?.createdAt} />
+                    </small>
+                  </div>
+                </div>
+
+                <div className="col-1 col-md-2" style={{ marginTop: "-.8rem" }}>
+                  <NavDropdown
+                    // className={`position-absolute end-0 ${styles.dropdown}`}
+                    drop="down"
+                    title={
+                      <Button
+                        variant="link"
+                        // className="dot-btn"
+                        className="text-dark"
+                        size="lg"
+                      >
+                        <HiDotsVertical size={25} />
+                      </Button>
+                    }
+                  >
+                    {/* <NavDropdown.Item className={styles.item}>
                   <RiClipboardFill /> &nbsp; Copy post link
                 </NavDropdown.Item> */}
-                  {/* <NavDropdown.Item className={styles.item}>
+                    {/* <NavDropdown.Item className={styles.item}>
                   <BsFolderFill /> &nbsp; Open Post
                 </NavDropdown.Item> */}
-                  {user?._id !== post?.author?._id ? (
-                    <>
-                      <NavDropdown.Item
-                        className={styles.item}
-                        style={{ backgroundColor: "rgb(237, 236, 236)" }}
-                      >
-                        <RiFlagFill /> Report post
-                      </NavDropdown.Item>
-                      <NavDropdown.Item
-                        className={styles.item}
-                        onClick={async () => {
-                          let confirmUnFollow = window.confirm(
-                            `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
-                          );
-                          if (confirmUnFollow) unFollow(post?.author?._id);
-                        }}
-                      >
-                        <BsXCircleFill /> Unfollow @
-                        {post?.author?.firstName?.split(" ")[0]}
-                        {post?.author?.lastName?.substring(0, 1)}
-                      </NavDropdown.Item>
-                    </>
-                  ) : null}
-                  {/* <NavDropdown.Item className={styles.item}>
+                    {user?._id !== post?.author?._id ? (
+                      <>
+                        <NavDropdown.Item
+                          className={styles.item}
+                          style={{ backgroundColor: "rgb(237, 236, 236)" }}
+                        >
+                          <RiFlagFill /> Report post
+                        </NavDropdown.Item>
+                        <NavDropdown.Item
+                          className={styles.item}
+                          onClick={async () => {
+                            let confirmUnFollow = window.confirm(
+                              `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
+                            );
+                            if (confirmUnFollow) unFollow(post?.author?._id);
+                          }}
+                        >
+                          <BsXCircleFill /> Unfollow @
+                          {post?.author?.firstName?.split(" ")[0]}
+                          {post?.author?.lastName?.substring(0, 1)}
+                        </NavDropdown.Item>
+                      </>
+                    ) : null}
+                    {/* <NavDropdown.Item className={styles.item}>
                   <BsXCircleFill /> &nbsp; Unfollow &nbsp;
                   {post.name.split(" ")[0]}
                 </NavDropdown.Item> */}
-                </NavDropdown>
+                  </NavDropdown>
+                </div>
               </div>
-            </div>
-          </Card.Title>
+            </Card.Title>
 
-          <Card.Body
-            style={{
-              cursor: "pointer",
-            }}
-          >
-            {Object.keys(post).length !== 0 && (
-              <div
-                className="post-content"
-                dangerouslySetInnerHTML={{
-                  __html: trimmed
-                    ? sanitizer(truncate(post?.postBody, 250).html) ||
-                      sanitizer(truncate(post?.post, 250).html)
-                    : sanitizer(truncate(post?.postBody, 250).html) ||
-                      sanitizer(truncate(post?.post, 250).html),
-                }}
-                // dangerouslySetInnerHTML={{
-                //   __html: trimmed
-                //     ? post?.postBody?.slice(0, 500) ||
-                //       post?.post?.slice(0, 500) + "..." ||
-                //       post?.postBody
-                //     : post?.postBody || post?.post,
-                // }}
-              />
-            )}
-
-            <div className={styles.trimmed}>
-              {!trimmed && (
-                <Image
-                  src={"/images/formbg.png"}
-                  alt={""}
-                  fluid
-                  className={styles.imgModal}
+            <Card.Body>
+              {Object.keys(post).length !== 0 && (
+                <div
+                  className="post-content"
+                  dangerouslySetInnerHTML={{
+                    __html: trimmed
+                      ? sanitizer(truncate(post?.postBody, 250).html) ||
+                        sanitizer(truncate(post?.post, 250).html)
+                      : sanitizer(truncate(post?.postBody, 250).html) ||
+                        sanitizer(truncate(post?.post, 250).html),
+                  }}
+                  // dangerouslySetInnerHTML={{
+                  //   __html: trimmed
+                  //     ? post?.postBody?.slice(0, 500) ||
+                  //       post?.post?.slice(0, 500) + "..." ||
+                  //       post?.postBody
+                  //     : post?.postBody || post?.post,
+                  // }}
                 />
               )}
-            </div>
-          </Card.Body>
 
-          {/* <Card.Footer
+              <div className={styles.trimmed}>
+                {!trimmed && (
+                  <Image
+                    src={"/images/formbg.png"}
+                    alt={""}
+                    fluid
+                    className={styles.imgModal}
+                  />
+                )}
+              </div>
+            </Card.Body>
+
+            {/* <Card.Footer
             className={`mx-1 d-flex justify-content-between bg-white ${styles.cardFooter}`}
           > */}
-          <Card.Footer className="justify-content-between bg-white px-0">
-            <div className="row">
-              {postButton.map((item, key) => (
-                <div className="col-3" key={key}>
-                  <Button
-                    // key={key}
-                    // onClick={() => item.name === "Like" && handleLike()}
-                    variant="none"
-                    // disabled={item.name === "Like" && post.likes?.includes(user._id)}
-                    // className="d-flex justify-content-center gap-1 align-items-center"
-                    className="d-flex justify-content-center align-items-center"
-                    // onClick={() => {
-                    //   if (item.name === "Comment") {
-                    //     setShowComment(!showComment);
-                    //   }
-                    // }}
-                  >
-                    {item.icon}
-                    {item.name === "Like" && (
-                      <span
-                        style={{ marginLeft: "7px" }}
-                        className="mx-2 text-secondary"
-                      >
-                        {post.likes?.length || 0}
-                      </span>
-                    )}
-
-                    {item.name === "Comment" && (
-                      <span
-                        style={{ marginLeft: "7px" }}
-                        className="mx-2 text-secondary"
-                        // onClick={() => setShowComment(!showComment)}
-                      >
-                        {post.comments?.length || 0}
-                      </span>
-                    )}
-
-                    <span
-                      // className={`d-none d-md-block ${styles.footerName}`}
-                      className="d-none d-xl-block"
-                      style={{ marginLeft: "7px" }}
+            <Card.Footer className="justify-content-between bg-white px-0">
+              <div className="row">
+                {postButton.map((item, key) => (
+                  <div className="col-3" key={key}>
+                    <Button
+                      // key={key}
+                      // onClick={() => item.name === "Like" && handleLike()}
+                      variant="none"
+                      // disabled={item.name === "Like" && post.likes?.includes(user._id)}
+                      // className="d-flex justify-content-center gap-1 align-items-center"
+                      className="d-flex justify-content-center align-items-center"
+                      onClick={() => {
+                        if (item.name === "Share") {
+                          // modalOpen;
+                          toggleShare();
+                          setSelectedShare(postButton);
+                          // document.getElementById("dropDownId").click();
+                        }
+                      }}
                     >
-                      {item.name}
-                    </span>
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </Card.Footer>
+                      {item.icon}
+                      {item.name === "Like" && (
+                        <span
+                          style={{ marginLeft: "7px" }}
+                          className="mx-2 text-secondary"
+                        >
+                          {post.likes?.length || 0}
+                        </span>
+                      )}
 
-          <section>
-            <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
-            <div className="row">
-              <div className="d-none d-md-flex col-md-2">
-                <Image
-                  src={modalPost.authorImage || "/images/imagePlaceholder.jpg"}
-                  width={50}
-                  height={50}
-                  // className="img-fluid"
-                  roundedCircle={true}
-                  alt="Author's Image"
-                />
+                      {item.name === "Comment" && (
+                        <span
+                          style={{ marginLeft: "7px" }}
+                          className="mx-2 text-secondary"
+                          // onClick={() => setShowComment(!showComment)}
+                        >
+                          {post.comments?.length || 0}
+                        </span>
+                      )}
+
+                      <span
+                        // className={`d-none d-md-block ${styles.footerName}`}
+                        className="d-none d-xl-block"
+                        style={{ marginLeft: "7px" }}
+                      >
+                        {item.name}
+                      </span>
+                    </Button>
+                  </div>
+                ))}
               </div>
-              <div className="col-12 col-md-10">
-                {/* <div className="form-floating shadow"> */}
-                <div className="shadow">
-                  <textarea
-                    id="articleTextarea"
-                    className="form-control"
-                    placeholder="."
-                    onChange={(e) => setCommentPost(e.target.value)}
-                    style={{ height: "100px" }}
-                  ></textarea>
-                  <label htmlFor="articleTextarea">Comments</label>
+            </Card.Footer>
+
+            <section>
+              <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
+              <div className="row">
+                <div className="d-none d-md-flex col-md-2">
+                  <Image
+                    src={
+                      modalPost.authorImage || "/images/imagePlaceholder.jpg"
+                    }
+                    width={50}
+                    height={50}
+                    // className="img-fluid"
+                    roundedCircle={true}
+                    alt="Author's Image"
+                  />
+                </div>
+                <div className="col-12 col-md-10">
+                  {/* <div className="form-floating shadow"> */}
+                  <div className="shadow">
+                    <textarea
+                      id="articleTextarea"
+                      className="form-control"
+                      placeholder="."
+                      onChange={(e) => setCommentPost(e.target.value)}
+                      style={{ height: "100px" }}
+                    ></textarea>
+                    <label htmlFor="articleTextarea">Comments</label>
+                  </div>
+                </div>
+                <div className="col-5 ms-auto d-grid">
+                  <button
+                    className="btn btn-sm btn-primary mt-3 d-inline"
+                    onClick={postComment}
+                  >
+                    Send
+                    {loading && (
+                      <div
+                        className="spinner-grow spinner-grow-sm text-light"
+                        role="status"
+                      ></div>
+                    )}
+                  </button>
                 </div>
               </div>
-              <div className="col-5 ms-auto d-grid">
-                <button
-                  className="btn btn-sm btn-primary mt-3 d-inline"
-                  onClick={postComment}
-                >
-                  Send
-                  {loading && (
-                    <div
-                      className="spinner-grow spinner-grow-sm text-light"
-                      role="status"
-                    ></div>
-                  )}
-                </button>
+            </section>
+            <section>
+              <h6 style={{ fontWeight: "bolder" }}>
+                Comments ({post.comments?.length})
+              </h6>
+              <div className="row">
+                <div className="col-12 mt-4">
+                  {post.comments?.length > 0 &&
+                    post.comments?.map((comment, index) => {
+                      return (
+                        <Comment key={`post_${index}`} comment={comment} />
+                      );
+                    })}
+                </div>
               </div>
-            </div>
-          </section>
-          <section>
-            <h6 style={{ fontWeight: "bolder" }}>
-              Comments ({post.comments?.length})
-            </h6>
-            <div className="row">
-              <div className="col-12 mt-4">
-                {post.comments?.length > 0 &&
-                  post.comments?.map((comment, index) => {
-                    return <Comment key={`post_${index}`} comment={comment} />;
-                  })}
-              </div>
-            </div>
-          </section>
-        </Card>
-      </Col>
-    </Row>
+            </section>
+          </Card>
+        </Col>
+      </Row>
+
+      <Modal
+        show={modalOpenShare}
+        className={styles.FeedModal}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        size="sm"
+        scrollable={true}
+      >
+        <span className={styles.openBtn}>
+          {" "}
+          <MdOutlineCancel
+            style={{ cursor: "pointer" }}
+            size={30}
+            onClick={() => toggleShare()}
+          />{" "}
+        </span>
+        <span className={styles.closeBtn}>
+          {" "}
+          <BiArrowBack
+            style={{ cursor: "pointer" }}
+            size={30}
+            onClick={() => toggleShare()}
+          />{" "}
+        </span>
+        <ModalRowShare selectedShare={selectedShare} />
+      </Modal>
+    </>
   );
 };
 

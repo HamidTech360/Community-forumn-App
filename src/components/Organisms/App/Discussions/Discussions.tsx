@@ -7,26 +7,47 @@ import truncate from "trunc-html";
 import { useModalWithData, ModalRow } from "@/hooks/useModalWithData";
 import { MdOutlineCancel } from "react-icons/md";
 import { BiArrowBack } from "react-icons/bi";
-import styles from "@/styles/profile.module.scss";
 
-const Discussions = ({ posts }: any) => {
+import { useDispatch, useSelector } from "@/redux/store";
+import {
+  // user as userAuth,
+  selectUser,
+} from "@/reduxFeatures/authState/authStateSlice";
+import { useRouter } from "next/router";
+
+const Discussions = () => {
+  const router = useRouter();
   const [gists, setGists] = useState<Record<string, any>[]>();
-  const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);
+  const user = useSelector(selectUser);
   const sanitizer = DOMPurify.sanitize;
-  // modal
-  const { modalOpen, toggle, selected, setSelected } = useModalWithData();
 
   useEffect(() => {
-    (async () => {
-      const { data } = await axios.get(`${config.serverUrl}/api/gists`);
-      setGists(data);
+    (async function () {
+      try {
+        const { data } = await axios.get(`${config.serverUrl}/api/gists`);
+
+        await data.gists.sort(function () {
+          return 0.5 - Math.random();
+        });
+
+        setGists(
+          data.gists
+            .filter((person) => {
+              return person?.author?._id.toString() !== user._id.toString();
+            })
+            .slice(0, 50)
+        );
+      } catch (error) {
+        // console.log(error.response?.data);
+      }
     })();
   }, []);
 
   return (
     <Card
       // style={{ border: "none", overflowY: "scroll", height: "450px" }}
-      style={{ border: "none", overflowY: "scroll", height: "18%" }}
+      style={{ border: "none", overflowY: "scroll", height: "450px" }}
       className="pb-5 mb-4 mt-4 shadow"
     >
       <Card.Header
@@ -34,18 +55,23 @@ const Discussions = ({ posts }: any) => {
         style={{ fontSize: "14px" }}
       >
         <span className="bold">Active discussions</span>
-        <small className="text-bold text-primary">See more</small>
+        <small
+          className="text-bold text-primary"
+          style={{ cursor: "pointer" }}
+          onClick={() => router.push("/gist")}
+        >
+          See more
+        </small>
       </Card.Header>
       <Card.Body>
-        {posts &&
-          posts?.map((post, index) => (
+        {gists &&
+          gists?.map((gist, index) => (
             <div
-              key={`discussion-${post?._id}-${index}`}
+              key={`discussion-${gist?._id}-${index}`}
               className="d-flex gap-3 mt-2 py-1 px-1 border-bottom"
               style={{ cursor: "pointer" }}
               onClick={() => {
-                setSelected(post);
-                toggle();
+                router.push(`/gist/${gist?._id}`);
               }}
             >
               <div>
@@ -61,43 +87,16 @@ const Discussions = ({ posts }: any) => {
                 <small
                   className="bolden"
                   dangerouslySetInnerHTML={{
-                    __html: sanitizer(truncate(post?.post, 25).html),
+                    __html: sanitizer(truncate(gist?.title, 50).html),
                   }}
                 />
                 <small className="text-muted" style={{ fontSize: "11px" }}>
-                  By {`${post?.author?.firstName} ${post?.author?.lastName}`}
+                  By {`${gist?.author?.firstName} ${gist?.author?.lastName}`}
                 </small>
               </div>
             </div>
           ))}
       </Card.Body>
-
-      <Modal
-        show={modalOpen}
-        className={styles.FeedModal}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        size="xl"
-        scrollable={true}
-      >
-        <span className={styles.openBtn}>
-          {" "}
-          <MdOutlineCancel
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggle()}
-          />{" "}
-        </span>
-        <span className={styles.closeBtn}>
-          {" "}
-          <BiArrowBack
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggle()}
-          />{" "}
-        </span>
-        <ModalRow selected={selected} />
-      </Modal>
     </Card>
   );
 };
