@@ -91,12 +91,7 @@ const PostCard = ({
       content: commentPost,
     };
 
-    if (body.content == "") {
-      return toast.error("Comment cannot be empty", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
-      });
-    }
+   
     setLoading(true);
     const res = await axios.post(
       `${config.serverUrl}/api/comments?type=feed&id=${post?._id}`,
