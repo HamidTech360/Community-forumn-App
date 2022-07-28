@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
@@ -27,11 +27,25 @@ function GistFooterBtn({ editorID }) {
   const showGistTitle = useSelector(selectGistTitle);
   const gistError = useSelector(selectGistError);
   const gistIsSuccess = useSelector(selectGistIsSuccess);
+  const [categories, setCategories] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState(null)
 
   const router = useRouter();
-
+  useEffect(()=>{
+    (async ()=>{
+      try{
+        const {data} = await axios.get(`${config.serverUrl}/api/category`)
+        // console.log(data);
+        setCategories(data.allCategories)
+        
+      }catch(error){
+        console.log(error.response?.data)
+      }
+    })()
+  },[])
   const createGist = async (e) => {
     e.preventDefault();
+  
     const editorInnerHtml = document.getElementById(editorID).innerHTML;
     setUploading(true);
     try {
@@ -40,7 +54,7 @@ function GistFooterBtn({ editorID }) {
         {
           title: showGistTitle,
           post: editorInnerHtml,
-          categories: "Migration",
+          categories: selectedCategory?selectedCategory:'none',
           country: "Ghana",
         },
         {
@@ -74,29 +88,32 @@ function GistFooterBtn({ editorID }) {
   };
 
   return (
-    <>
-      <div className="col-12 col-md-3 col-lg-2 mx-0 px-0 d-grid">
+    <div style={{display:'flex', flexDirection:'row', flexWrap:'wrap'}}>
+      <div className="">
         <DropdownButton
           as={ButtonGroup}
-          title="Category"
+          title={selectedCategory?selectedCategory:'Category'}
           id="bg-nested-dropdown-1"
           variant="outline-secondary"
-          size="sm"
+          
           className="m-1"
+         
         >
-          <Dropdown.Item eventKey="1" variant="outline-secondary">
-            Dropdown link 1
-          </Dropdown.Item>
-          <Dropdown.Item eventKey="2">Dropdown link 2</Dropdown.Item>
+          {categories.map((item, i)=>
+            <Dropdown.Item key={i} eventKey="1" onClick={()=>setSelectedCategory(item.name)} variant="outline-secondary">
+             {item.name}
+            </Dropdown.Item>
+          )}
+          
         </DropdownButton>
       </div>
-      <div className="col-12 col-md-3 col-lg-2 mx-0 px-0 d-grid">
+      <div className="">
         <DropdownButton
           as={ButtonGroup}
           title="Country"
           id="bg-nested-dropdown-2"
           variant="outline-secondary"
-          size="sm"
+         
           className="m-1"
         >
           <Dropdown.Item eventKey="1" variant="outline-secondary">
@@ -116,7 +133,7 @@ function GistFooterBtn({ editorID }) {
           Cancel
         </Button>
       </div>
-      <div className="col-12 col-md-3 col-lg-2 mx-0 px-0 d-grid">
+      <div className="">
         <Button
           variant="primary"
           size="sm"
@@ -127,7 +144,7 @@ function GistFooterBtn({ editorID }) {
           {gistIsLoading ? "uploading..." : "Post"}
         </Button>
       </div>
-    </>
+    </div>
   );
 }
 
