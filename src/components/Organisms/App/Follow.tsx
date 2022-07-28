@@ -3,52 +3,105 @@ import config from "@/config";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Image, ListGroup } from "react-bootstrap";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-import { useSelector } from "react-redux";
-import { makeSecuredRequest } from "@/utils/makeSecuredRequest";
-import { useDispatch } from "@/redux/store";
+import {
+  user as userAuth,
+  selectUser,
+  setFollowers,
+  selectFollowers,
+  setFollowing,
+  selectFollowing,
+} from "@/reduxFeatures/authState/authStateSlice";
+// import { useSelector } from "react-redux";
+import makeSecuredRequest, {
+  deleteSecuredRequest,
+} from "@/utils/makeSecuredRequest";
+import { useDispatch, useSelector } from "@/redux/store";
 import appSlice from "@/reduxFeatures/app/appSlice";
 
 const Follow = () => {
   const [users, setUsers] = useState([]);
   const user = useSelector(selectUser);
+  const userMapper = useSelector(selectUser);
+  const currentlyFollowing = useSelector(selectFollowing);
   const dispatch = useDispatch();
+
   const handleFollow = async (id: string) => {
     try {
-      const data = await makeSecuredRequest(
-        `${config.serverUrl}/api/users/${id}/follow`);
-      console.log("follow:", data);
-      // window.location.reload();
+      await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
+
+      // Update Auth User State
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+
+        // document.getElementById(`followBtn-${id}`).style.display = "none";
+      })();
     } catch (error) {
-      console.log("follow Error:", error);
+      // console.error("follow Error:", error);
     }
   };
 
- 
   useEffect(() => {
-    //alert('fetching');
-
     (async function () {
       try {
+        // users.length === undefined || users.length === 0
+        // console.log("users.length", users.length);
+        // if (users.length === undefined) {
+        //   console.log("users.length is undefined");
+        // }
         const { data } = await axios.get(`${config.serverUrl}/api/users`);
-        // console.log(user);
-        // console.log("User data:", data);
 
-        setUsers(
-          data.users
-            .filter((person) => {
-              return (
-                !person.followers.includes(user._id) ||
-                person._id.toString() !== user._id.toString()
-              );
-            })
-            .slice(0, 10)
-        );
+        // let sliceNum = 0;
+        // if (window.innerHeight > 777) {
+        //   sliceNum = 10;
+        // } else {
+        //   sliceNum = 5;
+        // }
+
+        await data.users.sort(function (newUser) {
+          return 0.5 - Math.random();
+        });
+
+        // setUsers(
+        //   data.users
+        //     .filter((person) => {
+        //       return (
+        //         // !person.followers.includes(user._id) ||
+        //         person._id.toString() !== user._id.toString()
+        //       );
+        //     })
+        //     // .slice(0, 10)
+        //     .slice(0, sliceNum)
+        // );
+
+        const notFollowing = data.users.filter((person) => {
+          if (
+            person._id.toString() !== user._id.toString() &&
+            !currentlyFollowing.includes(person?._id)
+          ) {
+            return person;
+          }
+        });
+
+        if (
+          JSON.stringify(currentlyFollowing) !== JSON.stringify(notFollowing)
+        ) {
+          setUsers(notFollowing);
+        }
       } catch (error) {
-        console.log(error.response?.data);
+        // console.log(error.response?.data);
       }
     })();
-  }, []);
+    // }, [window.innerHeight]);
+  }, [currentlyFollowing]);
   return (
     <ListGroup
       className="container p-0 p-xl-2 radius-10 shadow"
@@ -93,10 +146,42 @@ const Follow = () => {
 
             <div className="col-xs-3 justify-content-end">
               <Button
+                // id={`followBtn-${user?._id}`}
                 variant="outline-primary"
                 size="sm"
-                onClick={() => handleFollow(user._id)}
+                onClick={() => handleFollow(user?._id)}
               >
+                {/* {console.log("user._id", user?._id)} */}
+                {/* {user?._id === user?.following} */}
+                {/* {user?._id} */}
+                {/* {userMapper?.following?.map((obj) =>
+                  obj?._id === user?._id ? (
+                    <span>Followed</span>
+                  ) : (
+                    <span>Follow</span>
+                  )
+                )} */}
+                {/* {userMapper?.following?.some((item) => {
+                  // console.log("item?._id:", item?._id);
+                  // console.log("user?._id:", user?._id);
+                  item?._id === user?._id ? (
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => handleFollow(user?._id)}
+                    >
+                      Following
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => handleFollow(user?._id)}
+                    >
+                      Follow
+                    </Button>
+                  );
+                })} */}
                 Follow
               </Button>
             </div>

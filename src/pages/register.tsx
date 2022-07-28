@@ -7,7 +7,7 @@ import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import FormWrapper from "../components/Organisms/Layout/FormWrapper";
-import config from '../config'
+import config from "../config";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 
 import { useRouter } from "next/router";
@@ -42,7 +42,7 @@ const Register = () => {
         if (axios.isAxiosError(error)) {
           const serverError = error as AxiosError;
           if (serverError.response) {
-            let returnedErrorMessage = serverError.response.data.error;
+            let returnedErrorMessage = serverError?.response?.data?.error;
             if (typeof returnedErrorMessage === "string") {
               setMessage({ message: returnedErrorMessage, variant: "danger" });
             } else {
@@ -88,6 +88,9 @@ const Register = () => {
 
   return (
     <UnAuthContent>
+      <Head>
+        <title>Register</title>
+      </Head>
       <FormWrapper
         form={
           <div>
@@ -100,9 +103,6 @@ const Register = () => {
             {message.message && (
               <Alert variant={message.variant}>{message.message}</Alert>
             )}
-            <Head>
-              <title>Register</title>
-            </Head>
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={6}>

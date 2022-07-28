@@ -100,6 +100,9 @@ const Login = () => {
   return (
     <UnAuthContent>
       <ToastContainer />
+      <Head>
+        <title>Login</title>
+      </Head>
       <FormWrapper
         form={
           <div>
@@ -111,10 +114,6 @@ const Login = () => {
                 {message.message.replace("_", " ")}
               </Alert>
             )}
-
-            <Head>
-              <title>Login</title>
-            </Head>
             <Form onSubmit={handleSubmit}>
               <Form.Group>
                 <Form.Label> Email</Form.Label>

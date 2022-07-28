@@ -47,9 +47,11 @@ export const makeSecuredRequest = async (
   return data;
 };
 
+export default makeSecuredRequest;
+
 export const deleteSecuredRequest = async (
   url: string,
-  method: AxiosRequestConfig["method"] = " DELETE",
+  method: AxiosRequestConfig["method"] = "DELETE",
   body?: Record<string, any>
 ) => {
   let token = localStorage.getItem("accessToken");
@@ -76,5 +78,3 @@ export const deleteSecuredRequest = async (
 
   return data;
 };
-
-

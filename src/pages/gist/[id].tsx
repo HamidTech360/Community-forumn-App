@@ -57,7 +57,7 @@ const Gist = ({
         setData(response.data.gist);
       } catch (error) {
         router.replace("/gist");
-        console.log(error.response?.data);
+        // console.error("Error fetching individual gist", error.response?.data);
       }
     })();
 

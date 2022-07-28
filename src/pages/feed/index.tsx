@@ -21,7 +21,13 @@ import PostCard from "@/components/Organisms/App/PostCard";
 import UserCard from "@/components/Organisms/App/UserCard";
 import CreatePost from "@/components/Organisms/CreatePost";
 import { toast, ToastContainer } from "react-toastify";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import {
+  selectUser,
+  setFollowers,
+  selectFollowers,
+  setFollowing,
+  selectFollowing,
+} from "@/reduxFeatures/authState/authStateSlice";
 import { MdOutlineCancel } from "react-icons/md";
 // import { usePagination } from "@/hooks/usePagination";
 import usePagination, { Loader } from "@/hooks/usePagination";
@@ -33,25 +39,46 @@ import { useDispatch, useSelector } from "@/redux/store";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 
 // import Editor from "@/components/Organisms/SlateEditor/Editor";
-import { useModalWithData } from "@/hooks/useModalWithData";
+import { ModalRow, useModalWithData } from "@/hooks/useModalWithData";
 import InfiniteScroll from "react-infinite-scroll-component";
 // import { FaTimes } from "react-icons/fa";
 
+// import { FacebookShareButton, TwitterShareButton } from "react-share";
+// import { FacebookIcon, TwitterIcon } from "react-share";
+
 const Feed = () => {
-  const data = useSelector(selectUser);
+  // const data = useSelector(selectUser);
   const dispatch = useDispatch();
+  const stateUser = useSelector(selectUser);
   const newFeed = useSelector(selectNewFeed);
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
-  const [scrollInitialised, setScrollInitialised] = useState(false);
+  // const [scrollInitialised, setScrollInitialised] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [isFetching, setIsFetching] = useState(true);
-  const [uploading, setUploading] = useState(false);
+  // const [isFetching, setIsFetching] = useState(true);
+  // const [uploading, setUploading] = useState(false);
   // const [showModal, setShowModal] = useState(false);
   const { modalOpen, toggle, selected, setSelected } = useModalWithData();
 
-  const [formData, setFormData] = useState({
-    post: "",
-  });
+  // const [followers, setFollowers] = useState([]);
+  // const [following, setFollowing] = useState([]);
+
+  useEffect(() => {
+    if (stateUser) {
+      const currentlyFollowing = stateUser.following.map((follow) => {
+        return follow._id;
+      });
+      const currentFollowers = stateUser.followers.map((follow) => {
+        return follow._id;
+      });
+
+      dispatch(setFollowers(currentFollowers));
+      dispatch(setFollowing(currentlyFollowing));
+    }
+  }, [stateUser]);
+
+  // const [formData, setFormData] = useState({
+  //   post: "",
+  // });
 
   const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
     usePagination("/api/feed", "feed");
@@ -72,13 +99,10 @@ const Feed = () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   // Auto-Update new post to feed
-  //   console.log("newFeed:", newFeed);
-  //   // if (newFeed) {
-  //   setPosts([newFeed?.feed, ...posts]);
-  //   // }
-  // }, [newFeed]);
+  useEffect(() => {
+    fetchNextPage();
+    setPosts(paginatedData);
+  }, [newFeed]);
 
   useEffect(() => {
     if (paginatedData) {
@@ -105,10 +129,12 @@ const Feed = () => {
               className={`${styles.userCardDiscussion} position-fixed d-flex flex-column vh-100`}
             >
               <div className="col-xs-12">
-                <UserCard user={data!} />
+                {/* <UserCard user={data!} /> */}
+                {/* <UserCard data={data!} /> */}
+                <UserCard />
               </div>
               <div className="col-xs-12">
-                <Discussions posts={posts} />
+                <Discussions />
               </div>
             </div>
           </div>
@@ -190,7 +216,7 @@ const Feed = () => {
             onClick={() => toggle()}
           />{" "}
         </span>
-        {selected.images ? (
+        {/* {selected.images ? (
           <Row>
             <Col lg={6}></Col>
             <Col lg={6}>
@@ -204,7 +230,8 @@ const Feed = () => {
               <ModalCard post={selected} />
             </Col>
           </Row>
-        )}
+        )} */}
+        <ModalRow selected={selected} />
       </Modal>
     </AuthContent>
   );
