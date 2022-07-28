@@ -32,7 +32,7 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
         style={{ marginTop: "-1.2rem", fontSize: "12px" }}
       >
         @{user?.firstName}
-        {(user?.lastName).substring(0, 1)}
+        {/* {(user?.lastName).substring(0, 1)} */}
       </small>
       <small
         className="row text-muted mx-auto mt-2 text-center"

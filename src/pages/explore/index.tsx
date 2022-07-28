@@ -3,7 +3,6 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { RiMessage2Fill } from "react-icons/ri";
 import MessageButton from "@/components/Atoms/messageButton";
 import Head from "next/head";
-import config from "../../config";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Col,
@@ -20,6 +19,7 @@ import {
 import { FaTimes } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import Card from "../../components/Molecules/Card";
+import Followers from '@/components/Organisms/Followers'
 import axios from "axios";
 import styles from "../../styles/explore.module.scss";
 import formStyles from "../../styles/templates/new-group/formField.module.css";
@@ -33,9 +33,7 @@ import {
   setShowPostModal,
   selectShowPostModal,
   setPostTitle,
-  selectPostTitle,
-  setIsFetching,
-  selectIsFetching,
+  selectPostTitle
 } from "@/reduxFeatures/api/postSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import usePagination, { Loader } from "@/hooks/usePagination";
@@ -46,7 +44,7 @@ const Explore = ({}) => {
   const dispatch = useDispatch();
   const showPost = useSelector(selectPost);
   const showPostModal = useSelector(selectShowPostModal);
-  const user = useSelector(selectUser);
+  // const user = useSelector(selectUser);
   // const isFetching = useSelector(selectIsFetching);
 
   const [categories, setCategories] = useState([
@@ -165,7 +163,12 @@ const Explore = ({}) => {
                   >
                     Start writing
                   </Button>
-                  <Button variant="light">Explore</Button>
+                  <a href="#explore">
+                    <Button variant="light">
+                      Explore
+                    </Button>
+                  </a>
+                
                 </div>
               </div>
             </Col>
@@ -181,7 +184,7 @@ const Explore = ({}) => {
           </Row>
         </Container>
       </section>
-      <section className={styles.topicsSection}>
+      <section id="explore" className={styles.topicsSection}>
         <Container>
           <h1 className="d-flex justify-content-center">
             Topics that matter to you
@@ -256,35 +259,11 @@ const Explore = ({}) => {
           </div>
         </Container>
       </section>
-      <section className={styles.write}>
-        <Container>
-          <h1 className="d-flex justify-content-center">
-            Top writers you should follow
-          </h1>
-          <Row>
-            {users?.map((user, key) => (
-              <Col md={6} lg={4} sm={12} key={`author-${key}`} className="mt-4">
-                <div className="d-flex gap-3 align-items-center justify-content-evenly">
-                  <Image
-                    width={50}
-                    height={50}
-                    src={"/images/imagePlaceholder.jpg"}
-                    roundedCircle
-                    alt={user?.firstName}
-                  />
 
-                  <span className="mt-1">
-                    {user?.firstName} {user?.lastName}
-                  </span>
-
-                  <Button variant="outline-primary">Follow</Button>
-                </div>
-                <hr />
-              </Col>
-            ))}
-          </Row>
-        </Container>
+      <section>
+        <Followers />
       </section>
+     
 
       <Modal
         show={showPostModal}

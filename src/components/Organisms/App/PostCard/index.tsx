@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Link from "next/link";
 import strip from "striptags";
 import React, { useEffect, useState } from "react";
