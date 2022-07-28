@@ -51,30 +51,12 @@ const Followers = () => {
       }
     };
   
-    const postUnfollow = async (id: string) => {
-      try {
-        const data = await axios.delete(
-          `${config.serverUrl}/api/users/${id}/follow`, {
-              headers: {
-                  authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
-          }
-        );
-          setFollow(false)
-          console.log("follow:", data);
-      } catch (error) {
-        console.log("follow Error:", error);
-      }
-    };
+   
    
     useEffect(() => {
       (async function () {
         try {
-          // users.length === undefined || users.length === 0
-          // console.log("users.length", users.length);
-          // if (users.length === undefined) {
-          //   console.log("users.length is undefined");
-          // }
+          
           const { data } = await axios.get(`${config.serverUrl}/api/users`);
   
           await data.users.sort(function (newUser) {
@@ -123,20 +105,7 @@ const Followers = () => {
                   <span className="mt-1">
                     {user?.firstName} {user?.lastName}
                   </span>
-                  {/* {follow ? (
-                    <Button 
-                    variant="primary"
-                    onClick= {() => postUnfollow(user?._id)}
-                    >
-                      Unfollow
-                  </Button>
-                  ) : <Button 
-                  variant="outline-primary"
-                  onClick= {() => postFollow(user?._id)}
-                  >
-                    Follow
-                </Button>}
-                   */}
+                  
                   <Button 
                     variant="outline-primary"
                     onClick= {() => postFollow(user?._id)}

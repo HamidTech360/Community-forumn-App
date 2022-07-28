@@ -33,9 +33,6 @@ import {
   setShowPostModal,
   selectShowPostModal,
   setPostTitle,
-  selectPostTitle,
-  setIsFetching,
-  selectIsFetching,
   selectNewPost,
 } from "@/reduxFeatures/api/postSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
