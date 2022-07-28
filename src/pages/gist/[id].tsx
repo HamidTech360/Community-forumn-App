@@ -2,7 +2,7 @@
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Image, Row } from "react-bootstrap";
 import Comment from "../../components/Organisms/App/Comment";
 import Contributors from "../../components/Organisms/Gist/Contributors";
 import GistCard from "../../components/Organisms/Gist/GistCard";
@@ -25,7 +25,10 @@ const Gist = ({
   const router = useRouter();
   const { id } = router.query;
 
-  const [data, setData] = useState({});
+  const [data, setData] = useState<Record<string, any>>({});
+  const [commentPost, setCommentPost] = useState("");
+  const [showComment, setShowComment] = useState(false);
+  const [loading, setLoading] = useState(false);
   // const [user, setUser] = useState({});
   const [queryId, setQueryId] = useState(id);
   // Allow Rerender Bases On ID Change Even When Route Is Same Path
@@ -77,12 +80,52 @@ const Gist = ({
         </Col>
         <Col md={8}>
           <GistCard gist={data} primary />
-          <h5 className={`px-2 m-2 ${styles.comment}`}>Comments({"0"})</h5>
+          {/* <section>
+                <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
+                <div className="row">
+                  <div className="col-2 col-md-2">
+                    <Image
+                      src="/images/imagePlaceholder.jpg"
+                      
+                      className="img-fluid"
+                      roundedCircle={true}
+                      alt="Author's Image"
+                    />
+                  </div>
+                  <div className="col-7 col-md-10">
+                    <div className="form-floating shadow">
+                      <textarea
+                        id="articleTextarea"
+                        className="form-control"
+                        placeholder="."
+                        onChange={(e) => setCommentPost(e.target.value)}
+                        style={{ height: "100px" }}
+                      ></textarea>
+                      <label htmlFor="articleTextarea">Comments</label>
+                    </div>
+                  </div>
+                  <div className="col-3 col-md-2 ms-auto d-md-grid">
+                    <button
+                      className="btn btn-sm btn-primary mt-3 d-inline"
+                      onClick={postComment}
+                    >
+                      Send
+                      {loading && (
+                        <div
+                          className="spinner-grow spinner-grow-sm text-light"
+                          role="status"
+                        ></div>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </section> */}
+          {/* <h5 className={`px-2 m-2 ${styles.comment}`}>Comments({data?.comments?.length})</h5>
           <div className="mt-2">
             {replies?.map((reply, key) => (
               <Comment comment={reply} key={`comment-${key}`} />
             ))}
-          </div>
+          </div> */}
         </Col>
       </Row>
     </Container>

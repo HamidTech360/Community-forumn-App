@@ -338,7 +338,7 @@ const ModalCard = ({
             ))}
           </Card.Footer>
 
-          <section>
+              <section>
                 <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
                 <div className="row">
                   <div className="col-2 col-md-2">
