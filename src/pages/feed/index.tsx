@@ -21,7 +21,13 @@ import PostCard from "@/components/Organisms/App/PostCard";
 import UserCard from "@/components/Organisms/App/UserCard";
 import CreatePost from "@/components/Organisms/CreatePost";
 import { toast, ToastContainer } from "react-toastify";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import {
+  selectUser,
+  setFollowers,
+  selectFollowers,
+  setFollowing,
+  selectFollowing,
+} from "@/reduxFeatures/authState/authStateSlice";
 import { MdOutlineCancel } from "react-icons/md";
 // import { usePagination } from "@/hooks/usePagination";
 import usePagination, { Loader } from "@/hooks/usePagination";
@@ -42,7 +48,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 const Feed = () => {
   // const data = useSelector(selectUser);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const stateUser = useSelector(selectUser);
   const newFeed = useSelector(selectNewFeed);
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
   // const [scrollInitialised, setScrollInitialised] = useState(false);
@@ -51,6 +58,23 @@ const Feed = () => {
   // const [uploading, setUploading] = useState(false);
   // const [showModal, setShowModal] = useState(false);
   const { modalOpen, toggle, selected, setSelected } = useModalWithData();
+
+  // const [followers, setFollowers] = useState([]);
+  // const [following, setFollowing] = useState([]);
+
+  useEffect(() => {
+    if (stateUser) {
+      const currentlyFollowing = stateUser.following.map((follow) => {
+        return follow._id;
+      });
+      const currentFollowers = stateUser.followers.map((follow) => {
+        return follow._id;
+      });
+
+      dispatch(setFollowers(currentFollowers));
+      dispatch(setFollowing(currentlyFollowing));
+    }
+  }, [stateUser]);
 
   // const [formData, setFormData] = useState({
   //   post: "",

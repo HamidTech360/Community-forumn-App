@@ -35,6 +35,7 @@ import {
   BsFillBookmarkFill,
   BsBookmark,
 } from "react-icons/bs";
+import { RiUserFollowFill } from "react-icons/ri";
 import { AiOutlineLike, AiFillLike, AiOutlineShareAlt } from "react-icons/ai";
 import { FaRegCommentDots } from "react-icons/fa";
 import Age from "../../../Atoms/Age";
@@ -49,10 +50,17 @@ import {
   setIsFetching,
   setPosts,
 } from "@/reduxFeatures/api/postSlice";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import {
+  selectUser,
+  setFollowing,
+  selectFollowing,
+} from "@/reduxFeatures/authState/authStateSlice";
 import { useRouter } from "next/router";
 import Comment from "@/components/Organisms/App/Comment";
-import { deleteSecuredRequest } from "@/utils/makeSecuredRequest";
+import makeSecuredRequest, {
+  deleteSecuredRequest,
+} from "@/utils/makeSecuredRequest";
+// import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
   post,
@@ -64,7 +72,7 @@ const PostCard = ({
   // console.log("post:", post);
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const posts = useSelector(selectPost);
+  // const posts = useSelector(selectPost);
   const router = useRouter();
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookMarked] = useState(false);
@@ -75,6 +83,7 @@ const PostCard = ({
   const [commentPost, setCommentPost] = useState("");
   const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
+  const currentlyFollowing = useSelector(selectFollowing);
 
   const postComment = async () => {
     const body = {
@@ -236,7 +245,29 @@ const PostCard = ({
     }
   }, []);
 
-  const unFollow = async (id) => {
+  const handleFollow = async (id) => {
+    try {
+      await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
+
+      // Update Auth User State
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
+    } catch (error) {
+      // console.error("follow Error:", error);
+    }
+  };
+
+  const handleUnFollow = async (id) => {
     try {
       await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
@@ -255,6 +286,25 @@ const PostCard = ({
       })();
     } catch (error) {
       // console.error("follow Error:", error);
+    }
+  };
+
+  const changeFollowingStatus = (post) => {
+    if (
+      document.getElementById(`followStr-${post?.author?._id}`).innerText ===
+      "Follow"
+    ) {
+      handleFollow(post?.author?._id);
+    } else if (
+      document.getElementById(`followStr-${post?.author?._id}`).innerText ===
+      "Unfollow"
+    ) {
+      let confirmUnFollow = window.confirm(
+        `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
+      );
+      if (confirmUnFollow) {
+        handleUnFollow(post?.author?._id);
+      }
     }
   };
 
@@ -351,26 +401,39 @@ const PostCard = ({
                     toggle();
                   }}
                 >
-                  <BsFolderFill /> Open Post
+                  <BsFolderFill className="text-muted" /> Open Post
                 </NavDropdown.Item>
 
                 {user?._id !== post?.author?._id ? (
                   <>
                     <NavDropdown.Item className={styles.item}>
-                      {" "}
-                      <RiFlagFill /> Report post
+                      <RiFlagFill className="text-muted" /> Report post
                     </NavDropdown.Item>
                     <NavDropdown.Item
                       className={styles.item}
-                      onClick={async () => {
-                        let confirmUnFollow = window.confirm(
-                          `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
-                        );
-                        if (confirmUnFollow) unFollow(post?.author?._id);
-                      }}
+                      onClick={async () => changeFollowingStatus(post)}
+                      // onClick={async () =>
+                      //   changeFollowingStatus(post?.author?._id)
+                      // }
                     >
-                      <BsXCircleFill /> Unfollow @
-                      {post?.author?.firstName?.split(" ")[0]}
+                      {currentlyFollowing.includes(post?.author?._id) ? (
+                        <>
+                          <BsXCircleFill className="text-muted" />{" "}
+                          <span id={`followStr-${post?.author?._id}`}>
+                            {/* NOTE: Don't change the "Unfollow" Text From PascalCase, else unfollowing wouldn't work */}
+                            Unfollow
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <RiUserFollowFill className="text-muted" />{" "}
+                          <span id={`followStr-${post?.author?._id}`}>
+                            {/* NOTE: Don't change the "Follow" Text From PascalCase, else following wouldn't work */}
+                            Follow
+                          </span>
+                        </>
+                      )}{" "}
+                      @{post?.author?.firstName?.split(" ")[0]}
                       {post?.author?.lastName?.substring(0, 1)}
                     </NavDropdown.Item>
                   </>

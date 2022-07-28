@@ -20,11 +20,15 @@ import {
   BsFillBookmarkFill,
   BsBookmark,
 } from "react-icons/bs";
+import { RiUserFollowFill } from "react-icons/ri";
 import { AiOutlineLike, AiFillLike, AiOutlineShareAlt } from "react-icons/ai";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { user as userAuth } from "@/reduxFeatures/authState/authStateSlice";
+import {
+  user as userAuth,
+  selectFollowing,
+} from "@/reduxFeatures/authState/authStateSlice";
 
 import { FaRegCommentDots } from "react-icons/fa";
 import Age from "../../../Atoms/Age";
@@ -44,7 +48,9 @@ import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { useRouter } from "next/router";
 import Comment from "@/components/Organisms/App/Comment";
-import { deleteSecuredRequest } from "@/utils/makeSecuredRequest";
+import makeSecuredRequest, {
+  deleteSecuredRequest,
+} from "@/utils/makeSecuredRequest";
 import { ModalRowShare, useModalWithShare } from "@/hooks/useModalWithData";
 import { MdOutlineCancel } from "react-icons/md";
 import { BiArrowBack } from "react-icons/bi";
@@ -69,6 +75,7 @@ const ModalCard = ({
   const [commentPost, setCommentPost] = useState("");
   // const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
+  const currentlyFollowing = useSelector(selectFollowing);
 
   const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
     useModalWithShare();
@@ -227,7 +234,29 @@ const ModalCard = ({
     }
   }, []);
 
-  const unFollow = async (id) => {
+  const handleFollow = async (id) => {
+    try {
+      await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
+
+      // Update Auth User State
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
+    } catch (error) {
+      // console.error("follow Error:", error);
+    }
+  };
+
+  const handleUnFollow = async (id) => {
     try {
       await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
@@ -246,6 +275,25 @@ const ModalCard = ({
       })();
     } catch (error) {
       // console.error("follow Error:", error);
+    }
+  };
+
+  const changeFollowingStatus = (post) => {
+    if (
+      document.getElementById(`followStr-modal-${post?.author?._id}`)
+        .innerText === "Follow"
+    ) {
+      handleFollow(post?.author?._id);
+    } else if (
+      document.getElementById(`followStr-modal-${post?.author?._id}`)
+        .innerText === "Unfollow"
+    ) {
+      let confirmUnFollow = window.confirm(
+        `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
+      );
+      if (confirmUnFollow) {
+        handleUnFollow(post?.author?._id);
+      }
     }
   };
 
@@ -361,39 +409,40 @@ const ModalCard = ({
                       </Button>
                     }
                   >
-                    {/* <NavDropdown.Item className={styles.item}>
-                  <RiClipboardFill /> &nbsp; Copy post link
-                </NavDropdown.Item> */}
-                    {/* <NavDropdown.Item className={styles.item}>
-                  <BsFolderFill /> &nbsp; Open Post
-                </NavDropdown.Item> */}
                     {user?._id !== post?.author?._id ? (
                       <>
                         <NavDropdown.Item
                           className={styles.item}
                           style={{ backgroundColor: "rgb(237, 236, 236)" }}
                         >
-                          <RiFlagFill /> Report post
+                          <RiFlagFill className="text-muted" /> Report post
                         </NavDropdown.Item>
                         <NavDropdown.Item
                           className={styles.item}
-                          onClick={async () => {
-                            let confirmUnFollow = window.confirm(
-                              `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
-                            );
-                            if (confirmUnFollow) unFollow(post?.author?._id);
-                          }}
+                          onClick={async () => changeFollowingStatus(post)}
                         >
-                          <BsXCircleFill /> Unfollow @
-                          {post?.author?.firstName?.split(" ")[0]}
+                          {currentlyFollowing.includes(post?.author?._id) ? (
+                            <>
+                              <BsXCircleFill className="text-muted" />{" "}
+                              <span id={`followStr-modal-${post?.author?._id}`}>
+                                {/* NOTE: Don't change the "Unfollow" Text From PascalCase, else unfollowing wouldn't work */}
+                                Unfollow
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <RiUserFollowFill className="text-muted" />{" "}
+                              <span id={`followStr-modal-${post?.author?._id}`}>
+                                {/* NOTE: Don't change the "Follow" Text From PascalCase, else following wouldn't work */}
+                                Follow
+                              </span>
+                            </>
+                          )}{" "}
+                          @{post?.author?.firstName?.split(" ")[0]}
                           {post?.author?.lastName?.substring(0, 1)}
                         </NavDropdown.Item>
                       </>
                     ) : null}
-                    {/* <NavDropdown.Item className={styles.item}>
-                  <BsXCircleFill /> &nbsp; Unfollow &nbsp;
-                  {post.name.split(" ")[0]}
-                </NavDropdown.Item> */}
                   </NavDropdown>
                 </div>
               </div>
