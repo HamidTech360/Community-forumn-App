@@ -18,7 +18,7 @@ const Card = ({ image, title, author, id }: Record<string, any>) => {
       >
         <BCard.Img
           src={image}
-          alt={title.raw}
+          alt={title?.raw}
           style={{
             height: "130px",
             objectFit: "cover",
@@ -30,7 +30,7 @@ const Card = ({ image, title, author, id }: Record<string, any>) => {
             className="text-primary"
             style={{ textTransform: "capitalize", fontSize: "1rem" }}
           >
-            {title.replace("&amp;", "&")}
+            {title?.replace("&amp;", "&")}
           </h4>
           <span
             className="text-muted"

@@ -20,7 +20,7 @@ const SideBar = ({ conversations, selectChat }) => {
   return (
     < >
       {/* SideBar */}
-      <div className="d-md-block col-12 col-md-4 shadow">
+      
         <div className="row">
           <div className="d-flex py-3">
             <div className="col-8">
@@ -127,7 +127,7 @@ const SideBar = ({ conversations, selectChat }) => {
             </div>
           </Fade>
         </div>
-      </div>
+      
     </>
   );
 };

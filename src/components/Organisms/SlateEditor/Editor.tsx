@@ -120,7 +120,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
                     className={`${
                       !slim ? styles.editable : styles.editableSlim
                     }`}
-                    placeholder="Start writing your thoughts"
+                    placeholder={slim?'':"Start writing your thoughts"}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
                     onKeyDown={(event) => CtrlShiftCombo(event, editor)}
