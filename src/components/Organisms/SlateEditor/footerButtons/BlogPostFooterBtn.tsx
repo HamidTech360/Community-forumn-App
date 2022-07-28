@@ -24,11 +24,25 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
   const dispatch = useDispatch();
   const showPostTitle = useSelector(selectPostTitle);
   const showPostModal = useSelector(selectShowPostModal);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategpry, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     if (router.query.path == "timeline") {
       setGroupId(router.query.id);
     }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get(`${config.serverUrl}/api/category`);
+        // console.log(data);
+        setCategories(data.allCategories);
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    })();
   }, []);
 
   const createPost = async (e) => {
@@ -105,23 +119,29 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
   // }
 
   return (
-    <>
-      <div className="col-12 col-md-3 col-lg-2 mx-0 px-0 d-grid">
+    <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
+      <div className="">
         <DropdownButton
           as={ButtonGroup}
-          title="Category"
+          title={selectedCategpry ? selectedCategpry : "Category"}
           id="bg-nested-dropdown-1"
           variant="outline-secondary"
           size="sm"
           className="m-1"
         >
-          <Dropdown.Item eventKey="1" variant="outline-secondary">
-            Dropdown link 1
-          </Dropdown.Item>
-          <Dropdown.Item eventKey="2">Dropdown link 2</Dropdown.Item>
+          {categories.map((item, i) => (
+            <Dropdown.Item
+              onClick={() => setSelectedCategory(item.name)}
+              key={i}
+              eventKey="1"
+              variant="outline-secondary"
+            >
+              {item.name}
+            </Dropdown.Item>
+          ))}
         </DropdownButton>
       </div>
-      <div className="col-12 col-md-3 col-lg-2 mx-0 px-0 d-grid">
+      <div className="">
         <DropdownButton
           as={ButtonGroup}
           title="Tags"
@@ -146,7 +166,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
           Save as draft
         </Button>
       </div>
-      <div className="col-12 col-md-3 col-lg-2 mx-0 px-0 d-grid">
+      <div className="">
         <Button
           variant="primary"
           size="sm"
@@ -157,7 +177,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
           {uploading ? "uploading..." : "Create Post"}
         </Button>
       </div>
-    </>
+    </div>
   );
 }
 

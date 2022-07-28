@@ -24,6 +24,32 @@
     margin-left: -3.6rem;
   }
 }
+.messageHeader{
+  // height: 70px;
+}
+.messageArea{
+
+  @media screen and (max-width:768px) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+.cardBody{
+  margin-right: 0px !important;
+  // border: 1px solid red;
+  height: 77vh;
+  @media screen and (max-width:768px) {
+    margin-right: -20px !important;
+    height: 90vh;
+    // padding-left: 20px;
+    // padding-right: 20px;
+  }
+  @media screen and (max-width:400px) {
+    margin-right: -20px !important;
+    height: 95vh;
+  }
+
+}
 .messageItem{
   display: flex;
   flex-direction: row;
