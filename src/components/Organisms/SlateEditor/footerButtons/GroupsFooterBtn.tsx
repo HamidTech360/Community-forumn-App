@@ -56,10 +56,17 @@ function GroupsFooterBtn({ editorID }) {
         dispatch(setShowCreatePostModal(false));
         setUploading(false);
       } catch (error) {
-        toast.error("Failed to upload post", {
-          position: toast.POSITION.TOP_RIGHT,
-          toastId: "1",
-        });
+        if (!localStorage.getItem("accessToken")) {
+          toast.error("You must login to create a Post", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+        } else {
+          toast.error("Failed to upload Post: Try Again", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+        }
         setUploading(false);
       }
     }

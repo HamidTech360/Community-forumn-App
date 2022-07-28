@@ -234,7 +234,7 @@ const AuthHeader = () => {
                   roundedCircle
                 />
                 <span className={`mx-2 ${styles.span}`}>
-                  {data?.firstName.split(" ")[0]}
+                  {data?.firstName?.split(" ")[0]}
                 </span>
               </>
             }

@@ -88,6 +88,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
 
     if (paginatedData) {
       if (JSON.stringify(allGists) !== JSON.stringify(paginatedData)) {
+        // console.log("paginatedData - 1:", paginatedData);
         setAllGists(paginatedData);
       }
     }
@@ -100,10 +101,11 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         toastId: customId,
       });
 
-      (async function () {
-        const response = await axios.get(`${config.serverUrl}/api/gists`);
-        setAllGists(response.data);
-      })();
+      // Fetch Updated Gist Using useSWRInfinite
+      fetchNextPage();
+
+      // Update State
+      setAllGists(paginatedData);
 
       dispatch(uploadCleanUp({}));
       dispatch(setShowGistModal(false));
@@ -217,7 +219,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                 </p>
               }
               dataLength={paginatedData?.length ?? 0}
-              initialScrollY={0}
+              // initialScrollY={0}
             >
               <div className="justify-content-center">
                 {(filteredGists.length>0?filteredGists:allGists).map((post, key) => (

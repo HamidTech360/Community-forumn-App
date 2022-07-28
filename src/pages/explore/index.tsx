@@ -19,7 +19,7 @@ import {
 import { FaTimes } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import Card from "../../components/Molecules/Card";
-import Followers from '@/components/Organisms/Followers'
+import Followers from "@/components/Organisms/Followers";
 import axios from "axios";
 import styles from "../../styles/explore.module.scss";
 import formStyles from "../../styles/templates/new-group/formField.module.css";
@@ -33,11 +33,15 @@ import {
   setShowPostModal,
   selectShowPostModal,
   setPostTitle,
-  selectPostTitle
+  selectPostTitle,
+  setIsFetching,
+  selectIsFetching,
+  selectNewPost,
 } from "@/reduxFeatures/api/postSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import usePagination, { Loader } from "@/hooks/usePagination";
 import InfiniteScroll from "react-infinite-scroll-component";
+import config from "@/config";
 
 const Explore = ({}) => {
   const router = useRouter();
@@ -47,8 +51,9 @@ const Explore = ({}) => {
   // const user = useSelector(selectUser);
   // const isFetching = useSelector(selectIsFetching);
 
+  const newPost = useSelector(selectNewPost);
   const [categories, setCategories] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState([])
+  const [filteredPosts, setFilteredPosts] = useState([]);
   const [key, setKey] = useState<string>("all");
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
@@ -75,43 +80,71 @@ const Explore = ({}) => {
     }
   }, [paginatedData]);
 
+  useEffect(() => {
+    fetchNextPage();
+    setPosts(paginatedData);
+  }, [newPost]);
 
+  // useEffect(() => {
+  //   const fetchPost = async () => {
+  //     try {
+  //       const response = await axios.get(`${config.serverUrl}/api/posts`);
+  //       dispatch(setPosts(response.data.posts));
+  //       // setIsFetching(false);
+  //       dispatch(setIsFetching(false));
+  //       console.log(response.data.posts);
+  //     } catch (error) {
+  //       console.log(error.response?.data);
+  //     }
+  //   };
+  //   fetchPost();
+  //   //(async function () {
+  //   //   try {
+  //   //     const response = await axios.get(`${config.serverUrl}/api/users`, {});
+  //   //     // console.log("response.data+++:", response.data.users);
+  //   //     setUsers(response.data.users);
+  //   //     dispatch(setIsFetching(false));
+  //   //   } catch (error) {
+  //   //     //console.error(error.response?.data);
+  //   //     // setIsFetching(false);
+  //   //     dispatch(setIsFetching(false));
+  //   //   }
+  //   // })();
+  // }, [dispatch]);
 
-useEffect(()=>{
-  (async ()=>{
-    try{
-      const {data}= await axios.get(`${config.serverUrl}/api/category`)
-      setCategories(data.allCategories)
-      //console.log(data.allCategories);
-      
-    }catch(error){
-      console.log(error.response?.data);
-      
-    }
-  })()
-},[])
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get(`${config.serverUrl}/api/category`);
+        setCategories(data.allCategories);
+        //console.log(data.allCategories);
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    })();
+  }, []);
 
   const handleChange = (e) => {
     dispatch(setPostTitle(e.currentTarget.value));
   };
 
- const filterPost = (item)=>{
-  console.log('key is', key, item);
-    setKey(item)
-    if(item==='all'){
-      setFilteredPosts([])
-      return
+  const filterPost = (item) => {
+    console.log("key is", key, item);
+    setKey(item);
+    if (item === "all") {
+      setFilteredPosts([]);
+      return;
     }
-    
-    const filtered = showPost.filter(post=>post.category===item)
-    console.log('filtered post:', filtered);
-   
-    if(filtered.length<=0) {
-      alert('No Item in this category')
+
+    const filtered = showPost.filter((post) => post.category === item);
+    console.log("filtered post:", filtered);
+
+    if (filtered.length <= 0) {
+      alert("No Item in this category");
     }
-    
-    setFilteredPosts(filtered)
- }
+
+    setFilteredPosts(filtered);
+  };
 
   return (
     <div>
@@ -143,11 +176,8 @@ useEffect(()=>{
                     Start writing
                   </Button>
                   <a href="#explore">
-                    <Button variant="light">
-                      Explore
-                    </Button>
+                    <Button variant="light">Explore</Button>
                   </a>
-                
                 </div>
               </div>
             </Col>
@@ -178,7 +208,12 @@ useEffect(()=>{
             >
               <Tab title="All" eventKey="all" key="all" />
               {categories.map((category, i) => (
-                <Tab onClick={()=>filterPost(category)} eventKey={category.name} title={category.name} key={i} />
+                <Tab
+                  onClick={() => filterPost(category)}
+                  eventKey={category.name}
+                  title={category.name}
+                  key={i}
+                />
               ))}
             </Tabs>
             {/* {isFetching && (
@@ -200,22 +235,24 @@ useEffect(()=>{
               dataLength={paginatedData?.length ?? 0}
             >
               <Row className="d-flex justify-content-start w-100">
-                {(filteredPosts.length>0?filteredPosts:showPost)?.map((post, key) => (
-                  <Col
-                    key={`posts_${key}`}
-                    md={4}
-                    className={`my-4 ${styles.card}`}
-                  >
-                    <Card
-                      _id={post._id}
-                      image={"/images/postPlaceholder.jpg"}
-                      title={post.postTitle}
-                      body={post.postBody}
-                      author={post.author}
-                      size="any"
-                    />
-                  </Col>
-                ))}
+                {(filteredPosts.length > 0 ? filteredPosts : showPost)?.map(
+                  (post, key) => (
+                    <Col
+                      key={`posts_${key}`}
+                      md={4}
+                      className={`my-4 ${styles.card}`}
+                    >
+                      <Card
+                        _id={post._id}
+                        image={"/images/postPlaceholder.jpg"}
+                        title={post.postTitle}
+                        body={post.postBody}
+                        author={post.author}
+                        size="any"
+                      />
+                    </Col>
+                  )
+                )}
               </Row>
               {isValidating && (
                 <p style={{ textAlign: "center", color: "gray" }}>
@@ -242,7 +279,6 @@ useEffect(()=>{
       <section>
         <Followers />
       </section>
-     
 
       <Modal
         show={showPostModal}

@@ -21,7 +21,7 @@ import styles from "@/styles/gist.module.scss";
 //   };
 // }
 const GistCard = ({ gist, primary, trimmed }: any) => {
-  console.log(gist);
+  // console.log(gist);
   const sanitizer = DOMPurify.sanitize;
   const router = useRouter();
 
