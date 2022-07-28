@@ -47,9 +47,9 @@ const Gist = ({
       }
     );
     console.log(res);
-    let comments = gist?.comments;
+    let comments = data?.comments;
     comments?.unshift(res.data);
-    setData({ ...gist, comments });
+    setData({ ...data, comments });
 
     setLoading(false);
     setShowComment(false);
@@ -154,7 +154,7 @@ const Gist = ({
                   {data?.comments?.length > 0 &&
                     data?.comments?.map((comment, index) => {
                       return (
-                        <Comment key={`gist_${index}`} comment={comment} />
+                        <Comment key={`data_${index}`} comment={comment} />
                       );
                     })}
                 </div>

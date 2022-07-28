@@ -96,7 +96,7 @@ const Comment = ({ comment }: Record<string, any>) => {
             {comment?.author?.lastName && comment?.author?.lastName}
           </h6>
           <small>
-            <Age time={comment.createdAt} />
+            <Age time={comment?.createdAt} />
           </small>
         </div>
       </div>
@@ -109,9 +109,9 @@ const Comment = ({ comment }: Record<string, any>) => {
       <div className="buttons d-flex gap-2 justify-content-end mr-4">
         
       <small className="text-muted"  style={{cursor: "pointer" }} onClick = {() => handleLike()}>
-          {comment.likes?.length > 0 && (
+          {comment?.likes?.length > 0 && (
            <small className="badge rounded-pill bg-primary px-2 py-1 text-white">
-             {comment.likes?.length}
+             {comment?.likes?.length}
            </small>
          )} Like
          
@@ -121,10 +121,10 @@ const Comment = ({ comment }: Record<string, any>) => {
         style={{cursor: "pointer" }} 
         onClick={() => setShowComment(!showComment)}>
           Reply{" "}
-          {comment.replies?.length > 0 && (
+          {comment?.replies?.length > 0 && (
             <span>
               <small className="badge rounded-pill bg-primary px-2 py-1 text-white">
-                {comment.replies?.length}
+                {comment?.replies?.length}
               </small>
             </span>
           )}

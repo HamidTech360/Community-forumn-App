@@ -73,7 +73,7 @@ const ModalCard = ({
   // - comment section
   const [modalPost, setModalPost] = useState<Record<string, any>>({});
   const [commentPost, setCommentPost] = useState("");
-  // const [showComment, setShowComment] = useState(false);
+  const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
   const currentlyFollowing = useSelector(selectFollowing);
 
@@ -184,6 +184,7 @@ const ModalCard = ({
     comments?.unshift(res.data);
     setModalPost({ ...post, comments });
     setLoading(false);
+    setShowComment(false);
   };
 
   const handleBookMark = async () => {
