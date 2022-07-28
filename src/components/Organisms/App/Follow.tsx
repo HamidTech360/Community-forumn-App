@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Image, ListGroup } from "react-bootstrap";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { useSelector } from "react-redux";
-import makeSecuredRequest from "@/utils/makeSecuredRequest";
+import { makeSecuredRequest } from "@/utils/makeSecuredRequest";
 import { useDispatch } from "@/redux/store";
 import appSlice from "@/reduxFeatures/app/appSlice";
 
@@ -15,19 +15,16 @@ const Follow = () => {
   const dispatch = useDispatch();
   const handleFollow = async (id: string) => {
     try {
-      const data = await axios.get(
-        `${config.serverUrl}/api/users/${id}/follow`, {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          }
-        }
-      );
+      const data = await makeSecuredRequest(
+        `${config.serverUrl}/api/users/${id}/follow`);
       console.log("follow:", data);
       // window.location.reload();
     } catch (error) {
       console.log("follow Error:", error);
     }
   };
+
+ 
   useEffect(() => {
     //alert('fetching');
 

@@ -17,7 +17,7 @@ export const getNewToken = async () => {
   return data.accessToken;
 };
 
-const makeSecuredRequest = async (
+export const makeSecuredRequest = async (
   url: string,
   method: AxiosRequestConfig["method"] = "GET",
   body?: Record<string, any>
@@ -47,4 +47,34 @@ const makeSecuredRequest = async (
   return data;
 };
 
-export default makeSecuredRequest;
+export const deleteSecuredRequest = async (
+  url: string,
+  method: AxiosRequestConfig["method"] = " DELETE",
+  body?: Record<string, any>
+) => {
+  let token = localStorage.getItem("accessToken");
+
+  // Fetch new token if token is undefined
+  if (!token) {
+    token = await getNewToken();
+  } else {
+    const { exp }: any = jwtDecode(token);
+
+    if (Date.now() >= exp * 1000) {
+      token = await getNewToken();
+    }
+  }
+
+  const { data } = await axios({
+    method,
+    data: body,
+    url,
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
+
+  return data;
+};
+
+
