@@ -295,23 +295,27 @@ const AuthHeader = () => {
           style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
           fixed="bottom"
         >
-          <Container className="d-flex justify-content-start">
-            <Nav className="d-flex justify-content-around gap-4 w-100">
+          {/* <Container className="d-flex justify-content-start"> */}
+          <Container>
+            {/* <Nav className="row d-flex justify-content-around gap-4 w-100"> */}
+            <Nav className="row w-100">
               {links.map((link, key) => (
-                <Link key={key} href={`/${link.icon}`} passHref>
-                  <div
-                    className={`${
-                      router.asPath.substring(1) === link.icon
-                        ? "text-primary"
-                        : "text-muted"
-                    } d-flex flex-column align-items-center gap-1 mobi-nav bg-white btn`}
-                  >
-                    <span>{activeTab(link)}</span>
-                    <small className="fixed-bottom-navBar-text">
-                      {link.name}
-                    </small>
-                  </div>
-                </Link>
+                <div className="col-3" key={key}>
+                  <Link href={`/${link.icon}`} passHref>
+                    <div
+                      className={`${
+                        router.asPath.substring(1) === link.icon
+                          ? "text-primary"
+                          : "text-muted"
+                      } d-flex flex-column align-items-center gap-1 mobi-nav bg-white btn`}
+                    >
+                      <span>{activeTab(link)}</span>
+                      <small className="fixed-bottom-navBar-text">
+                        {link.name}
+                      </small>
+                    </div>
+                  </Link>
+                </div>
               ))}
             </Nav>
           </Container>
