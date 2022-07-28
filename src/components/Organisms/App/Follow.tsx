@@ -17,8 +17,10 @@ import makeSecuredRequest, {
 } from "@/utils/makeSecuredRequest";
 import { useDispatch, useSelector } from "@/redux/store";
 import appSlice from "@/reduxFeatures/app/appSlice";
+import { useRouter } from "next/router";
 
 const Follow = () => {
+  const router = useRouter();
   const [users, setUsers] = useState([]);
   const user = useSelector(selectUser);
   const userMapper = useSelector(selectUser);
@@ -59,12 +61,12 @@ const Follow = () => {
         // }
         const { data } = await axios.get(`${config.serverUrl}/api/users`);
 
-        // let sliceNum = 0;
-        // if (window.innerHeight > 777) {
-        //   sliceNum = 10;
-        // } else {
-        //   sliceNum = 5;
-        // }
+        let sliceNum = 0;
+        if (window.innerHeight > 777) {
+          sliceNum = 10;
+        } else {
+          sliceNum = 5;
+        }
 
         await data.users.sort(function (newUser) {
           return 0.5 - Math.random();
@@ -94,7 +96,7 @@ const Follow = () => {
         if (
           JSON.stringify(currentlyFollowing) !== JSON.stringify(notFollowing)
         ) {
-          setUsers(notFollowing);
+          setUsers(notFollowing.slice(0, sliceNum));
         }
       } catch (error) {
         // console.log(error.response?.data);
@@ -104,7 +106,7 @@ const Follow = () => {
   }, [currentlyFollowing]);
   return (
     <ListGroup
-      className="container p-0 p-xl-2 radius-10 shadow"
+      className="container-fluid p-0 p-xl-2 radius-10 shadow"
       as={Card}
       variant="flush"
       style={{
@@ -115,20 +117,19 @@ const Follow = () => {
     >
       <h6 className="text-center">Suggested connections</h6>
 
-      {/* <> */}
-      {/* {console.log("users:::", users)} */}
       {users.map((user, key) => (
-        <div
-          className="row align-items-center justify-content-center border-0"
-          key={`author-${key}`}
-        >
+        <div className="row align-items-center border-0" key={`author-${key}`}>
           <ListGroup.Item
             // key={`author-${key}`}
             // style={{ boxSizing: "border-box" }}
-            className="d-flex align-items-center gap-1 w-100 justify-content-between border-0 bg-transparent"
+            className="d-flex align-items-center gap-0 gap-xl-2 gap-xxl-3 w-100 justify-content-start border-0 bg-transparent"
           >
             {/* <div className="d-flex gap-2 py-1 align-items-center justify-content-center w-100"> */}
-            <div className="col-xs-2">
+            <div
+              className="col-xs-2"
+              style={{ cursor: "pointer" }}
+              onClick={() => router.push(`/profile/${user?._id}`)}
+            >
               <Image
                 width={35}
                 height={35}
@@ -138,58 +139,41 @@ const Follow = () => {
               />
             </div>
 
-            <div className="col-xs-7">
+            <div
+              className="col-xs-7 px-1"
+              style={{ cursor: "pointer" }}
+              onClick={() => router.push(`/profile/${user?._id}`)}
+            >
               <small className="mt-1" style={{ width: "90%" }}>
                 {user?.firstName} {user?.lastName.split(" ")[0]}
               </small>
             </div>
 
-            <div className="col-xs-3 justify-content-end">
+            <div className="col-xs-3 ms-auto">
               <Button
-                // id={`followBtn-${user?._id}`}
                 variant="outline-primary"
                 size="sm"
                 onClick={() => handleFollow(user?._id)}
               >
-                {/* {console.log("user._id", user?._id)} */}
-                {/* {user?._id === user?.following} */}
-                {/* {user?._id} */}
-                {/* {userMapper?.following?.map((obj) =>
-                  obj?._id === user?._id ? (
-                    <span>Followed</span>
-                  ) : (
-                    <span>Follow</span>
-                  )
-                )} */}
-                {/* {userMapper?.following?.some((item) => {
-                  // console.log("item?._id:", item?._id);
-                  // console.log("user?._id:", user?._id);
-                  item?._id === user?._id ? (
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      onClick={() => handleFollow(user?._id)}
-                    >
-                      Following
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      onClick={() => handleFollow(user?._id)}
-                    >
-                      Follow
-                    </Button>
-                  );
-                })} */}
                 Follow
               </Button>
             </div>
           </ListGroup.Item>
-          <hr style={{ width: "90%" }} />
+          {/* <hr style={{ width: "90%" }} /> */}
+          <hr className="w-75 mx-auto" />
         </div>
       ))}
-      {/* </> */}
+
+      <div className="row justify-content-center">
+        <div className="col">
+          <button
+            className="btn btn-link btn-sm"
+            style={{ textDecoration: "none" }}
+          >
+            See More
+          </button>
+        </div>
+      </div>
     </ListGroup>
   );
 };
