@@ -29,6 +29,31 @@ const Gist = ({
   const [commentPost, setCommentPost] = useState("");
   const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const postComment = async () => {
+    const body = {
+      content: commentPost,
+    };
+
+   
+    setLoading(true);
+    const res = await axios.post(
+      `${config.serverUrl}/api/comments?type=gist&id=${router.query.id}`,
+      body,
+      {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+    console.log(res);
+    let comments = gist?.comments;
+    comments?.unshift(res.data);
+    setData({ ...gist, comments });
+
+    setLoading(false);
+    setShowComment(false);
+  };
   // const [user, setUser] = useState({});
   const [queryId, setQueryId] = useState(id);
   // Allow Rerender Bases On ID Change Even When Route Is Same Path
@@ -80,7 +105,7 @@ const Gist = ({
         </Col>
         <Col md={8}>
           <GistCard gist={data} primary />
-          {/* <section>
+          <section>
                 <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
                 <div className="row">
                   <div className="col-2 col-md-2">
@@ -119,7 +144,22 @@ const Gist = ({
                     </button>
                   </div>
                 </div>
-              </section> */}
+              </section>
+              <section>
+              <h6 style={{ fontWeight: "bolder" }}>
+                Comments ({data?.comments?.length})
+              </h6>
+              <div className="row">
+                <div className="col-12 mt-4">
+                  {data?.comments?.length > 0 &&
+                    data?.comments?.map((comment, index) => {
+                      return (
+                        <Comment key={`gist_${index}`} comment={comment} />
+                      );
+                    })}
+                </div>
+              </div>
+            </section>
           {/* <h5 className={`px-2 m-2 ${styles.comment}`}>Comments({data?.comments?.length})</h5>
           <div className="mt-2">
             {replies?.map((reply, key) => (

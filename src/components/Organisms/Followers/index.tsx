@@ -11,7 +11,9 @@ import {
     setIsFetching,
     selectIsFetching,
   } from "@/reduxFeatures/api/postSlice";
-  import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+  
+  
+  import { user as userAuth, selectUser, selectFollowing } from "@/reduxFeatures/authState/authStateSlice";
 import config from "@/config";
 import { makeSecuredRequest, deleteSecuredRequest } from "@/utils/makeSecuredRequest";
 
@@ -20,7 +22,7 @@ const Followers = () => {
     const user = useSelector(selectUser);
     const isFetching = useSelector(selectIsFetching);
     const dispatch = useDispatch();
-
+    const currentlyFollowing = useSelector(selectFollowing);
 
     const [users, setUsers] = useState([]);
     const [ follow, setFollow ] = useState(false);
@@ -28,18 +30,24 @@ const Followers = () => {
 
     const postFollow = async (id: string) => {
       try {
-          const data = await axios.get(
-              `${config.serverUrl}/api/users/${id}/follow`, {
-                  headers: {
-                      authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                  },
-              }
-            );
-      //   window.location.reload();
-      setFollow(true)
-      console.log("follow:", data);
+        await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
+  
+        (async function () {
+          try {
+            const response = await axios.get(`${config.serverUrl}/api/auth`, {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            });
+            dispatch(userAuth(response.data));
+          } catch (error) {
+            localStorage.removeItem("accessToken");
+          }
+  
+          
+        })();
       } catch (error) {
-        console.log("follow Error:", error);
+        console.error("follow Error:", error);
       }
     };
   
@@ -58,37 +66,42 @@ const Followers = () => {
         console.log("follow Error:", error);
       }
     };
-    const postUsers = async () => {
+   
+    useEffect(() => {
+      (async function () {
         try {
+          // users.length === undefined || users.length === 0
+          // console.log("users.length", users.length);
+          // if (users.length === undefined) {
+          //   console.log("users.length is undefined");
+          // }
           const { data } = await axios.get(`${config.serverUrl}/api/users`);
-          // console.log(user);
-          // console.log("User data:", data);
   
-          setUsers(
-            data.users
-              .filter((person) => {
-                return (
-                  !person.followers.includes(user._id) ||
-                  person._id.toString() !== user._id.toString()
-                );
-              })
-              .slice(0, 10)
-          );
+          await data.users.sort(function (newUser) {
+            return 0.5 - Math.random();
+          });
+  
+         
+  
+          const notFollowing = data.users.filter((person) => {
+            if (
+              person._id.toString() !== user._id.toString() &&
+              !currentlyFollowing.includes(person?._id)
+            ) {
+              return person;
+            }
+          });
+  
+          if (
+            JSON.stringify(currentlyFollowing) !== JSON.stringify(notFollowing)
+          ) {
+            setUsers(notFollowing);
+          }
         } catch (error) {
           console.log(error.response?.data);
         }
-    }
-    useEffect(() => {
-        postUsers()
-
-        users.filter(element => {
-          if (element.followers.includes(user?._id)) {
-            setFollow(true)
-          }
-        
-          setFollow(false)
-        });
-    },[])
+      })();
+    }, [currentlyFollowing])
   return (
     <section className={styles.write}>
         <Container>
@@ -110,7 +123,7 @@ const Followers = () => {
                   <span className="mt-1">
                     {user?.firstName} {user?.lastName}
                   </span>
-                  {follow ? (
+                  {/* {follow ? (
                     <Button 
                     variant="primary"
                     onClick= {() => postUnfollow(user?._id)}
@@ -123,13 +136,13 @@ const Followers = () => {
                   >
                     Follow
                 </Button>}
-                  
-                  {/* <Button 
+                   */}
+                  <Button 
                     variant="outline-primary"
                     onClick= {() => postFollow(user?._id)}
                     >
                       Follow
-                  </Button> */}
+                  </Button>
                 </div>
                 <hr />
               </Col>
