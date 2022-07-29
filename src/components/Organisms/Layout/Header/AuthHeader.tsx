@@ -189,7 +189,7 @@ const AuthHeader = () => {
                 ) : (
                   <BsEnvelope />
                 )}
-                <Badge className={styles.badge}>9</Badge>
+                {/* <Badge className={styles.badge}>0</Badge> */}
               </Button>
             </Link>
 
@@ -219,7 +219,7 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
-              <Badge className={styles.badge}>9</Badge>
+              {/* <Badge className={styles.badge}>0</Badge> */}
             </Button>
           </div>
           <NavDropdown

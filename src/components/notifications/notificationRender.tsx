@@ -1,5 +1,5 @@
 import { Card } from "react-bootstrap";
-
+// import styles from '@/styles/notifications.module.css'
 import { GoPrimitiveDot } from "react-icons/go";
 import styles from "../../styles/notifications.module.css";
 
@@ -14,7 +14,7 @@ function NotificationRender({ notification }) {
           className={`${styles.notificationMessages}`}
           style={{ cursor: "pointer" }}
         >
-          <Card.Text> {notification.message}</Card.Text>
+          <Card.Text className={styles.notificationMessages} > {notification.content}</Card.Text>
           <div>
             <small className="text-muted" style={{ fontSize: "11px" }}>
               <div className="mt-3">

@@ -31,7 +31,7 @@ import styles from "@/styles/feed.module.scss";
 import Follow from "@/components/Organisms/App/Follow";
 import { useDispatch, useSelector } from "@/redux/store";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
-
+import { getNotification } from "@/reduxFeatures/api/notifications";
 // import Editor from "@/components/Organisms/SlateEditor/Editor";
 import { useModalWithData } from "@/hooks/useModalWithData";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -65,7 +65,7 @@ const Feed = () => {
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
     // window.addEventListener("scroll", checkScroll);
-
+    
     return () => {
       document.body.style.backgroundColor = "initial";
       // window.removeEventListener("scroll", checkScroll);
