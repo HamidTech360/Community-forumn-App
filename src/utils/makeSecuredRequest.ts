@@ -17,7 +17,7 @@ export const getNewToken = async () => {
   return data.accessToken;
 };
 
-const makeSecuredRequest = async (
+export const makeSecuredRequest = async (
   url: string,
   method: AxiosRequestConfig["method"] = "GET",
   body?: Record<string, any>

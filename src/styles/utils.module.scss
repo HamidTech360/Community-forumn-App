@@ -285,3 +285,16 @@
         width: 0.85rem;
     }
 }
+.comment{
+    small{
+        margin-top: 1rem;
+        font-weight: 600;
+        font-style: italic;
+        color: grey;
+    }
+}
+
+.replies{
+    float: right;
+    right: 0 !important;
+}

@@ -6,7 +6,6 @@ import { Button, Card, Image, ListGroup } from "react-bootstrap";
 import {
   user as userAuth,
   selectUser,
-  setFollowers,
   selectFollowers,
   setFollowing,
   selectFollowing,
