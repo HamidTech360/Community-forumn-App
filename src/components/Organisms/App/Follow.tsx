@@ -30,7 +30,6 @@ const Follow = () => {
   const handleFollow = async (id: string) => {
     try {
       await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
-
       // Update Auth User State
       (async function () {
         try {
@@ -43,9 +42,9 @@ const Follow = () => {
         } catch (error) {
           localStorage.removeItem("accessToken");
         }
-
         // document.getElementById(`followBtn-${id}`).style.display = "none";
       })();
+      // console.log("done");
     } catch (error) {
       // console.error("follow Error:", error);
     }
@@ -60,10 +59,15 @@ const Follow = () => {
         //   console.log("users.length is undefined");
         // }
         const { data } = await axios.get(`${config.serverUrl}/api/users`);
+        // console.log("data:", data);
 
         let sliceNum = 0;
-        if (window.innerHeight > 777) {
+        if (window.innerHeight >= 1024) {
           sliceNum = 10;
+        } else if (window.innerHeight >= 888) {
+          sliceNum = 8;
+        } else if (window.innerHeight >= 777) {
+          sliceNum = 7;
         } else {
           sliceNum = 5;
         }

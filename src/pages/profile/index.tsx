@@ -43,10 +43,10 @@ const Profile = () => {
             },
           }
         );
-        console.log(response.data);
+        // console.log(response.data);
         setData(response.data.posts);
       } catch (error) {
-        console.log(error.response?.data);
+        // console.log(error.response?.data);
       }
     })();
     document.body.style.backgroundColor = "#f6f6f6";

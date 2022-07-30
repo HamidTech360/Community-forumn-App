@@ -22,7 +22,7 @@ import {
   useModalWithData,
   useModalWithShare,
 } from "@/hooks/useModalWithData";
-import ModalCard from "@/components/Organisms/App/ModalCard";
+// import ModalCard from "@/components/Organisms/App/ModalCard";
 import truncate from "trunc-html";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -56,6 +56,16 @@ import {
   setFollowing,
   selectFollowing,
 } from "@/reduxFeatures/authState/authStateSlice";
+import {
+  // setLikeChanged,
+  // selectLikeChanged,
+  // setBookMarkChanged,
+  // selectBookMarkChanged,
+  setLikeChangedModal,
+  selectLikeChangedModal,
+  // setBookMarkChangedModal,
+  // selectBookMarkChangedModal,
+} from "@/reduxFeatures/app/postModalCardSlice";
 import { useRouter } from "next/router";
 import Comment from "@/components/Organisms/App/Comment";
 import makeSecuredRequest, {
@@ -64,19 +74,29 @@ import makeSecuredRequest, {
 // import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
-  post,
+  post: postComingIn,
   trimmed,
 }: {
   post: Record<string, any>;
   trimmed?: Boolean;
 }) => {
-  // console.log("post:", post);
+  // console.log("PastCard Loaded+++++");
+  // console.log("postComingIn:", postComingIn);
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   // const posts = useSelector(selectPost);
+  // const likeChanged = useSelector(selectLikeChanged);
+  // const bookmarkChanged = useSelector(selectBookMarkChanged);
+  const likeChangedModal = useSelector(selectLikeChangedModal);
+  // const bookmarkChangedModal = useSelector(selectBookMarkChangedModal);
   const router = useRouter();
+
+  const [post, setPostComingIn] = useState(postComingIn);
+
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookMarked] = useState(false);
+  // const [likedOrBookmarkedChanged, setLikedOrBookmarkedChanged] =
+  //   useState(false);
   const sanitizer = DOMPurify.sanitize;
 
   // - comment section
@@ -85,6 +105,27 @@ const PostCard = ({
   const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
   const currentlyFollowing = useSelector(selectFollowing);
+
+  // modal
+  const { modalOpen, toggle, selected, setSelected } = useModalWithData();
+  const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
+    useModalWithShare();
+
+  // Monitor Likes In ModalCard & Let It Reflect In PastCard
+  useEffect(() => {
+    if (!modalOpen && likeChangedModal.length > 0) {
+      if (likeChangedModal.includes(postComingIn?._id)) {
+        // Refetch Specific Post So as to get updated like count
+        (async () => await likeIt(false))();
+      }
+    }
+
+    // Clear Redux State On componentWillUnMount
+    return () => {
+      dispatch(setLikeChangedModal(""));
+      // dispatch(setBookMarkChangedModal(""));
+    };
+  }, [modalOpen]);
 
   const postComment = async () => {
     const body = {
@@ -107,7 +148,7 @@ const PostCard = ({
         },
       }
     );
-    console.log(res);
+    // console.log(res);
     let comments = post?.comments;
     comments?.unshift(res.data);
     setModalPost({ ...post, comments });
@@ -116,10 +157,88 @@ const PostCard = ({
     setShowComment(false);
   };
 
-  // modal
-  const { modalOpen, toggle, selected, setSelected } = useModalWithData();
-  const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
-    useModalWithShare();
+  const likeIt = async (bool) => {
+    let type;
+    const currentRoute = router.pathname;
+    if (currentRoute == "/feed") {
+      type = "feed";
+    } else if (
+      currentRoute == "/groups" ||
+      currentRoute == "/groups/[id]/[path]"
+    ) {
+      type = "post";
+    } else if (currentRoute.includes("profile")) {
+      type = "post";
+    }
+
+    try {
+      if (bool) {
+        // Like Post
+        await axios.get(
+          `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+      }
+
+      // Refetch Specific Post So as to get updated like count
+      if (currentRoute == "/feed") {
+        const response = await axios.get(
+          `${config.serverUrl}/api/${type}/${postComingIn?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+
+        setPostComingIn(response.data);
+        setLiked(true);
+      } else if (
+        currentRoute == "/groups" ||
+        currentRoute == "/groups/[id]/[path]"
+      ) {
+        // console.log(
+        //   "GROUPS",
+        //   `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`
+        // );
+        try {
+          const response = await axios.get(
+            `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`,
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+
+          // console.log("response.data:", response.data);
+          // setPostComingIn(response.data);
+          setLiked(true);
+        } catch (error) {
+          console.error(error);
+        }
+      } else if (currentRoute.includes("profile")) {
+        const response = await axios.get(
+          `${config.serverUrl}/api/${type}s/${postComingIn?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+
+        // console.log("response.data:", response.data.post);
+        setPostComingIn(response.data.post);
+        setLiked(true);
+      }
+    } catch (error) {
+      // console.log(error.response?.data);
+    }
+  };
 
   const postButton = [
     {
@@ -166,42 +285,12 @@ const PostCard = ({
   };
 
   const handleLike = async () => {
-    let type;
-    const currentRoute = router.pathname;
-    if (currentRoute == "/feed") {
-      type = "feed";
-    } else if (
-      currentRoute == "/groups" ||
-      currentRoute == "/groups/[id]/[path]"
-    ) {
-      type = "post";
-    } else if (currentRoute.includes("profile")) {
-      type = "post";
-    }
-
-    console.log(type, currentRoute);
-
-    try {
-      const { data } = await axios.get(
-        `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
-
-      setLiked(true);
-
-      // window.location.reload();
-    } catch (error) {
-      // console.log(error.response?.data);
-    }
+    await likeIt(true);
   };
 
   const handleBookMark = async () => {
     try {
-      const { data } = await axios.post(
+      await axios.post(
         `${config.serverUrl}/api/bookmarks/?id=${post._id}`,
         {},
         {
@@ -210,7 +299,21 @@ const PostCard = ({
           },
         }
       );
-      setBookMarked(true);
+      // setBookMarked(true);
+
+      // Update Auth User State. This would Auto-Sync Bookmark on both PastCard & ModalCard
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
     } catch (error) {
       // console.log(error.response?.data);
     }
@@ -218,33 +321,48 @@ const PostCard = ({
 
   const removeBookMark = async () => {
     try {
-      const { data } = await axios.delete(
-        `${config.serverUrl}/api/bookmarks/?id=${post._id}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
+      await axios.delete(`${config.serverUrl}/api/bookmarks/?id=${post._id}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
 
-      setBookMarked(false);
+      // setBookMarked(false);
+
+      // Update Auth User State. This would Auto-Sync Bookmark on both PastCard & ModalCard
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data);
     }
   };
 
   useEffect(() => {
     // console.log(router.pathname);
+    // console.log("user?.bookmarks:", user?.bookmarks);
 
     if (post?.likes?.includes(user._id)) {
       setLiked(true);
+      // dispatch(setLiked(true));
     }
     if (user?.bookmarks?.includes(post?._id)) {
       setBookMarked(true);
+      // dispatch(setBookMarked(true));
     } else {
       setBookMarked(false);
+      // dispatch(setBookMarked(false));
     }
-  }, []);
+  }, [user]);
 
   const handleFollow = async (id) => {
     try {
@@ -397,7 +515,7 @@ const PostCard = ({
                 <NavDropdown.Item
                   className={styles.item}
                   style={{ backgroundColor: "rgb(237, 236, 236)" }}
-                  onClick={() => {
+                  onClick={async () => {
                     setSelected(post);
                     toggle();
                   }}
@@ -413,9 +531,6 @@ const PostCard = ({
                     <NavDropdown.Item
                       className={styles.item}
                       onClick={async () => changeFollowingStatus(post)}
-                      // onClick={async () =>
-                      //   changeFollowingStatus(post?.author?._id)
-                      // }
                     >
                       {currentlyFollowing.includes(post?.author?._id) ? (
                         <>
@@ -448,7 +563,7 @@ const PostCard = ({
           style={{
             cursor: "pointer",
           }}
-          onClick={() => {
+          onClick={async () => {
             if (showComment) {
               setShowComment(!showComment);
             }
@@ -469,7 +584,7 @@ const PostCard = ({
               }}
             />
           )} */}
-            {Object.keys(post).length !== 0 && (
+            {post && Object.keys(post).length !== 0 && (
               <div
                 className="post-content"
                 dangerouslySetInnerHTML={{
@@ -481,6 +596,18 @@ const PostCard = ({
                 }}
               />
             )}
+            {/* {Object.keys(post).length !== 0 && (
+              <div
+                className="post-content"
+                dangerouslySetInnerHTML={{
+                  __html: trimmed
+                    ? sanitizer(truncate(post?.postBody, 250).html) ||
+                      sanitizer(truncate(post?.post, 250).html)
+                    : sanitizer(truncate(post?.postBody, 250).html) ||
+                      sanitizer(truncate(post?.post, 250).html),
+                }}
+              />
+            )} */}
           </div>
 
           {!trimmed && (
@@ -502,13 +629,18 @@ const PostCard = ({
             {postButton.map((item, key) => (
               <div className="col-3" key={key}>
                 <Button
-                  // key={key}
-                  // onClick={() => item.name === "Like" && handleLike()}
                   variant="none"
                   // disabled={item.name === "Like" && post?.likes?.includes(user._id)}
                   // className="d-flex justify-content-center gap-1 align-items-center"
                   className="d-flex justify-content-center align-items-center"
                   onClick={() => {
+                    if (item.name === "Like") {
+                      if (liked) {
+                        // removeLike();
+                      } else {
+                        handleLike();
+                      }
+                    }
                     if (item.name === "Comment") {
                       setShowComment(!showComment);
                     }
@@ -518,6 +650,15 @@ const PostCard = ({
                       toggleShare();
                       setSelectedShare(post);
                       // document.getElementById("dropDownId").click();
+                    }
+                    if (item.name === "Bookmark") {
+                      if (bookmarked) {
+                        // If already bookmarked, then remove bookmark
+                        removeBookMark();
+                      } else {
+                        // If not already bookmarked, then add bookmark
+                        handleBookMark();
+                      }
                     }
                   }}
                 >
@@ -535,7 +676,6 @@ const PostCard = ({
                     <span
                       style={{ marginLeft: "7px" }}
                       className="mx-2 text-secondary"
-                      // onClick={() => setShowComment(!showComment)}
                     >
                       {post?.comments?.length || 0}
                     </span>

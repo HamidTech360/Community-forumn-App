@@ -46,6 +46,16 @@ import {
 } from "@/reduxFeatures/api/postSlice";
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import {
+  // setLikeChanged,
+  // selectLikeChanged,
+  // setBookMarkChanged,
+  // selectBookMarkChanged,
+  setLikeChangedModal,
+  selectLikeChangedModal,
+  // setBookMarkChangedModal,
+  // selectBookMarkChangedModal,
+} from "@/reduxFeatures/app/postModalCardSlice";
 import { useRouter } from "next/router";
 import Comment from "@/components/Organisms/App/Comment";
 import makeSecuredRequest, {
@@ -56,7 +66,7 @@ import { MdOutlineCancel } from "react-icons/md";
 import { BiArrowBack } from "react-icons/bi";
 
 const ModalCard = ({
-  post,
+  post: postComingIn,
   trimmed,
 }: {
   post: Record<string, any>;
@@ -64,8 +74,15 @@ const ModalCard = ({
 }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const posts = useSelector(selectPost);
+  // const posts = useSelector(selectPost);
+  // const likeChanged = useSelector(selectLikeChanged);
+  // const bookmarkChanged = useSelector(selectBookMarkChanged);
+  const likeChangedModal = useSelector(selectLikeChangedModal);
+  // const bookmarkChangedModal = useSelector(selectBookMarkChangedModal);
   const router = useRouter();
+
+  const [post, setPostComingIn] = useState(postComingIn);
+
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookMarked] = useState(false);
   const sanitizer = DOMPurify.sanitize;
@@ -79,6 +96,15 @@ const ModalCard = ({
 
   const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
     useModalWithShare();
+
+  // useEffect(() => {
+  //   // first;
+
+  //   return () => {
+  //     dispatch(setLikeChanged([]));
+  //     dispatch(setBookMarkChanged([]));
+  //   };
+  // }, []);
 
   const postButton = [
     {
@@ -124,9 +150,10 @@ const ModalCard = ({
     });
   };
 
-  const handleLike = async () => {
+  const likeIt = async (bool) => {
     let type;
     const currentRoute = router.pathname;
+    // console.log("currentRoute:", currentRoute);
     if (currentRoute == "/feed") {
       type = "feed";
     } else if (
@@ -141,21 +168,86 @@ const ModalCard = ({
     console.log(type, currentRoute);
 
     try {
-      const { data } = await axios.get(
-        `${config.serverUrl}/api/likes/?type=${type}&id=${post._id}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+      if (bool) {
+        // Like Post
+        await axios.get(
+          `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+
+        // console.log("likePost.data:", likePost.data);
+      }
+      // Refetch Specific Post So as to get updated like count
+      if (currentRoute == "/feed") {
+        const response = await axios.get(
+          `${config.serverUrl}/api/${type}/${postComingIn?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+
+        // console.log("response.data:", response.data);
+        setPostComingIn(response.data);
+        setLiked(true);
+
+        if (!likeChangedModal.includes(post?._id)) {
+          dispatch(setLikeChangedModal(post?._id));
         }
-      );
+      } else if (
+        currentRoute == "/groups" ||
+        currentRoute == "/groups/[id]/[path]"
+      ) {
+        try {
+          const response = await axios.get(
+            `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`,
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
 
-      setLiked(true);
+          // console.log("response.data:", response.data);
+          // setPostComingIn(response.data);
+          setLiked(true);
 
-      // window.location.reload();
+          if (!likeChangedModal.includes(post?._id)) {
+            dispatch(setLikeChangedModal(post?._id));
+          }
+        } catch (error) {
+          // console.log(error);
+        }
+      } else if (currentRoute.includes("profile")) {
+        const response = await axios.get(
+          `${config.serverUrl}/api/${type}s/${postComingIn?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+
+        // console.log("response.data:", response.data.post);
+        setPostComingIn(response.data.post);
+        setLiked(true);
+
+        if (!likeChangedModal.includes(post?._id)) {
+          dispatch(setLikeChangedModal(post?._id));
+        }
+      }
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data);
     }
+  };
+
+  const handleLike = async () => {
+    likeIt(true);
   };
 
   const postComment = async () => {
@@ -171,7 +263,7 @@ const ModalCard = ({
     }
     setLoading(true);
     const res = await axios.post(
-      `${config.serverUrl}/api/comments?type=feed&id=${post._id}`,
+      `${config.serverUrl}/api/comments?type=feed&id=${post?._id}`,
       body,
       {
         headers: {
@@ -179,7 +271,7 @@ const ModalCard = ({
         },
       }
     );
-    console.log(res);
+    // console.log(res);
     let comments = post?.comments;
     comments?.unshift(res.data);
     setModalPost({ ...post, comments });
@@ -188,8 +280,8 @@ const ModalCard = ({
 
   const handleBookMark = async () => {
     try {
-      const { data } = await axios.post(
-        `${config.serverUrl}/api/bookmarks/?id=${post._id}`,
+      await axios.post(
+        `${config.serverUrl}/api/bookmarks/?id=${post?._id}`,
         {},
         {
           headers: {
@@ -197,42 +289,68 @@ const ModalCard = ({
           },
         }
       );
-      //console.log(data);
-      setBookMarked(true);
+      // setBookMarked(true);
+
+      // Update Auth User State. This would Auto-Sync Bookmark on both PastCard & ModalCard
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data);
     }
   };
 
   const removeBookMark = async () => {
     try {
-      const { data } = await axios.delete(
-        `${config.serverUrl}/api/bookmarks/?id=${post._id}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+      await axios.delete(`${config.serverUrl}/api/bookmarks/?id=${post?._id}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+      // setBookMarked(false);
+
+      // Update Auth User State. This would Auto-Sync Bookmark on both PastCard & ModalCard
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
         }
-      );
-      //console.log(data);
-      setBookMarked(false);
+      })();
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data);
     }
   };
 
   useEffect(() => {
     // console.log(router.pathname);
 
-    if (post.likes?.includes(user._id)) {
+    if (post?.likes?.includes(user._id)) {
       setLiked(true);
+      // dispatch(setLiked(true));
     }
-    if (user.bookmarks?.includes(post._id)) {
+    if (user.bookmarks?.includes(post?._id)) {
       setBookMarked(true);
+      // dispatch(setBookMarked(true));
     } else {
       setBookMarked(false);
+      // dispatch(setBookMarked(false));
     }
-  }, []);
+  }, [user]);
 
   const handleFollow = async (id) => {
     try {
@@ -354,7 +472,7 @@ const ModalCard = ({
                       onClick={redirectPage}
                       dangerouslySetInnerHTML={{
                         __html: sanitizer(
-                          `${post.author?.firstName} ${post.author?.lastName}`
+                          `${post?.author?.firstName} ${post?.author?.lastName}`
                         ),
                       }}
                     />
@@ -449,7 +567,7 @@ const ModalCard = ({
             </Card.Title>
 
             <Card.Body>
-              {Object.keys(post).length !== 0 && (
+              {post && Object.keys(post).length !== 0 && (
                 <div
                   className="post-content"
                   dangerouslySetInnerHTML={{
@@ -468,6 +586,25 @@ const ModalCard = ({
                   // }}
                 />
               )}
+              {/* {Object.keys(post).length !== 0 && (
+                <div
+                  className="post-content"
+                  dangerouslySetInnerHTML={{
+                    __html: trimmed
+                      ? sanitizer(truncate(post?.postBody, 250).html) ||
+                        sanitizer(truncate(post?.post, 250).html)
+                      : sanitizer(truncate(post?.postBody, 250).html) ||
+                        sanitizer(truncate(post?.post, 250).html),
+                  }}
+                  // dangerouslySetInnerHTML={{
+                  //   __html: trimmed
+                  //     ? post?.postBody?.slice(0, 500) ||
+                  //       post?.post?.slice(0, 500) + "..." ||
+                  //       post?.postBody
+                  //     : post?.postBody || post?.post,
+                  // }}
+                />
+              )} */}
 
               <div className={styles.trimmed}>
                 {!trimmed && (
@@ -494,13 +631,27 @@ const ModalCard = ({
                       variant="none"
                       // disabled={item.name === "Like" && post.likes?.includes(user._id)}
                       // className="d-flex justify-content-center gap-1 align-items-center"
-                      className="d-flex justify-content-center align-items-center"
+                      className="d-flex justify-content-center align-items-center border-0"
                       onClick={() => {
+                        if (item.name === "Like") {
+                          if (liked) {
+                            // removeLike();
+                          } else {
+                            handleLike();
+                          }
+                        }
                         if (item.name === "Share") {
                           // modalOpen;
                           toggleShare();
                           setSelectedShare(postButton);
                           // document.getElementById("dropDownId").click();
+                        }
+                        if (item.name === "Bookmark") {
+                          if (bookmarked) {
+                            removeBookMark();
+                          } else {
+                            handleBookMark();
+                          }
                         }
                       }}
                     >
@@ -510,7 +661,7 @@ const ModalCard = ({
                           style={{ marginLeft: "7px" }}
                           className="mx-2 text-secondary"
                         >
-                          {post.likes?.length || 0}
+                          {post?.likes?.length || 0}
                         </span>
                       )}
 
@@ -520,7 +671,7 @@ const ModalCard = ({
                           className="mx-2 text-secondary"
                           // onClick={() => setShowComment(!showComment)}
                         >
-                          {post.comments?.length || 0}
+                          {post?.comments?.length || 0}
                         </span>
                       )}
 
@@ -562,7 +713,7 @@ const ModalCard = ({
                       onChange={(e) => setCommentPost(e.target.value)}
                       style={{ height: "100px" }}
                     ></textarea>
-                    <label htmlFor="articleTextarea">Comments</label>
+                    {/* <label htmlFor="articleTextarea">Comments</label> */}
                   </div>
                 </div>
                 <div className="col-5 ms-auto d-grid">
@@ -583,12 +734,12 @@ const ModalCard = ({
             </section>
             <section>
               <h6 style={{ fontWeight: "bolder" }}>
-                Comments ({post.comments?.length})
+                Comments ({post?.comments?.length})
               </h6>
               <div className="row">
                 <div className="col-12 mt-4">
-                  {post.comments?.length > 0 &&
-                    post.comments?.map((comment, index) => {
+                  {post?.comments?.length > 0 &&
+                    post?.comments?.map((comment, index) => {
                       return (
                         <Comment key={`post_${index}`} comment={comment} />
                       );
