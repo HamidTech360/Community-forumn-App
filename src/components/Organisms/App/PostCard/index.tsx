@@ -66,6 +66,11 @@ const PostCard = ({
   const [commentPost, setCommentPost] = useState("");
   const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [noOfLikes, setNoOfLikes] = useState(0)
+
+  useEffect(()=>{
+    setNoOfLikes(post?.likes?.length)
+  },[])
 
   const postComment = async () => {
     const body = {
@@ -167,10 +172,11 @@ const PostCard = ({
       );
 
       setLiked(true);
-
+      setNoOfLikes(noOfLikes+1)
       // window.location.reload();
     } catch (error) {
       console.log(error.response?.data);
+      
     }
   };
 
@@ -343,7 +349,7 @@ const PostCard = ({
                 style={{ marginLeft: "7px" }}
                 className="mx-2 text-secondary"
               >
-                {post?.likes?.length || 0}
+                {noOfLikes || 0}
               </span>
             )}
 

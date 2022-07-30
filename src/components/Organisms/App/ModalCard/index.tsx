@@ -48,7 +48,8 @@ const ModalCard = ({
   const [modalPost, setModalPost] = useState<Record<string, any>>({});
   const [commentPost, setCommentPost] = useState("");
   const [loading, setLoading] = useState(false)
-
+  
+ //console.log([...post.comments].reverse());
  
 
   const postButton = [
@@ -386,7 +387,7 @@ const ModalCard = ({
                 <div className="row">
                   <div className="col-12 mt-4">
                     {post.comments?.length > 0 &&
-                      post.comments?.map((comment, index) => {
+                      ([...post.comments].reverse()).map((comment, index) => {
                         return (
                           <Comment
                             key={`post_${index}`}
