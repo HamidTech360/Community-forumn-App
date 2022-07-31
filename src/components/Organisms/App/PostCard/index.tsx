@@ -132,7 +132,6 @@ const PostCard = ({
       content: commentPost,
     };
 
-   
     setLoading(true);
     const res = await axios.post(
       `${config.serverUrl}/api/comments?type=feed&id=${post?._id}`,
@@ -168,15 +167,20 @@ const PostCard = ({
 
     try {
       if (bool) {
-        // Like Post
-        await axios.get(
-          `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
-          {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }
-        );
+        try {
+          // Like Post
+          const likeNew = await axios.get(
+            `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          console.log("likeNew:", likeNew);
+        } catch (error) {
+          console.error(error);
+        }
       }
 
       // Refetch Specific Post So as to get updated like count
@@ -196,13 +200,11 @@ const PostCard = ({
         currentRoute == "/groups" ||
         currentRoute == "/groups/[id]/[path]"
       ) {
-        // console.log(
-        //   "GROUPS",
-        //   `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`
-        // );
         try {
+          console.log("POST ID After:", postComingIn?._id);
           const response = await axios.get(
-            `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`,
+            // `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`,
+            `${config.serverUrl}/api/feed/${postComingIn?._id}`,
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -210,8 +212,8 @@ const PostCard = ({
             }
           );
 
-          // console.log("response.data:", response.data);
-          // setPostComingIn(response.data);
+          console.log("response.data:", response.data);
+          setPostComingIn(response.data);
           setLiked(true);
         } catch (error) {
           console.error(error);
@@ -235,12 +237,98 @@ const PostCard = ({
     }
   };
 
+  const unLikeIt = async (bool) => {
+    let type;
+    const currentRoute = router.pathname;
+    if (currentRoute == "/feed") {
+      type = "feed";
+    } else if (
+      currentRoute == "/groups" ||
+      currentRoute == "/groups/[id]/[path]"
+    ) {
+      type = "post";
+    } else if (currentRoute.includes("profile")) {
+      type = "post";
+    }
+
+    try {
+      // if (bool) {
+      //   // Like Post
+      //   try {
+      //     const unlikePost = await axios.delete(
+      //       `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
+      //       // `${config.serverUrl}/api/${type}/${post?._id}`,
+      //       {
+      //         headers: {
+      //           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      //         },
+      //       }
+      //     );
+      //     console.log("unlikePost:", unlikePost);
+      //   } catch (error) {
+      //     console.error(error);
+      //   }
+      // }
+
+      // Refetch Specific Post So as to get updated like count
+      if (currentRoute == "/feed") {
+        const response = await axios.get(
+          `${config.serverUrl}/api/${type}/${postComingIn?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+
+        setPostComingIn(response.data);
+        setLiked(false);
+      } else if (
+        currentRoute == "/groups" ||
+        currentRoute == "/groups/[id]/[path]"
+      ) {
+        try {
+          const response = await axios.get(
+            // `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`,
+            `${config.serverUrl}/api/feed/${postComingIn?._id}`,
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+
+          console.log("response.data:", response.data);
+          setPostComingIn(response.data);
+          setLiked(false);
+        } catch (error) {
+          console.error(error);
+        }
+      } else if (currentRoute.includes("profile")) {
+        const response = await axios.get(
+          `${config.serverUrl}/api/${type}s/${postComingIn?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+
+        // console.log("response.data:", response.data.post);
+        setPostComingIn(response.data.post);
+        setLiked(false);
+      }
+    } catch (error) {
+      // console.log(error.response?.data);
+    }
+  };
+
   const postButton = [
     {
       name: "Like",
       reaction: true,
       icon: liked ? (
-        <AiFillLike color="#086a6d " size={25} />
+        <AiFillLike color="#086a6d " size={25} onClick={() => handleUnLike()} />
       ) : (
         <AiOutlineLike size={25} onClick={() => handleLike()} />
       ),
@@ -281,6 +369,10 @@ const PostCard = ({
 
   const handleLike = async () => {
     await likeIt(true);
+  };
+
+  const handleUnLike = async () => {
+    await unLikeIt(true);
   };
 
   const handleBookMark = async () => {
@@ -580,16 +672,31 @@ const PostCard = ({
             />
           )} */}
             {post && Object.keys(post).length !== 0 && (
-              <div
-                className="post-content"
-                dangerouslySetInnerHTML={{
-                  __html: trimmed
-                    ? sanitizer(truncate(post?.postBody, 250).html) ||
-                      sanitizer(truncate(post?.post, 250).html)
-                    : sanitizer(truncate(post?.postBody, 250).html) ||
-                      sanitizer(truncate(post?.post, 250).html),
-                }}
-              />
+              <div className="d-flex flex-column">
+                <div
+                  className="post-content"
+                  dangerouslySetInnerHTML={{
+                    __html: trimmed
+                      ? sanitizer(truncate(post?.postBody, 100).html) ||
+                        sanitizer(truncate(post?.post, 100).html)
+                      : sanitizer(truncate(post?.postBody, 100).html) ||
+                        sanitizer(truncate(post?.post, 100).html),
+                  }}
+
+                  // // No Need for truncate here as it hides some tags like Bold & Underline
+                  // dangerouslySetInnerHTML={{
+                  //   __html: trimmed
+                  //     ? sanitizer(post?.postBody) || sanitizer(post?.post)
+                  //     : sanitizer(post?.postBody) || sanitizer(post?.post),
+                  // }}
+                />
+                {router.asPath === "/feed" && (
+                  <small style={{ color: "gray", fontSize: "13px" }}>
+                    {" "}
+                    See more
+                  </small>
+                )}
+              </div>
             )}
             {/* {Object.keys(post).length !== 0 && (
               <div
@@ -632,7 +739,9 @@ const PostCard = ({
                     if (item.name === "Like") {
                       if (liked) {
                         // removeLike();
+                        handleUnLike();
                       } else {
+                        console.log("POST ID Init:", post?._id);
                         handleLike();
                       }
                     }

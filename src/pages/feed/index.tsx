@@ -62,6 +62,9 @@ const Feed = () => {
   // const [followers, setFollowers] = useState([]);
   // const [following, setFollowing] = useState([]);
 
+  const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
+    usePagination("/api/feed", "feed");
+
   useEffect(() => {
     if (stateUser) {
       const currentlyFollowing = stateUser.following.map((follow) => {
@@ -80,9 +83,6 @@ const Feed = () => {
   //   post: "",
   // });
 
-  const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
-    usePagination("/api/feed", "feed");
-
   // const checkScroll = () => {
   //   if (window.scrollY > 100) {
   //     setScrollInitialised(true);
@@ -100,8 +100,19 @@ const Feed = () => {
   }, []);
 
   useEffect(() => {
-    fetchNextPage();
-    setPosts(paginatedData);
+    if (Object.entries(newFeed).length !== 0) {
+      console.log("newFeed:", newFeed);
+      if (posts?.length > 0) {
+        console.log("Re-rendering Feed Page");
+        // Fetch Updated Gist Using useSWRInfinite
+        console.log("OLD paginatedData:", paginatedData);
+        fetchNextPage();
+        console.log("NEW paginatedData:", paginatedData);
+
+        // Update State
+        // setPosts(paginatedData);
+      }
+    }
   }, [newFeed]);
 
   useEffect(() => {

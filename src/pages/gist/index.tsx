@@ -74,6 +74,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     usePagination("/api/gists", "gists");
 
   useEffect(() => {
+    document.body.style.backgroundColor = "#f6f6f6";
+
     (async () => {
       try {
         const { data } = await axios.get(`${config.serverUrl}/api/category`);
@@ -86,9 +88,23 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
       }
     })();
   }, []);
-  useEffect(() => {
-    document.body.style.backgroundColor = "#f6f6f6";
 
+  useEffect(() => {
+    if (gistIsSuccess) {
+      if (allGists?.length > 0) {
+        // Fetch Updated Gist Using useSWRInfinite
+        fetchNextPage();
+
+        // Update State
+        setAllGists(paginatedData);
+
+        dispatch(uploadCleanUp({}));
+        // dispatch(setShowGistModal(false));
+      }
+    }
+  }, [gistIsSuccess]);
+
+  useEffect(() => {
     if (paginatedData) {
       if (JSON.stringify(allGists) !== JSON.stringify(paginatedData)) {
         // console.log("paginatedData - 1:", paginatedData);
@@ -96,24 +112,6 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
       }
     }
   }, [paginatedData]);
-
-  useEffect(() => {
-    if (gistIsSuccess) {
-      toast.success("Gist uploaded succesfully", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: customId,
-      });
-
-      // Fetch Updated Gist Using useSWRInfinite
-      fetchNextPage();
-
-      // Update State
-      setAllGists(paginatedData);
-
-      dispatch(uploadCleanUp({}));
-      dispatch(setShowGistModal(false));
-    }
-  }, [gistIsSuccess]);
 
   const handleChange = (e) => {
     dispatch(setGistTitle(e.currentTarget.value));

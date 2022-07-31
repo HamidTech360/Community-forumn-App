@@ -51,8 +51,9 @@ function GroupsFooterBtn({ editorID }) {
           position: toast.POSITION.TOP_RIGHT,
           toastId: "1",
         });
+        // console.log("Groups Response data:", response.data.feed);
         // Auto update feeds in /feed
-        dispatch(setNewGroupFeed(response.data));
+        dispatch(setNewGroupFeed(response.data.feed));
         dispatch(setShowCreatePostModal(false));
         setUploading(false);
       } catch (error) {

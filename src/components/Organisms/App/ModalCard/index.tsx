@@ -169,17 +169,19 @@ const ModalCard = ({
 
     try {
       if (bool) {
-        // Like Post
-        await axios.get(
-          `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
-          {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }
-        );
-
-        // console.log("likePost.data:", likePost.data);
+        try {
+          // Like Post
+          await axios.get(
+            `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+        } catch (error) {
+          console.error(error);
+        }
       }
       // Refetch Specific Post So as to get updated like count
       if (currentRoute == "/feed") {
@@ -205,7 +207,8 @@ const ModalCard = ({
       ) {
         try {
           const response = await axios.get(
-            `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`,
+            // `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`,
+            `${config.serverUrl}/api/feed/${postComingIn?._id}`,
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -214,7 +217,7 @@ const ModalCard = ({
           );
 
           // console.log("response.data:", response.data);
-          // setPostComingIn(response.data);
+          setPostComingIn(response.data);
           setLiked(true);
 
           if (!likeChangedModal.includes(post?._id)) {
@@ -571,12 +574,19 @@ const ModalCard = ({
               {post && Object.keys(post).length !== 0 && (
                 <div
                   className="post-content"
+                  // dangerouslySetInnerHTML={{
+                  //   __html: trimmed
+                  //     ? sanitizer(truncate(post?.postBody, 250).html) ||
+                  //       sanitizer(truncate(post?.post, 250).html)
+                  //     : sanitizer(truncate(post?.postBody, 250).html) ||
+                  //       sanitizer(truncate(post?.post, 250).html),
+                  // }}
+
+                  // No Need for truncate here as it hides some tags like Bold & Underline
                   dangerouslySetInnerHTML={{
                     __html: trimmed
-                      ? sanitizer(truncate(post?.postBody, 250).html) ||
-                        sanitizer(truncate(post?.post, 250).html)
-                      : sanitizer(truncate(post?.postBody, 250).html) ||
-                        sanitizer(truncate(post?.post, 250).html),
+                      ? sanitizer(post?.postBody) || sanitizer(post?.post)
+                      : sanitizer(post?.postBody) || sanitizer(post?.post),
                   }}
                   // dangerouslySetInnerHTML={{
                   //   __html: trimmed

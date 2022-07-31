@@ -33,14 +33,14 @@ const BlogPost = () => {
     });
   };
 
-  const sanitizer = DOMPurify.sanitize;
+  // const sanitizer = DOMPurify.sanitize;
   const FetchData = async () => {
     try {
       const exploreResponse = await axios.get(
         `${config.serverUrl}/api/posts/${router.query.id}`
       );
       setBlogPost(exploreResponse.data.post);
-      console.log("This is explore response", exploreResponse.data.post);
+      // console.log("This is explore response", exploreResponse.data.post);
     } catch (error) {
       router.back();
     }

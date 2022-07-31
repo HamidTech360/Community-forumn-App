@@ -70,17 +70,21 @@ const Explore = ({}) => {
   }, []);
 
   useEffect(() => {
+    if (showPost?.length > 0) {
+      // Fetch Updated Gist Using useSWRInfinite
+      fetchNextPage();
+      // Update State
+      // setPosts(paginatedData);
+    }
+  }, [newPost]);
+
+  useEffect(() => {
     if (paginatedData) {
       if (JSON.stringify(showPost) !== JSON.stringify(paginatedData)) {
         dispatch(setPosts(paginatedData));
       }
     }
   }, [paginatedData]);
-
-  useEffect(() => {
-    fetchNextPage();
-    setPosts(paginatedData);
-  }, [newPost]);
 
   // useEffect(() => {
   //   const fetchPost = async () => {
