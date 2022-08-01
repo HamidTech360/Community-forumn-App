@@ -62,15 +62,21 @@ const AddConnections = ({handleSubmit, isLoading, chooseConnections, data}) => {
             className={styles.connectionItem}
             onClick={()=>handleSelection(item, i)}
           >
-            <Image
-              src={`/images/friends${i + 1}.png`}
-              alt="profile"
-              className={styles.profilePics}
-            />
-            <span className={styles.userName}>
-              {`${item.firstName} ${item.lastName}`} 
-             {item.isSelected?  <GiCheckMark size={23} style={{color:'green', marginLeft:'10px'}}/> :""}
-            </span>
+            <div>
+              <Image
+                src={`/images/friends${i + 1}.png`}
+                alt="profile"
+                className={styles.profilePics}
+                width={60}
+                height={60}
+              />
+            </div>
+            <div className={styles.userNameBox}>
+              <span className={styles.userName}>
+                {`${item.firstName} ${item.lastName}`} 
+              {item.isSelected?  <GiCheckMark size={23} style={{color:'green', marginLeft:'10px'}}/> :""}
+              </span>
+            </div>
           </Col>
         ))}
       </Row>

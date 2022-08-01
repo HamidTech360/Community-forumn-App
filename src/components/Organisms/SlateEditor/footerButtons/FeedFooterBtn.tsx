@@ -55,10 +55,17 @@ function FeedFooterBtn({ editorID }) {
         setUploading(false);
       } catch (error) {
         // console.error(error.response?.data);
-        toast.error("Failed to upload post", {
-          position: toast.POSITION.TOP_RIGHT,
-          toastId: "1",
-        });
+        if (!localStorage.getItem("accessToken")) {
+          toast.error("You must login to create a Blog Post", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+        } else {
+          toast.error("Failed to upload post: Try Again", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+        }
         setUploading(false);
       }
     }

@@ -11,7 +11,7 @@ export const notificationSlice = createSlice({
     },
     reducers:{
         getNotification:  (state, action: PayloadAction<any>) => {
-            console.log(action.payload);
+            //console.log(action.payload);
             
             state.data=action.payload
         }

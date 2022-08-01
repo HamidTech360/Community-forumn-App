@@ -15,13 +15,14 @@ function NotificationRender({ notification }) {
           style={{ cursor: "pointer" }}
         >
           <Card.Text className={styles.notificationMessages} > {notification.content}</Card.Text>
-          <div>
+          <hr />
+          {/* <div>
             <small className="text-muted" style={{ fontSize: "11px" }}>
               <div className="mt-3">
                 <Card.Text>{notification.date}</Card.Text>{" "}
               </div>
             </small>{" "}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

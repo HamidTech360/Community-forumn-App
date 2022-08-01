@@ -3,7 +3,6 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { RiMessage2Fill } from "react-icons/ri";
 import MessageButton from "@/components/Atoms/messageButton";
 import Head from "next/head";
-import config from "../../config";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Col,
@@ -20,6 +19,7 @@ import {
 import { FaTimes } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import Card from "../../components/Molecules/Card";
+import Followers from "@/components/Organisms/Followers";
 import axios from "axios";
 import styles from "../../styles/explore.module.scss";
 import formStyles from "../../styles/templates/new-group/formField.module.css";
@@ -33,24 +33,24 @@ import {
   setShowPostModal,
   selectShowPostModal,
   setPostTitle,
-  selectPostTitle,
-  setIsFetching,
-  selectIsFetching,
+  selectNewPost,
 } from "@/reduxFeatures/api/postSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import usePagination, { Loader } from "@/hooks/usePagination";
 import InfiniteScroll from "react-infinite-scroll-component";
+import config from "@/config";
 
 const Explore = ({}) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const showPost = useSelector(selectPost);
   const showPostModal = useSelector(selectShowPostModal);
-  const user = useSelector(selectUser);
+  // const user = useSelector(selectUser);
   // const isFetching = useSelector(selectIsFetching);
 
+  const newPost = useSelector(selectNewPost);
   const [categories, setCategories] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState([])
+  const [filteredPosts, setFilteredPosts] = useState([]);
   const [key, setKey] = useState<string>("all");
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
@@ -77,43 +77,48 @@ const Explore = ({}) => {
     }
   }, [paginatedData]);
 
+  useEffect(() => {
+    fetchNextPage();
+    setPosts(paginatedData);
+  }, [newPost]);
 
 
-useEffect(()=>{
-  (async ()=>{
-    try{
-      const {data}= await axios.get(`${config.serverUrl}/api/category`)
-      setCategories(data.allCategories)
-      //console.log(data.allCategories);
-      
-    }catch(error){
-      console.log(error.response?.data);
-      
-    }
-  })()
-},[])
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get(`${config.serverUrl}/api/category`);
+        setCategories(data.allCategories);
+        //console.log(data.allCategories);
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    })();
+  }, []);
 
   const handleChange = (e) => {
     dispatch(setPostTitle(e.currentTarget.value));
   };
 
- const filterPost = (item)=>{
-  console.log('key is', key, item);
-    setKey(item)
-    if(item==='all'){
-      setFilteredPosts([])
-      return
+  const filterPost = (item) => {
+    console.log("key is",  item);
+    setKey(item);
+    if (item === "all") {
+      return;
     }
-    
-    const filtered = showPost.filter(post=>post.category===item)
-    console.log('filtered post:', filtered);
-   
-    if(filtered.length<=0) {
-      alert('No Item in this category')
-    }
-    
-    setFilteredPosts(filtered)
- }
+
+    // const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
+    // usePagination(`/api/posts/?category=${item}`, "posts");
+
+    // const filtered = showPost.filter((post) => post.category === item);
+    // console.log("filtered post:", filtered);
+
+    // if (filtered.length <= 0) {
+    //   alert("No Item in this category");
+    // }
+
+    // setFilteredPosts(filtered);
+  };
 
   return (
     <div>
@@ -144,7 +149,9 @@ useEffect(()=>{
                   >
                     Start writing
                   </Button>
-                  <Button variant="light">Explore</Button>
+                  <a href="#explore">
+                    <Button variant="light">Explore</Button>
+                  </a>
                 </div>
               </div>
             </Col>
@@ -160,7 +167,7 @@ useEffect(()=>{
           </Row>
         </Container>
       </section>
-      <section className={styles.topicsSection}>
+      <section id="explore" className={styles.topicsSection}>
         <Container>
           <h1 className="d-flex justify-content-center">
             Topics that matter to you
@@ -175,7 +182,12 @@ useEffect(()=>{
             >
               <Tab title="All" eventKey="all" key="all" />
               {categories.map((category, i) => (
-                <Tab onClick={()=>filterPost(category)} eventKey={category.name} title={category.name} key={i} />
+                <Tab
+                  onClick={() => filterPost(category)}
+                  eventKey={category.name}
+                  title={category.name}
+                  key={i}
+                />
               ))}
             </Tabs>
             {/* {isFetching && (
@@ -197,22 +209,24 @@ useEffect(()=>{
               dataLength={paginatedData?.length ?? 0}
             >
               <Row className="d-flex justify-content-start w-100">
-                {(filteredPosts.length>0?filteredPosts:showPost)?.map((post, key) => (
-                  <Col
-                    key={`posts_${key}`}
-                    md={4}
-                    className={`my-4 ${styles.card}`}
-                  >
-                    <Card
-                      _id={post._id}
-                      image={"/images/postPlaceholder.jpg"}
-                      title={post.postTitle}
-                      body={post.postBody}
-                      author={post.author}
-                      size="any"
-                    />
-                  </Col>
-                ))}
+                {(filteredPosts.length > 0 ? filteredPosts : showPost)?.map(
+                  (post, key) => (
+                    <Col
+                      key={`posts_${key}`}
+                      md={4}
+                      className={`my-4 ${styles.card}`}
+                    >
+                      <Card
+                        _id={post._id}
+                        image={"/images/postPlaceholder.jpg"}
+                        title={post.postTitle}
+                        body={post.postBody}
+                        author={post.author}
+                        size="any"
+                      />
+                    </Col>
+                  )
+                )}
               </Row>
               {isValidating && (
                 <p style={{ textAlign: "center", color: "gray" }}>
@@ -235,34 +249,9 @@ useEffect(()=>{
           </div>
         </Container>
       </section>
-      <section className={styles.write}>
-        <Container>
-          <h1 className="d-flex justify-content-center">
-            Top writers you should follow
-          </h1>
-          <Row>
-            {users?.map((user, key) => (
-              <Col md={6} lg={4} sm={12} key={`author-${key}`} className="mt-4">
-                <div className="d-flex gap-3 align-items-center justify-content-evenly">
-                  <Image
-                    width={50}
-                    height={50}
-                    src={"/images/imagePlaceholder.jpg"}
-                    roundedCircle
-                    alt={user?.firstName}
-                  />
 
-                  <span className="mt-1">
-                    {user?.firstName} {user?.lastName}
-                  </span>
-
-                  <Button variant="outline-primary">Follow</Button>
-                </div>
-                <hr />
-              </Col>
-            ))}
-          </Row>
-        </Container>
+      <section>
+        <Followers />
       </section>
 
       <Modal

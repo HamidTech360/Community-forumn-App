@@ -1,6 +1,6 @@
 .Conections{
     padding-left: 70px;
-    padding-right: 70px;
+    padding-right: 0px;
 }
 .ConnectionHeader{
     font-size: 24px;
@@ -31,11 +31,20 @@
     /* border: 1px solid red; */
     width: fit-content;
     cursor: pointer;
+    display: flex;
+    flex-direction: row;
+}
+.userNameBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
 }
 .userName{
     font-size: 17px;
     font-weight: 500;
     color: black;
+    justify-self: auto;
 }
 .createBtn{
     background-color: #207681;

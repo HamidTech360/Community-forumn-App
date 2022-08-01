@@ -38,7 +38,7 @@ const Notifications = () => {
   const allNotifications = useSelector(state=>state.notification)
   console.log((allNotifications));
   
-  console.log('original notif', allNotifications);
+  //console.log('original notif', allNotifications);
   
   const dispatch = useDispatch();
   useEffect(()=>{
@@ -67,6 +67,18 @@ const Notifications = () => {
       document.body.style.backgroundColor = "initial";
     };
   }, []);
+
+  const navigateToItem = (item)=>{
+ 
+    if(item.forItem==="post"){
+      router.push(`/explore/${item.itemId}`)
+    }else if(item.forItem === "gist"){
+      router.push(`/gist/${item.itemId}`)
+    }
+    
+    dispatch(notificationsOffcanvas(false))
+
+  }
 
   const newAndEarlierStatus = (receivedDate) => {
     const today = new Date().toGMTString();
@@ -203,12 +215,8 @@ const Notifications = () => {
                   )}
                 </div>
                 {Notifications.map((notification, index) => (
-                  <div key={index}>
-                    {radioValue === "1" ? (
+                  <div key={index} onClick={()=>navigateToItem(notification)} >
                       <NotificationRender notification={notification} />
-                    ) : radioValue === "2" && !notification.read ? (
-                      <NotificationRender notification={notification} />
-                    ) : null}
                   </div>
                 ))}
               </div>
