@@ -597,25 +597,6 @@ const ModalCard = ({
                   // }}
                 />
               )}
-              {/* {Object.keys(post).length !== 0 && (
-                <div
-                  className="post-content"
-                  dangerouslySetInnerHTML={{
-                    __html: trimmed
-                      ? sanitizer(truncate(post?.postBody, 250).html) ||
-                        sanitizer(truncate(post?.post, 250).html)
-                      : sanitizer(truncate(post?.postBody, 250).html) ||
-                        sanitizer(truncate(post?.post, 250).html),
-                  }}
-                  // dangerouslySetInnerHTML={{
-                  //   __html: trimmed
-                  //     ? post?.postBody?.slice(0, 500) ||
-                  //       post?.post?.slice(0, 500) + "..." ||
-                  //       post?.postBody
-                  //     : post?.postBody || post?.post,
-                  // }}
-                />
-              )} */}
 
               <div className={styles.trimmed}>
                 {!trimmed && (

@@ -163,8 +163,7 @@ const PostCard = ({
       currentRoute == "/groups" ||
       currentRoute == "/groups/[id]/[path]"
     ) {
-      // type = "post";
-      type = "feed";
+      type = "post";
     } else if (currentRoute.includes("profile")) {
       type = "post";
     }

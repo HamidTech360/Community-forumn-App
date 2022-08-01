@@ -110,7 +110,7 @@ const Feed = () => {
         console.log("NEW paginatedData:", paginatedData);
 
         // Update State
-        // setPosts(paginatedData);
+        setPosts(paginatedData);
       }
     }
   }, [newFeed]);
