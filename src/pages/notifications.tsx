@@ -74,6 +74,9 @@ const Notifications = () => {
       router.push(`/explore/${item.itemId}`)
     }else if(item.forItem === "gist"){
       router.push(`/gist/${item.itemId}`)
+    }else if(item.forItem==="follow"){
+      //console.log(item);
+      router.push(`/profile/${item.itemId}`)
     }
     
     dispatch(notificationsOffcanvas(false))

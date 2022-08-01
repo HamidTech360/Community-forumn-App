@@ -27,6 +27,9 @@
   font-size: 20px;
   font-weight: lighter;
 }
+.authorName{
+  font-weight: 600;
+}
 @media screen and (max-width: 680px) {
   .notificationHeaderText {
     font-size: 25px;
