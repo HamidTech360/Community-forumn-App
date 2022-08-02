@@ -71,6 +71,7 @@ const Feed = () => {
     isValidating,
   } = usePagination("/api/feed", "feed");
 
+  // Update users followers & following in AuthUser because it's a frontend resolved data
   useEffect(() => {
     if (stateUser) {
       const currentlyFollowing = stateUser.following.map((follow) => {

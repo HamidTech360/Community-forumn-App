@@ -86,6 +86,7 @@ const Explore = ({}) => {
 
   // Auto Re-render on new post
   useEffect(() => {
+    // console.log("Mutation");
     mutate();
   }, [newPost]);
 
