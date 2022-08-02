@@ -260,7 +260,7 @@ const PostCard = ({
       currentRoute == "/groups" ||
       currentRoute == "/groups/[id]/[path]"
     ) {
-      type = "post";
+      type = "feed";
     } else if (currentRoute.includes("profile")) {
       type = "post";
     }
@@ -793,12 +793,13 @@ const PostCard = ({
                       : sanitizer(post?.postBody) || sanitizer(post?.post),
                   }}
                 />
-                {router.asPath === "/feed" && (
-                  <small style={{ color: "gray", fontSize: "13px" }}>
-                    {" "}
-                    See more
-                  </small>
-                )}
+                {router.asPath === "/feed" ||
+                  (router?.pathname.includes("profile") && (
+                    <small style={{ color: "gray", fontSize: "13px" }}>
+                      {" "}
+                      See more
+                    </small>
+                  ))}
               </div>
             )}
           </div>
