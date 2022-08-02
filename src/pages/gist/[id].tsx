@@ -152,7 +152,7 @@ const Gist = ({
               <div className="row">
                 <div className="col-12 mt-4">
                   {data?.comments?.length > 0 &&
-                    data?.comments?.map((comment, index) => {
+                    ([...data?.comments].reverse()).map((comment, index) => {
                       return (
                         <Comment key={`data_${index}`} comment={comment} />
                       );

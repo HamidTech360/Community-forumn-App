@@ -107,33 +107,6 @@ const Explore = ({}) => {
     // }
   }, [paginatedPageData]);
 
-  // useEffect(() => {
-  //   const fetchPost = async () => {
-  //     try {
-  //       const response = await axios.get(`${config.serverUrl}/api/posts`);
-  //       dispatch(setPosts(response.data.posts));
-  //       // setIsFetching(false);
-  //       dispatch(setIsFetching(false));
-  //       console.log(response.data.posts);
-  //     } catch (error) {
-  //       console.log(error.response?.data);
-  //     }
-  //   };
-  //   fetchPost();
-  //   //(async function () {
-  //   //   try {
-  //   //     const response = await axios.get(`${config.serverUrl}/api/users`, {});
-  //   //     // console.log("response.data+++:", response.data.users);
-  //   //     setUsers(response.data.users);
-  //   //     dispatch(setIsFetching(false));
-  //   //   } catch (error) {
-  //   //     //console.error(error.response?.data);
-  //   //     // setIsFetching(false);
-  //   //     dispatch(setIsFetching(false));
-  //   //   }
-  //   // })();
-  // }, [dispatch]);
-
   useEffect(() => {
     (async () => {
       try {
@@ -151,21 +124,23 @@ const Explore = ({}) => {
   };
 
   const filterPost = (item) => {
-    console.log("key is", key, item);
+    console.log("key is", item);
     setKey(item);
     if (item === "all") {
-      setFilteredPosts([]);
       return;
     }
 
     const filtered = showPost?.posts.filter((post) => post.category === item);
     console.log("filtered post:", filtered);
 
-    if (filtered.length <= 0) {
-      alert("No Item in this category");
-    }
+    // const filtered = showPost.filter((post) => post.category === item);
+    // console.log("filtered post:", filtered);
 
-    setFilteredPosts(filtered);
+    // if (filtered.length <= 0) {
+    //   alert("No Item in this category");
+    // }
+
+    // setFilteredPosts(filtered);
   };
 
   const handlePageChange = (page) => {
