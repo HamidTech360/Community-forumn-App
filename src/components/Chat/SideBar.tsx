@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 //@ts-nocheck
 import React, { useState, useEffect } from "react";
-import { Card, Fade, Image } from "react-bootstrap";
+import { Card, Fade, Image, Dropdown } from "react-bootstrap";
 import "react-toastify/dist/ReactToastify.css";
 import { FiEdit } from "react-icons/fi";
 import { BsChevronDoubleDown, BsChevronDoubleUp } from "react-icons/bs";
@@ -11,11 +11,35 @@ import truncate from "trunc-html";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import Age from "../Atoms/Age";
 import styles from '@/styles/chat.module.scss'
+import axios from 'axios'
+import config from "@/config";
 
 const SideBar = ({ conversations, selectChat }) => {
   const [open, setOpen] = useState(true);
   const user = useSelector(selectUser)
+  const [allUsers, setAllUsers] = useState([])
+  const [openSearch, setOpenSearch] = useState(false)
   const sanitizer = DOMPurify.sanitize;
+  
+  const handleSearch = async (e)=>{
+   // console.log(e.currentTarget.value)
+    if(e.currentTarget.value !== ""){
+      setOpen(false)
+      setOpenSearch(true)
+      
+      try{
+        const {data} = await axios.get(`${config.serverUrl}/api/search/?type=user&keyword=${e.currentTarget.value}`)
+        setAllUsers(data)
+      }catch(error){
+        console.log(error.response?.data)
+      }
+    }else{
+      setOpen(true)
+      setOpenSearch(false)
+    }
+   
+  }
+
 
   return (
     < >
@@ -61,23 +85,21 @@ const SideBar = ({ conversations, selectChat }) => {
               className="form-control my-2 mb-3 border"
               placeholder="&#128269; Search"
               aria-label="Search Message"
-              // onChange={searchMessages}
+              onChange={(e)=>handleSearch(e)}
             />
           </div>
-          <Fade in={open}>
+         
+         {!openSearch ? <Fade in={open}>
             <div
               id="toggleMessagingBody"
-              className="pt-2"
+              className={`pt-2 ${styles.sideBarCard}`}
               style={{
-                height: "75vh",
+                
                 overflowY: "auto",
                 overflowX: "hidden",
               }}
             >
-              <Card
-                className="border-0 navbar-nav"
-                // style={{ margin: "-.5rem" }}
-              >
+              <Card className="border-0 navbar-nav" >
                 {conversations.map((message, index) => {
                   return (
                     < >
@@ -126,6 +148,31 @@ const SideBar = ({ conversations, selectChat }) => {
               </Card>
             </div>
           </Fade>
+          :
+         <div className={styles.sideBarCard} >
+            {allUsers.map((item, i)=>
+            <div key={i} onClick={()=>selectChat(item)} className={styles.messageItem} style={{paddingLeft:'20px'}}>
+                <div className={styles.imageBox} >
+                  <Image
+                      src={`/images/friends${i+1}.png`}
+                      alt="image"
+                      width={60}
+                      height={60}
+                      roundedCircle={true}
+                  ></Image>
+                </div>
+                <div className={styles.messageTexts}  >
+                  
+                      <div style={{display:'flex', alignItems:'center', paddingTop:'13px'}}  >
+                        {`${item.firstName} ${item.lastName}`} 
+                      </div>                          
+                    
+                </div>
+            </div>
+            )}
+         </div>
+        }
+         
         </div>
       
     </>

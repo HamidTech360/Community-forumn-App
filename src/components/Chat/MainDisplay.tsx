@@ -29,53 +29,7 @@ const MainDisplay = ({   currentChat, messages }) => {
      
       <>
         <Card className={styles.cardBody} style={{  marginRight:'0px', overflow:'scroll', overflowX:'hidden' }}>
-          <Card.Header className={styles.messageHeader}>
-            {/* <div className="row">
           
-            </div> */}
-            {!currentChat? (
-              <div className="row">
-                <div className="col-12">
-                  <h4>
-                    <button className="btn btn-lg p-0" >
-                      <BsArrowLeft
-                        className="me-2 d-inline d-md-none"
-                        //onClick={backToSideMessages}
-                        style={{
-                          cursor: "pointer",
-                        }}
-                      />
-                    </button>
-                    New message
-                  </h4>
-                </div>
-                <div className="col-12 ">
-                  <input
-                    id="sendTo"
-                    type="text"
-                    className="form-control border"
-                    placeholder="Type a name or multiple names separated by comma"
-                  />
-                </div>
-              </div>
-            ) :       
-              <div className={``}>
-                    <div className="">
-                      <BsArrowLeft
-                          style={{
-                              cursor: "pointer",
-                              marginRight:'10px'
-                            }}
-                          />
-                      {currentChat?.firstName}
-                    </div>
-                    <div>
-                      <BsDot size={40} />
-                      <span className="">offline</span>
-                    </div>
-              </div>
-            }
-          </Card.Header>
           <Card.Body className={styles.messageArea}>
             {currentChat && 
               <>
