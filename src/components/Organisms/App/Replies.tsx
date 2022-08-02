@@ -15,7 +15,8 @@ const Replies = ({ reply }: Record<string, any>) => {
   const [liked, setLiked] = useState(false);
   const user = useSelector(selectUser);
   const sanitizer = DOMPurify.sanitize;
-
+  console.log(reply);
+  
   const handleLike = async () => {
     try {
       const { data } = await axios.get(

@@ -130,21 +130,23 @@ const Explore = ({}) => {
   };
 
   const filterPost = (item) => {
-    console.log("key is", key, item);
+    console.log("key is",  item);
     setKey(item);
     if (item === "all") {
-      setFilteredPosts([]);
       return;
     }
 
-    const filtered = showPost.filter((post) => post.category === item);
-    console.log("filtered post:", filtered);
+    // const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
+    // usePagination(`/api/posts/?category=${item}`, "posts");
 
-    if (filtered.length <= 0) {
-      alert("No Item in this category");
-    }
+    // const filtered = showPost.filter((post) => post.category === item);
+    // console.log("filtered post:", filtered);
 
-    setFilteredPosts(filtered);
+    // if (filtered.length <= 0) {
+    //   alert("No Item in this category");
+    // }
+
+    // setFilteredPosts(filtered);
   };
 
   return (
