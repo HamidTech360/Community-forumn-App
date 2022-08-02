@@ -84,6 +84,11 @@ const PostCard = ({
   const [commentPost, setCommentPost] = useState("");
   const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [noOfLikes, setNoOfLikes] = useState(0)
+
+  useEffect(()=>{
+    setNoOfLikes(post?.likes?.length)
+  },[])
   const currentlyFollowing = useSelector(selectFollowing);
 
   const postComment = async () => {
@@ -187,10 +192,11 @@ const PostCard = ({
       );
 
       setLiked(true);
-
+      setNoOfLikes(noOfLikes+1)
       // window.location.reload();
     } catch (error) {
-      // console.log(error.response?.data);
+      console.log(error.response?.data);
+      
     }
   };
 
@@ -463,6 +469,67 @@ const PostCard = ({
                   : post?.post || post?.post,
               }}
             />
+          )}
+        </div>
+
+        {!trimmed && (
+          <Image
+            className="d-none d-sm-block d-lg-none"
+            style={{ borderRadius: 0 }}
+            src={"/images/formbg.png"}
+            fluid
+            alt={""}
+          />
+        )}
+      </Card.Body>
+
+      <Card.Footer
+        className={`mx-1 d-flex justify-content-between bg-white ${styles.footer}`}
+      >
+        {postButton.map((item, key) => (
+          <Button
+            key={key}
+            // onClick={() => item.name === "Like" && handleLike()}
+            variant="none"
+            // disabled={item.name === "Like" && post?.likes?.includes(user._id)}
+            className="d-flex justify-content-center gap-1 align-items-center"
+          >
+            {item.icon}
+            {item.name === "Like" && (
+              <span
+                style={{ marginLeft: "7px" }}
+                className="mx-2 text-secondary"
+              >
+                {noOfLikes || 0}
+              </span>
+            )}
+
+            {item.name === "Comment" && (
+              <span
+                style={{ marginLeft: "7px" }}
+                className="mx-2 text-secondary"
+                onClick={() => setShowComment(!showComment)}
+              >
+                {post?.comments?.length || 0}
+              </span>
+            )}
+
+            <span className="d-none d-md-block" style={{ marginLeft: "7px" }}>
+              {item.name}
+            </span>
+          </Button>
+        ))}
+      </Card.Footer>
+      {showComment && (
+        <section>
+          <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
+          <div className="row">
+            <div className="col-2 col-md-2">
+              <Image
+                src={modalPost.authorImage || "/images/imagePlaceholder.jpg"}
+                className="img-fluid"
+                roundedCircle={true}
+                alt="Author's Image"
           )} */}
             {Object.keys(post).length !== 0 && (
               <div

@@ -5,8 +5,9 @@ import React, { useEffect, useState } from "react";
 import styles from "../styles/notifications.module.css";
 import { dummyData } from "@/components/notifications/dummyData";
 import NotificationRender from "@/components/notifications/notificationRender";
-
-import { useDispatch } from "@/redux/store";
+import config from "@/config";
+import axios from "axios";
+import { useDispatch, useSelector } from "@/redux/store";
 import { notificationsOffcanvas } from "@/reduxFeatures/app/appSlice";
 
 import { BsThreeDots } from "react-icons/bs";
@@ -23,16 +24,37 @@ import {
   ToggleButton,
 } from "react-bootstrap";
 import { useRouter } from "next/router";
+import {selectNotifications} from '@/reduxFeatures/api/notifications'
+import { getNotification } from "@/reduxFeatures/api/notifications";
+
 import Link from "next/link";
 
 const Notifications = () => {
   const notifications = dummyData;
 
   const [radioValue, setRadioValue] = useState("1");
+  const [Notifications, setNotifications] = useState([])
   let router = useRouter(null);
-
+  const allNotifications = useSelector(state=>state.notification)
+  console.log((allNotifications));
+  
+  //console.log('original notif', allNotifications);
+  
   const dispatch = useDispatch();
-
+  useEffect(()=>{
+    (async ()=>{
+      try{
+        const response = await axios.get(`${config.serverUrl}/api/notifications`, {headers:{
+          authorization:`Bearer ${localStorage.getItem('accessToken')}`
+        }})
+        console.log(response.data);
+        setNotifications(response.data.notifications)
+      }catch(error){
+        console.log(error.response?.data); 
+      }
+    })()
+    //dispatch(getNotification([1,5]))
+  },[])
   const radios = [
     { name: "All", value: "1" },
     { name: "Unread", value: "2" },
@@ -45,6 +67,21 @@ const Notifications = () => {
       document.body.style.backgroundColor = "initial";
     };
   }, []);
+
+  const navigateToItem = (item)=>{
+ 
+    if(item.forItem==="post"){
+      router.push(`/explore/${item.itemId}`)
+    }else if(item.forItem === "gist"){
+      router.push(`/gist/${item.itemId}`)
+    }else if(item.forItem==="follow"){
+      //console.log(item);
+      router.push(`/profile/${item.itemId}`)
+    }
+    
+    dispatch(notificationsOffcanvas(false))
+
+  }
 
   const newAndEarlierStatus = (receivedDate) => {
     const today = new Date().toGMTString();
@@ -120,7 +157,9 @@ const Notifications = () => {
               router.asPath === "/notifications"
                 ? "shadow  border-0 px-4"
                 : " border-0"
+                
             }
+            style={{minHeight:'90vh'}}
           >
             <Card.Body className="p-3">
               <Card.Title className={`${styles.notificationHeaderText}`}>
@@ -178,13 +217,9 @@ const Notifications = () => {
                     </h6>
                   )}
                 </div>
-                {notifications.map((notification, index) => (
-                  <div key={index}>
-                    {radioValue === "1" ? (
+                {Notifications.map((notification, index) => (
+                  <div key={index} onClick={()=>navigateToItem(notification)} >
                       <NotificationRender notification={notification} />
-                    ) : radioValue === "2" && !notification.read ? (
-                      <NotificationRender notification={notification} />
-                    ) : null}
                   </div>
                 ))}
               </div>
