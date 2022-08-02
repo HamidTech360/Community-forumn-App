@@ -169,7 +169,7 @@ const Explore = ({}) => {
   };
 
   const handlePageChange = (page) => {
-    console.log("Page Clicked:", page.selected);
+    // console.log("Page Clicked:", page.selected);
     setPageIndex(page.selected);
   };
 
