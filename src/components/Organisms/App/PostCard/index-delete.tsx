@@ -74,8 +74,7 @@ import makeSecuredRequest, {
 // import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
-  // post: postComingIn,
-  post,
+  post: postComingIn,
   trimmed,
 }: {
   post: Record<string, any>;
@@ -92,8 +91,7 @@ const PostCard = ({
   // const bookmarkChangedModal = useSelector(selectBookMarkChangedModal);
   const router = useRouter();
 
-  // const [post, setPostComingIn] = useState(postComingIn);
-  const [postReFetched, setPostComingIn] = useState(undefined);
+  const [post, setPostComingIn] = useState(postComingIn);
 
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookMarked] = useState(false);
@@ -116,8 +114,7 @@ const PostCard = ({
   // Monitor Likes In ModalCard & Let It Reflect In PastCard
   useEffect(() => {
     if (!modalOpen && likeChangedModal.length > 0) {
-      // if (likeChangedModal.includes(postComingIn?._id)) {
-      if (likeChangedModal.includes(post?._id)) {
+      if (likeChangedModal.includes(postComingIn?._id)) {
         // Refetch Specific Post So as to get updated like count
         (async () => await likeIt(false))();
       }
@@ -189,16 +186,13 @@ const PostCard = ({
       // Refetch Specific Post So as to get updated like count
       if (currentRoute == "/feed") {
         const response = await axios.get(
-          // `${config.serverUrl}/api/${type}/f}`,
-          `${config.serverUrl}/api/${type}/${post?._id}`,
+          `${config.serverUrl}/api/${type}/${postComingIn?._id}`,
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
           }
         );
-
-        console.log("LIKED response.data:", response.data);
 
         setPostComingIn(response.data);
         setLiked(true);
@@ -207,11 +201,10 @@ const PostCard = ({
         currentRoute == "/groups/[id]/[path]"
       ) {
         try {
-          // console.log("POST ID After:", postComingIn?._id);
+          console.log("POST ID After:", postComingIn?._id);
           const response = await axios.get(
             // `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`,
-            // `${config.serverUrl}/api/feed/${postComingIn?._id}`,
-            `${config.serverUrl}/api/feed/${post?._id}`,
+            `${config.serverUrl}/api/feed/${postComingIn?._id}`,
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -227,8 +220,7 @@ const PostCard = ({
         }
       } else if (currentRoute.includes("profile")) {
         const response = await axios.get(
-          // `${config.serverUrl}/api/${type}s/${postComingIn?._id}`,
-          `${config.serverUrl}/api/${type}s/${post?._id}`,
+          `${config.serverUrl}/api/${type}s/${postComingIn?._id}`,
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -260,29 +252,28 @@ const PostCard = ({
     }
 
     try {
-      if (bool) {
-        // Like Post
-        try {
-          const unlikePost = await axios.delete(
-            `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
-            // `${config.serverUrl}/api/${type}/${post?._id}`,
-            {
-              headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
-            }
-          );
-          console.log("unlikePost:", unlikePost);
-        } catch (error) {
-          console.error(error);
-        }
-      }
+      // if (bool) {
+      //   // Like Post
+      //   try {
+      //     const unlikePost = await axios.delete(
+      //       `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
+      //       // `${config.serverUrl}/api/${type}/${post?._id}`,
+      //       {
+      //         headers: {
+      //           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      //         },
+      //       }
+      //     );
+      //     console.log("unlikePost:", unlikePost);
+      //   } catch (error) {
+      //     console.error(error);
+      //   }
+      // }
 
       // Refetch Specific Post So as to get updated like count
       if (currentRoute == "/feed") {
         const response = await axios.get(
-          // `${config.serverUrl}/api/${type}/${postComingIn?._id}`,
-          `${config.serverUrl}/api/${type}/${post?._id}`,
+          `${config.serverUrl}/api/${type}/${postComingIn?._id}`,
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -299,8 +290,7 @@ const PostCard = ({
         try {
           const response = await axios.get(
             // `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`,
-            // `${config.serverUrl}/api/feed/${postComingIn?._id}`,
-            `${config.serverUrl}/api/feed/${post?._id}`,
+            `${config.serverUrl}/api/feed/${postComingIn?._id}`,
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -316,8 +306,7 @@ const PostCard = ({
         }
       } else if (currentRoute.includes("profile")) {
         const response = await axios.get(
-          // `${config.serverUrl}/api/${type}s/${postComingIn?._id}`,
-          `${config.serverUrl}/api/${type}s/${post?._id}`,
+          `${config.serverUrl}/api/${type}s/${postComingIn?._id}`,
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -614,20 +603,8 @@ const PostCard = ({
                   className={styles.item}
                   style={{ backgroundColor: "rgb(237, 236, 236)" }}
                   onClick={async () => {
-                    console.log("postReFetched?._id:", postReFetched?._id);
-                    console.log("post?._id:", post?._id);
-                    if (postReFetched) {
-                      if (postReFetched?._id === post?._id) {
-                        setSelected(postReFetched);
-                        toggle();
-                      } else {
-                        setSelected(post);
-                        toggle();
-                      }
-                    } else {
-                      setSelected(post);
-                      toggle();
-                    }
+                    setSelected(post);
+                    toggle();
                   }}
                 >
                   <BsFolderFill className="text-muted" /> Open Post
@@ -677,21 +654,8 @@ const PostCard = ({
             if (showComment) {
               setShowComment(!showComment);
             }
-
-            console.log("postReFetched?._id:", postReFetched?._id);
-            console.log("post?._id:", post?._id);
-            if (postReFetched) {
-              if (postReFetched?._id === post?._id) {
-                setSelected(postReFetched);
-                toggle();
-              } else {
-                setSelected(post);
-                toggle();
-              }
-            } else {
-              setSelected(post);
-              toggle();
-            }
+            setSelected(post);
+            toggle();
           }}
         >
           <div>
@@ -796,24 +760,7 @@ const PostCard = ({
                       style={{ marginLeft: "7px" }}
                       className="mx-2 text-secondary"
                     >
-                      {/* {post?.likes?.length || 0} */}
-                      {/* if (postReFetched) {
-              if (postReFetched?._id === post?._id) {
-                setSelected(postReFetched);
-                toggle();
-              } else {
-                setSelected(post);
-                toggle();
-              }
-            } else {
-              setSelected(post);
-              toggle();
-            } */}
-                      {postReFetched
-                        ? postReFetched?._id === post?._id
-                          ? postReFetched?.likes?.length || 0
-                          : post?.likes?.length || 0
-                        : post?.likes?.length || 0}
+                      {post?.likes?.length || 0}
                     </span>
                   )}
 
