@@ -16,7 +16,7 @@ const usePaginationPage = (url: string, pageIndex: number) => {
     return response.data;
   };
 
-  const { data: post, error } = useSWR(getKey, fetcher);
+  const { data: post, mutate, error } = useSWR(getKey, fetcher);
 
   const paginatedPageData = post;
 
@@ -26,12 +26,41 @@ const usePaginationPage = (url: string, pageIndex: number) => {
 
   return {
     paginatedPageData,
+    mutate,
     isLoadingPageData,
     errorPage,
   };
 };
 
 export default usePaginationPage;
+
+export const usePaginationStudyAbroad = (url: string, pageIndex: number) => {
+  const pageSize = 6;
+
+  const getKey = () => {
+    // return `${config.serverUrl}${url}?perPage=${pageSize}&page=${pageIndex}`; // SWR key
+    return `${config.serverUrl}${url}`; // SWR key
+  };
+
+  const fetcher = async function (url) {
+    const response = await axios.get(`${url}`);
+    return response.data;
+  };
+
+  const { data: post, error } = useSWR(getKey, fetcher);
+
+  const paginatedStudyAbroadData = post;
+
+  const isLoadingStudyAbroadData = !post && !error;
+
+  const errorStudyAbroad = error;
+
+  return {
+    paginatedStudyAbroadData,
+    isLoadingStudyAbroadData,
+    errorStudyAbroad,
+  };
+};
 
 export const LoaderPage = () => {
   return (

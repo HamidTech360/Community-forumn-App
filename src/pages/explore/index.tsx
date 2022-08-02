@@ -38,7 +38,10 @@ import {
 } from "@/reduxFeatures/api/postSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 // import usePagination, { Loader } from "@/hooks/usePagination";
-import usePaginationPage, { LoaderPage } from "@/hooks/usePaginationPage";
+import usePaginationPage, {
+  LoaderPage,
+  usePaginationStudyAbroad,
+} from "@/hooks/usePaginationPage";
 // import InfiniteScroll from "react-infinite-scroll-component";
 import config from "@/config";
 import ReactPaginate from "react-paginate";
@@ -65,10 +68,13 @@ const Explore = ({}) => {
 
   // const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
   //   usePagination("/api/posts", "posts");
-  const { paginatedPageData, isLoadingPageData, errorPage } = usePaginationPage(
-    "/api/posts",
-    pageIndex
-  );
+  const { paginatedPageData, mutate, isLoadingPageData, errorPage } =
+    usePaginationPage("/api/posts", pageIndex);
+  const {
+    paginatedStudyAbroadData,
+    isLoadingStudyAbroadData,
+    errorStudyAbroad,
+  } = usePaginationStudyAbroad("/api/post/?category=Study Abroad", pageIndex);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -78,24 +84,21 @@ const Explore = ({}) => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (showPost?.length > 0) {
-  //     // Fetch Updated Gist Using useSWRInfinite
-  //     fetchNextPage();
-  //     // Update State
-  //     // setPosts(paginatedData);
-  //   }
-  // }, [newPost]);
-
-  // useEffect(() => {
-  //   if (paginatedData) {
-  //     if (JSON.stringify(showPost) !== JSON.stringify(paginatedData)) {
-  //       dispatch(setPosts(paginatedData));
-  //     }
-  //   }
-  // }, [paginatedData]);
+  // Auto Re-render on new post
+  useEffect(() => {
+    mutate();
+  }, [newPost]);
 
   useEffect(() => {
+    if (paginatedPageData) {
+      if (JSON.stringify(showPost) !== JSON.stringify(paginatedPageData)) {
+        dispatch(setPosts(paginatedPageData));
+      }
+    }
+  }, [paginatedPageData]);
+
+  useEffect(() => {
+    console.log("paginatedStudyAbroadData:", paginatedStudyAbroadData);
     dispatch(setPosts(paginatedPageData));
 
     let pageCount = showPost?.numPages;
@@ -112,7 +115,7 @@ const Explore = ({}) => {
       try {
         const { data } = await axios.get(`${config.serverUrl}/api/category`);
         setCategories(data.allCategories);
-        //console.log(data.allCategories);
+        console.log("all categories data", data.allCategories);
       } catch (error) {
         console.log(error.response?.data);
       }
