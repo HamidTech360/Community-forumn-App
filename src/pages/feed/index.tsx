@@ -62,8 +62,14 @@ const Feed = () => {
   // const [followers, setFollowers] = useState([]);
   // const [following, setFollowing] = useState([]);
 
-  const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
-    usePagination("/api/feed", "feed");
+  const {
+    paginatedData,
+    isReachedEnd,
+    error,
+    fetchNextPage,
+    mutate,
+    isValidating,
+  } = usePagination("/api/feed", "feed");
 
   useEffect(() => {
     if (stateUser) {
@@ -92,7 +98,7 @@ const Feed = () => {
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
     // window.addEventListener("scroll", checkScroll);
-    
+
     return () => {
       document.body.style.backgroundColor = "initial";
       // window.removeEventListener("scroll", checkScroll);
@@ -101,14 +107,9 @@ const Feed = () => {
 
   useEffect(() => {
     if (Object.entries(newFeed).length !== 0) {
-      console.log("newFeed:", newFeed);
       if (posts?.length > 0) {
-        console.log("Re-rendering Feed Page");
         // Fetch Updated Gist Using useSWRInfinite
-        console.log("OLD paginatedData:", paginatedData);
-        fetchNextPage();
-        console.log("NEW paginatedData:", paginatedData);
-
+        mutate();
         // Update State
         setPosts(paginatedData);
       }

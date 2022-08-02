@@ -24,7 +24,7 @@ const usePagination = (url: string, dotTitle: string) => {
     size,
     setSize,
     error,
-    // mutate,
+    mutate,
     isValidating,
   } = useSWRInfinite(getKey, fetcher, {
     persistSize: true,
@@ -50,7 +50,7 @@ const usePagination = (url: string, dotTitle: string) => {
     fetchNextPage,
     // size,
     // setSize,
-    // mutate,
+    mutate,
     isValidating,
     // loadingMore,
   };

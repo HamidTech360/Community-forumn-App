@@ -70,8 +70,14 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     post: "",
   });
 
-  const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
-    usePagination("/api/gists", "gists");
+  const {
+    paginatedData,
+    isReachedEnd,
+    error,
+    fetchNextPage,
+    mutate,
+    isValidating,
+  } = usePagination("/api/gists", "gists");
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -93,7 +99,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     if (gistIsSuccess) {
       if (allGists?.length > 0) {
         // Fetch Updated Gist Using useSWRInfinite
-        fetchNextPage();
+        mutate();
 
         // Update State
         setAllGists(paginatedData);
