@@ -64,6 +64,12 @@ const Explore = ({}) => {
     postBody: "",
   });
 
+  const [paginatorDisplay, setPaginatorDisplay] = useState({
+    previous: "<<",
+    next: ">>",
+    pageMargin: 1,
+    pageRange: 2,
+  });
   const [pageIndex, setPageIndex] = useState(0);
 
   // const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
@@ -82,6 +88,32 @@ const Explore = ({}) => {
     return () => {
       document.body.style.backgroundColor = "initial";
     };
+  }, []);
+
+  useEffect(() => {
+    // Set Page Paginator Number Display
+    if (window.innerWidth < 768) {
+      setPaginatorDisplay({
+        previous: "<<",
+        next: ">>",
+        pageMargin: 1,
+        pageRange: 2,
+      });
+    } else if (window.innerWidth < 1024) {
+      setPaginatorDisplay({
+        previous: "<< Pre",
+        next: "Next >>",
+        pageMargin: 2,
+        pageRange: 3,
+      });
+    } else if (window.innerWidth >= 1024) {
+      setPaginatorDisplay({
+        previous: "<< Pre",
+        next: "Next >>",
+        pageMargin: 3,
+        pageRange: 4,
+      });
+    }
   }, []);
 
   // Auto Re-render on new post
@@ -150,6 +182,8 @@ const Explore = ({}) => {
   const handlePageChange = (page) => {
     // console.log("Page Clicked:", page.selected);
     setPageIndex(page.selected);
+    // Only scroll to top on page change
+    if (pageIndex !== page.selected) router.replace("#explore");
   };
 
   return (
@@ -341,12 +375,12 @@ const Explore = ({}) => {
           </div>
 
           <ReactPaginate
-            previousLabel="<< Pre"
-            nextLabel="Next >>"
+            previousLabel={paginatorDisplay.previous}
+            nextLabel={paginatorDisplay.next}
             breakLabel="..."
             pageCount={showPost?.numPages}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={3}
+            marginPagesDisplayed={paginatorDisplay.pageMargin}
+            pageRangeDisplayed={paginatorDisplay.pageRange}
             onPageChange={handlePageChange}
             containerClassName="pagination justify-content-center"
             pageClassName="page-item"
