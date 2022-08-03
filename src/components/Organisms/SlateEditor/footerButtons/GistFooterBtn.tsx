@@ -23,14 +23,14 @@ function GistFooterBtn({ editorID }) {
   const gistIsLoading = useSelector(selectGistIsLoading);
   const [uploading, setUploading] = useState(false);
   const dispatch = useDispatch();
-  const showGistModal = useSelector(selectShowGistModal);
+  // const showGistModal = useSelector(selectShowGistModal);
   const showGistTitle = useSelector(selectGistTitle);
-  const gistError = useSelector(selectGistError);
-  const gistIsSuccess = useSelector(selectGistIsSuccess);
+  // const gistError = useSelector(selectGistError);
+  // const gistIsSuccess = useSelector(selectGistIsSuccess);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const router = useRouter();
+  // const router = useRouter();
   useEffect(() => {
     (async () => {
       try {
@@ -85,8 +85,10 @@ function GistFooterBtn({ editorID }) {
           toastId: "1",
         });
 
+        // console.log("Gist Post:", response.data.gist);
         setUploading(false);
-        dispatch(uploadSuccess(response.data));
+        dispatch(uploadSuccess(response.data.gist));
+        dispatch(setShowGistModal(false));
       } catch (error) {
         if (!localStorage.getItem("accessToken")) {
           toast.error("You must login to create a Gist", {

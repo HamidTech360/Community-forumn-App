@@ -70,6 +70,15 @@ const Explore = ({}) => {
   }, []);
 
   useEffect(() => {
+    if (showPost?.length > 0) {
+      // Fetch Updated Gist Using useSWRInfinite
+      fetchNextPage();
+      // Update State
+      // setPosts(paginatedData);
+    }
+  }, [newPost]);
+
+  useEffect(() => {
     if (paginatedData) {
       if (JSON.stringify(showPost) !== JSON.stringify(paginatedData)) {
         dispatch(setPosts(paginatedData));
@@ -77,12 +86,32 @@ const Explore = ({}) => {
     }
   }, [paginatedData]);
 
-  useEffect(() => {
-    fetchNextPage();
-    setPosts(paginatedData);
-  }, [newPost]);
-
-
+  // useEffect(() => {
+  //   const fetchPost = async () => {
+  //     try {
+  //       const response = await axios.get(`${config.serverUrl}/api/posts`);
+  //       dispatch(setPosts(response.data.posts));
+  //       // setIsFetching(false);
+  //       dispatch(setIsFetching(false));
+  //       console.log(response.data.posts);
+  //     } catch (error) {
+  //       console.log(error.response?.data);
+  //     }
+  //   };
+  //   fetchPost();
+  //   //(async function () {
+  //   //   try {
+  //   //     const response = await axios.get(`${config.serverUrl}/api/users`, {});
+  //   //     // console.log("response.data+++:", response.data.users);
+  //   //     setUsers(response.data.users);
+  //   //     dispatch(setIsFetching(false));
+  //   //   } catch (error) {
+  //   //     //console.error(error.response?.data);
+  //   //     // setIsFetching(false);
+  //   //     dispatch(setIsFetching(false));
+  //   //   }
+  //   // })();
+  // }, [dispatch]);
 
   useEffect(() => {
     (async () => {
