@@ -62,6 +62,8 @@ import {
   // selectBookMarkChanged,
   setLikeChangedModal,
   selectLikeChangedModal,
+  setUnLikeChangedModal,
+  selectUnLikeChangedModal,
   // setBookMarkChangedModal,
   // selectBookMarkChangedModal,
 } from "@/reduxFeatures/app/postModalCardSlice";
@@ -88,6 +90,7 @@ const PostCard = ({
   // const likeChanged = useSelector(selectLikeChanged);
   // const bookmarkChanged = useSelector(selectBookMarkChanged);
   const likeChangedModal = useSelector(selectLikeChangedModal);
+  const unLikeChangedModal = useSelector(selectUnLikeChangedModal);
   // const bookmarkChangedModal = useSelector(selectBookMarkChangedModal);
   const router = useRouter();
 
@@ -122,14 +125,23 @@ const PostCard = ({
     if (!modalOpen && likeChangedModal.length > 0) {
       // if (likeChangedModal.includes(postComingIn?._id)) {
       if (likeChangedModal.includes(post?._id)) {
-        // Refetch Specific Post So as to get updated like count
+        // Refetch Specific Post So as to get updated like count The false argument is for iit not to sent an axios argument.
         (async () => await likeIt(false))();
+      }
+    }
+
+    if (!modalOpen && unLikeChangedModal.length > 0) {
+      // if (unLikeChangedModal.includes(postComingIn?._id)) {
+      if (unLikeChangedModal.includes(post?._id)) {
+        // Refetch Specific Post So as to get updated like count. The false argument is for iit not to sent an axios argument.
+        (async () => await unLikeIt(false))();
       }
     }
 
     // Clear Redux State On componentWillUnMount
     return () => {
       dispatch(setLikeChangedModal(""));
+      dispatch(setUnLikeChangedModal(""));
       // dispatch(setBookMarkChangedModal(""));
     };
   }, [modalOpen]);

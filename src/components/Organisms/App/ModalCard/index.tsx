@@ -53,6 +53,8 @@ import {
   // selectBookMarkChanged,
   setLikeChangedModal,
   selectLikeChangedModal,
+  setUnLikeChangedModal,
+  selectUnLikeChangedModal,
   // setBookMarkChangedModal,
   // selectBookMarkChangedModal,
 } from "@/reduxFeatures/app/postModalCardSlice";
@@ -78,6 +80,7 @@ const ModalCard = ({
   // const likeChanged = useSelector(selectLikeChanged);
   // const bookmarkChanged = useSelector(selectBookMarkChanged);
   const likeChangedModal = useSelector(selectLikeChangedModal);
+  const unLikeChangedModal = useSelector(selectUnLikeChangedModal);
   // const bookmarkChangedModal = useSelector(selectBookMarkChangedModal);
   const router = useRouter();
 
@@ -111,7 +114,7 @@ const ModalCard = ({
       name: "Like",
       reaction: true,
       icon: liked ? (
-        <AiFillLike color="#086a6d " size={25} />
+        <AiFillLike color="#086a6d " size={25} onClick={() => handleUnLike()} />
       ) : (
         <AiOutlineLike size={25} onClick={() => handleLike()} />
       ),
@@ -160,7 +163,8 @@ const ModalCard = ({
       currentRoute == "/groups" ||
       currentRoute == "/groups/[id]/[path]"
     ) {
-      type = "post";
+      // type = "post";
+      type = "feed";
     } else if (currentRoute.includes("profile")) {
       type = "post";
     }
@@ -197,10 +201,7 @@ const ModalCard = ({
         // console.log("response.data:", response.data);
         setPostComingIn(response.data);
         setLiked(true);
-
-        if (!likeChangedModal.includes(post?._id)) {
-          dispatch(setLikeChangedModal(post?._id));
-        }
+        dispatch(setLikeChangedModal(post?._id));
       } else if (
         currentRoute == "/groups" ||
         currentRoute == "/groups/[id]/[path]"
@@ -219,10 +220,7 @@ const ModalCard = ({
           // console.log("response.data:", response.data);
           setPostComingIn(response.data);
           setLiked(true);
-
-          if (!likeChangedModal.includes(post?._id)) {
-            dispatch(setLikeChangedModal(post?._id));
-          }
+          dispatch(setLikeChangedModal(post?._id));
         } catch (error) {
           // console.log(error);
         }
@@ -239,9 +237,107 @@ const ModalCard = ({
         // console.log("response.data:", response.data.post);
         setPostComingIn(response.data.post);
         setLiked(true);
+        dispatch(setLikeChangedModal(post?._id));
+      }
+    } catch (error) {
+      // console.log(error.response?.data);
+    }
+  };
 
-        if (!likeChangedModal.includes(post?._id)) {
-          dispatch(setLikeChangedModal(post?._id));
+  const unLikeIt = async (bool) => {
+    let type;
+    const currentRoute = router.pathname;
+    if (currentRoute == "/feed") {
+      type = "feed";
+    } else if (
+      currentRoute == "/groups" ||
+      currentRoute == "/groups/[id]/[path]"
+    ) {
+      type = "feed";
+    } else if (currentRoute.includes("profile")) {
+      type = "post";
+    }
+
+    try {
+      if (bool) {
+        // Like Post
+        try {
+          const unlikePost = await axios.delete(
+            `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
+            // `${config.serverUrl}/api/${type}/${post?._id}`,
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          console.log("unlikePost:", unlikePost);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      // Refetch Specific Post So as to get updated like count
+      if (currentRoute == "/feed") {
+        const response = await axios.get(
+          // `${config.serverUrl}/api/${type}/${postComingIn?._id}`,
+          `${config.serverUrl}/api/${type}/${post?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+
+        setPostComingIn(response.data);
+        setLiked(false);
+
+        if (!unLikeChangedModal.includes(post?._id)) {
+          dispatch(setUnLikeChangedModal(post?._id));
+        }
+      } else if (
+        currentRoute == "/groups" ||
+        currentRoute == "/groups/[id]/[path]"
+      ) {
+        try {
+          const response = await axios.get(
+            // `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`,
+            // `${config.serverUrl}/api/feed/${postComingIn?._id}`,
+            `${config.serverUrl}/api/feed/${post?._id}`,
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+
+          console.log("response.data:", response.data);
+          setPostComingIn(response.data);
+          setLiked(false);
+
+          if (!unLikeChangedModal.includes(post?._id)) {
+            dispatch(setUnLikeChangedModal(post?._id));
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      } else if (currentRoute.includes("profile")) {
+        const response = await axios.get(
+          // `${config.serverUrl}/api/${type}s/${postComingIn?._id}`,
+          `${config.serverUrl}/api/${type}s/${post?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+
+        // console.log("response.data:", response.data.post);
+        setPostComingIn(response.data.post);
+        setLiked(false);
+
+        if (!unLikeChangedModal.includes(post?._id)) {
+          dispatch(setUnLikeChangedModal(post?._id));
         }
       }
     } catch (error) {
@@ -251,6 +347,10 @@ const ModalCard = ({
 
   const handleLike = async () => {
     likeIt(true);
+  };
+
+  const handleUnLike = async () => {
+    await unLikeIt(true);
   };
 
   const postComment = async () => {
@@ -628,6 +728,7 @@ const ModalCard = ({
                         if (item.name === "Like") {
                           if (liked) {
                             // removeLike();
+                            handleUnLike();
                           } else {
                             handleLike();
                           }
