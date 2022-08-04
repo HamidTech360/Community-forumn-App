@@ -67,6 +67,8 @@ import {
   // setBookMarkChangedModal,
   // selectBookMarkChangedModal,
 } from "@/reduxFeatures/app/postModalCardSlice";
+import { selectCreatePostModal } from "@/reduxFeatures/app/createPost";
+import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 import { useRouter } from "next/router";
 import Comment from "@/components/Organisms/App/Comment";
 import makeSecuredRequest, {
@@ -91,6 +93,8 @@ const PostCard = ({
   // const bookmarkChanged = useSelector(selectBookMarkChanged);
   const likeChangedModal = useSelector(selectLikeChangedModal);
   const unLikeChangedModal = useSelector(selectUnLikeChangedModal);
+  const createPostModal = useSelector(selectCreatePostModal);
+  const newFeed = useSelector(selectNewFeed);
   // const bookmarkChangedModal = useSelector(selectBookMarkChangedModal);
   const router = useRouter();
 
@@ -120,8 +124,13 @@ const PostCard = ({
   const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
     useModalWithShare();
 
+  // useEffect(() => {
+  //   console.log("POST CHANGED:", post);
+  // }, [post]);
+
   // Monitor Likes In ModalCard & Let It Reflect In PastCard
   useEffect(() => {
+    // console.log("modalOpen OPEN");
     if (!modalOpen && likeChangedModal.length > 0) {
       // if (likeChangedModal.includes(postComingIn?._id)) {
       if (likeChangedModal.includes(post?._id)) {
@@ -146,6 +155,80 @@ const PostCard = ({
     };
   }, [modalOpen]);
 
+  /* Don't Integrate with below useEffect. Leave them apart.
+   ** This fixes the bug  of displaying colored icon for both like & bookmark (on making new post) once there was a previous like or bookmark click.
+   */
+  useEffect(() => {
+    if (post?.likes?.includes(user?._id)) {
+      setLiked(true);
+    } else {
+      setLiked(false);
+    }
+
+    if (user?.bookmarks?.includes(post?._id)) {
+      setBookMarked(true);
+    } else {
+      setBookMarked(false);
+    }
+  }, [post, newFeed]);
+
+  // Don't Integrate with above useEffect. Leave them apart.
+  useEffect(() => {
+    if (post?.likes?.includes(user?._id)) {
+      setLiked(true);
+    } // don't add an else statement. It would always toggle liked on every bookMark click, once there is a previous like click
+
+    if (user?.bookmarks?.includes(post?._id)) {
+      setBookMarked(true);
+    } else {
+      setBookMarked(false);
+    }
+  }, [user]);
+
+  const redirectPage = () => {
+    router.push({
+      pathname: `/profile/[id]`,
+      query: {
+        id: post?.author?._id,
+      },
+    });
+  };
+
+  const postButton = [
+    {
+      name: "Like",
+      reaction: true,
+      icon: liked ? (
+        <AiFillLike color="#086a6d " size={25} onClick={() => handleUnLike()} />
+      ) : (
+        <AiOutlineLike size={25} onClick={() => handleLike()} />
+      ),
+    },
+    {
+      name: "Share",
+      reaction: true,
+      icon: <AiOutlineShareAlt size={25} />,
+    },
+    {
+      name: "Comment",
+      reaction: true,
+      icon: <FaRegCommentDots size={24} />,
+    },
+    {
+      name: "Bookmark",
+      reaction: true,
+      icon: bookmarked ? (
+        <BsFillBookmarkFill
+          color="#086a6d "
+          onClick={() => removeBookMark()}
+          size={22}
+        />
+      ) : (
+        <BsBookmark onClick={() => handleBookMark()} size={22} />
+      ),
+    },
+  ];
+
   const postComment = async () => {
     const body = {
       content: commentPost,
@@ -168,6 +251,14 @@ const PostCard = ({
 
     setLoading(false);
     setShowComment(false);
+  };
+
+  const handleLike = async () => {
+    await likeIt(true);
+  };
+
+  const handleUnLike = async () => {
+    await unLikeIt(true);
   };
 
   const likeIt = async (bool) => {
@@ -197,9 +288,9 @@ const PostCard = ({
               },
             }
           );
-          console.log("likeNew:", likeNew);
+          // console.log("likeNew:", likeNew);
         } catch (error) {
-          console.error(error);
+          // console.error(error);
         }
       }
 
@@ -215,7 +306,7 @@ const PostCard = ({
           }
         );
 
-        console.log("LIKED response.data:", response.data);
+        // console.log("LIKED response.data:", response.data);
 
         setPostComingIn(response.data);
         setLiked(true);
@@ -236,11 +327,11 @@ const PostCard = ({
             }
           );
 
-          console.log("response.data:", response.data);
+          // console.log("response.data:", response.data);
           setPostComingIn(response.data);
           setLiked(true);
         } catch (error) {
-          console.error(error);
+          // console.error(error);
         }
       } else if (currentRoute.includes("profile")) {
         const response = await axios.get(
@@ -289,9 +380,9 @@ const PostCard = ({
               },
             }
           );
-          console.log("unlikePost:", unlikePost);
+          // console.log("unlikePost:", unlikePost);
         } catch (error) {
-          console.error(error);
+          // console.error(error);
         }
       }
 
@@ -325,11 +416,11 @@ const PostCard = ({
             }
           );
 
-          console.log("response.data:", response.data);
+          // console.log("response.data:", response.data);
           setPostComingIn(response.data);
           setLiked(false);
         } catch (error) {
-          console.error(error);
+          // console.error(error);
         }
       } else if (currentRoute.includes("profile")) {
         const response = await axios.get(
@@ -349,58 +440,6 @@ const PostCard = ({
     } catch (error) {
       // console.log(error.response?.data);
     }
-  };
-
-  const postButton = [
-    {
-      name: "Like",
-      reaction: true,
-      icon: liked ? (
-        <AiFillLike color="#086a6d " size={25} onClick={() => handleUnLike()} />
-      ) : (
-        <AiOutlineLike size={25} onClick={() => handleLike()} />
-      ),
-    },
-    {
-      name: "Share",
-      reaction: true,
-      icon: <AiOutlineShareAlt size={25} />,
-    },
-    {
-      name: "Comment",
-      reaction: true,
-      icon: <FaRegCommentDots size={24} />,
-    },
-    {
-      name: "Bookmark",
-      reaction: true,
-      icon: bookmarked ? (
-        <BsFillBookmarkFill
-          color="#086a6d "
-          onClick={() => removeBookMark()}
-          size={22}
-        />
-      ) : (
-        <BsBookmark onClick={() => handleBookMark()} size={22} />
-      ),
-    },
-  ];
-
-  const redirectPage = () => {
-    router.push({
-      pathname: `/profile/[id]`,
-      query: {
-        id: post?.author?._id,
-      },
-    });
-  };
-
-  const handleLike = async () => {
-    await likeIt(true);
-  };
-
-  const handleUnLike = async () => {
-    await unLikeIt(true);
   };
 
   const handleBookMark = async () => {
@@ -462,22 +501,24 @@ const PostCard = ({
     }
   };
 
-  useEffect(() => {
-    // console.log(router.pathname);
-    // console.log("user?.bookmarks:", user?.bookmarks);
-
-    if (post?.likes?.includes(user._id)) {
-      setLiked(true);
-      // dispatch(setLiked(true));
+  const changeFollowingStatus = (post) => {
+    if (
+      document.getElementById(`followStr-${post?.author?._id}`).innerText ===
+      "Follow"
+    ) {
+      handleFollow(post?.author?._id);
+    } else if (
+      document.getElementById(`followStr-${post?.author?._id}`).innerText ===
+      "Unfollow"
+    ) {
+      let confirmUnFollow = window.confirm(
+        `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
+      );
+      if (confirmUnFollow) {
+        handleUnFollow(post?.author?._id);
+      }
     }
-    if (user?.bookmarks?.includes(post?._id)) {
-      setBookMarked(true);
-      // dispatch(setBookMarked(true));
-    } else {
-      setBookMarked(false);
-      // dispatch(setBookMarked(false));
-    }
-  }, [user]);
+  };
 
   const handleFollow = async (id) => {
     try {
@@ -520,25 +561,6 @@ const PostCard = ({
       })();
     } catch (error) {
       // console.error("follow Error:", error);
-    }
-  };
-
-  const changeFollowingStatus = (post) => {
-    if (
-      document.getElementById(`followStr-${post?.author?._id}`).innerText ===
-      "Follow"
-    ) {
-      handleFollow(post?.author?._id);
-    } else if (
-      document.getElementById(`followStr-${post?.author?._id}`).innerText ===
-      "Unfollow"
-    ) {
-      let confirmUnFollow = window.confirm(
-        `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
-      );
-      if (confirmUnFollow) {
-        handleUnFollow(post?.author?._id);
-      }
     }
   };
 
@@ -631,8 +653,8 @@ const PostCard = ({
                   className={styles.item}
                   style={{ backgroundColor: "rgb(237, 236, 236)" }}
                   onClick={async () => {
-                    console.log("postReFetched?._id:", postReFetched?._id);
-                    console.log("post?._id:", post?._id);
+                    // console.log("postReFetched?._id:", postReFetched?._id);
+                    // console.log("post?._id:", post?._id);
                     if (postReFetched) {
                       if (postReFetched?._id === post?._id) {
                         setSelected(postReFetched);
@@ -695,8 +717,8 @@ const PostCard = ({
               setShowComment(!showComment);
             }
 
-            console.log("postReFetched?._id:", postReFetched?._id);
-            console.log("post?._id:", post?._id);
+            // console.log("postReFetched?._id:", postReFetched?._id);
+            // console.log("post?._id:", post?._id);
             if (postReFetched) {
               if (postReFetched?._id === post?._id) {
                 setSelected(postReFetched);
@@ -844,7 +866,7 @@ const PostCard = ({
                         // removeLike();
                         handleUnLike();
                       } else {
-                        console.log("POST ID Init:", post?._id);
+                        // console.log("POST ID Init:", post?._id);
                         handleLike();
                       }
                     }

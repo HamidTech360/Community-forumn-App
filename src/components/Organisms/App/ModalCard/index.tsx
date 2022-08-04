@@ -109,6 +109,22 @@ const ModalCard = ({
   //   };
   // }, []);
 
+  useEffect(() => {
+    // console.log(router.pathname);
+
+    if (post?.likes?.includes(user._id)) {
+      setLiked(true);
+      // dispatch(setLiked(true));
+    }
+    if (user.bookmarks?.includes(post?._id)) {
+      setBookMarked(true);
+      // dispatch(setBookMarked(true));
+    } else {
+      setBookMarked(false);
+      // dispatch(setBookMarked(false));
+    }
+  }, [user]);
+
   const postButton = [
     {
       name: "Like",
@@ -153,6 +169,14 @@ const ModalCard = ({
     });
   };
 
+  const handleLike = async () => {
+    likeIt(true);
+  };
+
+  const handleUnLike = async () => {
+    await unLikeIt(true);
+  };
+
   const likeIt = async (bool) => {
     let type;
     const currentRoute = router.pathname;
@@ -169,7 +193,7 @@ const ModalCard = ({
       type = "post";
     }
 
-    console.log(type, currentRoute);
+    // console.log(type, currentRoute);
 
     try {
       if (bool) {
@@ -184,7 +208,7 @@ const ModalCard = ({
             }
           );
         } catch (error) {
-          console.error(error);
+          // console.error(error);
         }
       }
       // Refetch Specific Post So as to get updated like count
@@ -271,9 +295,9 @@ const ModalCard = ({
               },
             }
           );
-          console.log("unlikePost:", unlikePost);
+          // console.log("unlikePost:", unlikePost);
         } catch (error) {
-          console.error(error);
+          // console.error(error);
         }
       }
 
@@ -311,7 +335,7 @@ const ModalCard = ({
             }
           );
 
-          console.log("response.data:", response.data);
+          // console.log("response.data:", response.data);
           setPostComingIn(response.data);
           setLiked(false);
 
@@ -319,7 +343,7 @@ const ModalCard = ({
             dispatch(setUnLikeChangedModal(post?._id));
           }
         } catch (error) {
-          console.error(error);
+          // console.error(error);
         }
       } else if (currentRoute.includes("profile")) {
         const response = await axios.get(
@@ -345,14 +369,6 @@ const ModalCard = ({
     }
   };
 
-  const handleLike = async () => {
-    likeIt(true);
-  };
-
-  const handleUnLike = async () => {
-    await unLikeIt(true);
-  };
-
   const postComment = async () => {
     const body = {
       content: commentPost,
@@ -364,22 +380,30 @@ const ModalCard = ({
         toastId: "1",
       });
     }
-    setLoading(true);
-    const res = await axios.post(
-      `${config.serverUrl}/api/comments?type=feed&id=${post?._id}`,
-      body,
-      {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      }
-    );
-    // console.log(res);
-    let comments = post?.comments;
-    comments?.unshift(res.data);
-    setModalPost({ ...post, comments });
-    setLoading(false);
-    setShowComment(false);
+
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        `${config.serverUrl}/api/comments?type=feed&id=${post?._id}`,
+        body,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      // console.log(res);
+      let comments = post?.comments;
+      comments?.unshift(res.data);
+      setModalPost({ ...post, comments });
+      setLoading(false);
+      setShowComment(false);
+      setCommentPost("");
+      (document.getElementById("articleTextarea") as HTMLInputElement).value =
+        "";
+    } catch (error) {
+      // console.error(error);
+    }
   };
 
   const handleBookMark = async () => {
@@ -440,21 +464,24 @@ const ModalCard = ({
     }
   };
 
-  useEffect(() => {
-    // console.log(router.pathname);
-
-    if (post?.likes?.includes(user._id)) {
-      setLiked(true);
-      // dispatch(setLiked(true));
+  const changeFollowingStatus = (post) => {
+    if (
+      document.getElementById(`followStr-modal-${post?.author?._id}`)
+        .innerText === "Follow"
+    ) {
+      handleFollow(post?.author?._id);
+    } else if (
+      document.getElementById(`followStr-modal-${post?.author?._id}`)
+        .innerText === "Unfollow"
+    ) {
+      let confirmUnFollow = window.confirm(
+        `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
+      );
+      if (confirmUnFollow) {
+        handleUnFollow(post?.author?._id);
+      }
     }
-    if (user.bookmarks?.includes(post?._id)) {
-      setBookMarked(true);
-      // dispatch(setBookMarked(true));
-    } else {
-      setBookMarked(false);
-      // dispatch(setBookMarked(false));
-    }
-  }, [user]);
+  };
 
   const handleFollow = async (id) => {
     try {
@@ -497,25 +524,6 @@ const ModalCard = ({
       })();
     } catch (error) {
       // console.error("follow Error:", error);
-    }
-  };
-
-  const changeFollowingStatus = (post) => {
-    if (
-      document.getElementById(`followStr-modal-${post?.author?._id}`)
-        .innerText === "Follow"
-    ) {
-      handleFollow(post?.author?._id);
-    } else if (
-      document.getElementById(`followStr-modal-${post?.author?._id}`)
-        .innerText === "Unfollow"
-    ) {
-      let confirmUnFollow = window.confirm(
-        `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
-      );
-      if (confirmUnFollow) {
-        handleUnFollow(post?.author?._id);
-      }
     }
   };
 

@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react";
 import { Card, Col, Image, Row } from "react-bootstrap";
 import Age from "../../Atoms/Age";
 import DOMPurify from "dompurify";
-import Replies from './Replies'
+import Replies from "./Replies";
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import config from "@/config";
-import axios from 'axios'
-import styles from '@/styles/utils.module.scss'
+import axios from "axios";
+import { toast } from "react-toastify";
+import styles from "@/styles/utils.module.scss";
 
 const Comment = ({ comment }: Record<string, any>) => {
   const [liked, setLiked] = useState(false);
@@ -27,6 +28,23 @@ const Comment = ({ comment }: Record<string, any>) => {
           },
         }
       );
+
+      console.log("like comment:", data);
+
+      // const response = await axios.get(
+      //   // `${config.serverUrl}/api/${type}/f}`,
+      //   // `${config.serverUrl}/api/${type}/${postComingIn?._id}`,
+      //   // `${config.serverUrl}/api/?type=comment&id=${comment?._id}`,
+      //   // `${config.serverUrl}/api/likes/?type=comment`,
+      //   `${config.serverUrl}/api/comments?type=feed&id=${comment?._id}`,
+      //   {
+      //     headers: {
+      //       authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      //     },
+      //   }
+      // );
+
+      // console.log("LIKED response.data:", response.data);
 
       setLiked(true);
       // window.location.reload();
@@ -47,34 +65,44 @@ const Comment = ({ comment }: Record<string, any>) => {
       content: commentPost,
     };
 
-   
-    setLoading(true);
-    const res = await axios.post(
-      `${config.serverUrl}/api/comments?type=reply&id=${comment?._id}`,
-      body,
-      {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      }
-    );
-    console.log(res);
-    let replies = comment?.replies;
-    replies?.unshift(res.data);
-    setModalPost({ ...comment, replies });
+    if (body.content == "") {
+      return toast.error("Comment cannot be empty", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1",
+      });
+    }
 
-    setLoading(false);
-    setShowComment(false);
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        `${config.serverUrl}/api/comments?type=reply&id=${comment?._id}`,
+        body,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      console.log(res);
+      let replies = comment?.replies;
+      replies?.unshift(res.data);
+      setModalPost({ ...comment, replies });
+
+      setLoading(false);
+      setShowComment(false);
+      setCommentPost("");
+      (document.getElementById("articleTextarea") as HTMLInputElement).value =
+        "";
+    } catch (error) {
+      console.error(error);
+    }
   };
-  
 
-  useEffect(()=>{
-
+  useEffect(() => {
     if (comment?.likes?.includes(user?._id)) {
       setLiked(true);
     }
-
-   },[])
+  }, []);
 
   return (
     <Card
@@ -107,19 +135,24 @@ const Comment = ({ comment }: Record<string, any>) => {
       />
 
       <div className="buttons d-flex gap-2 justify-content-end mr-4">
-        
-      <small className="text-muted"  style={{cursor: "pointer" }} onClick = {() => handleLike()}>
+        <small
+          className="text-muted"
+          style={{ cursor: "pointer" }}
+          onClick={() => handleLike()}
+        >
           {comment?.likes?.length > 0 && (
-           <small className="badge rounded-pill bg-primary px-2 py-1 text-white">
-             {comment?.likes?.length}
-           </small>
-         )} Like
-         
-       </small>
-        
-        <small className="text-muted" 
-        style={{cursor: "pointer" }} 
-        onClick={() => setShowComment(!showComment)}>
+            <small className="badge rounded-pill bg-primary px-2 py-1 text-white">
+              {comment?.likes?.length}
+            </small>
+          )}{" "}
+          Like
+        </small>
+
+        <small
+          className="text-muted"
+          style={{ cursor: "pointer" }}
+          onClick={() => setShowComment(!showComment)}
+        >
           Reply{" "}
           {comment?.replies?.length > 0 && (
             <span>
@@ -128,30 +161,30 @@ const Comment = ({ comment }: Record<string, any>) => {
               </small>
             </span>
           )}
-         
-         
         </small>
       </div>
-      <div className={ `buttons d-flex gap-2 justify-content-end mr-4 ${styles.comment}`}>
-        {
-          comment?.replies.length > 0 ? (
-          <small style={{cursor: "pointer" }}  onClick = {() => setShowReplies(!showReplies)}>view replies</small> 
-          ): ("")
-        }
-       </div>
-        {showReplies && (
-          <div>
-              {comment.replies?.length > 0 && comment.replies?.map((reply, index) =>{
-                  return (
-                    
-                    <Replies 
-                    key={`comment_${index}`}
-                    reply={reply}/>
-                  )
-              })}
-          </div>
-          
+      <div
+        className={`buttons d-flex gap-2 justify-content-end mr-4 ${styles.comment}`}
+      >
+        {comment?.replies.length > 0 ? (
+          <small
+            style={{ cursor: "pointer" }}
+            onClick={() => setShowReplies(!showReplies)}
+          >
+            view replies
+          </small>
+        ) : (
+          ""
         )}
+      </div>
+      {showReplies && (
+        <div>
+          {comment.replies?.length > 0 &&
+            comment.replies?.map((reply, index) => {
+              return <Replies key={`comment_${index}`} reply={reply} />;
+            })}
+        </div>
+      )}
       {showComment && (
         <section>
           <div className="row">
