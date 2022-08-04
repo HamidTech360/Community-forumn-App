@@ -569,7 +569,7 @@ const ModalCard = ({
                 </div>
 
                 {/* <div className="d-flex flex-column"> */}
-                <div className="col-5 col-sm-10 col-md-8 ms-4 me-xl-0">
+                <div className="col-6 col-sm-8 ms-4 ms-lg-3 ms-xl-4 me-xl-0">
                   <div
                     className={styles.div}
                     // onClick={redirectPage}

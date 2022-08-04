@@ -592,7 +592,8 @@ const PostCard = ({
               />
             </div>
 
-            <div className="col-6 col-sm-9 col-xl-10 ms-4 ms-lg-1 ms-xl-0">
+            {/* <div className="col-6 col-sm-9 col-xl-10 ms-4 ms-lg-1 ms-xl-0"> */}
+            <div className="col-6 col-sm-8 ms-4 me-xl-5">
               <div
                 className={styles.div}
                 // onClick={redirectPage}

@@ -206,6 +206,7 @@ const Feed = () => {
           <div
             // style={{ width: 270 }}
             // className="position-fixed d-none d-xxl-flex end-0 me-5 vh-100 "
+            // className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-3 me-xl-2 ms-xxl-4 vh-100"
             className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-3 me-xl-2 ms-xxl-4 vh-100"
           >
             <Follow />
