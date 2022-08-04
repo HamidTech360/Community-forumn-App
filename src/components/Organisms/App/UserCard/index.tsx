@@ -43,9 +43,8 @@ const UserCard = () => {
         className="text-center text-muted"
         style={{ marginTop: "-1.2rem", fontSize: "12px" }}
       >
-        {/* @{user?.firstName} */}@{data?.firstName}
-        {/* {(user?.lastName).substring(0, 1)} */}
-        {data?.lastName?.substring(0, 1)}
+       @{data?.username || data?.firstName}
+        
       </small>
       <small
         className="row text-muted mx-auto mt-2 text-center"

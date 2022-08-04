@@ -2,7 +2,14 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { ReactNode, useEffect, useState } from "react";
-import { Card, CardImg, Image, Nav } from "react-bootstrap";
+import {
+  Card,
+  CardImg,
+  Dropdown,
+  DropdownButton,
+  Image,
+  Nav,
+} from "react-bootstrap";
 import About from "../../Templates/Profile/About";
 import Bookmarks from "../../Templates/Profile/Bookmarks";
 import Articles from "../../Templates/Profile/Articles";
@@ -58,7 +65,7 @@ const ProfileCard = ({
         <div className=" mt-4 bold text-center fs-7">
           {data?.firstName} {data?.lastName}
         </div>
-        <div className="text-muting">@{data?.firstName}</div>
+        <div className="text-muting">@{data?.username || data?.firstName}</div>
         <div className="text-muted text-center">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
           illum quasi voluptatem explicabo, tempore enim!
@@ -67,14 +74,58 @@ const ProfileCard = ({
           className="d-flex justify-content-between"
           style={{ width: "60%" }}
         >
-          <div className="d-flex flex-column align-items-center">
-            <span>{data.followers?.length}</span>
-            <span>followers</span>
-          </div>
-          <div className="d-flex flex-column align-items-center">
-            <span>{data.following?.length}</span>
-            <span>following</span>
-          </div>
+          <DropdownButton
+            variant="light"
+            title={
+              <div className="d-flex flex-column align-items-center">
+                <span>{data.followers?.length}</span>
+                <span>followers</span>
+              </div>
+            }
+          >
+            {data.followers.map((item: Record<string, any>) => (
+              <Link href={`/profile/${item._id}`} passHref>
+                <Dropdown.Item key={item._id}>
+                  <Image
+                    src={item?.avatar?.url || "/images/imagePlaceholder.jpg"}
+                    alt=""
+                    roundedCircle
+                    width={15}
+                    height={15}
+                  />
+                  <span>
+                    {item.firstName} {item.lastName}
+                  </span>
+                </Dropdown.Item>
+              </Link>
+            ))}
+          </DropdownButton>
+          <DropdownButton
+            variant="light"
+            title={
+              <div className="d-flex flex-column align-items-center">
+                <span>{data.following?.length}</span>
+                <span>following</span>
+              </div>
+            }
+          >
+            {data.following.map((item: Record<string, any>) => (
+              <Link href={`/profile/${item._id}`} passHref>
+                <Dropdown.Item key={item._id}>
+                  <Image
+                    src={item?.avatar?.url || "/images/imagePlaceholder.jpg"}
+                    alt=""
+                    roundedCircle
+                    width={15}
+                    height={15}
+                  />
+                  <span>
+                    {item.firstName} {item.lastName}
+                  </span>
+                </Dropdown.Item>
+              </Link>
+            ))}
+          </DropdownButton>
         </div>
       </Card.Body>
       <Card.Footer>
