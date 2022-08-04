@@ -834,7 +834,7 @@ const ModalCard = ({
               </div>
             </section>
             <section>
-              <h6 style={{ fontWeight: "bolder" }}>
+              <h6 style={{ fontWeight: "bolder", marginBottom: "-1.2rem" }}>
                 Comments ({post?.comments?.length})
               </h6>
               <div className="row">

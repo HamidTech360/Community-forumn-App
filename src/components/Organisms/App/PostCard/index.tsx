@@ -174,10 +174,6 @@ const PostCard = ({
 
   // Don't Integrate with above useEffect. Leave them apart.
   useEffect(() => {
-    if (post?.likes?.includes(user?._id)) {
-      setLiked(true);
-    } // don't add an else statement. It would always toggle liked on every bookMark click, once there is a previous like click
-
     if (user?.bookmarks?.includes(post?._id)) {
       setBookMarked(true);
     } else {
@@ -276,7 +272,7 @@ const PostCard = ({
       type = "post";
     }
 
-    console.log("Post data:", post);
+    // console.log("Post data:", post);
     try {
       if (bool) {
         try {
@@ -290,7 +286,7 @@ const PostCard = ({
             }
           );
 
-          console.log("likeNew response.data:", likeNew.data);
+          // console.log("likeNew response.data:", likeNew.data);
         } catch (error) {
           // console.error(error);
         }
@@ -298,36 +294,39 @@ const PostCard = ({
 
       // Refetch Specific Post So as to get updated like count
       if (currentRoute == "/feed") {
-        if (bool) {
-          // Refetch Specific Post So as to get updated like count
-          if (currentRoute == "/feed") {
-            let newPost = { ...post };
-            if (!newPost?.likes.includes(user?._id)) {
-              const response = newPost.likes.push(user?._id);
-              setPostComingIn("");
-              setPostComingIn(response);
-            }
+        // if (bool) {
+        //   // Refetch Specific Post So as to get updated like count
+        //   // if (currentRoute == "/feed") {
+        // let newPost = { ...post };
+        // if (!newPost?.likes.includes(user?._id)) {
+        //   const response = newPost?.likes.push(user?._id);
+        //   // setPostComingIn("");
+        //   console.log("LIKED bool newPosts:", newPost);
+        //   setPostComingIn("newPost");
+        //   setPostComingIn(newPost);
+        //   setLiked(true);
+        // }
+        // console.log("LIKED bool:", newPost);
+        // setLiked(true);
+        //   }
+        // } else {
+        const response = await axios.get(
+          // `${config.serverUrl}/api/${type}/f}`,
+          `${config.serverUrl}/api/${type}/${post?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
           }
-          setLiked(true);
-          console.log("LIKED response.data bool:", response.data);
-        } else {
-          const response = await axios.get(
-            // `${config.serverUrl}/api/${type}/f}`,
-            `${config.serverUrl}/api/${type}/${post?._id}`,
-            {
-              headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
-            }
-          );
-          console.log("LIKED response.data false:", response.data);
-          // console.log(
-          //   "===:",
-          //   JSON.stringify(likeNew.data) === JSON.stringify(response.data)
-          // );
-          setPostComingIn(response.data);
-          setLiked(true);
-        }
+        );
+        // console.log("LIKED response.data false:", response.data);
+        // console.log(
+        //   "===:",
+        //   JSON.stringify(likeNew.data) === JSON.stringify(response.data)
+        // );
+        setPostComingIn(response.data);
+        setLiked(true);
+        // }
       } else if (
         currentRoute == "/groups" ||
         currentRoute == "/groups/[id]/[path]"
