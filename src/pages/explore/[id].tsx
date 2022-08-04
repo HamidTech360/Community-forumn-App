@@ -169,7 +169,7 @@ const BlogPost = () => {
                 <div className="row">
                   <div className="col-12 mt-4">
                     {blogPost.comments?.length > 0 &&
-                      ([...blogPost.comments].reverse()).map((comment, index) => {
+                      [...blogPost.comments].reverse().map((comment, index) => {
                         return (
                           <Comment
                             key={`blogPost_${index}`}
