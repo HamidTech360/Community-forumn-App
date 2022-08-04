@@ -58,7 +58,7 @@ const ProfileCard = ({
         <div className=" mt-4 bold text-center fs-7">
           {data?.firstName} {data?.lastName}
         </div>
-        <div className="text-muting">@{data?.firstName}</div>
+        <div className="text-muting">@{data?.username || data?.firstName}</div>
         <div className="text-muted text-center">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
           illum quasi voluptatem explicabo, tempore enim!
