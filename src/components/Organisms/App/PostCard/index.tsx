@@ -276,6 +276,7 @@ const PostCard = ({
       type = "post";
     }
 
+    console.log("Post data:", post);
     try {
       if (bool) {
         try {
@@ -288,7 +289,8 @@ const PostCard = ({
               },
             }
           );
-          // console.log("likeNew:", likeNew);
+
+          console.log("likeNew response.data:", likeNew.data);
         } catch (error) {
           // console.error(error);
         }
@@ -296,20 +298,36 @@ const PostCard = ({
 
       // Refetch Specific Post So as to get updated like count
       if (currentRoute == "/feed") {
-        const response = await axios.get(
-          // `${config.serverUrl}/api/${type}/f}`,
-          `${config.serverUrl}/api/${type}/${post?._id}`,
-          {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+        if (bool) {
+          // Refetch Specific Post So as to get updated like count
+          if (currentRoute == "/feed") {
+            let newPost = { ...post };
+            if (!newPost?.likes.includes(user?._id)) {
+              const response = newPost.likes.push(user?._id);
+              setPostComingIn("");
+              setPostComingIn(response);
+            }
           }
-        );
-
-        // console.log("LIKED response.data:", response.data);
-
-        setPostComingIn(response.data);
-        setLiked(true);
+          setLiked(true);
+          console.log("LIKED response.data bool:", response.data);
+        } else {
+          const response = await axios.get(
+            // `${config.serverUrl}/api/${type}/f}`,
+            `${config.serverUrl}/api/${type}/${post?._id}`,
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          console.log("LIKED response.data false:", response.data);
+          // console.log(
+          //   "===:",
+          //   JSON.stringify(likeNew.data) === JSON.stringify(response.data)
+          // );
+          setPostComingIn(response.data);
+          setLiked(true);
+        }
       } else if (
         currentRoute == "/groups" ||
         currentRoute == "/groups/[id]/[path]"
