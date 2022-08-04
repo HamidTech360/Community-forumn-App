@@ -89,7 +89,7 @@ const Follow = () => {
 
         const notFollowing = data.users.filter((person) => {
           if (
-            person._id.toString() !== user._id.toString() &&
+            person?._id.toString() !== user?._id.toString() &&
             !currentlyFollowing.includes(person?._id)
           ) {
             return person;

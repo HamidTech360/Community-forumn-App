@@ -27,8 +27,6 @@ import truncate from "trunc-html";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { user as userAuth } from "@/reduxFeatures/authState/authStateSlice";
-
 import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
 import {
   BsFolderFill,
@@ -52,6 +50,7 @@ import {
   setPosts,
 } from "@/reduxFeatures/api/postSlice";
 import {
+  user as userAuth,
   selectUser,
   setFollowing,
   selectFollowing,

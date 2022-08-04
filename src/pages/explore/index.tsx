@@ -15,6 +15,7 @@ import {
   Modal,
   Spinner,
   Form,
+  Pagination,
 } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
@@ -36,9 +37,14 @@ import {
   selectNewPost,
 } from "@/reduxFeatures/api/postSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-import usePagination, { Loader } from "@/hooks/usePagination";
-import InfiniteScroll from "react-infinite-scroll-component";
+// import usePagination, { Loader } from "@/hooks/usePagination";
+import usePaginationPage, {
+  LoaderPage,
+  usePaginationStudyAbroad,
+} from "@/hooks/usePaginationPage";
+// import InfiniteScroll from "react-infinite-scroll-component";
 import config from "@/config";
+import ReactPaginate from "react-paginate";
 
 const Explore = ({}) => {
   const router = useRouter();
@@ -58,8 +64,23 @@ const Explore = ({}) => {
     postBody: "",
   });
 
-  const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
-    usePagination("/api/posts", "posts");
+  const [paginatorDisplay, setPaginatorDisplay] = useState({
+    previous: "<<",
+    next: ">>",
+    pageMargin: 1,
+    pageRange: 2,
+  });
+  const [pageIndex, setPageIndex] = useState(0);
+
+  // const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
+  //   usePagination("/api/posts", "posts");
+  const { paginatedPageData, mutate, isLoadingPageData, errorPage } =
+    usePaginationPage("/api/posts", pageIndex);
+  const {
+    paginatedStudyAbroadData,
+    isLoadingStudyAbroadData,
+    errorStudyAbroad,
+  } = usePaginationStudyAbroad("/api/post/?category=Study Abroad", pageIndex);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -70,55 +91,64 @@ const Explore = ({}) => {
   }, []);
 
   useEffect(() => {
-    if (showPost?.length > 0) {
-      // Fetch Updated Gist Using useSWRInfinite
-      fetchNextPage();
-      // Update State
-      // setPosts(paginatedData);
+    // Set Page Paginator Number Display
+    if (window.innerWidth < 768) {
+      setPaginatorDisplay({
+        previous: "<<",
+        next: ">>",
+        pageMargin: 1,
+        pageRange: 2,
+      });
+    } else if (window.innerWidth < 1024) {
+      setPaginatorDisplay({
+        previous: "<< Pre",
+        next: "Next >>",
+        pageMargin: 2,
+        pageRange: 3,
+      });
+    } else if (window.innerWidth >= 1024) {
+      setPaginatorDisplay({
+        previous: "<< Pre",
+        next: "Next >>",
+        pageMargin: 3,
+        pageRange: 4,
+      });
     }
+  }, []);
+
+  // Auto Re-render on new post
+  useEffect(() => {
+    // console.log("Mutation");
+    mutate();
   }, [newPost]);
 
   useEffect(() => {
-    if (paginatedData) {
-      if (JSON.stringify(showPost) !== JSON.stringify(paginatedData)) {
-        dispatch(setPosts(paginatedData));
+    if (paginatedPageData) {
+      if (JSON.stringify(showPost) !== JSON.stringify(paginatedPageData)) {
+        dispatch(setPosts(paginatedPageData));
       }
     }
-  }, [paginatedData]);
+  }, [paginatedPageData]);
 
-  // useEffect(() => {
-  //   const fetchPost = async () => {
-  //     try {
-  //       const response = await axios.get(`${config.serverUrl}/api/posts`);
-  //       dispatch(setPosts(response.data.posts));
-  //       // setIsFetching(false);
-  //       dispatch(setIsFetching(false));
-  //       console.log(response.data.posts);
-  //     } catch (error) {
-  //       console.log(error.response?.data);
-  //     }
-  //   };
-  //   fetchPost();
-  //   //(async function () {
-  //   //   try {
-  //   //     const response = await axios.get(`${config.serverUrl}/api/users`, {});
-  //   //     // console.log("response.data+++:", response.data.users);
-  //   //     setUsers(response.data.users);
-  //   //     dispatch(setIsFetching(false));
-  //   //   } catch (error) {
-  //   //     //console.error(error.response?.data);
-  //   //     // setIsFetching(false);
-  //   //     dispatch(setIsFetching(false));
-  //   //   }
-  //   // })();
-  // }, [dispatch]);
+  useEffect(() => {
+    console.log("paginatedStudyAbroadData:", paginatedStudyAbroadData);
+    dispatch(setPosts(paginatedPageData));
+
+    let pageCount = showPost?.numPages;
+
+    // if (pageCount <= 6) {
+    //   // return all numbers
+    // } else {
+    //   // pageIndex
+    // }
+  }, [paginatedPageData]);
 
   useEffect(() => {
     (async () => {
       try {
         const { data } = await axios.get(`${config.serverUrl}/api/category`);
         setCategories(data.allCategories);
-        //console.log(data.allCategories);
+        console.log("all categories data", data.allCategories);
       } catch (error) {
         console.log(error.response?.data);
       }
@@ -130,14 +160,14 @@ const Explore = ({}) => {
   };
 
   const filterPost = (item) => {
-    console.log("key is",  item);
+    console.log("key is", item);
     setKey(item);
     if (item === "all") {
       return;
     }
 
-    // const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
-    // usePagination(`/api/posts/?category=${item}`, "posts");
+    const filtered = showPost?.posts.filter((post) => post.category === item);
+    console.log("filtered post:", filtered);
 
     // const filtered = showPost.filter((post) => post.category === item);
     // console.log("filtered post:", filtered);
@@ -147,6 +177,13 @@ const Explore = ({}) => {
     // }
 
     // setFilteredPosts(filtered);
+  };
+
+  const handlePageChange = (page) => {
+    // console.log("Page Clicked:", page.selected);
+    setPageIndex(page.selected);
+    // Only scroll to top on page change
+    if (pageIndex !== page.selected) router.replace("#explore");
   };
 
   return (
@@ -226,7 +263,7 @@ const Explore = ({}) => {
                 </Spinner>
               </div>
             )} */}
-            <InfiniteScroll
+            {/* <InfiniteScroll
               next={fetchNextPage}
               hasMore={!isReachedEnd}
               loader={<Loader />}
@@ -273,9 +310,96 @@ const Explore = ({}) => {
                   <b>Oops! Something went wrong</b>
                 </p>
               )}
-            </InfiniteScroll>
+            </InfiniteScroll> */}
             {/* {!showPost?.length && <p>No posts under this category </p>} */}
+            {/* {console.log("paginatedPageData:", paginatedPageData)}
+            {paginatedPageData.map((page) => (
+              <>
+                <Row className="d-flex justify-content-start w-100">
+                  {(filteredPosts.length > 0 ? filteredPosts : showPost)?.map(
+                    (post, key) => (
+                      <Col
+                        key={`posts_${key}`}
+                        md={4}
+                        className={`my-4 ${styles.card}`}
+                      >
+                        <Card
+                          _id={post._id}
+                          image={"/images/postPlaceholder.jpg"}
+                          title={post.postTitle}
+                          body={post.postBody}
+                          author={post.author}
+                          size="any"
+                        />
+                      </Col>
+                    )
+                  )}
+                </Row>
+              </>
+            ))} */}
+
+            <Row className="d-flex justify-content-start w-100">
+              {showPost?.posts.map((post, key) => (
+                <Col
+                  key={`posts_${key}`}
+                  md={4}
+                  className={`my-4 ${styles.card}`}
+                >
+                  <Card
+                    _id={post._id}
+                    image={"/images/postPlaceholder.jpg"}
+                    title={post.postTitle}
+                    body={post.postBody}
+                    author={post.author}
+                    size="any"
+                  />
+                </Col>
+              ))}
+            </Row>
+
+            {isLoadingPageData && <LoaderPage />}
+
+            {errorPage && (
+              <p
+                style={{
+                  textAlign: "center",
+                  color: "gray",
+                  marginTop: "1.2rem",
+                }}
+              >
+                <b>Oops! Something went wrong</b>
+              </p>
+            )}
+
+            {/* {console.log("showPost:", showPost)} */}
           </div>
+
+          <ReactPaginate
+            previousLabel={paginatorDisplay.previous}
+            nextLabel={paginatorDisplay.next}
+            breakLabel="..."
+            pageCount={showPost?.numPages}
+            marginPagesDisplayed={paginatorDisplay.pageMargin}
+            pageRangeDisplayed={paginatorDisplay.pageRange}
+            onPageChange={handlePageChange}
+            containerClassName="pagination justify-content-center"
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            activeLinkClassName="bg-primary text-light"
+            // eslint-disable-next-line no-unused-vars
+            hrefBuilder={(page, pageCount, selected) =>
+              page >= 1 && page <= pageCount ? `/explore/${page}` : "#"
+            }
+            hrefAllControls
+            forcePage={pageIndex}
+            renderOnZeroPageCount={null}
+          />
         </Container>
       </section>
 
@@ -335,3 +459,8 @@ const Explore = ({}) => {
 };
 
 export default Explore;
+
+const activatedStyle = {
+  backgroundColor: "blue",
+  color: "white",
+};
