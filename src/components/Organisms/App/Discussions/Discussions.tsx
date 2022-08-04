@@ -2,38 +2,79 @@ import config from "@/config";
 import axios from "axios";
 import DOMPurify from "dompurify";
 import React, { useEffect, useState } from "react";
-import { Card, Image } from "react-bootstrap";
+import { Card, Image, Modal } from "react-bootstrap";
+import truncate from "trunc-html";
+import { useModalWithData, ModalRow } from "@/hooks/useModalWithData";
+import { MdOutlineCancel } from "react-icons/md";
+import { BiArrowBack } from "react-icons/bi";
+import styles from "@/styles/feed.module.scss";
 
-const Discussions = ({ posts }: any) => {
+import { useDispatch, useSelector } from "@/redux/store";
+import {
+  // user as userAuth,
+  selectUser,
+} from "@/reduxFeatures/authState/authStateSlice";
+import { useRouter } from "next/router";
+
+const Discussions = () => {
+  const router = useRouter();
   const [gists, setGists] = useState<Record<string, any>[]>();
-  const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);
+  const user = useSelector(selectUser);
+  const sanitizer = DOMPurify.sanitize;
+
   useEffect(() => {
-    (async () => {
-      const { data } = await axios.get(`${config.serverUrl}/api/gists`);
-      setGists(data);
+    (async function () {
+      try {
+        const { data } = await axios.get(`${config.serverUrl}/api/gists`);
+
+        await data.gists.sort(function () {
+          return 0.5 - Math.random();
+        });
+
+        setGists(
+          data.gists
+            .filter((person) => {
+              return person?.author?._id.toString() !== user._id.toString();
+            })
+            .slice(0, 50)
+        );
+      } catch (error) {
+        // console.log(error.response?.data);
+      }
     })();
   }, []);
 
-  const sanitizer = DOMPurify.sanitize;
   return (
     <Card
       // style={{ border: "none", overflowY: "scroll", height: "450px" }}
-      style={{ border: "none", overflowY: "scroll", height: "18%" }}
-      className="pb-5 mb-4 mt-4 shadow"
+      // style={{ border: "none", overflowY: "scroll", height: "450px" }}
+      // className="pb-5 mb-4 mt-4 shadow"
+      className={`pb-5 mb-4 mt-4 shadow ${styles.activeDiscussion}`}
     >
       <Card.Header
         className="d-flex justify-content-between gap-2 align-items-center bg-white shadow-sm sticky-top"
         style={{ fontSize: "14px" }}
       >
         <span className="bold">Active discussions</span>
-        <small className="text-bold text-primary">See more</small>
+        <small
+          className="text-bold text-primary"
+          style={{ cursor: "pointer" }}
+          onClick={() => router.push("/gist")}
+        >
+          See more
+        </small>
       </Card.Header>
       <Card.Body>
-        {posts &&
-          posts?.map((post, index) => (
+        {gists &&
+          gists?.map((gist, index) => (
             <div
-              key={`discussion-${post?._id}-${index}`}
-              className="d-flex gap-3 mt-2 py-1 border-bottom"
+              key={`discussion-${gist?._id}-${index}`}
+              className="d-flex gap-3 mt-2 py-1 px-1 border-bottom"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                router.push(`/gist/${gist?._id}`);
+              }}
             >
               <div>
                 <Image
@@ -48,11 +89,11 @@ const Discussions = ({ posts }: any) => {
                 <small
                   className="bolden"
                   dangerouslySetInnerHTML={{
-                    __html: sanitizer(post?.postTitle),
+                    __html: sanitizer(truncate(gist?.title, 50).html),
                   }}
                 />
-                <small className="text-muted">
-                  By {`${post?.author?.firstName} ${post?.author?.lastName}`}
+                <small className="text-muted" style={{ fontSize: "11px" }}>
+                  By {`${gist?.author?.firstName} ${gist?.author?.lastName}`}
                 </small>
               </div>
             </div>

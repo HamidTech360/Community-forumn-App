@@ -2,8 +2,10 @@
 //@ts-nocheck
 import AuthContent from "@/components/Auth/AuthContent";
 import React, { useState, useRef, useEffect } from "react";
-import { Container, Row, Col } from "react-bootstrap";
-import { ToastContainer } from "react-toastify";
+import { Form, Row, Button, Card } from "react-bootstrap";
+import {FiSend} from 'react-icons/fi'
+import { BsArrowLeft, BsDot } from "react-icons/bs";
+import Editor from "@/components/Organisms/SlateEditor/Editor";
 import axios from 'axios'
 import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
@@ -13,17 +15,20 @@ import SideBar from "@/components/Chat/SideBar";
 import MainDisplay from "@/components/Chat/MainDisplay";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { io } from 'socket.io-client';
+import chatStyles from '@/styles/chat.module.scss'
+import styles from '@/styles/templates/chatEditor.module.scss'
 
 const Chat = () => {
   const user = useSelector(selectUser)
-  const mainDisplay = useRef();
-  const mainSidebar = useRef();
+  // const mainDisplay = useRef();
+  // const mainSidebar = useRef();
   const [conversations, setConversations] = useState([])
   const [currentChat, setCurrentChat] = useState(null)
   const [messages, setMessages] = useState([])
   const [receivedMessage, setReceivedMessage] = useState(null)
   const [showConversationList, setShowConversationList] = useState(true)
   const [showMsgArea, setShowMsgArea] = useState(false)
+  const [newMsg, setNewMsg] = useState('')
   const socket:any = useRef()
 
   let emptyEditorInnerHtml =
@@ -114,13 +119,21 @@ useEffect(()=>{
         console.log(error.response?.data);
     }
 }
-
-const sendMessage = async ()=>{
+const handleChange = (e)=>{
+  setNewMsg(e.currentTarget.value)
+  console.log(newMsg);
+  
+}
+const sendMessage = async (e)=>{
+  e.preventDefault()
+  console.log(newMsg);
+  // alert(newMsg)
+  
   
   if(!currentChat) return
-  const newMsg = document.getElementById('/chat-slateRefId').innerHTML
-  if(newMsg===emptyEditorInnerHtml) return 
-  
+  if(newMsg===""){
+    return
+  }
   
   
   socket.current.emit("sendMessage", {
@@ -135,41 +148,114 @@ const sendMessage = async ()=>{
       }})
       console.log(data);
       setMessages([...messages, data.newMessage])
-      document.getElementById('/chat-slateRefId').innerHTML = emptyEditorInnerHtml
-      // setNewMsg('')
+     // document.getElementById('/chat-slateRefId').innerHTML = emptyEditorInnerHtml
+       setNewMsg('')
   }catch(error){
       console.log(error.response?.data);
       
   }
 }
 
-
+const backToConversationList = ()=>{
+  setCurrentChat(null)
+  setShowConversationList(true)
+  if(window.innerWidth <= 768){
+    setShowMsgArea(false)
+  }
+}
 
   return (
     <AuthContent>
       <Head>
         <title>Chat</title>
       </Head>
-      <div className="" style={{  }}>
-        <ToastContainer />
-        <div className="row" style={{ minHeight: "87vh" }}>
-          {/* SideBar */}
-          {showConversationList && 
-          <SideBar 
-              conversations={conversations} 
-              selectChat={selectChat} 
-          />}
+      <div className="" style={{  maxHeight:'84vh' }}>
+        
+        <div className="row" >
+           
+          {showConversationList &&
+          <div className="col-lg-4 col-md-4 col-sm-12 col-xs-12 shadow" style={{overflowY:'hidden'}}>
+            <SideBar 
+                conversations={conversations} 
+                selectChat={selectChat} 
+            />
+          </div>
+          }
 
-          {/* Main Display */}
-         { showMsgArea && 
-           <MainDisplay
-            currentChat={currentChat}
-            messages={messages}
-            mainSidebar={mainSidebar}
-            mainDisplay={mainDisplay}
-            sendMessage={sendMessage}
-          />
-         }
+      
+          {showMsgArea &&
+          <div className={`${chatStyles.messageAreaCol} col-lg-8 col-md-8 col-sm-12 col-xs-12 `} style={{overflowX:'hidden'}}>
+            {currentChat?
+              <Card.Header style={{border:'1px solid lightgrey', borderBottom:'0px', width:'100%'}} className={styles.activeChat}>
+                  <div className="">
+                    <BsArrowLeft
+                      style={{
+                        cursor: "pointer",
+                        marginRight:'10px'
+                      }}
+                      onClick={()=>backToConversationList()}
+                    />     
+                    {currentChat?.firstName}
+                  </div>
+
+                  <div>
+                    <BsDot size={40} />
+                    <span className="">offline</span>
+                  </div>
+              </Card.Header >
+                    :
+              <Card.Header className={styles.messageHeader}>
+                <div className="row">
+                  <div className="col-12">
+                    <h4>
+                      <button className="btn btn-lg p-0" >
+                        <BsArrowLeft
+                          className="me-2 d-inline d-md-none"
+                          //onClick={backToSideMessages}
+                          style={{
+                            cursor: "pointer",
+                          }}
+                        />
+                      </button>
+                      New message
+                    </h4>
+                  </div>
+                  <div className="col-12 ">
+                    <input
+                      id="sendTo"
+                      type="text"
+                      className="form-control border"
+                      placeholder="Type a name or multiple names separated by comma"
+                    />
+                  </div>
+                </div>
+            
+              </Card.Header>
+            }
+
+            <MainDisplay
+                currentChat={currentChat}
+                messages={messages}
+                sendMessage={sendMessage}
+            />
+
+            {currentChat && 
+              <div className={styles.chatBox} style={{marginTop:'10px'}}>
+               
+                <Form.Control
+                  as="textarea" 
+                  style={{marginRight:'10px'}}
+                  placeholder="Write something"
+                  value={newMsg}
+                  onChange={(e)=>handleChange(e)}
+                />
+                <Button onClick={(e)=>sendMessage(e)} style={{minWidth:'70px'}}> <FiSend size={22} /> </Button>
+              </div>
+            }
+          </div>
+          }
+           
+         
         </div>
       </div>
     </AuthContent>

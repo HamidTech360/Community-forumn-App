@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Head from "next/head";
 import MessageButton from "@/components/Atoms/messageButton";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -62,44 +62,77 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   const isFetching = useSelector(selectIsFetching);
 
   const [allGists, setAllGists] = useState([]);
-
+  const [filteredGists, setFilteredGists] = useState([]);
+  const [gistCategories, setGistCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     post: "",
   });
 
-  const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
-    usePagination("/api/gists", "gists");
+  const {
+    paginatedData,
+    isReachedEnd,
+    error,
+    fetchNextPage,
+    mutate,
+    isValidating,
+  } = usePagination("/api/gists", "gists");
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
 
+    (async () => {
+      try {
+        const { data } = await axios.get(`${config.serverUrl}/api/category`);
+        setGistCategories([
+          { name: "All", type: "gist" },
+          ...data.allCategories,
+        ]);
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (gistIsSuccess) {
+      if (allGists?.length > 0) {
+        // Fetch Updated Gist Using useSWRInfinite
+        mutate();
+
+        // Update State
+        setAllGists(paginatedData);
+
+        dispatch(uploadCleanUp({}));
+        // dispatch(setShowGistModal(false));
+      }
+    }
+  }, [gistIsSuccess]);
+
+  useEffect(() => {
     if (paginatedData) {
       if (JSON.stringify(allGists) !== JSON.stringify(paginatedData)) {
+        // console.log("paginatedData - 1:", paginatedData);
         setAllGists(paginatedData);
       }
     }
   }, [paginatedData]);
 
-  useEffect(() => {
-    if (gistIsSuccess) {
-      toast.success("Gist uploaded succesfully", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: customId,
-      });
-
-      (async function () {
-        const response = await axios.get(`${config.serverUrl}/api/gists`);
-        setAllGists(response.data);
-      })();
-
-      dispatch(uploadCleanUp({}));
-      dispatch(setShowGistModal(false));
-    }
-  }, [gistIsSuccess]);
-
   const handleChange = (e) => {
     dispatch(setGistTitle(e.currentTarget.value));
+  };
+
+  const filterCategory = (item) => {
+    console.log(item);
+
+    const filtered = allGists.filter((gist) => gist.categories === item.name);
+    if (filtered.length <= 0) {
+      alert("No Item in this category");
+    }
+    // console.log('filtered gists:', filteredGists);
+
+    setFilteredGists(filtered);
   };
 
   return (
@@ -123,8 +156,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                     ? item?.bbp_media[0]!.attachment_data?.thumb
                     : "/images/formbg.png"
                 }
-                title={item.title}
-                author={`${item.author?.firstName} ${item.author?.lastName}`}
+                title={item?.title}
+                author={`${item?.author?.firstName} ${item?.author?.lastName}`}
               />
             ))}
           </EndlessCarousel>
@@ -141,8 +174,14 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
 
               <BCard.Body className="mt-3 mx-2">
                 <div style={{ listStyleType: "none" }}>
-                  {[1, 2, 3, 4, 5].map((item, key) => (
-                    <li key={`category-${key}`}>Lorem, ipsum - {key}.</li>
+                  {gistCategories.map((item, key) => (
+                    <li
+                      onClick={() => filterCategory(item)}
+                      style={{ marginBottom: "15px", cursor: "pointer" }}
+                      key={key}
+                    >
+                      {item.name}
+                    </li>
                   ))}
                 </div>
               </BCard.Body>
@@ -192,12 +231,14 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                 </p>
               }
               dataLength={paginatedData?.length ?? 0}
-              initialScrollY={0}
+              // initialScrollY={0}
             >
               <div className="justify-content-center">
-                {allGists.map((post, key) => (
-                  <GistCard gist={post} key={`gist-${key}`} trimmed />
-                ))}
+                {(filteredGists.length > 0 ? filteredGists : allGists).map(
+                  (post, key) => (
+                    <GistCard gist={post} key={`gist-${key}`} trimmed />
+                  )
+                )}
               </div>
 
               {isValidating && (

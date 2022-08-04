@@ -21,7 +21,13 @@ import PostCard from "@/components/Organisms/App/PostCard";
 import UserCard from "@/components/Organisms/App/UserCard";
 import CreatePost from "@/components/Organisms/CreatePost";
 import { toast, ToastContainer } from "react-toastify";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import {
+  selectUser,
+  setFollowers,
+  selectFollowers,
+  setFollowing,
+  selectFollowing,
+} from "@/reduxFeatures/authState/authStateSlice";
 import { MdOutlineCancel } from "react-icons/md";
 // import { usePagination } from "@/hooks/usePagination";
 import usePagination, { Loader } from "@/hooks/usePagination";
@@ -31,30 +37,58 @@ import styles from "@/styles/feed.module.scss";
 import Follow from "@/components/Organisms/App/Follow";
 import { useDispatch, useSelector } from "@/redux/store";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
-
+import { getNotification } from "@/reduxFeatures/api/notifications";
 // import Editor from "@/components/Organisms/SlateEditor/Editor";
-import { useModalWithData } from "@/hooks/useModalWithData";
+import { ModalRow, useModalWithData } from "@/hooks/useModalWithData";
 import InfiniteScroll from "react-infinite-scroll-component";
 // import { FaTimes } from "react-icons/fa";
 
+// import { FacebookShareButton, TwitterShareButton } from "react-share";
+// import { FacebookIcon, TwitterIcon } from "react-share";
+
 const Feed = () => {
-  const data = useSelector(selectUser);
+  // const data = useSelector(selectUser);
   const dispatch = useDispatch();
+  const stateUser = useSelector(selectUser);
   const newFeed = useSelector(selectNewFeed);
   //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
-  const [scrollInitialised, setScrollInitialised] = useState(false);
+  // const [scrollInitialised, setScrollInitialised] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [isFetching, setIsFetching] = useState(true);
-  const [uploading, setUploading] = useState(false);
+  // const [isFetching, setIsFetching] = useState(true);
+  // const [uploading, setUploading] = useState(false);
   // const [showModal, setShowModal] = useState(false);
   const { modalOpen, toggle, selected, setSelected } = useModalWithData();
 
-  const [formData, setFormData] = useState({
-    post: "",
-  });
+  // const [followers, setFollowers] = useState([]);
+  // const [following, setFollowing] = useState([]);
 
-  const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
-    usePagination("/api/feed", "feed");
+  const {
+    paginatedData,
+    isReachedEnd,
+    error,
+    fetchNextPage,
+    mutate,
+    isValidating,
+  } = usePagination("/api/feed", "feed");
+
+  // Update users followers & following in AuthUser because it's a frontend resolved data
+  useEffect(() => {
+    if (stateUser) {
+      const currentlyFollowing = stateUser.following.map((follow) => {
+        return follow._id;
+      });
+      const currentFollowers = stateUser.followers.map((follow) => {
+        return follow._id;
+      });
+
+      dispatch(setFollowers(currentFollowers));
+      dispatch(setFollowing(currentlyFollowing));
+    }
+  }, [stateUser]);
+
+  // const [formData, setFormData] = useState({
+  //   post: "",
+  // });
 
   // const checkScroll = () => {
   //   if (window.scrollY > 100) {
@@ -72,13 +106,16 @@ const Feed = () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   // Auto-Update new post to feed
-  //   console.log("newFeed:", newFeed);
-  //   // if (newFeed) {
-  //   setPosts([newFeed?.feed, ...posts]);
-  //   // }
-  // }, [newFeed]);
+  useEffect(() => {
+    if (Object.entries(newFeed).length !== 0) {
+      if (posts?.length > 0) {
+        // Fetch Updated Gist Using useSWRInfinite
+        mutate();
+        // Update State
+        setPosts(paginatedData);
+      }
+    }
+  }, [newFeed]);
 
   useEffect(() => {
     if (paginatedData) {
@@ -105,10 +142,12 @@ const Feed = () => {
               className={`${styles.userCardDiscussion} position-fixed d-flex flex-column vh-100`}
             >
               <div className="col-xs-12">
-                <UserCard user={data!} />
+                {/* <UserCard user={data!} /> */}
+                {/* <UserCard data={data!} /> */}
+                <UserCard />
               </div>
               <div className="col-xs-12">
-                <Discussions posts={posts} />
+                <Discussions />
               </div>
             </div>
           </div>
@@ -167,6 +206,7 @@ const Feed = () => {
           <div
             // style={{ width: 270 }}
             // className="position-fixed d-none d-xxl-flex end-0 me-5 vh-100 "
+            // className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-3 me-xl-2 ms-xxl-4 vh-100"
             className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-3 me-xl-2 ms-xxl-4 vh-100"
           >
             <Follow />
@@ -190,7 +230,7 @@ const Feed = () => {
             onClick={() => toggle()}
           />{" "}
         </span>
-        {selected.images ? (
+        {/* {selected.images ? (
           <Row>
             <Col lg={6}></Col>
             <Col lg={6}>
@@ -204,7 +244,8 @@ const Feed = () => {
               <ModalCard post={selected} />
             </Col>
           </Row>
-        )}
+        )} */}
+        <ModalRow selected={selected} />
       </Modal>
     </AuthContent>
   );

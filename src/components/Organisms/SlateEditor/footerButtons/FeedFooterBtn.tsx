@@ -16,9 +16,10 @@ function FeedFooterBtn({ editorID }) {
   const createPost = async (e) => {
     e.preventDefault();
 
-    const editorInnerHtml = (
-      document.getElementById(editorID) as HTMLInputElement
-    ).innerHTML;
+    // const editorInnerHtml = (
+    //   document.getElementById(editorID) as HTMLInputElement
+    // ).innerHTML;
+    const editorInnerHtml = document.getElementById(editorID).innerHTML;
 
     let emptyEditorInnerHtml =
       '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
@@ -50,15 +51,23 @@ function FeedFooterBtn({ editorID }) {
           toastId: "1",
         });
         // Auto update feeds in /feed
-        dispatch(setNewFeed(response.data));
+        console.log("Feed Post response.data:", response.data.feed);
+        dispatch(setNewFeed(response.data.feed));
         dispatch(setShowCreatePostModal(false));
         setUploading(false);
       } catch (error) {
         // console.error(error.response?.data);
-        toast.error("Failed to upload post", {
-          position: toast.POSITION.TOP_RIGHT,
-          toastId: "1",
-        });
+        if (!localStorage.getItem("accessToken")) {
+          toast.error("You must login to create a Blog Post", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+        } else {
+          toast.error("Failed to upload post: Try Again", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+        }
         setUploading(false);
       }
     }

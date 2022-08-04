@@ -16,8 +16,14 @@ import { HiDotsVertical } from "react-icons/hi";
 
 import { MdOutlineCancel } from "react-icons/md";
 import { BiArrowBack } from "react-icons/bi";
-import { useModalWithData } from "@/hooks/useModalWithData";
-import ModalCard from "@/components/Organisms/App/ModalCard";
+import {
+  ModalRow,
+  ModalRowShare,
+  useModalWithData,
+  useModalWithShare,
+} from "@/hooks/useModalWithData";
+// import ModalCard from "@/components/Organisms/App/ModalCard";
+import truncate from "trunc-html";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -28,38 +34,77 @@ import {
   BsFillBookmarkFill,
   BsBookmark,
 } from "react-icons/bs";
+import { RiUserFollowFill } from "react-icons/ri";
 import { AiOutlineLike, AiFillLike, AiOutlineShareAlt } from "react-icons/ai";
-import { FaCommentDots } from "react-icons/fa";
+import { FaRegCommentDots } from "react-icons/fa";
 import Age from "../../../Atoms/Age";
 import DOMPurify from "dompurify";
 import styles from "@/styles/profile.module.scss";
 import axios from "axios";
 import config from "@/config";
-import { useDispatch } from "react-redux";
 
+import { useDispatch, useSelector } from "@/redux/store";
 import {
   selectPost,
   setIsFetching,
   setPosts,
 } from "@/reduxFeatures/api/postSlice";
-import { useSelector } from "@/redux/store";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import {
+  user as userAuth,
+  selectUser,
+  setFollowing,
+  selectFollowing,
+} from "@/reduxFeatures/authState/authStateSlice";
+import {
+  // setLikeChanged,
+  // selectLikeChanged,
+  // setBookMarkChanged,
+  // selectBookMarkChanged,
+  setLikeChangedModal,
+  selectLikeChangedModal,
+  setUnLikeChangedModal,
+  selectUnLikeChangedModal,
+  // setBookMarkChangedModal,
+  // selectBookMarkChangedModal,
+} from "@/reduxFeatures/app/postModalCardSlice";
+import { selectCreatePostModal } from "@/reduxFeatures/app/createPost";
+import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 import { useRouter } from "next/router";
 import Comment from "@/components/Organisms/App/Comment";
+import makeSecuredRequest, {
+  deleteSecuredRequest,
+} from "@/utils/makeSecuredRequest";
+// import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
+  // post: postComingIn,
   post,
   trimmed,
 }: {
   post: Record<string, any>;
   trimmed?: Boolean;
 }) => {
+  // console.log("PastCard Loaded+++++");
+  // console.log("postComingIn:", postComingIn);
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const posts = useSelector(selectPost);
+  // const posts = useSelector(selectPost);
+  // const likeChanged = useSelector(selectLikeChanged);
+  // const bookmarkChanged = useSelector(selectBookMarkChanged);
+  const likeChangedModal = useSelector(selectLikeChangedModal);
+  const unLikeChangedModal = useSelector(selectUnLikeChangedModal);
+  const createPostModal = useSelector(selectCreatePostModal);
+  const newFeed = useSelector(selectNewFeed);
+  // const bookmarkChangedModal = useSelector(selectBookMarkChangedModal);
   const router = useRouter();
+
+  // const [post, setPostComingIn] = useState(postComingIn);
+  const [postReFetched, setPostComingIn] = useState(undefined);
+
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookMarked] = useState(false);
+  // const [likedOrBookmarkedChanged, setLikedOrBookmarkedChanged] =
+  //   useState(false);
   const sanitizer = DOMPurify.sanitize;
 
   // - comment section
@@ -67,46 +112,94 @@ const PostCard = ({
   const [commentPost, setCommentPost] = useState("");
   const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
+  // const [noOfLikes, setNoOfLikes] = useState(0)
 
-  const postComment = async () => {
-    const body = {
-      content: commentPost,
-    };
-
-    if (body.content == "") {
-      return toast.error("Comment cannot be empty", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
-      });
-    }
-    setLoading(true);
-    const res = await axios.post(
-      `${config.serverUrl}/api/comments?type=feed&id=${post?._id}`,
-      body,
-      {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      }
-    );
-    console.log(res);
-    let comments = post?.comments;
-    comments?.unshift(res.data);
-    setModalPost({ ...post, comments });
-
-    setLoading(false);
-    setShowComment(false);
-  };
+  // useEffect(()=>{
+  //   setNoOfLikes(post?.likes?.length)
+  // },[])
+  const currentlyFollowing = useSelector(selectFollowing);
 
   // modal
   const { modalOpen, toggle, selected, setSelected } = useModalWithData();
+  const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
+    useModalWithShare();
+
+  // useEffect(() => {
+  //   console.log("POST CHANGED:", post);
+  // }, [post]);
+
+  // Monitor Likes In ModalCard & Let It Reflect In PastCard
+  useEffect(() => {
+    // console.log("modalOpen OPEN");
+    if (!modalOpen && likeChangedModal.length > 0) {
+      // if (likeChangedModal.includes(postComingIn?._id)) {
+      if (likeChangedModal.includes(post?._id)) {
+        // Refetch Specific Post So as to get updated like count The false argument is for iit not to sent an axios argument.
+        (async () => await likeIt(false))();
+      }
+    }
+
+    if (!modalOpen && unLikeChangedModal.length > 0) {
+      // if (unLikeChangedModal.includes(postComingIn?._id)) {
+      if (unLikeChangedModal.includes(post?._id)) {
+        // Refetch Specific Post So as to get updated like count. The false argument is for iit not to sent an axios argument.
+        (async () => await unLikeIt(false))();
+      }
+    }
+
+    // Clear Redux State On componentWillUnMount
+    return () => {
+      dispatch(setLikeChangedModal(""));
+      dispatch(setUnLikeChangedModal(""));
+      // dispatch(setBookMarkChangedModal(""));
+    };
+  }, [modalOpen]);
+
+  /* Don't Integrate with below useEffect. Leave them apart.
+   ** This fixes the bug  of displaying colored icon for both like & bookmark (on making new post) once there was a previous like or bookmark click.
+   */
+  useEffect(() => {
+    if (post?.likes?.includes(user?._id)) {
+      setLiked(true);
+    } else {
+      setLiked(false);
+    }
+
+    if (user?.bookmarks?.includes(post?._id)) {
+      setBookMarked(true);
+    } else {
+      setBookMarked(false);
+    }
+  }, [post, newFeed]);
+
+  // Don't Integrate with above useEffect. Leave them apart.
+  useEffect(() => {
+    if (post?.likes?.includes(user?._id)) {
+      setLiked(true);
+    } // don't add an else statement. It would always toggle liked on every bookMark click, once there is a previous like click
+
+    if (user?.bookmarks?.includes(post?._id)) {
+      setBookMarked(true);
+    } else {
+      setBookMarked(false);
+    }
+  }, [user]);
+
+  const redirectPage = () => {
+    router.push({
+      pathname: `/profile/[id]`,
+      query: {
+        id: post?.author?._id,
+      },
+    });
+  };
 
   const postButton = [
     {
       name: "Like",
       reaction: true,
       icon: liked ? (
-        <AiFillLike color="#086a6d " size={25} />
+        <AiFillLike color="#086a6d " size={25} onClick={() => handleUnLike()} />
       ) : (
         <AiOutlineLike size={25} onClick={() => handleLike()} />
       ),
@@ -119,29 +212,56 @@ const PostCard = ({
     {
       name: "Comment",
       reaction: true,
-      icon: <FaCommentDots size={20} />,
+      icon: <FaRegCommentDots size={24} />,
     },
     {
       name: "Bookmark",
       reaction: true,
       icon: bookmarked ? (
-        <BsFillBookmarkFill color="#086a6d " onClick={() => removeBookMark()} />
+        <BsFillBookmarkFill
+          color="#086a6d "
+          onClick={() => removeBookMark()}
+          size={22}
+        />
       ) : (
-        <BsBookmark onClick={() => handleBookMark()} />
+        <BsBookmark onClick={() => handleBookMark()} size={22} />
       ),
     },
   ];
 
-  const redirectPage = () => {
-    router.push({
-      pathname: `/profile/[id]`,
-      query: {
-        id: post?.author?._id,
-      },
-    });
+  const postComment = async () => {
+    const body = {
+      content: commentPost,
+    };
+
+    setLoading(true);
+    const res = await axios.post(
+      `${config.serverUrl}/api/comments?type=feed&id=${post?._id}`,
+      body,
+      {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+    // console.log(res);
+    let comments = post?.comments;
+    comments?.unshift(res.data);
+    setModalPost({ ...post, comments });
+
+    setLoading(false);
+    setShowComment(false);
   };
 
   const handleLike = async () => {
+    await likeIt(true);
+  };
+
+  const handleUnLike = async () => {
+    await unLikeIt(true);
+  };
+
+  const likeIt = async (bool) => {
     let type;
     const currentRoute = router.pathname;
     if (currentRoute == "/feed") {
@@ -150,34 +270,181 @@ const PostCard = ({
       currentRoute == "/groups" ||
       currentRoute == "/groups/[id]/[path]"
     ) {
-      type = "post";
+      // type = "post";
+      type = "feed";
     } else if (currentRoute.includes("profile")) {
       type = "post";
     }
 
-    console.log(type, currentRoute);
+    try {
+      if (bool) {
+        try {
+          // Like Post
+          const likeNew = await axios.get(
+            `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          // console.log("likeNew:", likeNew);
+        } catch (error) {
+          // console.error(error);
+        }
+      }
+
+      // Refetch Specific Post So as to get updated like count
+      if (currentRoute == "/feed") {
+        const response = await axios.get(
+          // `${config.serverUrl}/api/${type}/f}`,
+          `${config.serverUrl}/api/${type}/${post?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+
+        // console.log("LIKED response.data:", response.data);
+
+        setPostComingIn(response.data);
+        setLiked(true);
+      } else if (
+        currentRoute == "/groups" ||
+        currentRoute == "/groups/[id]/[path]"
+      ) {
+        try {
+          // console.log("POST ID After:", postComingIn?._id);
+          const response = await axios.get(
+            // `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`,
+            // `${config.serverUrl}/api/feed/${postComingIn?._id}`,
+            `${config.serverUrl}/api/feed/${post?._id}`,
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+
+          // console.log("response.data:", response.data);
+          setPostComingIn(response.data);
+          setLiked(true);
+        } catch (error) {
+          // console.error(error);
+        }
+      } else if (currentRoute.includes("profile")) {
+        const response = await axios.get(
+          // `${config.serverUrl}/api/${type}s/${postComingIn?._id}`,
+          `${config.serverUrl}/api/${type}s/${post?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+
+        // console.log("response.data:", response.data.post);
+        setPostComingIn(response.data.post);
+        setLiked(true);
+      }
+    } catch (error) {
+      // console.log(error.response?.data);
+    }
+  };
+
+  const unLikeIt = async (bool) => {
+    let type;
+    const currentRoute = router.pathname;
+    if (currentRoute == "/feed") {
+      type = "feed";
+    } else if (
+      currentRoute == "/groups" ||
+      currentRoute == "/groups/[id]/[path]"
+    ) {
+      type = "feed";
+    } else if (currentRoute.includes("profile")) {
+      type = "post";
+    }
 
     try {
-      const { data } = await axios.get(
-        `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+      if (bool) {
+        // Like Post
+        try {
+          const unlikePost = await axios.delete(
+            `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
+            // `${config.serverUrl}/api/${type}/${post?._id}`,
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          // console.log("unlikePost:", unlikePost);
+        } catch (error) {
+          // console.error(error);
         }
-      );
+      }
 
-      setLiked(true);
+      // Refetch Specific Post So as to get updated like count
+      if (currentRoute == "/feed") {
+        const response = await axios.get(
+          // `${config.serverUrl}/api/${type}/${postComingIn?._id}`,
+          `${config.serverUrl}/api/${type}/${post?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
 
-      // window.location.reload();
+        setPostComingIn(response.data);
+        setLiked(false);
+      } else if (
+        currentRoute == "/groups" ||
+        currentRoute == "/groups/[id]/[path]"
+      ) {
+        try {
+          const response = await axios.get(
+            // `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`,
+            // `${config.serverUrl}/api/feed/${postComingIn?._id}`,
+            `${config.serverUrl}/api/feed/${post?._id}`,
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+
+          // console.log("response.data:", response.data);
+          setPostComingIn(response.data);
+          setLiked(false);
+        } catch (error) {
+          // console.error(error);
+        }
+      } else if (currentRoute.includes("profile")) {
+        const response = await axios.get(
+          // `${config.serverUrl}/api/${type}s/${postComingIn?._id}`,
+          `${config.serverUrl}/api/${type}s/${post?._id}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+
+        // console.log("response.data:", response.data.post);
+        setPostComingIn(response.data.post);
+        setLiked(false);
+      }
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data);
     }
   };
 
   const handleBookMark = async () => {
     try {
-      const { data } = await axios.post(
+      await axios.post(
         `${config.serverUrl}/api/bookmarks/?id=${post._id}`,
         {},
         {
@@ -186,123 +453,289 @@ const PostCard = ({
           },
         }
       );
-      setBookMarked(true);
+      // setBookMarked(true);
+
+      // Update Auth User State. This would Auto-Sync Bookmark on both PastCard & ModalCard
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data);
     }
   };
 
   const removeBookMark = async () => {
     try {
-      const { data } = await axios.delete(
-        `${config.serverUrl}/api/bookmarks/?id=${post._id}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
+      await axios.delete(`${config.serverUrl}/api/bookmarks/?id=${post._id}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
 
-      setBookMarked(false);
+      // setBookMarked(false);
+
+      // Update Auth User State. This would Auto-Sync Bookmark on both PastCard & ModalCard
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data);
     }
   };
 
-  useEffect(() => {
-    // console.log(router.pathname);
+  const changeFollowingStatus = (post) => {
+    if (
+      document.getElementById(`followStr-${post?.author?._id}`).innerText ===
+      "Follow"
+    ) {
+      handleFollow(post?.author?._id);
+    } else if (
+      document.getElementById(`followStr-${post?.author?._id}`).innerText ===
+      "Unfollow"
+    ) {
+      let confirmUnFollow = window.confirm(
+        `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
+      );
+      if (confirmUnFollow) {
+        handleUnFollow(post?.author?._id);
+      }
+    }
+  };
 
-    if (post?.likes?.includes(user._id)) {
-      setLiked(true);
+  const handleFollow = async (id) => {
+    try {
+      await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
+
+      // Update Auth User State
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
+    } catch (error) {
+      // console.error("follow Error:", error);
     }
-    if (user.bookmarks?.includes(post?._id)) {
-      setBookMarked(true);
-    } else {
-      setBookMarked(false);
+  };
+
+  const handleUnFollow = async (id) => {
+    try {
+      await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
+
+      // Update Auth User State
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
+    } catch (error) {
+      // console.error("follow Error:", error);
     }
-  }, []);
+  };
 
   return (
-    <Card
-      id={post?.id}
-      className="my-3 cards"
-      style={{
-        border: "none",
-        width: "100%",
-        // padding: "-3rem",
-      }}
-    >
-      <Card.Title
-        className={`position-relative d-flex justify-content-start gap-2 pb-2 border-bottom ${styles.title}`}
-      >
-        <Image
-          src={"/images/imagePlaceholder.jpg"}
-          width={45}
-          height={45}
-          alt=""
-          roundedCircle
-          style={{ cursor: "pointer" }}
-          onClick={redirectPage}
-        />
-        <div className="d-flex flex-column">
-          <div
-            className={styles.div}
-            onClick={redirectPage}
-            style={{ cursor: "pointer" }}
-          >
-            <span
-              style={{ fontWeight: 500, color: "var(--bs-primary)" }}
-              dangerouslySetInnerHTML={{
-                __html: sanitizer(
-                  `${post?.author?.firstName} ${post?.author?.lastName}`
-                ),
-              }}
-            />
-            <br />
-            <small
-              style={{ marginTop: "10px", fontWeight: 400, fontSize: "0.9rem" }}
-            >
-              <Age time={post?.createdAt} />
-            </small>
-          </div>
-          <NavDropdown
-            className={`position-absolute end-0 ${styles.dropdown}`}
-            drop="down"
-            title={
-              <Button variant="light" size="sm" className="dot-btn">
-                <HiDotsVertical />
-              </Button>
-            }
-          >
-            <NavDropdown.Item className={styles.item}>
-              <RiClipboardFill /> &nbsp; Copy post link
-            </NavDropdown.Item>
-            <NavDropdown.Item className={styles.item}>
-              <BsFolderFill /> &nbsp; Open Post
-            </NavDropdown.Item>
-            <NavDropdown.Item className={styles.item}>
-              {" "}
-              <RiFlagFill /> &nbsp; Report post
-            </NavDropdown.Item>
-            <NavDropdown.Item className={styles.item}>
-              <BsXCircleFill /> &nbsp; Unfollow &nbsp;
-              {/* {post?.name.split(" ")[0]} */}
-            </NavDropdown.Item>
-          </NavDropdown>
-        </div>
-      </Card.Title>
-      <Card.Body
+    <>
+      <Card
+        id={post?.id}
+        className="container-fluid my-3 cards"
         style={{
-          cursor: "pointer",
+          border: "none",
+          width: "100%",
+          // padding: "-3rem",
         }}
       >
-        <div
-          onClick={() => {
-            setSelected(post);
-            toggle();
+        <Card.Title
+          // className={`position-relative d-flex justify-content-start gap-2 pb-2 border-bottom ${styles.title}`}
+          className={`border-bottom ${styles.title}`}
+        >
+          <div className="row">
+            <div className="col-1">
+              <Image
+                src={"/images/imagePlaceholder.jpg"}
+                width={45}
+                height={45}
+                alt=""
+                roundedCircle
+                style={{ cursor: "pointer" }}
+                onClick={redirectPage}
+              />
+            </div>
+
+            {/* <div className="col-6 col-sm-9 col-xl-10 ms-4 ms-lg-1 ms-xl-0"> */}
+            <div className="col-6 col-sm-8 ms-4 me-xl-5">
+              <div
+                className={styles.div}
+                // onClick={redirectPage}
+                // style={{ cursor: "pointer" }}
+              >
+                <span
+                  style={{
+                    fontWeight: 500,
+                    cursor: "pointer",
+                    color: "var(--bs-primary)",
+                  }}
+                  onClick={redirectPage}
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizer(
+                      `${post?.author?.firstName} ${post?.author?.lastName}`
+                    ),
+                  }}
+                />
+                <br />
+                <small
+                  style={{
+                    marginTop: "10px",
+                    fontWeight: 400,
+                    fontSize: "0.9rem",
+                    color: "gray",
+                  }}
+                >
+                  <Age time={post?.createdAt} />
+                </small>
+              </div>
+            </div>
+
+            <div className="col-1" style={{ marginTop: "-.8rem" }}>
+              <NavDropdown
+                // className={`position-absolute end-0 ${styles.dropdown}`}
+                // className={`${styles.dropdown}`}
+                drop="down"
+                title={
+                  <Button
+                    // variant="light"
+                    variant="link"
+                    className="text-dark"
+                    size="lg"
+                    // className="dot-btn"
+                    // style={{ background: "none" }}
+                  >
+                    <HiDotsVertical size={25} />
+                  </Button>
+                }
+              >
+                {/* <NavDropdown.Item
+                  className={styles.item}
+                  style={{ backgroundColor: "rgb(237, 236, 236)" }}
+                >
+                  <RiClipboardFill /> Copy post link
+                </NavDropdown.Item> */}
+                <NavDropdown.Item
+                  className={styles.item}
+                  style={{ backgroundColor: "rgb(237, 236, 236)" }}
+                  onClick={async () => {
+                    // console.log("postReFetched?._id:", postReFetched?._id);
+                    // console.log("post?._id:", post?._id);
+                    if (postReFetched) {
+                      if (postReFetched?._id === post?._id) {
+                        setSelected(postReFetched);
+                        toggle();
+                      } else {
+                        setSelected(post);
+                        toggle();
+                      }
+                    } else {
+                      setSelected(post);
+                      toggle();
+                    }
+                  }}
+                >
+                  <BsFolderFill className="text-muted" /> Open Post
+                </NavDropdown.Item>
+
+                {user?._id !== post?.author?._id ? (
+                  <>
+                    <NavDropdown.Item className={styles.item}>
+                      <RiFlagFill className="text-muted" /> Report post
+                    </NavDropdown.Item>
+                    <NavDropdown.Item
+                      className={styles.item}
+                      onClick={async () => changeFollowingStatus(post)}
+                    >
+                      {currentlyFollowing.includes(post?.author?._id) ? (
+                        <>
+                          <BsXCircleFill className="text-muted" />{" "}
+                          <span id={`followStr-${post?.author?._id}`}>
+                            {/* NOTE: Don't change the "Unfollow" Text From PascalCase, else unfollowing wouldn't work */}
+                            Unfollow
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <RiUserFollowFill className="text-muted" />{" "}
+                          <span id={`followStr-${post?.author?._id}`}>
+                            {/* NOTE: Don't change the "Follow" Text From PascalCase, else following wouldn't work */}
+                            Follow
+                          </span>
+                        </>
+                      )}{" "}
+                      @{post?.author?.firstName?.split(" ")[0]}
+                      {post?.author?.lastName?.substring(0, 1)}
+                    </NavDropdown.Item>
+                  </>
+                ) : null}
+              </NavDropdown>
+            </div>
+          </div>
+        </Card.Title>
+
+        <Card.Body
+          style={{
+            cursor: "pointer",
+          }}
+          onClick={async () => {
+            if (showComment) {
+              setShowComment(!showComment);
+            }
+
+            // console.log("postReFetched?._id:", postReFetched?._id);
+            // console.log("post?._id:", post?._id);
+            if (postReFetched) {
+              if (postReFetched?._id === post?._id) {
+                setSelected(postReFetched);
+                toggle();
+              } else {
+                setSelected(post);
+                toggle();
+              }
+            } else {
+              setSelected(post);
+              toggle();
+            }
           }}
         >
-          {Object.keys(post).length !== 0 && (
+          <div>
+            {/* {Object.keys(post).length !== 0 && (
             <div
               className="post-content"
               dangerouslySetInnerHTML={{
@@ -344,7 +777,7 @@ const PostCard = ({
                 style={{ marginLeft: "7px" }}
                 className="mx-2 text-secondary"
               >
-                {post?.likes?.length || 0}
+                {noOfLikes || 0}
               </span>
             )}
 
@@ -374,38 +807,181 @@ const PostCard = ({
                 className="img-fluid"
                 roundedCircle={true}
                 alt="Author's Image"
-              />
-            </div>
-            <div className="col-7 col-md-10">
-              <div className="form-floating shadow">
-                <textarea
-                  id="articleTextarea"
-                  className="form-control"
-                  placeholder="."
-                  onChange={(e) => setCommentPost(e.target.value)}
-                  style={{ height: "100px" }}
-                ></textarea>
-                <label htmlFor="articleTextarea">Comments</label>
+          )} */}
+            {post && Object.keys(post).length !== 0 && (
+              <div className="d-flex flex-column">
+                <div
+                  className="post-content"
+                  // dangerouslySetInnerHTML={{
+                  //   __html: trimmed
+                  //     ? sanitizer(truncate(post?.postBody, 100).html) ||
+                  //       sanitizer(truncate(post?.post, 100).html)
+                  //     : sanitizer(truncate(post?.postBody, 100).html) ||
+                  //       sanitizer(truncate(post?.post, 100).html),
+                  // }}
+
+                  // No Need for truncate here as it hides some tags like Bold & Underline
+                  dangerouslySetInnerHTML={{
+                    __html: trimmed
+                      ? sanitizer(post?.postBody) || sanitizer(post?.post)
+                      : sanitizer(post?.postBody) || sanitizer(post?.post),
+                  }}
+                />
+                {router.asPath === "/feed" ||
+                  (router?.pathname.includes("profile") && (
+                    <small style={{ color: "gray", fontSize: "13px" }}>
+                      {" "}
+                      See more
+                    </small>
+                  ))}
+              </div>
+            )}
+          </div>
+
+          {!trimmed && (
+            <Image
+              className="d-none d-sm-block d-lg-none"
+              style={{ borderRadius: 0 }}
+              src={"/images/formbg.png"}
+              fluid
+              alt={""}
+            />
+          )}
+        </Card.Body>
+
+        {/* <Card.Footer
+          className={`mx-1 d-flex justify-content-between bg-white ${styles.footer}`}
+        > */}
+        <Card.Footer className="justify-content-between bg-white px-0">
+          <div className="row">
+            {postButton.map((item, key) => (
+              <div className="col-3" key={key}>
+                <Button
+                  variant="none"
+                  // disabled={item.name === "Like" && post?.likes?.includes(user._id)}
+                  // className="d-flex justify-content-center gap-1 align-items-center"
+                  className="d-flex justify-content-center align-items-center"
+                  onClick={() => {
+                    if (item.name === "Like") {
+                      if (liked) {
+                        // removeLike();
+                        handleUnLike();
+                      } else {
+                        // console.log("POST ID Init:", post?._id);
+                        handleLike();
+                      }
+                    }
+                    if (item.name === "Comment") {
+                      setShowComment(!showComment);
+                    }
+
+                    if (item.name === "Share") {
+                      // modalOpen;
+                      toggleShare();
+                      setSelectedShare(post);
+                      // document.getElementById("dropDownId").click();
+                    }
+                    if (item.name === "Bookmark") {
+                      if (bookmarked) {
+                        // If already bookmarked, then remove bookmark
+                        removeBookMark();
+                      } else {
+                        // If not already bookmarked, then add bookmark
+                        handleBookMark();
+                      }
+                    }
+                  }}
+                >
+                  {item.icon}
+                  {item.name === "Like" && (
+                    <span
+                      style={{ marginLeft: "7px" }}
+                      className="mx-2 text-secondary"
+                    >
+                      {/* {post?.likes?.length || 0} */}
+                      {/* if (postReFetched) {
+              if (postReFetched?._id === post?._id) {
+                setSelected(postReFetched);
+                toggle();
+              } else {
+                setSelected(post);
+                toggle();
+              }
+            } else {
+              setSelected(post);
+              toggle();
+            } */}
+                      {postReFetched
+                        ? postReFetched?._id === post?._id
+                          ? postReFetched?.likes?.length || 0
+                          : post?.likes?.length || 0
+                        : post?.likes?.length || 0}
+                    </span>
+                  )}
+
+                  {item.name === "Comment" && (
+                    <span
+                      style={{ marginLeft: "7px" }}
+                      className="mx-2 text-secondary"
+                    >
+                      {post?.comments?.length || 0}
+                    </span>
+                  )}
+
+                  <span
+                    className="d-none d-xl-block"
+                    style={{ marginLeft: "7px" }}
+                  >
+                    {item.name}
+                  </span>
+                </Button>
+              </div>
+            ))}
+          </div>
+        </Card.Footer>
+
+        {showComment && (
+          <section>
+            <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
+            <div className="row">
+              <div className="col-2 col-md-2">
+                <Image
+                  src={modalPost.authorImage || "/images/imagePlaceholder.jpg"}
+                  className="img-fluid"
+                  roundedCircle={true}
+                  alt="Author's Image"
+                />
+              </div>
+              <div className="col-7 col-md-10">
+                <div className="form-floating shadow">
+                  <textarea
+                    id="articleTextarea"
+                    className="form-control"
+                    placeholder="."
+                    onChange={(e) => setCommentPost(e.target.value)}
+                    style={{ height: "100px" }}
+                  ></textarea>
+                  <label htmlFor="articleTextarea">Comments</label>
+                </div>
+              </div>
+              <div className="col-3 col-md-2 ms-auto d-md-grid">
+                <button
+                  className="btn btn-sm btn-primary mt-3 d-inline"
+                  onClick={postComment}
+                >
+                  Send
+                  {loading && (
+                    <div
+                      className="spinner-grow spinner-grow-sm text-light"
+                      role="status"
+                    ></div>
+                  )}
+                </button>
               </div>
             </div>
-            <div className="col-3 col-md-2 ms-auto d-md-grid">
-              <button
-                className="btn btn-sm btn-primary mt-3 d-inline"
-                onClick={postComment}
-              >
-                Send
-                {loading && (
-                  <div
-                    className="spinner-grow spinner-grow-sm text-light"
-                    role="status"
-                  ></div>
-                )}
-              </button>
-            </div>
-          </div>
-        </section>
-      )}
-
+          </section>
+        )}
+      </Card>
       <Modal
         show={modalOpen}
         className={styles.FeedModal}
@@ -430,23 +1006,36 @@ const PostCard = ({
             onClick={() => toggle()}
           />{" "}
         </span>
-        {selected.images ? (
-          <Row>
-            <Col lg={6}></Col>
-            <Col lg={6}>
-              {" "}
-              <ModalCard post={selected} />
-            </Col>
-          </Row>
-        ) : (
-          <Row>
-            <Col lg={12} className="px-5">
-              <ModalCard post={selected} />
-            </Col>
-          </Row>
-        )}
+        <ModalRow selected={selected} />
       </Modal>
-    </Card>
+
+      <Modal
+        show={modalOpenShare}
+        className={styles.FeedModal}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        size="sm"
+        scrollable={true}
+      >
+        <span className={styles.openBtn}>
+          {" "}
+          <MdOutlineCancel
+            style={{ cursor: "pointer" }}
+            size={30}
+            onClick={() => toggleShare()}
+          />{" "}
+        </span>
+        <span className={styles.closeBtn}>
+          {" "}
+          <BiArrowBack
+            style={{ cursor: "pointer" }}
+            size={30}
+            onClick={() => toggleShare()}
+          />{" "}
+        </span>
+        <ModalRowShare selectedShare={selectedShare} />
+      </Modal>
+    </>
   );
 };
 

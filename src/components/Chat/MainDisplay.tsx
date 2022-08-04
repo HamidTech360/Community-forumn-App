@@ -14,129 +14,46 @@ import {
 import {Button} from 'react-bootstrap'
 import {FiSend} from 'react-icons/fi'
 
-const MainDisplay = ({  mainSidebar, mainDisplay, currentChat, messages, sendMessage }) => {
+const MainDisplay = ({   currentChat, messages }) => {
 
   const selectUserToChatTimeline = useSelector(selectedUserInChatTimeline);
   const scrollRef = useRef();
-  const backToSideMessages = (e) => {
-    if (window.innerWidth < 768) {
-      mainDisplay.current.classList.add("d-none");
-      mainSidebar.current.classList.remove("d-none");
-    }
-  };
 
-  // useEffect(()=>{
-  //   scrollRef.current?.scrollIntoView({behavior:'smooth'})
-  //   if(scrollRef) console.log(scrollRef);
+  useEffect(()=>{
     
-  // },[messages, scrollRef])
-  
-
+    scrollRef.current?.scrollIntoView()
+  },[messages])
+ 
   return (
-    <>
-      {/* Main Display */}
-      <div
-       
-        className="col-12 col-md-8 shadow"
-      >
-        <Card
-          // className="border-0 d-flex flex-column"
-          style={{ height: "90vh", paddingRight:'0' }}
-        >
-          <Card.Header>
-            <div className="row">
-              <h4 className="col-12 mt-2">
-                {JSON.stringify(selectUserToChatTimeline[0]) !== "{}" && (
-                  <button
-                    className="btn btn-lg p-0"
-                    onClick={backToSideMessages}
-                  >
-                    <BsArrowLeft
-                      className="me-2 d-inline d-md-none"
-                      onClick={backToSideMessages}
-                      style={{
-                        cursor: "pointer",
-                      }}
-                    />
-                  </button>
-                )}
-                {currentChat?.firstName}
-              </h4>
-            </div>
-            {!currentChat? (
-              <div className="row">
-                <div className="col-12">
-                  <h4>
-                    <button
-                      className="btn btn-lg p-0"
-                      onClick={backToSideMessages}
-                    >
-                      <BsArrowLeft
-                        className="me-2 d-inline d-md-none"
-                        onClick={backToSideMessages}
-                        style={{
-                          cursor: "pointer",
-                        }}
-                      />
-                    </button>
-                    New message
-                  </h4>
-                </div>
-                <div className="col-12 ">
-                  <input
-                    id="sendTo"
-                    type="text"
-                    className="form-control border"
-                    placeholder="Type a name or multiple names separated by comma"
-                  />
-                </div>
-              </div>
-            ) :       
-            <div className="row">
-              <h1
-                className="col-1 me-2"
-                style={{
-                  fontSize: "3rem",
-                  marginTop: "-1.2rem",
-                  marginBottom: "-1.6rem",
-                  color: "gray",
-                }}
-              >
-                <span>
-                  <BsDot />
-                </span>
-              </h1>
-              <div className={`col-3 ${styles.reduceMargin}`}>
-                <span className="h6 text-muted">offline</span>
-              </div>
-            </div>}
-          </Card.Header>
-          <Card.Body style={{ overflowY: "scroll" }}>
+   
+     
+      <>
+        <Card className={styles.cardBody} style={{  marginRight:'0px', overflow:'scroll', overflowX:'hidden' }}>
+          
+          <Card.Body className={styles.messageArea}>
             {currentChat && 
               <>
                 {messages.map((message, index) => 
-                    <div>
+                    <div >
                       <ChatBubble message={message} />
                     </div>
                 )}
-             
+              <div ref={scrollRef}></div>
               </>
             }
           </Card.Body>
-          <Card.Footer
+          {/* <Card.Footer
             className="row border-0 pb-5 pb-md-2"
             style={{ backgroundColor: "transparent" }}
           >
-
             <div className="col-10 col-lg-11 d-flex">
               <Editor slim={true} pageAt="/chat" /> 
               <Button onClick={()=>sendMessage()} style={{minWidth:'70px'}}> <FiSend size={22} /> </Button>
-
             </div>
-          </Card.Footer>
+          </Card.Footer> */}
         </Card>
-      </div>
-    </>
+      </>
+   
   );
 };
 

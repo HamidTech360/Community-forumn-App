@@ -15,11 +15,12 @@ import {
   Modal,
   Spinner,
   Form,
+  Pagination,
 } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import Card from "../../components/Molecules/Card";
-import Followers from '@/components/Organisms/Followers'
+import Followers from "@/components/Organisms/Followers";
 import axios from "axios";
 import styles from "../../styles/explore.module.scss";
 import formStyles from "../../styles/templates/new-group/formField.module.css";
@@ -33,11 +34,17 @@ import {
   setShowPostModal,
   selectShowPostModal,
   setPostTitle,
-  selectPostTitle
+  selectNewPost,
 } from "@/reduxFeatures/api/postSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-import usePagination, { Loader } from "@/hooks/usePagination";
-import InfiniteScroll from "react-infinite-scroll-component";
+// import usePagination, { Loader } from "@/hooks/usePagination";
+import usePaginationPage, {
+  LoaderPage,
+  usePaginationStudyAbroad,
+} from "@/hooks/usePaginationPage";
+// import InfiniteScroll from "react-infinite-scroll-component";
+import config from "@/config";
+import ReactPaginate from "react-paginate";
 
 const Explore = ({}) => {
   const router = useRouter();
@@ -47,13 +54,9 @@ const Explore = ({}) => {
   // const user = useSelector(selectUser);
   // const isFetching = useSelector(selectIsFetching);
 
-  const [categories, setCategories] = useState([
-    { name: "How to work abroad" },
-    { name: "Engineering" },
-    { name: "Technology" },
-    { name: "Visa acquisition" },
-    { name: "How to work abroad" },
-  ]);
+  const newPost = useSelector(selectNewPost);
+  const [categories, setCategories] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
   const [key, setKey] = useState<string>("all");
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
@@ -61,8 +64,23 @@ const Explore = ({}) => {
     postBody: "",
   });
 
-  const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
-    usePagination("/api/posts", "posts");
+  const [paginatorDisplay, setPaginatorDisplay] = useState({
+    previous: "<<",
+    next: ">>",
+    pageMargin: 1,
+    pageRange: 2,
+  });
+  const [pageIndex, setPageIndex] = useState(0);
+
+  // const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
+  //   usePagination("/api/posts", "posts");
+  const { paginatedPageData, mutate, isLoadingPageData, errorPage } =
+    usePaginationPage("/api/posts", pageIndex);
+  const {
+    paginatedStudyAbroadData,
+    isLoadingStudyAbroadData,
+    errorStudyAbroad,
+  } = usePaginationStudyAbroad("/api/post/?category=Study Abroad", pageIndex);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -73,66 +91,100 @@ const Explore = ({}) => {
   }, []);
 
   useEffect(() => {
-    if (paginatedData) {
-      if (JSON.stringify(showPost) !== JSON.stringify(paginatedData)) {
-        dispatch(setPosts(paginatedData));
+    // Set Page Paginator Number Display
+    if (window.innerWidth < 768) {
+      setPaginatorDisplay({
+        previous: "<<",
+        next: ">>",
+        pageMargin: 1,
+        pageRange: 2,
+      });
+    } else if (window.innerWidth < 1024) {
+      setPaginatorDisplay({
+        previous: "<< Pre",
+        next: "Next >>",
+        pageMargin: 2,
+        pageRange: 3,
+      });
+    } else if (window.innerWidth >= 1024) {
+      setPaginatorDisplay({
+        previous: "<< Pre",
+        next: "Next >>",
+        pageMargin: 3,
+        pageRange: 4,
+      });
+    }
+  }, []);
+
+  // Auto Re-render on new post
+  useEffect(() => {
+    // console.log("Mutation");
+    mutate();
+  }, [newPost]);
+
+  useEffect(() => {
+    if (paginatedPageData) {
+      if (JSON.stringify(showPost) !== JSON.stringify(paginatedPageData)) {
+        dispatch(setPosts(paginatedPageData));
       }
     }
-  }, [paginatedData]);
+  }, [paginatedPageData]);
 
-  // useEffect(() => {
-  //   const fetchPost = async () => {
-  //     try {
-  //       const response = await axios.get(`${config.serverUrl}/api/posts`);
-  //       dispatch(setPosts(response.data.posts));
-  //       // setIsFetching(false);
-  //       dispatch(setIsFetching(false));
-  //       console.log(response.data.posts);
-  //     } catch (error) {
-  //       console.log(error.response?.data);
-  //     }
-  //   };
-  //   fetchPost();
-  //   //(async function () {
-  //   //   try {
-  //   //     const response = await axios.get(`${config.serverUrl}/api/users`, {});
-  //   //     // console.log("response.data+++:", response.data.users);
-  //   //     setUsers(response.data.users);
-  //   //     dispatch(setIsFetching(false));
-  //   //   } catch (error) {
-  //   //     //console.error(error.response?.data);
-  //   //     // setIsFetching(false);
-  //   //     dispatch(setIsFetching(false));
-  //   //   }
-  //   // })();
-  // }, [dispatch]);
+  useEffect(() => {
+    console.log("paginatedStudyAbroadData:", paginatedStudyAbroadData);
+    dispatch(setPosts(paginatedPageData));
+
+    let pageCount = showPost?.numPages;
+
+    // if (pageCount <= 6) {
+    //   // return all numbers
+    // } else {
+    //   // pageIndex
+    // }
+  }, [paginatedPageData]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get(`${config.serverUrl}/api/category`);
+        setCategories(data.allCategories);
+        console.log("all categories data", data.allCategories);
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    })();
+  }, []);
 
   const handleChange = (e) => {
     dispatch(setPostTitle(e.currentTarget.value));
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   dispatch(setIsFetching(true));
-  //   // setUploading(true);
-  //   try {
-  //     const response = await axios.post(
-  //       `${config.serverUrl}/api/posts`,
-  //       { ...formData },
-  //       {
-  //         headers: {
-  //           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  //         },
-  //       }
-  //     );
-  //     // console.log(response.data.posts);
-  //     dispatch(setPosts(response.data.posts));
-  //     dispatch(setIsFetching(false));
-  //   } catch (error) {
-  //     console.error(error.response?.data);
-  //     dispatch(setIsFetching(false));
-  //   }
-  // };
+  const filterPost = (item) => {
+    console.log("key is", item);
+    setKey(item);
+    if (item === "all") {
+      return;
+    }
+
+    const filtered = showPost?.posts.filter((post) => post.category === item);
+    console.log("filtered post:", filtered);
+
+    // const filtered = showPost.filter((post) => post.category === item);
+    // console.log("filtered post:", filtered);
+
+    // if (filtered.length <= 0) {
+    //   alert("No Item in this category");
+    // }
+
+    // setFilteredPosts(filtered);
+  };
+
+  const handlePageChange = (page) => {
+    // console.log("Page Clicked:", page.selected);
+    setPageIndex(page.selected);
+    // Only scroll to top on page change
+    if (pageIndex !== page.selected) router.replace("#explore");
+  };
 
   return (
     <div>
@@ -164,11 +216,8 @@ const Explore = ({}) => {
                     Start writing
                   </Button>
                   <a href="#explore">
-                    <Button variant="light">
-                      Explore
-                    </Button>
+                    <Button variant="light">Explore</Button>
                   </a>
-                
                 </div>
               </div>
             </Col>
@@ -191,7 +240,7 @@ const Explore = ({}) => {
           </h1>
           <div className={styles.topics}>
             <Tabs
-              onSelect={(k) => setKey(k!)}
+              onSelect={(k) => filterPost(k!)}
               activeKey={key}
               id="uncontrolled-tab-example"
               className="justify-content-center d-flex gap-2"
@@ -199,7 +248,12 @@ const Explore = ({}) => {
             >
               <Tab title="All" eventKey="all" key="all" />
               {categories.map((category, i) => (
-                <Tab eventKey={i} title={category.name} key={i} />
+                <Tab
+                  onClick={() => filterPost(category)}
+                  eventKey={category.name}
+                  title={category.name}
+                  key={i}
+                />
               ))}
             </Tabs>
             {/* {isFetching && (
@@ -209,7 +263,7 @@ const Explore = ({}) => {
                 </Spinner>
               </div>
             )} */}
-            <InfiniteScroll
+            {/* <InfiniteScroll
               next={fetchNextPage}
               hasMore={!isReachedEnd}
               loader={<Loader />}
@@ -221,22 +275,24 @@ const Explore = ({}) => {
               dataLength={paginatedData?.length ?? 0}
             >
               <Row className="d-flex justify-content-start w-100">
-                {showPost?.map((post, key) => (
-                  <Col
-                    key={`posts_${key}`}
-                    md={4}
-                    className={`my-4 ${styles.card}`}
-                  >
-                    <Card
-                      _id={post._id}
-                      image={"/images/postPlaceholder.jpg"}
-                      title={post.postTitle}
-                      body={post.postBody}
-                      author={post.author}
-                      size="any"
-                    />
-                  </Col>
-                ))}
+                {(filteredPosts.length > 0 ? filteredPosts : showPost)?.map(
+                  (post, key) => (
+                    <Col
+                      key={`posts_${key}`}
+                      md={4}
+                      className={`my-4 ${styles.card}`}
+                    >
+                      <Card
+                        _id={post._id}
+                        image={"/images/postPlaceholder.jpg"}
+                        title={post.postTitle}
+                        body={post.postBody}
+                        author={post.author}
+                        size="any"
+                      />
+                    </Col>
+                  )
+                )}
               </Row>
               {isValidating && (
                 <p style={{ textAlign: "center", color: "gray" }}>
@@ -254,16 +310,102 @@ const Explore = ({}) => {
                   <b>Oops! Something went wrong</b>
                 </p>
               )}
-            </InfiniteScroll>
+            </InfiniteScroll> */}
             {/* {!showPost?.length && <p>No posts under this category </p>} */}
+            {/* {console.log("paginatedPageData:", paginatedPageData)}
+            {paginatedPageData.map((page) => (
+              <>
+                <Row className="d-flex justify-content-start w-100">
+                  {(filteredPosts.length > 0 ? filteredPosts : showPost)?.map(
+                    (post, key) => (
+                      <Col
+                        key={`posts_${key}`}
+                        md={4}
+                        className={`my-4 ${styles.card}`}
+                      >
+                        <Card
+                          _id={post._id}
+                          image={"/images/postPlaceholder.jpg"}
+                          title={post.postTitle}
+                          body={post.postBody}
+                          author={post.author}
+                          size="any"
+                        />
+                      </Col>
+                    )
+                  )}
+                </Row>
+              </>
+            ))} */}
+
+            <Row className="d-flex justify-content-start w-100">
+              {showPost?.posts.map((post, key) => (
+                <Col
+                  key={`posts_${key}`}
+                  md={4}
+                  className={`my-4 ${styles.card}`}
+                >
+                  <Card
+                    _id={post._id}
+                    image={"/images/postPlaceholder.jpg"}
+                    title={post.postTitle}
+                    body={post.postBody}
+                    author={post.author}
+                    size="any"
+                  />
+                </Col>
+              ))}
+            </Row>
+
+            {isLoadingPageData && <LoaderPage />}
+
+            {errorPage && (
+              <p
+                style={{
+                  textAlign: "center",
+                  color: "gray",
+                  marginTop: "1.2rem",
+                }}
+              >
+                <b>Oops! Something went wrong</b>
+              </p>
+            )}
+
+            {/* {console.log("showPost:", showPost)} */}
           </div>
+
+          <ReactPaginate
+            previousLabel={paginatorDisplay.previous}
+            nextLabel={paginatorDisplay.next}
+            breakLabel="..."
+            pageCount={showPost?.numPages}
+            marginPagesDisplayed={paginatorDisplay.pageMargin}
+            pageRangeDisplayed={paginatorDisplay.pageRange}
+            onPageChange={handlePageChange}
+            containerClassName="pagination justify-content-center"
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            activeLinkClassName="bg-primary text-light"
+            // eslint-disable-next-line no-unused-vars
+            hrefBuilder={(page, pageCount, selected) =>
+              page >= 1 && page <= pageCount ? `/explore/${page}` : "#"
+            }
+            hrefAllControls
+            forcePage={pageIndex}
+            renderOnZeroPageCount={null}
+          />
         </Container>
       </section>
 
       <section>
         <Followers />
       </section>
-     
 
       <Modal
         show={showPostModal}
@@ -317,3 +459,8 @@ const Explore = ({}) => {
 };
 
 export default Explore;
+
+const activatedStyle = {
+  backgroundColor: "blue",
+  color: "white",
+};

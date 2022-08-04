@@ -1,8 +1,17 @@
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Card, Image } from "react-bootstrap";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import { useSelector } from "@/redux/store";
 
-const UserCard = ({ user }: { user: Record<string, any> }) => {
+// const UserCard = ({ user }: { user: Record<string, any> }) => {
+// const UserCard = ({ data }: { data: Record<string, any> }) => {
+const UserCard = () => {
+  const data = useSelector(selectUser);
+
+  useEffect(() => {
+    console.log("data Changed...");
+  }, [data]);
   return (
     <Card
       className="bg-white radius-10 p-3 user-card position-relative shadow"
@@ -16,7 +25,9 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
       >
         <Image
           className="user-img"
-          src={user?.images?.avatar || "/images/formbg.png"}
+          // src={data?.avatar?.url || "/images/formbg.png"}
+          // src={user?.images?.avatar || "/images/formbg.png"}
+          src={data?.images?.avatar || "/images/formbg.png"}
           alt=""
           width={70}
           height={70}
@@ -25,14 +36,15 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
       </div>
 
       <p className="text-center bold" style={{ marginTop: "-2rem" }}>
-        {user?.firstName}&nbsp; {user?.lastName}
+        {/* {user?.firstName}&nbsp; {user?.lastName} */}
+        {data?.firstName}&nbsp; {data?.lastName}
       </p>
       <small
         className="text-center text-muted"
         style={{ marginTop: "-1.2rem", fontSize: "12px" }}
       >
-        @{user?.firstName}
-        {/* {(user?.lastName).substring(0, 1)} */}
+       @{data?.username || data?.firstName}
+        
       </small>
       <small
         className="row text-muted mx-auto mt-2 text-center"
@@ -46,11 +58,13 @@ const UserCard = ({ user }: { user: Record<string, any> }) => {
         style={{ fontSize: "12px" }}
       >
         <div className="d-flex flex-column align-items-center">
-          <span>{user.following?.length}</span>
+          {/* <span>{user.following?.length}</span> */}
+          <span>{data?.following?.length}</span>
           <small>following</small>
         </div>
         <div className="d-flex flex-column align-items-center ">
-          <span>{user.followers?.length}</span>
+          {/* <span>{user.followers?.length}</span> */}
+          <span>{data?.followers?.length}</span>
           <small>followers</small>
         </div>
       </div>

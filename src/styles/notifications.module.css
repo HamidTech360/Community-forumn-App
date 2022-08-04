@@ -16,22 +16,27 @@
   line-height: 16px;
 }
 .notificationMessages {
-  border-bottom: 1px solid #e0e0e0;
-  padding-bottom: 10px;
+  /* border-bottom: 1px solid #e0e0e0; */
+  padding-bottom: 0px;
   text-align: justify;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 400;
+  padding-right: 20px;
 }
 .notificationDay {
   font-size: 20px;
   font-weight: lighter;
+}
+.authorName{
+  font-weight: 600;
 }
 @media screen and (max-width: 680px) {
   .notificationHeaderText {
     font-size: 25px;
   }
   .notificationMessages {
-    font-size: 17px;
+    font-size: 13px;
+    padding-right: 10px;
   }
   .notificationDay {
     font-size: 15px;

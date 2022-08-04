@@ -51,15 +51,23 @@ function GroupsFooterBtn({ editorID }) {
           position: toast.POSITION.TOP_RIGHT,
           toastId: "1",
         });
+        // console.log("Groups Response data:", response.data.feed);
         // Auto update feeds in /feed
-        dispatch(setNewGroupFeed(response.data));
+        dispatch(setNewGroupFeed(response.data.feed));
         dispatch(setShowCreatePostModal(false));
         setUploading(false);
       } catch (error) {
-        toast.error("Failed to upload post", {
-          position: toast.POSITION.TOP_RIGHT,
-          toastId: "1",
-        });
+        if (!localStorage.getItem("accessToken")) {
+          toast.error("You must login to create a Post", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+        } else {
+          toast.error("Failed to upload Post: Try Again", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+        }
         setUploading(false);
       }
     }

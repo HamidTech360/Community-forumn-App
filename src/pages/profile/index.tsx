@@ -6,7 +6,7 @@ import axios from "axios";
 import config from "@/config";
 import styles from "../../styles/feed.module.scss";
 import Head from "next/head";
-import UserCard from "../../components/Organisms/App/UserCard";
+// import UserCard from "../../components/Organisms/App/UserCard";
 import Discussions from "../../components/Organisms/App/Discussions/Discussions";
 import { usePagination } from "../../hooks/usePagination-old";
 import { useRouter } from "next/router";
@@ -43,10 +43,10 @@ const Profile = () => {
             },
           }
         );
-        console.log(response.data);
+        // console.log(response.data);
         setData(response.data.posts);
       } catch (error) {
-        console.log(error.response?.data);
+        // console.log(error.response?.data);
       }
     })();
     document.body.style.backgroundColor = "#f6f6f6";
@@ -70,14 +70,14 @@ const Profile = () => {
       </Head>
       <Container>
         <div className={`padding-top mt-3 ${styles.profileWrapper}`}>
-          <>
+          {/* <>
             <div
               style={{ width: 250 }}
               className="position-fixed d-none d-md-flex flex-column gap-4 vh-100"
             >
               <Discussions />
             </div>
-          </>
+          </> */}
 
           <main className={styles.profile}>
             <ProfileCard active={path} handlePath={setPath} />

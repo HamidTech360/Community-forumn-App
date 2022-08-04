@@ -24,6 +24,43 @@
     margin-left: -3.6rem;
   }
 }
+.messageAreaCol{
+ 
+  @media screen and (max-width:768px) {
+    padding-right: 0px !important;
+   
+  }
+}
+.sideBarCard{
+  height: 69vh;
+ 
+  @media screen and (max-width:768px) {
+    height: 74vh;
+  }
+}
+.messageArea{
+
+  @media screen and (max-width:768px) {
+    padding-left: 20px;
+    padding-right: 20px !important;
+  }
+}
+.cardBody{
+  margin-right: 0px !important;
+  // border: 1px solid red;
+  height: 60vh;
+  @media screen and (max-width:768px) {
+    // margin-right: -20px !important;
+    height: 90vh;
+    // padding-left: 20px;
+    // padding-right: 20px;
+  }
+  @media screen and (max-width:400px) {
+    // margin-right: -20px !important;
+    height: 65vh;
+  }
+
+}
 .messageItem{
   display: flex;
   flex-direction: row;
@@ -49,5 +86,5 @@
 }
 .activeChat {
   background-color: rgb(235, 233, 233);
-  padding-top: 7px;
+  // padding-top: 7px;
 }

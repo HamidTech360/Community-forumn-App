@@ -53,11 +53,11 @@ const Leaf = ({ attributes, children, leaf }) => {
 
 // const Editor = ({ slim }: { slim: boolean }) => {
 const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
-  console.log("Editor pageAt:", pageAt);
+  // console.log("Editor pageAt:", pageAt);
   const router = useRouter();
   const editorID = `${router.asPath}-slateRefId`;
-  console.log((editorID));
-  
+  // console.log((editorID));
+
   const editor = useMemo(
     () => withHistory(withEmbeds(withLinks(withReact(createEditor())))),
     []
@@ -120,7 +120,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
                     className={`${
                       !slim ? styles.editable : styles.editableSlim
                     }`}
-                    placeholder="Start writing your thoughts"
+                    placeholder={slim ? "" : "Start writing your thoughts"}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
                     onKeyDown={(event) => CtrlShiftCombo(event, editor)}
