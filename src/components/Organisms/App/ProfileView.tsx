@@ -8,7 +8,15 @@ import Timeline from "@/components/Templates/Profile/Timeline";
 import Friends from "@/components/Templates/Profile/Articles";
 import Media from "@/components/Templates/Profile/Media";
 import Bookmarks from "@/components/Templates/Profile/Bookmarks";
-import { Card, CardImg, Image, Nav } from "react-bootstrap";
+import {
+  Card,
+  CardImg,
+  Dropdown,
+  DropdownButton,
+  Image,
+  Nav,
+} from "react-bootstrap";
+import Link from "next/link";
 
 interface IComponents {
   about: ReactNode;
@@ -90,14 +98,58 @@ const ProfileView = ({
             className="d-flex justify-content-between"
             style={{ width: "60%" }}
           >
-            <div className="d-flex flex-column align-items-center">
-              <span>{profile?.followers?.length}</span>
-              <span>following</span>
-            </div>
-            <div className="d-flex flex-column align-items-center">
-              <span>{profile?.following?.length}</span>
-              <span>following</span>
-            </div>
+            <DropdownButton
+              variant="light"
+              title={
+                <div className="d-flex flex-column align-items-center">
+                  <span>{profile.followers?.length}</span>
+                  <span>followers</span>
+                </div>
+              }
+            >
+              {profile.followers.map((item: Record<string, any>) => (
+                <Link href={`/profile/${item._id}`} passHref>
+                  <Dropdown.Item key={item._id}>
+                    <Image
+                      src={item?.avatar?.url || "/images/imagePlaceholder.jpg"}
+                      alt=""
+                      roundedCircle
+                      width={15}
+                      height={15}
+                    />
+                    <span>
+                      {item.firstName} {item.lastName}
+                    </span>
+                  </Dropdown.Item>
+                </Link>
+              ))}
+            </DropdownButton>
+            <DropdownButton
+              variant="light"
+              title={
+                <div className="d-flex flex-column align-items-center">
+                  <span>{profile.following?.length}</span>
+                  <span>following</span>
+                </div>
+              }
+            >
+              {profile.following.map((item: Record<string, any>) => (
+                <Link href={`/profile/${item._id}`} passHref>
+                  <Dropdown.Item key={item._id}>
+                    <Image
+                      src={item?.avatar?.url || "/images/imagePlaceholder.jpg"}
+                      alt=""
+                      roundedCircle
+                      width={15}
+                      height={15}
+                    />
+                    <span>
+                      {item.firstName} {item.lastName}
+                    </span>
+                  </Dropdown.Item>
+                </Link>
+              ))}
+            </DropdownButton>
           </div>
         </Card.Body>
         <Card.Footer>
