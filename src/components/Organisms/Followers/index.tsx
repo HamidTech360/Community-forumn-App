@@ -113,15 +113,7 @@ const Followers = () => {
         </h1>
         <Row>
           {users?.map((user, key) => (
-            <Col
-              sm={12}
-              md={6}
-              lg={4}
-              xl={3}
-              xxl={2}
-              key={`author-${key}`}
-              className="mt-4"
-            >
+            <Col sm={12} md={6} lg={4} key={`author-${key}`} className="mt-4">
               {/* <div className="d-flex gap-3 align-items-center justify-content-evenly"> */}
               <div className="d-flex gap-3 align-items-center justify-content-between">
                 <Image

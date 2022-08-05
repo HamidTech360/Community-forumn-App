@@ -48,8 +48,9 @@ const Discussions = () => {
   return (
     <Card
       // style={{ border: "none", overflowY: "scroll", height: "450px" }}
-      // style={{ border: "none", overflowY: "scroll", height: "450px" }}
+      style={{ border: "none", overflowY: "scroll", height: "450px" }}
       // className="pb-5 mb-4 mt-4 shadow"
+
       className={`pb-5 mb-4 mt-4 shadow ${styles.activeDiscussion}`}
     >
       <Card.Header
