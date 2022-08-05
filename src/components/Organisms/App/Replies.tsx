@@ -18,6 +18,11 @@ const Replies = ({ reply: replyComingIn }: Record<string, any>) => {
   const sanitizer = DOMPurify.sanitize;
   // console.log(reply);
 
+  // Auto Render Reply after post
+  useEffect(() => {
+    setReplyComingIn(replyComingIn);
+  }, [replyComingIn]);
+
   const handleLike = async () => {
     try {
       const { data } = await axios.get(

@@ -1001,7 +1001,7 @@ const PostCard = ({
       </Card>
       <Modal
         show={modalOpen}
-        className={styles.FeedModal}
+        className={`${styles.FeedModal}`}
         aria-labelledby="contained-modal-title-vcenter"
         centered
         size="xl"

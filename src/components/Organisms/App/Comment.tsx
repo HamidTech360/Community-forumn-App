@@ -19,6 +19,26 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
   const router = useRouter();
   const sanitizer = DOMPurify.sanitize;
 
+  const [modalPost, setModalPost] = useState<Record<string, any>>({});
+  const [commentPost, setCommentPost] = useState("");
+  const [showComment, setShowComment] = useState(false);
+  const [showReplies, setShowReplies] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Auto Render Comment after post
+  useEffect(() => {
+    setCommentComingIn(commentComingIn);
+  }, [commentComingIn]);
+
+  useEffect(() => {
+    if (comment?.likes?.includes(user?._id)) {
+      setLiked(true);
+    }
+  }, []);
+
+  // console.log("comment", comment);
+  console.log("commentComingIn:", commentComingIn);
+
   const handleLike = async () => {
     try {
       const { data } = await axios.get(
@@ -74,13 +94,6 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
     }
   };
 
-  const [modalPost, setModalPost] = useState<Record<string, any>>({});
-  const [commentPost, setCommentPost] = useState("");
-  const [showComment, setShowComment] = useState(false);
-  const [showReplies, setShowReplies] = useState(false);
-
-  const [loading, setLoading] = useState(false);
-
   const postComment = async () => {
     const body = {
       content: commentPost,
@@ -104,11 +117,12 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
           },
         }
       );
-      // console.log(res);
+      console.log("res:", res);
       let replies = comment?.replies;
       replies?.unshift(res.data);
+      console.log("{ ...comment, replies }:", { ...comment, replies });
       setModalPost({ ...comment, replies });
-
+      setCommentComingIn({ ...comment, replies });
       setLoading(false);
       setShowComment(false);
       setCommentPost("");
@@ -119,19 +133,12 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
     }
   };
 
-  useEffect(() => {
-    if (comment?.likes?.includes(user?._id)) {
-      setLiked(true);
-    }
-  }, []);
-
   return (
     <Card
       className="px-2"
       style={{ border: "none", background: "none", lineHeight: "1.2" }}
     >
       <hr className="w-75 mx-auto text-muted" />
-
       <div className="d-flex align-items-center justify-content-start gap-2 mt-1">
         <Image
           src="/images/friends3.png"
@@ -154,14 +161,13 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
           </h6>
         </div>
       </div>
-
+      {/* {console.log("comment?.content", comment?.content)} */}
       <Card.Body
         className="container px-md-5"
         dangerouslySetInnerHTML={{
           __html: sanitizer(comment?.content),
         }}
       />
-
       <div className="buttons d-flex gap-2 justify-content-end mr-4">
         <small
           className="text-muted"
@@ -219,6 +225,7 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
         <div>
           {comment.replies?.length > 0 &&
             comment.replies?.map((reply, index) => {
+              // console.log("Comment Reply:", reply);
               return <Replies key={`comment_${index}`} reply={reply} />;
             })}
         </div>
