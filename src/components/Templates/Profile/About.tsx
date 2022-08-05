@@ -11,10 +11,10 @@ import {
 import { MdCall } from "react-icons/md";
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-import styles from '@/styles/profile.module.scss'
+import styles from "@/styles/profile.module.scss";
 
 const About = () => {
-  const user = useSelector(selectUser)
+  const user = useSelector(selectUser);
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState("bio");
@@ -51,23 +51,26 @@ const About = () => {
         <div className="row">
           <h5 className="col-10">Bio</h5>
           <h5 className="col-2 btn" style={{ marginTop: "-.5rem" }}>
-            {router.query.id ? ('') : (<FiEdit size="15" />)}
+            {router.query.id ? "" : <FiEdit size="15" />}
           </h5>
         </div>
         <div className="row">
-          <p className="col-12 text-muted" id="bioText">
-           
-          </p>
-          {router.query.id ? ('') : (
-            <FormControl 
-            style={{color:'grey', fontWeight:'500'}} 
-            value= {user.bio?user.bio:`I am ${user.firstName} ${user.lastName}...`} 
-             as="textarea"
-            rows={3}
-            readOnly={true}
+          <p className="col-12 text-muted" id="bioText"></p>
+          {router.query.id ? (
+            ""
+          ) : (
+            <FormControl
+              style={{ color: "grey", fontWeight: "500" }}
+              value={
+                user.bio
+                  ? user.bio
+                  : `I am ${user.firstName} ${user.lastName}...`
+              }
+              as="textarea"
+              rows={3}
+              readOnly={true}
             />
           )}
-          
         </div>
         <div className="row col-12 mt-4">
           <h5>Interest</h5>
@@ -170,7 +173,7 @@ const About = () => {
   };
 
   return (
-    <section  className = {styles.profileWrap}>
+    <section className={styles.profileWrap}>
       <Container className="shadow-sm">
         <Card className="border-0">
           <div className="row g-2" style={{ marginTop: "-2rem" }}>

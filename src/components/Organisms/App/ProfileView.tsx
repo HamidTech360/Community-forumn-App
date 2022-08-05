@@ -107,7 +107,7 @@ const ProfileView = ({
                 </div>
               }
             >
-              {profile.followers.map((item: Record<string, any>) => (
+              {profile?.followers?.map((item: Record<string, any>) => (
                 <Link href={`/profile/${item._id}`} passHref>
                   <Dropdown.Item key={item._id}>
                     <Image
@@ -133,7 +133,7 @@ const ProfileView = ({
                 </div>
               }
             >
-              {profile.following.map((item: Record<string, any>) => (
+              {profile?.following?.map((item: Record<string, any>) => (
                 <Link href={`/profile/${item._id}`} passHref>
                   <Dropdown.Item key={item._id}>
                     <Image
