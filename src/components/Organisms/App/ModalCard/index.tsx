@@ -395,7 +395,9 @@ const ModalCard = ({
       // console.log(res);
       let comments = post?.comments;
       comments?.unshift(res.data);
+      // console.log("{ ...post, comments }:", { ...post, comments });
       setModalPost({ ...post, comments });
+      setPostComingIn({ ...post, comments });
       setLoading(false);
       setShowComment(false);
       setCommentPost("");
@@ -834,13 +836,14 @@ const ModalCard = ({
               </div>
             </section>
             <section>
-              <h6 style={{ fontWeight: "bolder" }}>
+              <h6 style={{ fontWeight: "bolder", marginBottom: "-1.2rem" }}>
                 Comments ({post?.comments?.length})
               </h6>
               <div className="row">
                 <div className="col-12 mt-4">
                   {post?.comments?.length > 0 &&
                     post?.comments?.map((comment, index) => {
+                      // console.log("comment:", comment);
                       return (
                         <Comment key={`post_${index}`} comment={comment} />
                       );
