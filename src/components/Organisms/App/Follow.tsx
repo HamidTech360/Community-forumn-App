@@ -26,6 +26,26 @@ const Follow = () => {
   const currentlyFollowing = useSelector(selectFollowing);
   const dispatch = useDispatch();
 
+  // DELETE-CHECK ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  useEffect(() => {
+    (async function () {
+      try {
+        const response = await axios.get(
+          `${config.serverUrl}/api/users/connections/all`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        console.log("response.+++++:", response.data);
+      } catch (error) {
+        console.log("ERROR:", error);
+      }
+    })();
+  }, []);
+  // DELETE-CHECK ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
   const handleFollow = async (id: string) => {
     try {
       await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
