@@ -37,7 +37,7 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
   }, []);
 
   // console.log("comment", comment);
-  console.log("commentComingIn:", commentComingIn);
+  // console.log("commentComingIn:", commentComingIn);
 
   const handleLike = async () => {
     try {
@@ -117,10 +117,10 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
           },
         }
       );
-      console.log("res:", res);
+      // console.log("res:", res);
       let replies = comment?.replies;
       replies?.unshift(res.data);
-      console.log("{ ...comment, replies }:", { ...comment, replies });
+      // console.log("{ ...comment, replies }:", { ...comment, replies });
       setModalPost({ ...comment, replies });
       setCommentComingIn({ ...comment, replies });
       setLoading(false);

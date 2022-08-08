@@ -110,8 +110,14 @@ const ModalCard = ({
   // }, []);
 
   useEffect(() => {
-    // console.log(router.pathname);
+    if (post?.likes?.includes(user._id)) {
+      setLiked(true);
+    } else {
+      setLiked(false);
+    }
+  }, [post]);
 
+  useEffect(() => {
     if (post?.likes?.includes(user._id)) {
       setLiked(true);
       // dispatch(setLiked(true));
@@ -178,6 +184,18 @@ const ModalCard = ({
   };
 
   const likeIt = async (bool) => {
+    // Pre-Set Like State B4 Axios
+    let currentPostState = JSON.parse(JSON.stringify(post));
+
+    let newPostState = { ...currentPostState };
+    if (!newPostState?.likes.includes(user?._id)) {
+      newPostState.likes.push(user?._id);
+    }
+    setPostComingIn(newPostState);
+    setLiked(true);
+    // Notify the PostCard of Changes in the ModalCard
+    dispatch(setLikeChangedModal(post?._id));
+
     let type;
     const currentRoute = router.pathname;
     // console.log("currentRoute:", currentRoute);
@@ -195,80 +213,65 @@ const ModalCard = ({
 
     // console.log(type, currentRoute);
 
-    try {
-      if (bool) {
-        try {
-          // Like Post
-          await axios.get(
-            `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
-            {
-              headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
-            }
-          );
-        } catch (error) {
-          // console.error(error);
-        }
-      }
-      // Refetch Specific Post So as to get updated like count
-      if (currentRoute == "/feed") {
-        const response = await axios.get(
-          `${config.serverUrl}/api/${type}/${postComingIn?._id}`,
+    // try {
+    if (bool) {
+      try {
+        // Like Post
+        await axios.get(
+          `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
           }
         );
-
-        // console.log("response.data:", response.data);
-        setPostComingIn(response.data);
-        setLiked(true);
-        dispatch(setLikeChangedModal(post?._id));
-      } else if (
-        currentRoute == "/groups" ||
-        currentRoute == "/groups/[id]/[path]"
-      ) {
-        try {
-          const response = await axios.get(
-            // `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`,
-            `${config.serverUrl}/api/feed/${postComingIn?._id}`,
-            {
-              headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
-            }
-          );
-
-          // console.log("response.data:", response.data);
-          setPostComingIn(response.data);
-          setLiked(true);
-          dispatch(setLikeChangedModal(post?._id));
-        } catch (error) {
-          // console.log(error);
+      } catch (error) {
+        // Reverse Like State Because of Axios Error
+        let filterNewPostState = newPostState?.likes;
+        if (newPostState?.likes.includes(user?._id)) {
+          filterNewPostState = newPostState?.likes.filter((person) => {
+            return person !== user?._id;
+          });
         }
-      } else if (currentRoute.includes("profile")) {
-        const response = await axios.get(
-          `${config.serverUrl}/api/${type}s/${postComingIn?._id}`,
-          {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }
-        );
-
-        // console.log("response.data:", response.data.post);
-        setPostComingIn(response.data.post);
-        setLiked(true);
-        dispatch(setLikeChangedModal(post?._id));
+        newPostState.likes = filterNewPostState;
+        setPostComingIn(newPostState);
+        setLiked(false);
+        // REVERSE Notify the PostCard of Changes in the ModalCard
+        if (likeChangedModal.includes(post?._id)) {
+          // Trigger Rerender
+          dispatch(setLikeChangedModal(""));
+        }
+        //  Main Render
+        dispatch(setUnLikeChangedModal(post?._id));
+        // console.error(error);
       }
-    } catch (error) {
-      // console.log(error.response?.data);
     }
   };
 
   const unLikeIt = async (bool) => {
+    // Pre-Set Unlike State B4 Axios
+    let currentPostState = JSON.parse(JSON.stringify(post));
+
+    let newPostState = { ...currentPostState };
+    let filterNewPostState = newPostState?.likes;
+    if (newPostState?.likes.includes(user?._id)) {
+      // newPostState.likes.push(user?._id);
+
+      filterNewPostState = newPostState?.likes.filter((person) => {
+        return person !== user?._id;
+      });
+    }
+    newPostState.likes = filterNewPostState;
+    // console.log("filterNewPostState:", filterNewPostState);
+    // console.log("newPostState:", newPostState);
+
+    setPostComingIn(newPostState);
+    setLiked(false);
+    // Notify the PostCard of Changes in the ModalCard
+    if (!unLikeChangedModal.includes(post?._id)) {
+      dispatch(setUnLikeChangedModal(post?._id));
+    }
+
     let type;
     const currentRoute = router.pathname;
     if (currentRoute == "/feed") {
@@ -282,90 +285,37 @@ const ModalCard = ({
       type = "post";
     }
 
-    try {
-      if (bool) {
-        // Like Post
-        try {
-          const unlikePost = await axios.delete(
-            `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
-            // `${config.serverUrl}/api/${type}/${post?._id}`,
-            {
-              headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
-            }
-          );
-          // console.log("unlikePost:", unlikePost);
-        } catch (error) {
-          // console.error(error);
-        }
-      }
-
-      // Refetch Specific Post So as to get updated like count
-      if (currentRoute == "/feed") {
-        const response = await axios.get(
-          // `${config.serverUrl}/api/${type}/${postComingIn?._id}`,
-          `${config.serverUrl}/api/${type}/${post?._id}`,
+    if (bool) {
+      // Axios Like Post
+      try {
+        const unlikePost = await axios.delete(
+          `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
+          // `${config.serverUrl}/api/${type}/${post?._id}`,
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
           }
         );
-
-        setPostComingIn(response.data);
-        setLiked(false);
-
-        if (!unLikeChangedModal.includes(post?._id)) {
-          dispatch(setUnLikeChangedModal(post?._id));
+      } catch (error) {
+        // Reverse Like Because of Axios Error
+        let newPostState = { ...currentPostState };
+        if (!newPostState?.likes.includes(user?._id)) {
+          newPostState.likes.push(user?._id);
         }
-      } else if (
-        currentRoute == "/groups" ||
-        currentRoute == "/groups/[id]/[path]"
-      ) {
-        try {
-          const response = await axios.get(
-            // `${config.serverUrl}/api/feed/groups/${postComingIn?.group}/${postComingIn?._id}`,
-            // `${config.serverUrl}/api/feed/${postComingIn?._id}`,
-            `${config.serverUrl}/api/feed/${post?._id}`,
-            {
-              headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
-            }
-          );
 
-          // console.log("response.data:", response.data);
-          setPostComingIn(response.data);
-          setLiked(false);
+        setPostComingIn(newPostState);
+        setLiked(true);
 
-          if (!unLikeChangedModal.includes(post?._id)) {
-            dispatch(setUnLikeChangedModal(post?._id));
-          }
-        } catch (error) {
-          // console.error(error);
+        // REVERSE Notify the PostCard of Changes in the ModalCard
+        if (unLikeChangedModal.includes(post?._id)) {
+          // Trigger Rerender
+          dispatch(setUnLikeChangedModal(""));
         }
-      } else if (currentRoute.includes("profile")) {
-        const response = await axios.get(
-          // `${config.serverUrl}/api/${type}s/${postComingIn?._id}`,
-          `${config.serverUrl}/api/${type}s/${post?._id}`,
-          {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }
-        );
-
-        // console.log("response.data:", response.data.post);
-        setPostComingIn(response.data.post);
-        setLiked(false);
-
-        if (!unLikeChangedModal.includes(post?._id)) {
-          dispatch(setUnLikeChangedModal(post?._id));
-        }
+        //  Main Render
+        dispatch(setLikeChangedModal(post?._id));
+        // console.error(error);
       }
-    } catch (error) {
-      // console.log(error.response?.data);
     }
   };
 
@@ -409,6 +359,16 @@ const ModalCard = ({
   };
 
   const handleBookMark = async () => {
+    /* Pre-Bookmark Post.
+     ** This would Auto-Sync Bookmark on both PastCard & ModalCard
+     */
+
+    // if (!user?.bookmarks?.includes(post?._id)) {
+    let newBookmarks = [...user?.bookmarks, post?._id];
+    dispatch(userAuth({ ...user, bookmarks: newBookmarks }));
+    // }
+
+    // Axios Bookmark Post
     try {
       await axios.post(
         `${config.serverUrl}/api/bookmarks/?id=${post?._id}`,
@@ -419,49 +379,40 @@ const ModalCard = ({
           },
         }
       );
-      // setBookMarked(true);
-
-      // Update Auth User State. This would Auto-Sync Bookmark on both PastCard & ModalCard
-      (async function () {
-        try {
-          const response = await axios.get(`${config.serverUrl}/api/auth`, {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          });
-          dispatch(userAuth(response.data));
-        } catch (error) {
-          localStorage.removeItem("accessToken");
-        }
-      })();
     } catch (error) {
-      // console.log(error.response?.data);
+      // if (user?.bookmarks?.includes(post?._id)) {
+      let fitterStateUser = user?.bookmarks.filter((filterUser) => {
+        return filterUser !== post?._id;
+      });
+      // }
+
+      // Reverse Bookmark State
+      dispatch(userAuth({ ...user, bookmarks: fitterStateUser }));
+      // console.log(error);
     }
   };
 
   const removeBookMark = async () => {
+    /* Pre Remove BookMarked Post.
+     ** This would Auto-Sync Bookmark on both PastCard & ModalCard
+     */
+
+    let fitterStateUser = user?.bookmarks.filter((filterUser) => {
+      return filterUser !== post?._id;
+    });
+    dispatch(userAuth({ ...user, bookmarks: fitterStateUser }));
+
+    // Axios Remove BookMarked Post
     try {
       await axios.delete(`${config.serverUrl}/api/bookmarks/?id=${post?._id}`, {
         headers: {
           authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       });
-      // setBookMarked(false);
-
-      // Update Auth User State. This would Auto-Sync Bookmark on both PastCard & ModalCard
-      (async function () {
-        try {
-          const response = await axios.get(`${config.serverUrl}/api/auth`, {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          });
-          dispatch(userAuth(response.data));
-        } catch (error) {
-          localStorage.removeItem("accessToken");
-        }
-      })();
     } catch (error) {
+      // Reverse Bookmark Auth User State.
+      let reverseBookmarks = [...user?.bookmarks, post?._id];
+      dispatch(userAuth({ ...user, bookmarks: reverseBookmarks }));
       // console.log(error.response?.data);
     }
   };
