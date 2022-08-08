@@ -49,12 +49,12 @@ const Discussions = () => {
     <Card
       // style={{ border: "none", overflowY: "scroll", height: "450px" }}
       style={{ border: "none", overflowY: "scroll", height: "450px" }}
-      // className="pb-5 mb-4 mt-4 shadow"
-
-      className={`pb-5 mb-4 mt-4 shadow ${styles.activeDiscussion}`}
+      // className={`pb-5 mb-4 mt-4 shadow ${styles.activeDiscussion}`}
+      className={`pb-5 mb-4 mt-4 ${styles.activeDiscussion}`}
     >
       <Card.Header
-        className="d-flex justify-content-between gap-2 align-items-center bg-white shadow-sm sticky-top"
+        // className="d-flex justify-content-between gap-2 align-items-center bg-white shadow-sm sticky-top"
+        className="d-flex justify-content-between gap-2 align-items-center bg-white sticky-top"
         style={{ fontSize: "14px" }}
       >
         <span className="bold">Active discussions</span>

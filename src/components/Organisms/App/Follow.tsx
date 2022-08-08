@@ -109,7 +109,8 @@ const Follow = () => {
   }, [currentlyFollowing]);
   return (
     <ListGroup
-      className="container-fluid p-0 p-xl-2 radius-10 shadow"
+      // className="container-fluid p-0 p-xl-2 radius-10 shadow"
+      className="container-fluid p-0 p-xl-2 radius-10"
       as={Card}
       variant="flush"
       style={{

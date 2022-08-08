@@ -185,7 +185,7 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
               {comment?.likes?.length}
             </small>
           )}{" "}
-          Like
+          {liked ? "Unlike" : "Like"}
         </small>
 
         <small

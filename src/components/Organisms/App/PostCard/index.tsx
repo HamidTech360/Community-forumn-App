@@ -970,7 +970,8 @@ const PostCard = ({
                 />
               </div>
               <div className="col-7 col-md-10">
-                <div className="form-floating shadow">
+                {/* <div className="form-floating shadow"> */}
+                <div className="form-floating">
                   <textarea
                     id="articleTextarea"
                     className="form-control"

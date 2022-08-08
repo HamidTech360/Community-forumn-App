@@ -139,7 +139,7 @@ const Replies = ({ reply: replyComingIn }: Record<string, any>) => {
               {reply.likes?.length}
             </small>
           )}{" "}
-          Like
+          {liked ? "Unlike" : "Like"}
         </small>
       </div>
     </Card>
