@@ -11,24 +11,29 @@ import Discussions from "@/components/Organisms/App/Discussions/Discussions";
 
 import About from "@/components/Templates/Profile/About";
 import Timeline from "@/components/Templates/Profile/Timeline";
-import Friends from "@/components/Templates/Profile/Articles";
+import Friends from "@/components/Templates/Profile/Friends";
 import Media from "@/components/Templates/Profile/Media";
 import Bookmarks from "@/components/Templates/Profile/Bookmarks";
 
 import ProfileCard from "@/components/Organisms/App/ProfileCard";
 import AuthContent from "@/components/Auth/AuthContent";
+import Articles from "@/components/Templates/Profile/Articles";
+import { useSelector } from "@/redux/store";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+
 interface IComponents {
   about: ReactNode;
   timeline: ReactNode;
   bookmarks: ReactNode;
   media: ReactNode;
-  friends: ReactNode;
+  articles: ReactNode;
+  connections: ReactNode;
 }
 
 const Profile = () => {
   const [path, setPath] = useState("timeline");
   const [data, setData] = useState([]);
-
+  const user = useSelector(selectUser);
   useEffect(() => {
     (async () => {
       try {
@@ -57,7 +62,8 @@ const Profile = () => {
     timeline: <Timeline Posts={data} />,
     about: <About />,
     media: <Media />,
-    friends: <Friends />,
+    connections: <Friends user={user} />,
+    articles: <Articles />,
     bookmarks: <Bookmarks />,
   };
   return (

@@ -6,19 +6,15 @@ import styles from "../../../styles/friends.module.scss";
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 
-const Articles = () => {
-  const Data = useSelector(selectUser);
-
+const Friends = ({ user }: { user: Record<string, any> }) => {
+  console.log(user);
   return (
     <>
       <Container className={styles.friendBody}>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo soluta
-        harum repellendus saepe amet quos. Et aspernatur a ab! Consequuntur
-        natus ratione dicta consectetur aspernatur omnis id nobis possimus
-        molestias?
+        <FriendsData friendsList={[...user.followers, ...user.following]} />
       </Container>
     </>
   );
 };
 
-export default Articles;
+export default Friends;
