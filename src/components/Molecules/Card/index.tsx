@@ -31,10 +31,12 @@ const Card = ({ _id, image, title, author, body, size }) => {
     <>
       <BCard
         style={{
-          boxShadow:
-            size === "small"
-              ? "0"
-              : "0px 8.21687px 8.21687px rgba(0, 0, 0, 0.1)",
+          // boxShadow:
+          //   size === "small"
+          //     ? "0"
+          //     : "0px 8.21687px 8.21687px rgba(0, 0, 0, 0.1)",
+
+          border: size === "small" ? "none" : "1px solid rgba(0, 0, 0, 0.125)",
 
           width: "100%",
           minHeight: "380px",

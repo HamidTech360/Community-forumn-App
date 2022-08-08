@@ -40,7 +40,7 @@ const CreatePost = ({ pageAt }) => {
   // };
   return (
     // <Card className="p-4 shadow" style={{ border: "none" }}>
-    <Card className="p-4" style={{ border: "none" }}>
+    <Card className="p-4">
       <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
         <>
           <Image
@@ -52,7 +52,10 @@ const CreatePost = ({ pageAt }) => {
           />
         </>
         <>
-          <Form style={{ width: "100%" }}>
+          <Form
+            className="radius-20"
+            style={{ width: "100%", border: "1px solid rgba(0, 0, 0, 0.125)" }}
+          >
             <Form.Control
               // className={`radius-20 shadow-sm ${styles.form}`}
               className={`radius-20 ${styles.form}`}

@@ -48,7 +48,11 @@ const Discussions = () => {
   return (
     <Card
       // style={{ border: "none", overflowY: "scroll", height: "450px" }}
-      style={{ border: "none", overflowY: "scroll", height: "450px" }}
+      style={{
+        overflowY: "scroll",
+        height: "450px",
+        border: "1px solid rgba(0, 0, 0, 0.125)",
+      }}
       // className={`pb-5 mb-4 mt-4 shadow ${styles.activeDiscussion}`}
       className={`pb-5 mb-4 mt-4 ${styles.activeDiscussion}`}
     >

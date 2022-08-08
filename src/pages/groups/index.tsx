@@ -73,7 +73,7 @@ const Groups = () => {
       <div className="mt-5">
         <Container className={styles.wrapper}>
           <Card
-            style={{ maxWidth: "280px", border: "none" }}
+            style={{ maxWidth: "280px", borderRadius: "10px" }}
             className="d-none d-lg-block p-3 position-fixed left-0"
           >
             <div className="d-flex justify-content-between my-2">
@@ -114,7 +114,7 @@ const Groups = () => {
                   href={`/groups/${post.groupId}/timeline`}
                   passHref
                 >
-                  <Card style={{ height: "280px", border: "none" }}>
+                  <Card style={{ height: "280px", borderRadius: "10px" }}>
                     <CardImg
                       src={"/images/article.png"}
                       alt=""

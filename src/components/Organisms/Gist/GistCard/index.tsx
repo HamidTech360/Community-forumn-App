@@ -36,12 +36,11 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
 
   return (
     <Card
-      className="mt-4 p-3 shadow-sm w-100"
+      className="mt-4 p-3 w-100"
       style={{
-        border: "none",
         borderRadius: "10px",
-        marginLeft: "-.4rem",
-        marginRight: "-.2rem",
+        // marginLeft: "-.4rem",
+        // marginRight: "-.2rem",
       }}
     >
       <Card.Title>

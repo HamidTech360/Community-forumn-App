@@ -134,7 +134,6 @@ const Follow = () => {
       as={Card}
       variant="flush"
       style={{
-        border: "none",
         width: "100%",
         height: "max-content",
       }}

@@ -133,7 +133,8 @@ const AuthHeader = () => {
       </Head>
       <Navbar
         className={`bg-white  ${styles.navBar}`}
-        style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
+        // style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
+        style={{ borderBottom: "1.5px solid rgba(0, 0, 0, 0.125)" }}
         fixed="top"
       >
         <Container className="d-flex justify-content-between">
@@ -292,7 +293,8 @@ const AuthHeader = () => {
       {router.asPath !== "/chat" && (
         <Navbar
           className="mobi-nav bg-white rounded"
-          style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
+          // style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
+          style={{ borderTop: "1.5px solid rgba(0, 0, 0, 0.125)" }}
           fixed="bottom"
         >
           {/* <Container className="d-flex justify-content-start"> */}

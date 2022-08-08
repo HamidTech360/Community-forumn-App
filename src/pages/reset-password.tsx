@@ -64,10 +64,11 @@ const ResetPassword = () => {
           </div>
           <Form
             // onSubmit={handleSubmit}
-            className="p-3 shadow"
+            className="p-3"
             style={{
               background: "#F5FEFF",
               borderRadius: 10,
+              border: "1px solid rgba(0, 0, 0, 0.125)",
             }}
           >
             <Form.Group style={{ marginBottom: "30px" }}>
