@@ -16,8 +16,9 @@ import Articles from "../../Templates/Profile/Articles";
 import Media from "../../Templates/Profile/Media";
 import Timeline from "../../Templates/Profile/Timeline";
 import { useSelector } from "@/redux/store";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import { selectUser, user } from "@/reduxFeatures/authState/authStateSlice";
 import config from "@/config";
+import Friends from "../../Templates/Profile/Friends";
 
 interface IComponents {
   about: ReactNode;
@@ -25,14 +26,8 @@ interface IComponents {
   bookmarks: ReactNode;
   media: ReactNode;
   articles: ReactNode;
+  connections: ReactNode;
 }
-const Components: IComponents = {
-  timeline: <Timeline Posts={[]} />,
-  about: <About />,
-  media: <Media />,
-  articles: <Articles />,
-  bookmarks: <Bookmarks />,
-};
 
 const ProfileCard = ({
   handlePath,
@@ -45,7 +40,14 @@ const ProfileCard = ({
 
   const data = useSelector(selectUser);
   // console.log(data);
-
+  const Components: IComponents = {
+    timeline: <Timeline Posts={[]} />,
+    about: <About />,
+    media: <Media />,
+    articles: <Articles />,
+    bookmarks: <Bookmarks />,
+    connections: <Friends user={user} />,
+  };
   return (
     <Card className="mt-2 mb-3">
       <CardImg src="/images/formbg.png" className="image3" />
