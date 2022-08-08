@@ -81,7 +81,14 @@ const Groups = () => {
               <p className="bold">Your groups</p>
               <p className="text-primary">See more</p>
             </div>
-            <Form.Control placeholder="search" />
+            <div
+              style={{
+                border: "1px solid rgba(0, 0, 0, 0.125)",
+                borderRadius: "10px",
+              }}
+            >
+              <Form.Control placeholder="search" />
+            </div>
             <div className={`${styles.groupLists}`}>
               {groups.map((item, i) => (
                 <Link href={`/groups/${item._id}/timeline`} key={i} passHref>
