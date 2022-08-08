@@ -21,16 +21,17 @@ import Link from "next/link";
 interface IComponents {
   about: ReactNode;
   timeline: ReactNode;
-  bookmarks: ReactNode;
+
   media: ReactNode;
-  friends: ReactNode;
+
+  connections: ReactNode;
 }
 const Components: IComponents = {
   timeline: <Timeline Posts={[]} />,
   about: <About />,
   media: <Media />,
-  friends: <Friends />,
-  bookmarks: <Bookmarks />,
+
+  connections: <Friends />,
 };
 
 const ProfileView = ({
@@ -42,22 +43,16 @@ const ProfileView = ({
 }) => {
   const router = useRouter();
   const { id } = router.query;
-  const [queryId, setQueryId] = useState(id);
-  // Allow Rerender Bases On ID Change Even When Route Is Same Path
-  if (id && id !== queryId) setQueryId(id);
 
   const [profile, setProfile] = useState<Record<string, any>>({});
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        `${config.serverUrl}/api/users/${router.query.id}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
+      const response = await axios.get(`${config.serverUrl}/api/users/${id}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
       setProfile(response.data);
       // console.log(response.data);
     } catch (error) {
@@ -68,7 +63,7 @@ const ProfileView = ({
 
   useEffect(() => {
     fetchData();
-  }, [queryId]);
+  }, [id]);
   return (
     <>
       <Card className="mt-2 mb-3">
