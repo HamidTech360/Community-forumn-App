@@ -25,36 +25,20 @@ import {
 } from "react-bootstrap";
 import { useRouter } from "next/router";
 import {selectNotifications} from '@/reduxFeatures/api/notifications'
-import { getNotification } from "@/reduxFeatures/api/notifications";
+
 
 import Link from "next/link";
 
 const Notifications = () => {
-  const notifications = dummyData;
+  
 
   const [radioValue, setRadioValue] = useState("1");
   const [Notifications, setNotifications] = useState([])
   let router = useRouter(null);
-  const allNotifications = useSelector(state=>state.notification)
-  console.log((allNotifications));
-  
-  //console.log('original notif', allNotifications);
-  
+  const allNotifications = useSelector(state=>state.notification.data.notifications)
+ 
   const dispatch = useDispatch();
-  useEffect(()=>{
-    (async ()=>{
-      try{
-        const response = await axios.get(`${config.serverUrl}/api/notifications`, {headers:{
-          authorization:`Bearer ${localStorage.getItem('accessToken')}`
-        }})
-        console.log(response.data);
-        setNotifications(response.data.notifications)
-      }catch(error){
-        console.log(error.response?.data); 
-      }
-    })()
-    //dispatch(getNotification([1,5]))
-  },[])
+ 
   const radios = [
     { name: "All", value: "1" },
     { name: "Unread", value: "2" },
@@ -217,7 +201,7 @@ const Notifications = () => {
                     </h6>
                   )}
                 </div>
-                {Notifications.map((notification, index) => (
+                {allNotifications?.map((notification, index) => (
                   <div key={index} onClick={()=>navigateToItem(notification)} >
                       <NotificationRender notification={notification} />
                   </div>
