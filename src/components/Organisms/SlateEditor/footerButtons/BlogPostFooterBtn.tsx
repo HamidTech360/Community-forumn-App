@@ -25,7 +25,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
   const showPostTitle = useSelector(selectPostTitle);
   const showPostModal = useSelector(selectShowPostModal);
   const [categories, setCategories] = useState([]);
-  const [selectedCategpry, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     if (router.query.path == "timeline") {
@@ -47,7 +47,9 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
 
   const createPost = async (e) => {
     e.preventDefault();
-
+    //console.log(selectedCategory);
+    
+    
     const editorInnerHtml = (
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
@@ -72,7 +74,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
       try {
         const response = await axios.post(
           `${config.serverUrl}/api/posts`,
-          { postTitle: showPostTitle, postBody: editorInnerHtml, groupId },
+          { postTitle: showPostTitle, postBody: editorInnerHtml, groupId, category:selectedCategory.tag },
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -91,7 +93,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
         setUploading(false);
         dispatch(setShowPostModal(false));
       } catch (error) {
-        // console.log(error.response?.data);
+         console.log(error.response?.data);
         if (!localStorage.getItem("accessToken")) {
           toast.error("You must login to create a post", {
             position: toast.POSITION.TOP_RIGHT,
@@ -123,7 +125,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
       <div className="">
         <DropdownButton
           as={ButtonGroup}
-          title={selectedCategpry ? selectedCategpry : "Category"}
+          title={selectedCategory ? selectedCategory.name : "Category"}
           id="bg-nested-dropdown-1"
           variant="outline-secondary"
           size="sm"
@@ -131,7 +133,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
         >
           {categories.map((item, i) => (
             <Dropdown.Item
-              onClick={() => setSelectedCategory(item.name)}
+              onClick={() => setSelectedCategory(item)}
               key={i}
               eventKey="1"
               variant="outline-secondary"

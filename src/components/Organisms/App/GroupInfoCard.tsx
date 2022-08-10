@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState} from "react";
+import axios from "axios";
+import config from "@/config";
+import Spinner from 'react-spinner-material'
 import {
   Button,
   Card,
@@ -16,6 +19,8 @@ import Bookmarks from "../../Templates/Profile/Bookmarks";
 import Friends from "../../Templates/Groups/Friends";
 import Media from "../../Templates/Groups/Media";
 import Timeline from "../../Templates/Groups/Timeline";
+import {useDispatch, useSelector} from '@/redux/store'
+import {selectUser} from '@/reduxFeatures/authState/authStateSlice'
 
 interface IComponents {
   about: ReactNode;
@@ -34,6 +39,28 @@ const Components: IComponents = {
 
 const GroupInfoCard = ({data}:any) => {
   const { path, id } = useRouter().query;
+  const [joined, setJoined] = useState(false)
+  const [joining, setJoining] = useState(false)
+  const user = useSelector(selectUser)
+ 
+  const handleJoin = async ()=>{
+    if( data.groupMembers?.find(e=>e._id===user._id) || joined ) return
+  
+    setJoining(true)
+    try{
+      const response = await axios.patch(`${config.serverUrl}/api/groups/group/${data._id}`, {}, {headers:{
+        authorization:`Bearer ${localStorage.getItem('accessToken')}`
+      }})
+      console.log(response.data)
+      setJoining(false)
+      setJoined(true)
+      
+    }catch(error){
+      console.log(error.response?.data);
+      setJoining(false)
+    }
+  }
+  
 
   return (
     <Card className="mb-3">
@@ -62,13 +89,12 @@ const GroupInfoCard = ({data}:any) => {
             </p>
             <small className="text-mute">{data?.privacy} Group</small>
             <div className="mb-div mb-2">
-              <Button variant="primary" className="mb-btns">
-                Joined{" "}
-                <Image
-                  src="/images/Stroke-1.png"
-                  alt="down"
-                  className="image1"
-                />
+              <Button onClick={()=>handleJoin()} variant="primary" className="mb-btns">
+                  {joining?
+                    <Spinner radius={22} color={"lightgray"} stroke={2} visible={true} />
+                        :
+                     data.groupMembers?.find(e=>e._id===user._id) || joined ?'Joined':'Join'
+                  }               
               </Button>{" "}
               <Button variant="outline-primary" className="mb-btns">
                 Invite{" "}
