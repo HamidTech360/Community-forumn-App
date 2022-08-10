@@ -59,17 +59,13 @@ const Group = () => {
   }, []);
 
   useEffect(() => {
-    //console.log('current group id is ' + id + router.isReady);
+   
     (async function () {
       try {
-        const response = await axios.get(
-          // `${config.serverUrl}/api/groups/group/${id}`
-          `${config.serverUrl}/api/feed/groups/${id}`
-        );
-        // console.log(response.data);
+        const response = await axios.get(`${config.serverUrl}/api/groups/group/${id}`);
         setGroupData(response.data);
       } catch (error) {
-        // console.log(error.response?.data);
+        console.log(error.response?.data);
       }
     })();
   }, [router.isReady, newCreatePost, queryId]);

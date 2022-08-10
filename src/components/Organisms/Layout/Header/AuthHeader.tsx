@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import config from "@/config";
+import axios from "axios";
 import Link from "next/link";
 import {
   Container,
   Form,
-  FormControl,
-  InputGroup,
   Modal,
   Nav,
   Navbar,
@@ -43,7 +43,7 @@ import {
   MdNotificationsActive,
   MdOutlineNotificationsActive,
 } from "react-icons/md";
-
+import { getNotification } from "@/reduxFeatures/api/notifications";
 import Head from "next/head";
 import styles from "@/styles/utils.module.scss";
 import SearchTabs from "@/components/Molecules/SearchTabs";
@@ -126,6 +126,25 @@ const AuthHeader = () => {
     }
   };
 
+  useEffect(()=>{
+    (async ()=>{
+      try{
+        const response = await axios.get(`${config.serverUrl}/api/notifications`, {headers:{
+          authorization:`Bearer ${localStorage.getItem('accessToken')}`
+        }})
+        console.log(response.data);
+        dispatch(getNotification(response.data))
+        //setNotifications(response.data.notifications)
+      }catch(error){
+        console.log(error.response?.data); 
+      }
+    })()
+  },[])
+  
+  //@ts-ignore
+  const notifications = useSelector(state=>state.notification.data?.notifications)
+  // console.log('lenght of notifications is ', notifications?.length);
+  
   return (
     <>
       <Head>
@@ -220,7 +239,7 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
-              {/* <Badge className={styles.badge}>0</Badge> */}
+              <Badge className={styles.badge}>{notifications?.length}</Badge> 
             </Button>
           </div>
           <NavDropdown

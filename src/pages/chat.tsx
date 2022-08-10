@@ -100,7 +100,7 @@ useEffect(()=>{
     })()
   },[])
 
-  const selectChat = async (activeChat)=>{
+const selectChat = async (activeChat)=>{
     console.log(activeChat);
     setCurrentChat(activeChat)
     setMessages([])
