@@ -26,10 +26,29 @@ const Follow = () => {
   const currentlyFollowing = useSelector(selectFollowing);
   const dispatch = useDispatch();
 
+  // DELETE-CHECK ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  useEffect(() => {
+    (async function () {
+      try {
+        const response = await axios.get(
+          `${config.serverUrl}/api/users/connections/all`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        console.log("response.+++++:", response.data);
+      } catch (error) {
+        console.log("ERROR:", error);
+      }
+    })();
+  }, []);
+  // DELETE-CHECK ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
   const handleFollow = async (id: string) => {
     try {
       await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
-
       // Update Auth User State
       (async function () {
         try {
@@ -42,9 +61,9 @@ const Follow = () => {
         } catch (error) {
           localStorage.removeItem("accessToken");
         }
-
         // document.getElementById(`followBtn-${id}`).style.display = "none";
       })();
+      // console.log("done");
     } catch (error) {
       // console.error("follow Error:", error);
     }
@@ -59,10 +78,15 @@ const Follow = () => {
         //   console.log("users.length is undefined");
         // }
         const { data } = await axios.get(`${config.serverUrl}/api/users`);
+        // console.log("data:", data);
 
         let sliceNum = 0;
-        if (window.innerHeight > 777) {
+        if (window.innerHeight >= 1024) {
           sliceNum = 10;
+        } else if (window.innerHeight >= 888) {
+          sliceNum = 8;
+        } else if (window.innerHeight >= 777) {
+          sliceNum = 7;
         } else {
           sliceNum = 5;
         }
@@ -85,7 +109,7 @@ const Follow = () => {
 
         const notFollowing = data.users.filter((person) => {
           if (
-            person._id.toString() !== user._id.toString() &&
+            person?._id.toString() !== user?._id.toString() &&
             !currentlyFollowing.includes(person?._id)
           ) {
             return person;
@@ -105,11 +129,11 @@ const Follow = () => {
   }, [currentlyFollowing]);
   return (
     <ListGroup
-      className="container-fluid p-0 p-xl-2 radius-10 shadow"
+      // className="container-fluid p-0 p-xl-2 radius-10 shadow"
+      className="container-fluid p-0 p-xl-2 radius-10"
       as={Card}
       variant="flush"
       style={{
-        border: "none",
         width: "100%",
         height: "max-content",
       }}

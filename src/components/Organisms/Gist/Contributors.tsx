@@ -6,7 +6,7 @@ const Contributors = ({ contributors }: any) => {
   // console.log(contributors[0]);
 
   return (
-    <Card className="p-3 mt-4" style={{ border: "none" }}>
+    <Card className="p-3 mt-4">
       <Card.Title className="d-flex justify-content-between align-items-center">
         <span> Top Contributors</span>
         <span

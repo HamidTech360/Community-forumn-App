@@ -81,7 +81,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
             },
           }
         );
-        // console.log(response.data);
+        // console.log(response.data.post);
 
         toast.success("Post uploaded successfully", {
           position: toast.POSITION.TOP_RIGHT,
@@ -89,7 +89,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
         });
 
         // Auto update Blog Post in /explore
-        dispatch(setNewPost(response.data));
+        dispatch(setNewPost(response.data.post));
         setUploading(false);
         dispatch(setShowPostModal(false));
       } catch (error) {

@@ -4,49 +4,47 @@
   height: auto !important;
 }
 
-.column{
+.column {
   // max-height: 60vh;
-  @media screen and (max-width:991px){
+  @media screen and (max-width: 991px) {
     display: none;
   }
 }
 
-.FeedModal{
-  .openBtn{
+.FeedModal {
+  .openBtn {
     margin: 10px;
     display: flex;
     flex-direction: row-reverse;
 
-      @media screen and (max-width:991px){
-        display: none;
-      }
+    @media screen and (max-width: 991px) {
+      display: none;
+    }
   }
 
-  .closeBtn{
+  .closeBtn {
     margin: 10px;
     display: none;
 
-
-      @media screen and (max-width:991px){
-        display: flex;
-      }
+    @media screen and (max-width: 991px) {
+      display: flex;
+    }
   }
-  
 }
-.cardColumn{
+.cardColumn {
   max-height: 60vh !important;
   overflow-y: scroll;
   padding-bottom: 2rem;
 
-    @media screen and (max-width:991px) {
-      max-height: 100vh !important;
-    }
+  @media screen and (max-width: 991px) {
+    max-height: 100vh !important;
+  }
 }
 
 .trimmed {
   display: none;
 
-  @media screen and (max-width: 991px){
+  @media screen and (max-width: 991px) {
     display: block;
     margin-top: 1rem;
   }
@@ -76,19 +74,18 @@
       }
     }
 
-   
     @media screen and (max-width: 330px) {
       line-height: 1.5rem;
       font-size: smaller !important;
     }
   }
 
-  span{
-    @media screen and (max-width: 400px){
+  span {
+    @media screen and (max-width: 400px) {
       font-size: medium;
     }
 
-    @media screen and (max-width: 330px){
+    @media screen and (max-width: 330px) {
       font-size: 0.85rem;
     }
   }
@@ -142,7 +139,7 @@
   height: 90%;
 }
 
-.cardFooter{
+.cardFooter {
   @media screen and (max-width: 1000px) {
     margin-left: -1.5rem !important;
   }
@@ -151,7 +148,7 @@
     @media screen and (max-width: 1200px) {
       display: none !important;
     }
-    @media screen and (max-width: 768px){
+    @media screen and (max-width: 768px) {
       display: block !important;
       font-size: 0.9rem;
     }
@@ -159,4 +156,11 @@
       display: none !important;
     }
   }
-} 
+}
+
+// .mouseOverBtn {
+//   color: gray;
+// }
+.mouseOverBtn:hover {
+  color: white;
+}

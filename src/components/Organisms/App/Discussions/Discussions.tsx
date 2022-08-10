@@ -7,6 +7,7 @@ import truncate from "trunc-html";
 import { useModalWithData, ModalRow } from "@/hooks/useModalWithData";
 import { MdOutlineCancel } from "react-icons/md";
 import { BiArrowBack } from "react-icons/bi";
+import styles from "@/styles/feed.module.scss";
 
 import { useDispatch, useSelector } from "@/redux/store";
 import {
@@ -47,11 +48,17 @@ const Discussions = () => {
   return (
     <Card
       // style={{ border: "none", overflowY: "scroll", height: "450px" }}
-      style={{ border: "none", overflowY: "scroll", height: "450px" }}
-      className="pb-5 mb-4 mt-4 shadow"
+      style={{
+        overflowY: "scroll",
+        height: "450px",
+        border: "1px solid rgba(0, 0, 0, 0.125)",
+      }}
+      // className={`pb-5 mb-4 mt-4 shadow ${styles.activeDiscussion}`}
+      className={`pb-5 mb-4 mt-4 ${styles.activeDiscussion}`}
     >
       <Card.Header
-        className="d-flex justify-content-between gap-2 align-items-center bg-white shadow-sm sticky-top"
+        // className="d-flex justify-content-between gap-2 align-items-center bg-white shadow-sm sticky-top"
+        className="d-flex justify-content-between gap-2 align-items-center bg-white sticky-top"
         style={{ fontSize: "14px" }}
       >
         <span className="bold">Active discussions</span>

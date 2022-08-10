@@ -1,37 +1,39 @@
 import React, { useEffect, useState, ReactNode } from "react";
 import { Card, CardImg, Container, Nav, Spinner } from "react-bootstrap";
-import PostCard from "../../components/Organisms/App/PostCard";
-import CreatePost from "../../components/Organisms/CreatePost";
+import PostCard from "@/components/Organisms/App/PostCard";
+import CreatePost from "@/components/Organisms/CreatePost";
 import axios from "axios";
 import config from "@/config";
-import styles from "../../styles/feed.module.scss";
+import styles from "@/styles/feed.module.scss";
 import Head from "next/head";
-// import UserCard from "../../components/Organisms/App/UserCard";
-import Discussions from "../../components/Organisms/App/Discussions/Discussions";
-import { usePagination } from "../../hooks/usePagination-old";
-import { useRouter } from "next/router";
-import About from "../../components/Templates/Profile/About";
-import Timeline from "../../components/Templates/Profile/Timeline";
-import Friends from "../../components/Templates/Profile/Articles";
-import Media from "../../components/Templates/Profile/Media";
-import Bookmarks from "../../components/Templates/Profile/Bookmarks";
-import Link from "next/link";
-import ProfileCard from "../../components/Organisms/App/ProfileCard";
+// import UserCard from "@/components/Organisms/App/UserCard";
+import Discussions from "@/components/Organisms/App/Discussions/Discussions";
+
+import About from "@/components/Templates/Profile/About";
+import Timeline from "@/components/Templates/Profile/Timeline";
+import Friends from "@/components/Templates/Profile/Friends";
+import Media from "@/components/Templates/Profile/Media";
+import Bookmarks from "@/components/Templates/Profile/Bookmarks";
+
+import ProfileCard from "@/components/Organisms/App/ProfileCard";
 import AuthContent from "@/components/Auth/AuthContent";
+import Articles from "@/components/Templates/Profile/Articles";
+import { useSelector } from "@/redux/store";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+
 interface IComponents {
   about: ReactNode;
   timeline: ReactNode;
   bookmarks: ReactNode;
   media: ReactNode;
-  friends: ReactNode;
+  articles: ReactNode;
+  connections: ReactNode;
 }
 
 const Profile = () => {
-  //const { posts,  hasMore, isFetchingMore } = usePagination();
-
   const [path, setPath] = useState("timeline");
   const [data, setData] = useState([]);
-
+  const user = useSelector(selectUser);
   useEffect(() => {
     (async () => {
       try {
@@ -43,10 +45,10 @@ const Profile = () => {
             },
           }
         );
-        console.log(response.data);
+        // console.log(response.data);
         setData(response.data.posts);
       } catch (error) {
-        console.log(error.response?.data);
+        // console.log(error.response?.data);
       }
     })();
     document.body.style.backgroundColor = "#f6f6f6";
@@ -60,7 +62,8 @@ const Profile = () => {
     timeline: <Timeline Posts={data} />,
     about: <About />,
     media: <Media />,
-    friends: <Friends />,
+    connections: <Friends user={user} />,
+    articles: <Articles />,
     bookmarks: <Bookmarks />,
   };
   return (
@@ -70,16 +73,19 @@ const Profile = () => {
       </Head>
       <Container>
         <div className={`padding-top mt-3 ${styles.profileWrapper}`}>
-          {/* <>
+          <div className="d-none d-lg-flex col-lg-3 col-xl-2 me-xl-4">
             <div
-              style={{ width: 250 }}
-              className="position-fixed d-none d-md-flex flex-column gap-4 vh-100"
+              // style={{ width: 230 }}
+              // className="position-fixed d-none d-lg-flex flex-column vh-100"
+              className={`${styles.userCardDiscussion} position-fixed d-flex flex-column vh-100`}
             >
-              <Discussions />
+              <div className="col-xs-12">
+                <Discussions />
+              </div>
             </div>
-          </> */}
+          </div>
 
-          <main className={styles.profile}>
+          <main className={`${styles.profile} col-12 col-lg-7 col-xl-7 `}>
             <ProfileCard active={path} handlePath={setPath} />
 
             {Components[path as unknown as string]}

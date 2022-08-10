@@ -63,29 +63,54 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
 
   const [allGists, setAllGists] = useState([]);
   const [filteredGists, setFilteredGists] = useState([]);
-  const [gistCategories, setGistCategories] = useState([])
-  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [gistCategories, setGistCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     post: "",
   });
 
-  const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
-    usePagination("/api/gists", "gists");
+  const {
+    paginatedData,
+    isReachedEnd,
+    error,
+    fetchNextPage,
+    mutate,
+    isValidating,
+  } = usePagination("/api/gists", "gists");
 
-    useEffect(()=>{
-      (async ()=>{
-        try{
-          const {data}= await axios.get(`${config.serverUrl}/api/category`)
-          setGistCategories([{name:'All', type:'gist'},...data.allCategories])
-        }catch(error){
-          console.log(error.response?.data);
-        }
-      })()
-    },[])
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
 
+    (async () => {
+      try {
+        const { data } = await axios.get(`${config.serverUrl}/api/category`);
+        setGistCategories([
+          { name: "All", type: "gist" },
+          ...data.allCategories,
+        ]);
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (gistIsSuccess) {
+      if (allGists?.length > 0) {
+        // Fetch Updated Gist Using useSWRInfinite
+        mutate();
+
+        // Update State
+        setAllGists(paginatedData);
+
+        dispatch(uploadCleanUp({}));
+        // dispatch(setShowGistModal(false));
+      }
+    }
+  }, [gistIsSuccess]);
+
+  useEffect(() => {
     if (paginatedData) {
       if (JSON.stringify(allGists) !== JSON.stringify(paginatedData)) {
         // console.log("paginatedData - 1:", paginatedData);
@@ -94,40 +119,21 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     }
   }, [paginatedData]);
 
-  useEffect(() => {
-    if (gistIsSuccess) {
-      toast.success("Gist uploaded succesfully", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: customId,
-      });
-
-      // Fetch Updated Gist Using useSWRInfinite
-      fetchNextPage();
-
-      // Update State
-      setAllGists(paginatedData);
-
-      dispatch(uploadCleanUp({}));
-      dispatch(setShowGistModal(false));
-    }
-  }, [gistIsSuccess]);
-
   const handleChange = (e) => {
     dispatch(setGistTitle(e.currentTarget.value));
   };
 
-  const filterCategory = (item)=>{
+  const filterCategory = (item) => {
     console.log(item);
-    
-   
-    const filtered = allGists.filter(gist=>gist.categories===item.name)
-    if(filtered.length<=0) {
-      alert('No Item in this category')
+
+    const filtered = allGists.filter((gist) => gist.categories === item.name);
+    if (filtered.length <= 0) {
+      alert("No Item in this category");
     }
     // console.log('filtered gists:', filteredGists);
-    
-    setFilteredGists(filtered)
-  }
+
+    setFilteredGists(filtered);
+  };
 
   return (
     <section className={styles.gist}>
@@ -159,17 +165,28 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         <Row className="mt-5">
           <Col md={3} className="desktop-only">
             <BCard
-              className={`pt-1 px-1 shadow-sm ${styles.wrapper}`}
-              style={{ position: "sticky", top: "5rem" }}
+              // className={`pt-1 px-1 shadow-sm ${styles.wrapper}`}
+              className={`pt-1 px-1 ${styles.wrapper}`}
+              style={{
+                position: "sticky",
+                top: "5rem",
+                border: "1px solid rgba(0, 0, 0, 0.125)",
+              }}
             >
               <BCard.Header className="shadow-sm border-0">
                 <h5>Browse categories</h5>
               </BCard.Header>
 
               <BCard.Body className="mt-3 mx-2">
-                <div style={{ listStyleType: "none"}}>
+                <div style={{ listStyleType: "none" }}>
                   {gistCategories.map((item, key) => (
-                    <li onClick={()=>filterCategory(item)} style={{ marginBottom:'15px', cursor:'pointer' }} key={key}>{item.name}</li>
+                    <li
+                      onClick={() => filterCategory(item)}
+                      style={{ marginBottom: "15px", cursor: "pointer" }}
+                      key={key}
+                    >
+                      {item.name}
+                    </li>
                   ))}
                 </div>
               </BCard.Body>
@@ -222,9 +239,11 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
               // initialScrollY={0}
             >
               <div className="justify-content-center">
-                {(filteredGists.length>0?filteredGists:allGists).map((post, key) => (
-                  <GistCard gist={post} key={`gist-${key}`} trimmed />
-                ))}
+                {(filteredGists.length > 0 ? filteredGists : allGists).map(
+                  (post, key) => (
+                    <GistCard gist={post} key={`gist-${key}`} trimmed />
+                  )
+                )}
               </div>
 
               {isValidating && (
@@ -275,18 +294,25 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                 <Form.Label className={formStyles.formLabel}>
                   Gist Title
                 </Form.Label>
-                <Form.Control
-                  id="createGistID"
-                  size="lg"
-                  name="title"
-                  type="text"
-                  onChange={(e) => handleChange(e)}
+                <div
                   style={{
-                    backgroundColor: "rgb(248, 244, 244)",
+                    border: "1px solid rgba(0, 0, 0, 0.125)",
                     borderRadius: "10px",
                   }}
-                  required
-                />
+                >
+                  <Form.Control
+                    id="createGistID"
+                    size="lg"
+                    name="title"
+                    type="text"
+                    onChange={(e) => handleChange(e)}
+                    style={{
+                      backgroundColor: "rgb(248, 244, 244)",
+                      borderRadius: "10px",
+                    }}
+                    required
+                  />
+                </div>
               </Form.Group>
             </Form>
           </div>

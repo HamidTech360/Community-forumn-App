@@ -62,6 +62,16 @@ const Feed = () => {
   // const [followers, setFollowers] = useState([]);
   // const [following, setFollowing] = useState([]);
 
+  const {
+    paginatedData,
+    isReachedEnd,
+    error,
+    fetchNextPage,
+    mutate,
+    isValidating,
+  } = usePagination("/api/feed", "feed");
+
+  // Update users followers & following in AuthUser because it's a frontend resolved data
   useEffect(() => {
     if (stateUser) {
       const currentlyFollowing = stateUser.following.map((follow) => {
@@ -80,9 +90,6 @@ const Feed = () => {
   //   post: "",
   // });
 
-  const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
-    usePagination("/api/feed", "feed");
-
   // const checkScroll = () => {
   //   if (window.scrollY > 100) {
   //     setScrollInitialised(true);
@@ -92,7 +99,7 @@ const Feed = () => {
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
     // window.addEventListener("scroll", checkScroll);
-    
+
     return () => {
       document.body.style.backgroundColor = "initial";
       // window.removeEventListener("scroll", checkScroll);
@@ -100,8 +107,14 @@ const Feed = () => {
   }, []);
 
   useEffect(() => {
-    fetchNextPage();
-    setPosts(paginatedData);
+    if (Object.entries(newFeed).length !== 0) {
+      if (posts?.length > 0) {
+        // Fetch Updated Gist Using useSWRInfinite
+        mutate();
+        // Update State
+        setPosts(paginatedData);
+      }
+    }
   }, [newFeed]);
 
   useEffect(() => {
@@ -121,7 +134,6 @@ const Feed = () => {
       <MessageButton />
       <Container>
         <div className="row mt-lg-5">
-          {/* <div className={`mt-3 ${styles.wrapper}`}> */}
           <div className="d-none d-lg-flex col-lg-3 col-xl-2 me-xl-4">
             <div
               // style={{ width: 230 }}
@@ -193,6 +205,7 @@ const Feed = () => {
           <div
             // style={{ width: 270 }}
             // className="position-fixed d-none d-xxl-flex end-0 me-5 vh-100 "
+            // className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-3 me-xl-2 ms-xxl-4 vh-100"
             className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-3 me-xl-2 ms-xxl-4 vh-100"
           >
             <Follow />
@@ -209,28 +222,12 @@ const Feed = () => {
         scrollable={true}
       >
         <span className={styles.openBtn}>
-          {" "}
           <MdOutlineCancel
             style={{ cursor: "pointer" }}
             size={30}
             onClick={() => toggle()}
-          />{" "}
+          />
         </span>
-        {/* {selected.images ? (
-          <Row>
-            <Col lg={6}></Col>
-            <Col lg={6}>
-              {" "}
-              <ModalCard post={selected} />
-            </Col>
-          </Row>
-        ) : (
-          <Row>
-            <Col lg={12} className="px-5">
-              <ModalCard post={selected} />
-            </Col>
-          </Row>
-        )} */}
         <ModalRow selected={selected} />
       </Modal>
     </AuthContent>

@@ -35,7 +35,6 @@ const Gist = ({
       content: commentPost,
     };
 
-   
     setLoading(true);
     const res = await axios.post(
       `${config.serverUrl}/api/comments?type=gist&id=${router.query.id}`,
@@ -106,60 +105,61 @@ const Gist = ({
         <Col md={8}>
           <GistCard gist={data} primary />
           <section>
-                <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
-                <div className="row">
-                  <div className="col-2 col-md-2">
-                    <Image
-                      src="/images/imagePlaceholder.jpg"
-                      
-                      className="img-fluid"
-                      roundedCircle={true}
-                      alt="Author's Image"
-                    />
-                  </div>
-                  <div className="col-7 col-md-10">
-                    <div className="form-floating shadow">
-                      <textarea
-                        id="articleTextarea"
-                        className="form-control"
-                        placeholder="."
-                        onChange={(e) => setCommentPost(e.target.value)}
-                        style={{ height: "100px" }}
-                      ></textarea>
-                      <label htmlFor="articleTextarea">Comments</label>
-                    </div>
-                  </div>
-                  <div className="col-3 col-md-2 ms-auto d-md-grid">
-                    <button
-                      className="btn btn-sm btn-primary mt-3 d-inline"
-                      onClick={postComment}
-                    >
-                      Send
-                      {loading && (
-                        <div
-                          className="spinner-grow spinner-grow-sm text-light"
-                          role="status"
-                        ></div>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </section>
-              <section>
-              <h6 style={{ fontWeight: "bolder" }}>
-                Comments ({data?.comments?.length})
-              </h6>
-              <div className="row">
-                <div className="col-12 mt-4">
-                  {data?.comments?.length > 0 &&
-                    ([...data?.comments].reverse()).map((comment, index) => {
-                      return (
-                        <Comment key={`data_${index}`} comment={comment} />
-                      );
-                    })}
+            <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
+            <div className="row">
+              <div className="col-2 col-md-2">
+                <Image
+                  src="/images/imagePlaceholder.jpg"
+                  className="img-fluid"
+                  roundedCircle={true}
+                  alt="Author's Image"
+                />
+              </div>
+              <div className="col-7 col-md-10">
+                {/* <div className="form-floating shadow"> */}
+                <div
+                  className="form-floating"
+                  style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
+                >
+                  <textarea
+                    id="articleTextarea"
+                    className="form-control"
+                    placeholder="."
+                    onChange={(e) => setCommentPost(e.target.value)}
+                    style={{ height: "100px" }}
+                  ></textarea>
+                  <label htmlFor="articleTextarea">Comments</label>
                 </div>
               </div>
-            </section>
+              <div className="col-3 col-md-2 ms-auto d-md-grid">
+                <button
+                  className="btn btn-sm btn-primary mt-3 d-inline"
+                  onClick={postComment}
+                >
+                  Send
+                  {loading && (
+                    <div
+                      className="spinner-grow spinner-grow-sm text-light"
+                      role="status"
+                    ></div>
+                  )}
+                </button>
+              </div>
+            </div>
+          </section>
+          <section>
+            <h6 style={{ fontWeight: "bolder" }}>
+              Comments ({data?.comments?.length})
+            </h6>
+            <div className="row">
+              <div className="col-12 mt-4">
+                {data?.comments?.length > 0 &&
+                  [...data?.comments].reverse().map((comment, index) => {
+                    return <Comment key={`data_${index}`} comment={comment} />;
+                  })}
+              </div>
+            </div>
+          </section>
           {/* <h5 className={`px-2 m-2 ${styles.comment}`}>Comments({data?.comments?.length})</h5>
           <div className="mt-2">
             {replies?.map((reply, key) => (

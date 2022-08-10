@@ -56,7 +56,7 @@ export const useModalWithShare = () => {
 };
 
 export function ModalRow({ selected }) {
-  console.log("selected++:", selected);
+  console.log("selected+++++:", selected);
   return (
     <>
       {selected.images ? (
@@ -69,7 +69,7 @@ export function ModalRow({ selected }) {
         </Row>
       ) : (
         <Row>
-          <Col lg={12} className="px-5">
+          <Col lg={12} className="px-3 px-lg-4">
             <ModalCard post={selected} />
           </Col>
         </Row>

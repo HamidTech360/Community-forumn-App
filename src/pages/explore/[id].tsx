@@ -33,14 +33,14 @@ const BlogPost = () => {
     });
   };
 
-  const sanitizer = DOMPurify.sanitize;
+  // const sanitizer = DOMPurify.sanitize;
   const FetchData = async () => {
     try {
       const exploreResponse = await axios.get(
         `${config.serverUrl}/api/posts/${router.query.id}`
       );
       setBlogPost(exploreResponse.data.post);
-      console.log("This is explore response", exploreResponse.data.post);
+      // console.log("This is explore response", exploreResponse.data.post);
     } catch (error) {
       router.back();
     }
@@ -135,7 +135,11 @@ const BlogPost = () => {
                     ></Image>
                   </div>
                   <div className="col-7 col-md-10">
-                    <div className="form-floating shadow">
+                    {/* <div className="form-floating shadow"> */}
+                    <div
+                      className="form-floating"
+                      style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
+                    >
                       <textarea
                         id="articleTextarea"
                         className="form-control"
@@ -169,7 +173,7 @@ const BlogPost = () => {
                 <div className="row">
                   <div className="col-12 mt-4">
                     {blogPost.comments?.length > 0 &&
-                      ([...blogPost.comments].reverse()).map((comment, index) => {
+                      [...blogPost.comments].reverse().map((comment, index) => {
                         return (
                           <Comment
                             key={`blogPost_${index}`}

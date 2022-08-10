@@ -12,20 +12,22 @@ import { usePagination } from "../../hooks/usePagination-old";
 import { useRouter } from "next/router";
 import About from "../../components/Templates/Profile/About";
 import Timeline from "../../components/Templates/Profile/Timeline";
-import Friends from "../../components/Templates/Profile/Articles";
+import Friends from "../../components/Templates/Profile/Friends";
 import Media from "../../components/Templates/Profile/Media";
 import Bookmarks from "../../components/Templates/Profile/Bookmarks";
 import Link from "next/link";
 import ProfileCard from "../../components/Organisms/App/ProfileCard";
 import ProfileView from "../../components/Organisms/App/ProfileView";
 import AuthContent from "@/components/Auth/AuthContent";
+import Articles from "@/components/Templates/Profile/Articles";
 
 interface IComponents {
   about: ReactNode;
   timeline: ReactNode;
   bookmarks: ReactNode;
   media: ReactNode;
-  friends: ReactNode;
+  connections: ReactNode;
+  articles: ReactNode;
 }
 
 const Profile = () => {
@@ -33,17 +35,18 @@ const Profile = () => {
 
   const router = useRouter();
   const { id } = router.query;
-  const [queryId, setQueryId] = useState(id);
-  // Allow Rerender Bases On ID Change Even When Route Is Same Path
-  if (id && id !== queryId) setQueryId(id);
 
   const [path, setPath] = useState("timeline");
 
   const [data, setData] = useState([]);
-
+  const [user, setUser] = useState<Record<string, any>>({});
   useEffect(() => {
     (async () => {
       try {
+        const { data: res } = await axios.get(
+          `${config.serverUrl}/api/users/${id}`
+        );
+        setUser(res);
         const response = await axios.get(
           `${config.serverUrl}/api/posts/user/all`,
           {
@@ -63,13 +66,14 @@ const Profile = () => {
     return () => {
       document.body.style.backgroundColor = "initial";
     };
-  }, [queryId]);
+  }, [id]);
 
   const Components: IComponents = {
     timeline: <Timeline Posts={data} />,
     about: <About />,
     media: <Media />,
-    friends: <Friends />,
+    connections: <Friends user={user} />,
+    articles: <Articles />,
     bookmarks: <Bookmarks />,
   };
   return (
@@ -82,7 +86,7 @@ const Profile = () => {
           <>
             <div
               style={{ width: 250 }}
-              className="position-fixed d-none d-md-flex flex-column gap-4 vh-100"
+              className="position-fixed d-none d-lg-flex flex-column gap-4 vh-100"
             >
               <Discussions />
             </div>

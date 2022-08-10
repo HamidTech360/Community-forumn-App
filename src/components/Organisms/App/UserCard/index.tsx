@@ -14,9 +14,10 @@ const UserCard = () => {
   }, [data]);
   return (
     <Card
-      className="bg-white radius-10 p-3 user-card position-relative shadow"
+      // className="bg-white radius-10 p-3 user-card position-relative shadow"
+      className="bg-white radius-10 p-3 user-card position-relative"
       // style={{ border: "none", height: "200px" }}
-      style={{ border: "none", height: "240px" }}
+      style={{ height: "240px" }}
       // style={{ border: "none", height: "34%" }}
     >
       <div
@@ -43,8 +44,7 @@ const UserCard = () => {
         className="text-center text-muted"
         style={{ marginTop: "-1.2rem", fontSize: "12px" }}
       >
-       @{data?.username || data?.firstName}
-        
+        @{data?.username || data?.firstName}
       </small>
       <small
         className="row text-muted mx-auto mt-2 text-center"
@@ -68,7 +68,11 @@ const UserCard = () => {
           <small>followers</small>
         </div>
       </div>
-      <Button variant="light" className="text-center mt-2">
+      <Button
+        variant="light"
+        className="text-center mt-2"
+        style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
+      >
         <Link href={`/profile`}>View Profile</Link>
       </Button>
     </Card>
