@@ -40,6 +40,7 @@ const ProfileCard = ({
 
   const data = useSelector(selectUser);
   // console.log(data);
+
   const Components: IComponents = {
     timeline: <Timeline Posts={[]} />,
     about: <About />,

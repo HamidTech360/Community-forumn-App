@@ -52,7 +52,7 @@ import {
 import {
   user as userAuth,
   selectUser,
-  setFollowing,
+  // setFollowing,
   selectFollowing,
 } from "@/reduxFeatures/authState/authStateSlice";
 import {
@@ -446,12 +446,12 @@ const PostCard = ({
       document.getElementById(`followStr-${post?.author?._id}`).innerText ===
       "Unfollow"
     ) {
-      let confirmUnFollow = window.confirm(
-        `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
-      );
-      if (confirmUnFollow) {
-        handleUnFollow(post?.author?._id);
-      }
+      // let confirmUnFollow = window.confirm(
+      //   `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
+      // );
+      // if (confirmUnFollow) {
+      handleUnFollow(post?.author?._id);
+      // }
     }
   };
 

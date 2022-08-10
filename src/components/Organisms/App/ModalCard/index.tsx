@@ -483,7 +483,7 @@ const ModalCard = ({
   return (
     <>
       <Row>
-        <Col sm={12} md={12} lg={5} className={styles.column}>
+        <Col sm={12} md={12} lg={5} className={`${styles.column} pe-lg-0`}>
           {!trimmed && (
             <Image
               src={"/images/formbg.png"}
@@ -494,7 +494,7 @@ const ModalCard = ({
           )}
         </Col>
 
-        <Col sm={12} md={12} lg={7} className={styles.cardColumn}>
+        <Col sm={12} md={12} lg={7} className={`${styles.cardColumn} px-lg-0`}>
           <Card
             id={post?.id}
             className="my-3 cards"
