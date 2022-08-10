@@ -434,18 +434,26 @@ const Explore = ({}) => {
                 <Form.Label className={formStyles.formLabel}>
                   Post Title
                 </Form.Label>
-                <Form.Control
-                  id="createPostID"
-                  size="lg"
-                  name="postTitle"
-                  type="text"
-                  onChange={(e) => handleChange(e)}
+                <div
                   style={{
-                    backgroundColor: "rgb(248, 244, 244)",
+                    border: "1px solid rgba(0, 0, 0, 0.125)",
                     borderRadius: "10px",
                   }}
-                  required
-                />
+                >
+                  <Form.Control
+                    id="createPostID"
+                    size="lg"
+                    name="postTitle"
+                    type="text"
+                    onChange={(e) => handleChange(e)}
+                    style={{
+                      backgroundColor: "rgb(248, 244, 244)",
+                      borderRadius: "10px",
+                      border: "1px solid rgba(0, 0, 0, 0.125)",
+                    }}
+                    required
+                  />
+                </div>
               </Form.Group>
             </Form>
           </div>

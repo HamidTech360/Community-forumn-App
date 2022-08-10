@@ -16,14 +16,22 @@ const About = ({ type, data }: any) => {
 
   return (
     <section>
-      <Container className="shadow-sm">
+      {/* <Container className="shadow-sm"> */}
+      <Container>
         <Card className="border-0">
-          <div className="row g-2" style={{ marginTop: "-2rem" }}>
+          <div
+            className="row g-2"
+            // style={{ marginTop: "-2rem" }}
+          >
             <div className="col-md-12 col-lg-12">
               <Card.Body
                 id="profileMainSide"
-                className="bg-light shadow"
-                style={{ height: "100%" }}
+                // className="bg-light shadow"
+                className="bg-light"
+                style={{
+                  height: "100%",
+                  border: "1px solid rgba(0, 0, 0, 0.125)",
+                }}
               >
                 <Container>
                   <div className="row">

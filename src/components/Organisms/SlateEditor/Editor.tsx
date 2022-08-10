@@ -90,9 +90,13 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
     <div className={slim ? "container-fluid px-0 mx-0" : "container"}>
       <div className={`row justify-content-center ${slim && "px-0 mx-0"}`}>
         <div
-          className={`${
-            slim ? "col-10 col-md-11 px-0 me-0" : "col-12"
-          } shadow ${styles.main}`}
+          // className={`${
+          //   slim ? "col-10 col-md-11 px-0 me-0" : "col-12"
+          // } shadow ${styles.main}`}
+          className={`${slim ? "col-10 col-md-11 px-0 me-0" : "col-12"} ${
+            styles.main
+          }`}
+          style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
         >
           <Slate editor={editor} value={value} onChange={handleEditorChange}>
             <div className="row">
