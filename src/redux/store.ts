@@ -7,7 +7,7 @@ import gistReducer from "@/reduxFeatures/api/gistSlice";
 import feedReducer from "@/reduxFeatures/api/feedSlice";
 import groupReducer from "@/reduxFeatures/api/groupSlice";
 import createPostReducer from "@/reduxFeatures/app/createPost";
-import dragAndDropReducer from "@/reduxFeatures/app/dragAndDropSlice";
+// import dragAndDropReducer from "@/reduxFeatures/app/dragAndDropSlice";
 import searchReducer from "@/reduxFeatures/api/searchSlice";
 import postModalCardReducer from "@/reduxFeatures/app/postModalCardSlice";
 import notificationReducer from "@/reduxFeatures/api/notifications";
@@ -30,7 +30,7 @@ export const store = configureStore({
     app: appReducer,
     chat: chatReducer,
     authState: authStateReducer,
-    dragAndDrop: dragAndDropReducer,
+    // dragAndDrop: dragAndDropReducer,
     search: searchReducer,
     postModalCard: postModalCardReducer,
     notification: notificationReducer,
