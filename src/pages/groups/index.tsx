@@ -10,6 +10,7 @@ import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { useRouter } from "next/router";
 import config from "@/config";
 import axios from "axios";
+import {FaUser} from 'react-icons/fa'
 const posts = [
   {
     image: "/images/article.png",
@@ -118,7 +119,7 @@ const Groups = () => {
               {Posts.slice(0, 4).map((post, index) => (
                 <Link
                   key={`card-${index}`}
-                  href={`/groups/${post.groupId}/timeline`}
+                  href={`/groups/${post.group._id}/timeline`}
                   passHref
                 >
                   <Card style={{ height: "280px", borderRadius: "10px" }}>
@@ -129,15 +130,16 @@ const Groups = () => {
                     />
                     <Card.Body className="d-flex flex-column">
                       <p className="bold">{post.postTitle}</p>
+                      <h6>{post.group.name}</h6>
                       <small className="text-muted">
-                        Admin: {post.author.firstName}
+                       <FaUser color="black" /> {post.author?.firstName}
                       </small>
-                      <Image
+                      {/* <Image
                         width={20}
                         height={20}
                         alt="members"
                         src="/assets/icons/users.svg"
-                      />
+                      /> */}
                     </Card.Body>
                   </Card>
                 </Link>

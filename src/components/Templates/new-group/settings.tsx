@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../../styles/templates/new-group/settings.module.css";
-import { Form } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 
-const Settings = ({handleSelectOption, data}) => {
+const Settings = ({handleSelectOption, data, moveToNewTab}) => {
 
   const setValues = (state,  setState, dataKey)=>{
     const clone = [...state]
@@ -13,6 +13,7 @@ const Settings = ({handleSelectOption, data}) => {
     setState(clone)
   }
   useEffect(()=>{
+    window.scrollTo(0,0)
      if(data.privacy) setValues(privacy, setPrivacy, 'privacy')
      if(data.invite)  setValues(inviteOptions, setInviteOptions, 'invite')
      if(data.allowedToPost)  setValues(postOptions, setPostOptions, 'allowedToPost')
@@ -92,12 +93,13 @@ const Settings = ({handleSelectOption, data}) => {
     clone.map((item) => (item.active = false));
     clone[i].active = true;
     setArray(clone);
-    //console.log(item);
-    handleSelectOption(name, item.value)
-
-    
+    handleSelectOption(name, item.value)   
     
   };
+
+  const handleContinue = ()=>{
+    moveToNewTab(2)
+  }
   return (
     <div className={styles.settings}>
       <div className={styles.settingsHeader}>Privacy Settings</div>
@@ -171,6 +173,9 @@ const Settings = ({handleSelectOption, data}) => {
             </div>
           ))}
         </div>
+        <Button onClick={()=>handleContinue()} variant="primary" className="d-flex mx-auto" type="submit">
+          Continue
+        </Button>
       </div>
     </div>
   );
