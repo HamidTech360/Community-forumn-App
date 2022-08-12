@@ -165,8 +165,13 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         <Row className="mt-5">
           <Col md={3} className="desktop-only">
             <BCard
-              className={`pt-1 px-1 shadow-sm ${styles.wrapper}`}
-              style={{ position: "sticky", top: "5rem" }}
+              // className={`pt-1 px-1 shadow-sm ${styles.wrapper}`}
+              className={`pt-1 px-1 ${styles.wrapper}`}
+              style={{
+                position: "sticky",
+                top: "5rem",
+                border: "1px solid rgba(0, 0, 0, 0.125)",
+              }}
             >
               <BCard.Header className="shadow-sm border-0">
                 <h5>Browse categories</h5>
@@ -289,18 +294,25 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                 <Form.Label className={formStyles.formLabel}>
                   Gist Title
                 </Form.Label>
-                <Form.Control
-                  id="createGistID"
-                  size="lg"
-                  name="title"
-                  type="text"
-                  onChange={(e) => handleChange(e)}
+                <div
                   style={{
-                    backgroundColor: "rgb(248, 244, 244)",
+                    border: "1px solid rgba(0, 0, 0, 0.125)",
                     borderRadius: "10px",
                   }}
-                  required
-                />
+                >
+                  <Form.Control
+                    id="createGistID"
+                    size="lg"
+                    name="title"
+                    type="text"
+                    onChange={(e) => handleChange(e)}
+                    style={{
+                      backgroundColor: "rgb(248, 244, 244)",
+                      borderRadius: "10px",
+                    }}
+                    required
+                  />
+                </div>
               </Form.Group>
             </Form>
           </div>

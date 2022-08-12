@@ -52,7 +52,7 @@ import {
 import {
   user as userAuth,
   selectUser,
-  setFollowing,
+  // setFollowing,
   selectFollowing,
 } from "@/reduxFeatures/authState/authStateSlice";
 import {
@@ -447,12 +447,12 @@ const PostCard = ({
       document.getElementById(`followStr-${post?.author?._id}`).innerText ===
       "Unfollow"
     ) {
-      let confirmUnFollow = window.confirm(
-        `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
-      );
-      if (confirmUnFollow) {
-        handleUnFollow(post?.author?._id);
-      }
+      // let confirmUnFollow = window.confirm(
+      //   `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
+      // );
+      // if (confirmUnFollow) {
+      handleUnFollow(post?.author?._id);
+      // }
     }
   };
 
@@ -506,7 +506,7 @@ const PostCard = ({
         id={post?.id}
         className="container-fluid my-3 cards"
         style={{
-          border: "none",
+          border: "1px solid rgba(0, 0, 0, 0.125)",
           width: "100%",
         }}
       >
@@ -785,7 +785,10 @@ const PostCard = ({
               </div>
               <div className="col-7 col-md-10">
                 {/* <div className="form-floating shadow"> */}
-                <div className="form-floating">
+                <div
+                  className="form-floating"
+                  style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
+                >
                   <textarea
                     id="articleTextarea"
                     className="form-control"

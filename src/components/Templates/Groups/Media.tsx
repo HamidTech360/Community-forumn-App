@@ -36,7 +36,9 @@ const Media = () => {
     },
   ];
   return (
-    <div className={`row d-flex justify-content-start justify-content-sm-evenly ${styles.media}`}>
+    <div
+      className={`row d-flex justify-content-start justify-content-sm-evenly ${styles.media}`}
+    >
       {imageList.map((item, i) => (
         <div
           key={i}
@@ -46,7 +48,12 @@ const Media = () => {
             src={`/images/${
               i + 1 >= 1 && i + 1 <= 4 ? `masonry${i + 1}.png` : item.image
             }`}
-            className={`${styles.image} shadow`}
+            // className={`${styles.image} shadow-sm`}
+            className={`${styles.image}`}
+            style={{
+              border: "1px solid rgba(0, 0, 0, 0.125)",
+              borderRadius: "5px",
+            }}
             alt="placeholder"
           />
         </div>

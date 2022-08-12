@@ -79,7 +79,7 @@ const Timeline = ({ Posts }) => {
           bottom: 0,
         }}
       ></div>
-      {console.log("POST+++", Posts)}
+      {/* {console.log("POST+++", Posts)} */}
       {Posts?.map((post, index) => (
         <PostCard
           post={post}

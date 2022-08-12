@@ -484,7 +484,7 @@ const ModalCard = ({
   return (
     <>
       <Row>
-        <Col sm={12} md={12} lg={5} className={styles.column}>
+        <Col sm={12} md={12} lg={5} className={`${styles.column} pe-lg-0`}>
           {!trimmed && (
             <Image
               src={"/images/formbg.png"}
@@ -495,7 +495,7 @@ const ModalCard = ({
           )}
         </Col>
 
-        <Col sm={12} md={12} lg={7} className={styles.cardColumn}>
+        <Col sm={12} md={12} lg={7} className={`${styles.cardColumn} px-lg-0`}>
           <Card
             id={post?.id}
             className="my-3 cards"
@@ -766,7 +766,7 @@ const ModalCard = ({
                 </div>
                 <div className="col-12 col-md-10">
                   {/* <div className="form-floating shadow"> */}
-                  <div className="shadow">
+                  <div style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}>
                     <textarea
                       id="articleTextarea"
                       className="form-control"

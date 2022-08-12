@@ -14,6 +14,7 @@ const Card = ({ image, title, author, id }: Record<string, any>) => {
         style={{
           width: "271px",
           height: "250px",
+          border: "1px solid rgba(0, 0, 0, 0.125)",
         }}
       >
         <BCard.Img

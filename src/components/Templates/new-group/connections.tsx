@@ -13,6 +13,7 @@ const AddConnections = ({handleSubmit, isLoading, chooseConnections, data}) => {
   
   const [connections, setConnections]= useState([])
   useEffect(()=>{
+    window.scrollTo(0,0)
     const addSelectionProps = [...user.followers, ...user.following].map(el=>({...el, isSelected:false}))
     addSelectionProps.map((item)=>{
       const index = data.groupMembers.indexOf(item._id)

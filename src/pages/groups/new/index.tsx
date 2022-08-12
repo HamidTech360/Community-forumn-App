@@ -126,13 +126,11 @@ const CreateNewGroup = () => {
   };
 
   const goBack = () => {
-    if (sessionStorage.getItem("newGroup_coming4rm")) {
-      let backTo = JSON.parse(sessionStorage.getItem("newGroup_coming4rm"));
-      sessionStorage.removeItem("newGroup_coming4rm");
-      router.push(backTo);
-    } else {
-      router.push("/");
+  
+    if(activeTab==0) {
+      return router.push('/groups')
     }
+    setActiveTab(activeTab-1)
   };
 
   const tabs = [
@@ -152,7 +150,7 @@ const CreateNewGroup = () => {
       index: 1,
       label: "Settings",
       component: (
-        <Settings data={data} handleSelectOption={handleSelectOption} />
+        <Settings data={data} moveToNewTab={moveToNewTab} handleSelectOption={handleSelectOption} />
       ),
       active: false,
     },
@@ -201,7 +199,7 @@ const CreateNewGroup = () => {
               {tabs.map((item, i) => (
                 <div className={styles.stepperBoxItem} key={i}>
                   <Badge
-                    onClick={() => handleSelectTabs(item, i)}
+                    //onClick={() => handleSelectTabs(item, i)}
                     className={`${styles.stepperBadge} ${
                       item.index == activeTab
                         ? styles.stepperBadgeActive

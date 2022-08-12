@@ -17,7 +17,7 @@ const UserCard = () => {
       // className="bg-white radius-10 p-3 user-card position-relative shadow"
       className="bg-white radius-10 p-3 user-card position-relative"
       // style={{ border: "none", height: "200px" }}
-      style={{ border: "none", height: "240px" }}
+      style={{ height: "240px" }}
       // style={{ border: "none", height: "34%" }}
     >
       <div
@@ -68,7 +68,11 @@ const UserCard = () => {
           <small>followers</small>
         </div>
       </div>
-      <Button variant="light" className="text-center mt-2">
+      <Button
+        variant="light"
+        className="text-center mt-2"
+        style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
+      >
         <Link href={`/profile`}>View Profile</Link>
       </Button>
     </Card>

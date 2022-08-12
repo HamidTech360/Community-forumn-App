@@ -10,6 +10,7 @@ import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { useRouter } from "next/router";
 import config from "@/config";
 import axios from "axios";
+import {FaUser} from 'react-icons/fa'
 const posts = [
   {
     image: "/images/article.png",
@@ -73,7 +74,7 @@ const Groups = () => {
       <div className="mt-5">
         <Container className={styles.wrapper}>
           <Card
-            style={{ maxWidth: "280px", border: "none" }}
+            style={{ maxWidth: "280px", borderRadius: "10px" }}
             className="d-none d-lg-block p-3 position-fixed left-0"
           >
             <div className="d-flex justify-content-between my-2">
@@ -81,7 +82,14 @@ const Groups = () => {
               <p className="bold">Your groups</p>
               <p className="text-primary">See more</p>
             </div>
-            <Form.Control placeholder="search" />
+            <div
+              style={{
+                border: "1px solid rgba(0, 0, 0, 0.125)",
+                borderRadius: "10px",
+              }}
+            >
+              <Form.Control placeholder="search" />
+            </div>
             <div className={`${styles.groupLists}`}>
               {groups.map((item, i) => (
                 <Link href={`/groups/${item._id}/timeline`} key={i} passHref>
@@ -111,10 +119,10 @@ const Groups = () => {
               {Posts.slice(0, 4).map((post, index) => (
                 <Link
                   key={`card-${index}`}
-                  href={`/groups/${post.groupId}/timeline`}
+                  href={`/groups/${post.group._id}/timeline`}
                   passHref
                 >
-                  <Card style={{ height: "280px", border: "none" }}>
+                  <Card style={{ height: "280px", borderRadius: "10px" }}>
                     <CardImg
                       src={"/images/article.png"}
                       alt=""
@@ -122,15 +130,16 @@ const Groups = () => {
                     />
                     <Card.Body className="d-flex flex-column">
                       <p className="bold">{post.postTitle}</p>
+                      <h6>{post.group.name}</h6>
                       <small className="text-muted">
-                        Admin: {post.author.firstName}
+                       <FaUser color="black" /> {post.author?.firstName}
                       </small>
-                      <Image
+                      {/* <Image
                         width={20}
                         height={20}
                         alt="members"
                         src="/assets/icons/users.svg"
-                      />
+                      /> */}
                     </Card.Body>
                   </Card>
                 </Link>
