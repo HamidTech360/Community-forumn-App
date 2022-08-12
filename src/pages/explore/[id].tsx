@@ -11,13 +11,15 @@ import Head from "next/head";
 import Age from "@/components/Atoms/Age";
 import config from "@/config";
 import DOMPurify from "dompurify";
+import { useSelector } from "@/redux/store"
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 
 const BlogPost = () => {
   const [blogPost, setBlogPost] = useState<Record<string, any>>({});
 
   const [commentPost, setCommentPost] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const user = useSelector(selectUser)
   const router = useRouter();
   const { id } = router.query;
   const [queryId, setQueryId] = useState(id);
@@ -45,6 +47,8 @@ const BlogPost = () => {
       router.back();
     }
   };
+  //console.log(user);
+  
 
   const postComment = async () => {
     const body = {
@@ -73,6 +77,19 @@ const BlogPost = () => {
   }, [queryId]);
   const likeComment = () => {};
   const replyComment = () => {};
+
+  const deletePost =async ()=>{
+    try{
+      const {data} = await axios.delete(`${config.serverUrl}/api/posts/${router.query.id}`, {headers:{
+        authorization:`Bearer ${localStorage.getItem('accessToken')}`
+      }})
+      console.log(data);
+       router.push('/explore')
+      
+    }catch(error){
+      console.log(error.response?.data)
+    }
+  }
 
   return (
     <>
@@ -106,7 +123,9 @@ const BlogPost = () => {
                       <BsDot />
                       {<Age time={blogPost?.createdAt} />}
                     </small>
+                    
                   </div>
+                 
                 </div>
                 <div className="row">
                   <div className="col"></div>
@@ -184,6 +203,7 @@ const BlogPost = () => {
                   </div>
                 </div>
               </section>
+              {blogPost.author?._id==user?._id ? <h6 onClick={()=>deletePost()} style={{color:'red', marginTop:'15px', cursor:'pointer'}}>Delete post</h6>:""}
             </div>
           </div>
         </div>

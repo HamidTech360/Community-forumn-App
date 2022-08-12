@@ -51,16 +51,9 @@ const Feed = () => {
   const dispatch = useDispatch();
   const stateUser = useSelector(selectUser);
   const newFeed = useSelector(selectNewFeed);
-  //const { posts, setPage, hasMore, isFetchingMore } = usePagination();
-  // const [scrollInitialised, setScrollInitialised] = useState(false);
   const [posts, setPosts] = useState([]);
-  // const [isFetching, setIsFetching] = useState(true);
-  // const [uploading, setUploading] = useState(false);
-  // const [showModal, setShowModal] = useState(false);
   const { modalOpen, toggle, selected, setSelected } = useModalWithData();
 
-  // const [followers, setFollowers] = useState([]);
-  // const [following, setFollowing] = useState([]);
 
   const {
     paginatedData,
@@ -86,15 +79,7 @@ const Feed = () => {
     }
   }, [stateUser]);
 
-  // const [formData, setFormData] = useState({
-  //   post: "",
-  // });
 
-  // const checkScroll = () => {
-  //   if (window.scrollY > 100) {
-  //     setScrollInitialised(true);
-  //   }
-  // };
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -124,6 +109,25 @@ const Feed = () => {
       }
     }
   }, [paginatedData]);
+
+  const handleDeletePost = async (item)=>{
+      const newPosts = posts.filter(el=>el._id!==item._id)
+      console.log(posts,newPosts);
+      
+      setPosts(posts.filter(el=>el._id!==item._id))
+    
+    try{
+      const {data} = await axios.delete(`${config.serverUrl}/api/feed?id=${item._id}`, {headers:{
+        authorization:`Bearer ${localStorage.getItem('accessToken')}`
+      }})
+      console.log(data, item._id)
+      
+      
+    }catch(error){
+      console.log(error.response?.data);
+      
+    }
+  }
 
   return (
     <AuthContent>
@@ -182,6 +186,7 @@ const Feed = () => {
                   post={post}
                   key={`activity-post-${index}-${post?.id}`}
                   trimmed
+                  handleDeletePost={handleDeletePost}
                 />
               ))}
               {isValidating && (
