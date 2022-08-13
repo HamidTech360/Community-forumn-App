@@ -40,7 +40,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
         // console.log(data);
         setCategories(data.allCategories);
       } catch (error) {
-        console.log(error.response?.data);
+        // console.log(error.response?.data);
       }
     })();
   }, []);
@@ -48,8 +48,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
   const createPost = async (e) => {
     e.preventDefault();
     //console.log(selectedCategory);
-    
-    
+
     const editorInnerHtml = (
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
@@ -68,13 +67,26 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
       return;
     }
 
+    if (!selectedCategory) {
+      toast.warn("Select A Post Category To Proceed", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1",
+      });
+      return;
+    }
+
     if (editorInnerHtml.trim() !== "") {
       setUploading(true);
 
       try {
         const response = await axios.post(
           `${config.serverUrl}/api/posts`,
-          { postTitle: showPostTitle, postBody: editorInnerHtml, groupId, category:selectedCategory.tag },
+          {
+            postTitle: showPostTitle,
+            postBody: editorInnerHtml,
+            groupId,
+            category: selectedCategory.tag,
+          },
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -93,7 +105,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
         setUploading(false);
         dispatch(setShowPostModal(false));
       } catch (error) {
-         console.log(error.response?.data);
+        // console.log(error.response?.data);
         if (!localStorage.getItem("accessToken")) {
           toast.error("You must login to create a post", {
             position: toast.POSITION.TOP_RIGHT,
@@ -109,16 +121,6 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
       }
     }
   };
-
-  // try {
-  //   // const response = await axios.get(`/api/posts`);
-  //   const response = await axios.get(`${config.serverUrl}/api/posts`);
-  //   dispatch(setPosts(response.data.posts));
-  //   dispatch(setIsFetching(false));
-  // } catch (error) {
-  //   console.error(error.response?.data);
-  //   dispatch(setIsFetching(false));
-  // }
 
   return (
     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>

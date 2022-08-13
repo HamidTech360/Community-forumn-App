@@ -38,10 +38,11 @@ import {
 } from "@/reduxFeatures/api/postSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 // import usePagination, { Loader } from "@/hooks/usePagination";
-import usePaginationPage, {
+import usePaginationBlogAll, {
   LoaderPage,
+  usePaginationBlogHousing,
   usePaginationStudyAbroad,
-} from "@/hooks/usePaginationPage";
+} from "@/hooks/usePaginationBlog";
 // import InfiniteScroll from "react-infinite-scroll-component";
 import config from "@/config";
 import ReactPaginate from "react-paginate";
@@ -74,13 +75,25 @@ const Explore = ({}) => {
 
   // const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
   //   usePagination("/api/posts", "posts");
-  const { paginatedPageData, mutate, isLoadingPageData, errorPage } =
-    usePaginationPage("/api/posts", pageIndex);
+  const { paginatedBlogAll, mutateBlogAll, isLoadingBlogAll, errorBlogAll } =
+    usePaginationBlogAll("/api/posts", pageIndex);
   const {
-    paginatedStudyAbroadData,
-    isLoadingStudyAbroadData,
-    errorStudyAbroad,
-  } = usePaginationStudyAbroad("/api/post/?category=Study Abroad", pageIndex);
+    paginatedBlogHousing,
+    mutateBlogHousing,
+    isLoadingBlogHousing,
+    errorBlogHousing,
+  } = usePaginationBlogHousing("/api/posts?category=study_abroad", pageIndex);
+  // } = usePaginationBlogHousing("/api/posts?category=work_abroad", pageIndex);
+  // } = usePaginationBlogHousing("/api/posts?category=live_abroad", pageIndex);
+  // } = usePaginationBlogHousing("/api/posts?category=pg_studies", pageIndex);
+  // } = usePaginationBlogHousing("/api/posts?category=housing", pageIndex);
+  // } = usePaginationBlogHousing("/api/posts?category=pt_jobs", pageIndex);
+
+  // const {
+  //   paginatedStudyAbroadData,
+  //   isLoadingStudyAbroadData,
+  //   errorStudyAbroad,
+  // } = usePaginationStudyAbroad("/api/post?category=housing", pageIndex);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -119,20 +132,20 @@ const Explore = ({}) => {
   // Auto Re-render on new post
   useEffect(() => {
     // console.log("Mutation");
-    mutate();
+    mutateBlogAll();
   }, [newPost]);
 
   useEffect(() => {
-    if (paginatedPageData) {
-      if (JSON.stringify(showPost) !== JSON.stringify(paginatedPageData)) {
-        dispatch(setPosts(paginatedPageData));
+    if (paginatedBlogAll) {
+      if (JSON.stringify(showPost) !== JSON.stringify(paginatedBlogAll)) {
+        dispatch(setPosts(paginatedBlogAll));
       }
     }
-  }, [paginatedPageData]);
+  }, [paginatedBlogAll]);
 
   useEffect(() => {
-    console.log("paginatedStudyAbroadData:", paginatedStudyAbroadData);
-    dispatch(setPosts(paginatedPageData));
+    // console.log("paginatedStudyAbroadData:", paginatedStudyAbroadData);
+    dispatch(setPosts(paginatedBlogAll));
 
     let pageCount = showPost?.numPages;
 
@@ -141,7 +154,13 @@ const Explore = ({}) => {
     // } else {
     //   // pageIndex
     // }
-  }, [paginatedPageData]);
+  }, [paginatedBlogAll]);
+
+  useEffect(() => {
+    console.log("paginatedBlogAll:", paginatedBlogAll);
+    // console.log("paginatedStudyAbroadData:", paginatedStudyAbroadData);
+    console.log("paginatedBlogHousing:", paginatedBlogHousing);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -312,8 +331,8 @@ const Explore = ({}) => {
               )}
             </InfiniteScroll> */}
             {/* {!showPost?.length && <p>No posts under this category </p>} */}
-            {/* {console.log("paginatedPageData:", paginatedPageData)}
-            {paginatedPageData.map((page) => (
+            {/* {console.log("paginatedBlogAll:", paginatedBlogAll)}
+            {paginatedBlogAll.map((page) => (
               <>
                 <Row className="d-flex justify-content-start w-100">
                   {(filteredPosts.length > 0 ? filteredPosts : showPost)?.map(
@@ -357,9 +376,9 @@ const Explore = ({}) => {
               ))}
             </Row>
 
-            {isLoadingPageData && <LoaderPage />}
+            {isLoadingBlogAll && <LoaderPage />}
 
-            {errorPage && (
+            {errorBlogAll && (
               <p
                 style={{
                   textAlign: "center",
