@@ -37,6 +37,8 @@ const Timeline = ({ groupId }: any) => {
       setTimeLinePosts(response.data.posts);
     })();
   }, [newCreatePost, queryId]);
+
+ 
   return (
     <>
       <div>

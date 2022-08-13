@@ -80,10 +80,9 @@ const PostCard = ({
   // post: postComingIn,
   post,
   trimmed,
-}: {
-  post: Record<string, any>;
-  trimmed?: Boolean;
-}) => {
+  handleDeletePost
+}
+) => {
   // console.log("PastCard Loaded+++++");
   // console.log("postComingIn:", postComingIn);
   const dispatch = useDispatch();
@@ -208,7 +207,24 @@ const PostCard = ({
     {
       name: "Comment",
       reaction: true,
-      icon: <FaRegCommentDots size={24} />,
+      icon: <FaRegCommentDots size={24}
+        onClick={async () => {
+          // console.log("postReFetched?._id:", postReFetched?._id);
+          // console.log("post?._id:", post?._id);
+          if (postReFetched) {
+            if (postReFetched?._id === post?._id) {
+              setSelected(postReFetched);
+              toggle();
+            } else {
+              setSelected(post);
+              toggle();
+            }
+          } else {
+            setSelected(post);
+            toggle();
+          }
+        }}
+       />,
     },
     {
       name: "Bookmark",
@@ -499,6 +515,8 @@ const PostCard = ({
     }
   };
 
+  
+
   return (
     <>
       <Card
@@ -579,12 +597,7 @@ const PostCard = ({
                   </Button>
                 }
               >
-                {/* <NavDropdown.Item
-                  className={styles.item}
-                  style={{ backgroundColor: "rgb(237, 236, 236)" }}
-                >
-                  <RiClipboardFill /> Copy post link
-                </NavDropdown.Item> */}
+                
                 <NavDropdown.Item
                   className={styles.item}
                   style={{ backgroundColor: "rgb(237, 236, 236)" }}
@@ -637,8 +650,14 @@ const PostCard = ({
                       @{post?.author?.firstName?.split(" ")[0]}
                       {post?.author?.lastName?.substring(0, 1)}
                     </NavDropdown.Item>
+                    
                   </>
                 ) : null}
+                {user._id==post.author._id?
+                    <NavDropdown.Item style={{marginTop:'8px'}} onClick={()=>handleDeletePost(post)}>
+                        <span style={{color:'red', fontWeight:'500', marginLeft:'10px'}}>Delete Post</span>
+                    </NavDropdown.Item>:""
+                    }
               </NavDropdown>
             </div>
           </div>
@@ -670,90 +689,12 @@ const PostCard = ({
           }}
         >
           <div>
-            {/* {Object.keys(post).length !== 0 && (
-            <div
-              className="post-content"
-              dangerouslySetInnerHTML={{
-                __html: trimmed
-                  ? post?.postBody?.slice(0, 500) ||
-                    post?.post?.slice(0, 500) + "..." ||
-                    post?.postBody
-                  : post?.post || post?.post,
-              }}
-            />
-          )}
-        </div>
-
-        {!trimmed && (
-          <Image
-            className="d-none d-sm-block d-lg-none"
-            style={{ borderRadius: 0 }}
-            src={"/images/formbg.png"}
-            fluid
-            alt={""}
-          />
-        )}
-      </Card.Body>
-
-      <Card.Footer
-        className={`mx-1 d-flex justify-content-between bg-white ${styles.footer}`}
-      >
-        {postButton.map((item, key) => (
-          <Button
-            key={key}
-            // onClick={() => item.name === "Like" && handleLike()}
-            variant="none"
-            // disabled={item.name === "Like" && post?.likes?.includes(user._id)}
-            className="d-flex justify-content-center gap-1 align-items-center"
-          >
-            {item.icon}
-            {item.name === "Like" && (
-              <span
-                style={{ marginLeft: "7px" }}
-                className="mx-2 text-secondary"
-              >
-                {noOfLikes || 0}
-              </span>
-            )}
-
-            {item.name === "Comment" && (
-              <span
-                style={{ marginLeft: "7px" }}
-                className="mx-2 text-secondary"
-                onClick={() => setShowComment(!showComment)}
-              >
-                {post?.comments?.length || 0}
-              </span>
-            )}
-
-            <span className="d-none d-md-block" style={{ marginLeft: "7px" }}>
-              {item.name}
-            </span>
-          </Button>
-        ))}
-      </Card.Footer>
-      {showComment && (
-        <section>
-          <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
-          <div className="row">
-            <div className="col-2 col-md-2">
-              <Image
-                src={modalPost.authorImage || "/images/imagePlaceholder.jpg"}
-                className="img-fluid"
-                roundedCircle={true}
-                alt="Author's Image"
-          )} */}
+    
             {post && Object.keys(post).length !== 0 && (
               <div className="d-flex flex-column">
                 <div
                   className="post-content"
-                  // dangerouslySetInnerHTML={{
-                  //   __html: trimmed
-                  //     ? sanitizer(truncate(post?.postBody, 100).html) ||
-                  //       sanitizer(truncate(post?.post, 100).html)
-                  //     : sanitizer(truncate(post?.postBody, 100).html) ||
-                  //       sanitizer(truncate(post?.post, 100).html),
-                  // }}
+                
 
                   // No Need for truncate here as it hides some tags like Bold & Underline
                   dangerouslySetInnerHTML={{
@@ -806,9 +747,9 @@ const PostCard = ({
                         handleLike();
                       }
                     }
-                    if (item.name === "Comment") {
-                      setShowComment(!showComment);
-                    }
+                    // if (item.name === "Comment") {
+                    //   setShowComment(!showComment);
+                    // }
 
                     if (item.name === "Share") {
                       // modalOpen;
@@ -833,19 +774,7 @@ const PostCard = ({
                       style={{ marginLeft: "7px" }}
                       className="mx-2 text-secondary"
                     >
-                      {/* {post?.likes?.length || 0} */}
-                      {/* if (postReFetched) {
-              if (postReFetched?._id === post?._id) {
-                setSelected(postReFetched);
-                toggle();
-              } else {
-                setSelected(post);
-                toggle();
-              }
-            } else {
-              setSelected(post);
-              toggle();
-            } */}
+                 
                       {postReFetched
                         ? postReFetched?._id === post?._id
                           ? postReFetched?.likes?.length || 0
