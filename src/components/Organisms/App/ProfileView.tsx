@@ -217,10 +217,12 @@ const ProfileView = ({
                   </>
                 )}
               </div>
+              <Link href={`/chat?active=${profile?._id}`}>
               <div className="col-5 col-sm-3 col-lg-2 btn btn-sm btn-outline-primary mx-1 p-0">
-                <RiMessage2Fill className={styles.mouseOverBtn} />{" "}
-                <span> message</span>
+                  <RiMessage2Fill className={styles.mouseOverBtn} />{" "}
+                  <span> message</span>
               </div>
+              </Link>
             </div>
           </div>
           <div className="text-muted text-center">
