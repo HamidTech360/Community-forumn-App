@@ -4,8 +4,6 @@ import { Button, Card, Image } from "react-bootstrap";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { useSelector } from "@/redux/store";
 
-// const UserCard = ({ user }: { user: Record<string, any> }) => {
-// const UserCard = ({ data }: { data: Record<string, any> }) => {
 const UserCard = () => {
   const data = useSelector(selectUser);
 
@@ -14,11 +12,8 @@ const UserCard = () => {
   }, [data]);
   return (
     <Card
-      // className="bg-white radius-10 p-3 user-card position-relative shadow"
-      className="bg-white radius-10 p-3 user-card position-relative"
-      // style={{ border: "none", height: "200px" }}
+      className="bg-white radius-10 pt-1 pb-2 px-2 user-card position-relative"
       style={{ height: "240px" }}
-      // style={{ border: "none", height: "34%" }}
     >
       <div
         className="d-flex justify-content-center  "
@@ -26,8 +21,6 @@ const UserCard = () => {
       >
         <Image
           className="user-img"
-          // src={data?.avatar?.url || "/images/formbg.png"}
-          // src={user?.images?.avatar || "/images/formbg.png"}
           src={data?.images?.avatar || "/images/formbg.png"}
           alt=""
           width={70}
@@ -37,7 +30,6 @@ const UserCard = () => {
       </div>
 
       <p className="text-center bold" style={{ marginTop: "-2rem" }}>
-        {/* {user?.firstName}&nbsp; {user?.lastName} */}
         {data?.firstName}&nbsp; {data?.lastName}
       </p>
       <small
@@ -70,7 +62,7 @@ const UserCard = () => {
       </div>
       <Button
         variant="light"
-        className="text-center mt-2"
+        className="text-center my-2"
         style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
       >
         <Link href={`/profile`}>View Profile</Link>

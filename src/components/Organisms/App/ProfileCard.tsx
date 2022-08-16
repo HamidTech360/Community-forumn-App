@@ -77,58 +77,20 @@ const ProfileCard = ({
           className="d-flex justify-content-between"
           style={{ width: "60%" }}
         >
-          <DropdownButton
-            variant="light"
-            title={
-              <div className="d-flex flex-column align-items-center">
-                <span>{data.followers?.length}</span>
-                <span>followers</span>
-              </div>
-            }
+          <div
+            className="d-flex flex-column align-items-center"
+            onClick={() => handlePath("connections")}
           >
-            {data.followers.map((item: Record<string, any>) => (
-              <Link href={`/profile/${item._id}`} passHref>
-                <Dropdown.Item key={item._id}>
-                  <Image
-                    src={item?.avatar?.url || "/images/imagePlaceholder.jpg"}
-                    alt=""
-                    roundedCircle
-                    width={15}
-                    height={15}
-                  />
-                  <span>
-                    {item.firstName} {item.lastName}
-                  </span>
-                </Dropdown.Item>
-              </Link>
-            ))}
-          </DropdownButton>
-          <DropdownButton
-            variant="light"
-            title={
-              <div className="d-flex flex-column align-items-center">
-                <span>{data.following?.length}</span>
-                <span>following</span>
-              </div>
-            }
+            <span>{data.followers?.length}</span>
+            <span>followers</span>
+          </div>
+          <div
+            className="d-flex flex-column align-items-center"
+            onClick={() => handlePath("connections")}
           >
-            {data.following.map((item: Record<string, any>) => (
-              <Link href={`/profile/${item._id}`} passHref>
-                <Dropdown.Item key={item._id}>
-                  <Image
-                    src={item?.avatar?.url || "/images/imagePlaceholder.jpg"}
-                    alt=""
-                    roundedCircle
-                    width={15}
-                    height={15}
-                  />
-                  <span>
-                    {item.firstName} {item.lastName}
-                  </span>
-                </Dropdown.Item>
-              </Link>
-            ))}
-          </DropdownButton>
+            <span>{data.following?.length}</span>
+            <span>following</span>
+          </div>
         </div>
       </Card.Body>
       <Card.Footer>
