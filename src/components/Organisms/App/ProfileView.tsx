@@ -37,6 +37,7 @@ import makeSecuredRequest, {
 } from "@/utils/makeSecuredRequest";
 
 import styles from "@/styles/profile.module.scss";
+import { datacatalog } from "googleapis/build/src/apis/datacatalog";
 
 interface IComponents {
   about: ReactNode;
@@ -226,8 +227,7 @@ const ProfileView = ({
             </div>
           </div>
           <div className="text-muted text-center">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
-            illum quasi voluptatem explicabo, tempore enim!
+                  {profile?.bio || ' Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapienteillum quasi voluptatem explicabo, tempore enim!'}
           </div>
           <div
             className="d-flex justify-content-between"
