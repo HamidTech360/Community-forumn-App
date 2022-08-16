@@ -80,7 +80,7 @@ const Explore = ({}) => {
     paginatedStudyAbroadData,
     isLoadingStudyAbroadData,
     errorStudyAbroad,
-  } = usePaginationStudyAbroad("/api/post/?category=Study Abroad", pageIndex);
+  } = usePaginationStudyAbroad("/api/posts/?category=Study Abroad", pageIndex);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";

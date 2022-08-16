@@ -36,7 +36,7 @@ import {
 } from "react-icons/bs";
 import { RiUserFollowFill } from "react-icons/ri";
 import { AiOutlineLike, AiFillLike, AiOutlineShareAlt } from "react-icons/ai";
-import { FaRegCommentDots } from "react-icons/fa";
+import { FaRegCommentDots, FaThumbsUp } from "react-icons/fa";
 import Age from "../../../Atoms/Age";
 import DOMPurify from "dompurify";
 import styles from "@/styles/profile.module.scss";
@@ -74,15 +74,15 @@ import Comment from "@/components/Organisms/App/Comment";
 import makeSecuredRequest, {
   deleteSecuredRequest,
 } from "@/utils/makeSecuredRequest";
+import likes from "@/utils/like";
 // import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
   // post: postComingIn,
   post,
   trimmed,
-  handleDeletePost
-}
-) => {
+  handleDeletePost,
+}) => {
   // console.log("PastCard Loaded+++++");
   // console.log("postComingIn:", postComingIn);
   const dispatch = useDispatch();
@@ -207,24 +207,27 @@ const PostCard = ({
     {
       name: "Comment",
       reaction: true,
-      icon: <FaRegCommentDots size={24}
-        onClick={async () => {
-          // console.log("postReFetched?._id:", postReFetched?._id);
-          // console.log("post?._id:", post?._id);
-          if (postReFetched) {
-            if (postReFetched?._id === post?._id) {
-              setSelected(postReFetched);
-              toggle();
+      icon: (
+        <FaRegCommentDots
+          size={24}
+          onClick={async () => {
+            // console.log("postReFetched?._id:", postReFetched?._id);
+            // console.log("post?._id:", post?._id);
+            if (postReFetched) {
+              if (postReFetched?._id === post?._id) {
+                setSelected(postReFetched);
+                toggle();
+              } else {
+                setSelected(post);
+                toggle();
+              }
             } else {
               setSelected(post);
               toggle();
             }
-          } else {
-            setSelected(post);
-            toggle();
-          }
-        }}
-       />,
+          }}
+        />
+      ),
     },
     {
       name: "Bookmark",
@@ -515,8 +518,6 @@ const PostCard = ({
     }
   };
 
-  
-
   return (
     <>
       <Card
@@ -525,13 +526,9 @@ const PostCard = ({
         style={{
           border: "1px solid rgba(0, 0, 0, 0.125)",
           width: "100%",
-          // padding: "-3rem",
         }}
       >
-        <Card.Title
-          // className={`position-relative d-flex justify-content-start gap-2 pb-2 border-bottom ${styles.title}`}
-          className={`border-bottom ${styles.title}`}
-        >
+        <Card.Title className={`border-bottom ${styles.title}`}>
           <div className="row">
             <div className="col-1">
               <Image
@@ -545,13 +542,8 @@ const PostCard = ({
               />
             </div>
 
-            {/* <div className="col-6 col-sm-9 col-xl-10 ms-4 ms-lg-1 ms-xl-0"> */}
             <div className="col-6 col-sm-8 ms-4 me-xl-5">
-              <div
-                className={styles.div}
-                // onClick={redirectPage}
-                // style={{ cursor: "pointer" }}
-              >
+              <div className={styles.div}>
                 <span
                   style={{
                     fontWeight: 500,
@@ -581,29 +573,17 @@ const PostCard = ({
 
             <div className="col-1" style={{ marginTop: "-.8rem" }}>
               <NavDropdown
-                // className={`position-absolute end-0 ${styles.dropdown}`}
-                // className={`${styles.dropdown}`}
                 drop="down"
                 title={
-                  <Button
-                    // variant="light"
-                    variant="link"
-                    className="text-dark"
-                    size="lg"
-                    // className="dot-btn"
-                    // style={{ background: "none" }}
-                  >
+                  <Button variant="link" className="text-dark" size="lg">
                     <HiDotsVertical size={25} />
                   </Button>
                 }
               >
-                
                 <NavDropdown.Item
                   className={styles.item}
                   style={{ backgroundColor: "rgb(237, 236, 236)" }}
                   onClick={async () => {
-                    // console.log("postReFetched?._id:", postReFetched?._id);
-                    // console.log("post?._id:", post?._id);
                     if (postReFetched) {
                       if (postReFetched?._id === post?._id) {
                         setSelected(postReFetched);
@@ -634,7 +614,6 @@ const PostCard = ({
                         <>
                           <BsXCircleFill className="text-muted" />{" "}
                           <span id={`followStr-${post?.author?._id}`}>
-                            {/* NOTE: Don't change the "Unfollow" Text From PascalCase, else unfollowing wouldn't work */}
                             Unfollow
                           </span>
                         </>
@@ -642,7 +621,6 @@ const PostCard = ({
                         <>
                           <RiUserFollowFill className="text-muted" />{" "}
                           <span id={`followStr-${post?.author?._id}`}>
-                            {/* NOTE: Don't change the "Follow" Text From PascalCase, else following wouldn't work */}
                             Follow
                           </span>
                         </>
@@ -650,14 +628,26 @@ const PostCard = ({
                       @{post?.author?.firstName?.split(" ")[0]}
                       {post?.author?.lastName?.substring(0, 1)}
                     </NavDropdown.Item>
-                    
                   </>
                 ) : null}
-                {user._id==post.author._id?
-                    <NavDropdown.Item style={{marginTop:'8px'}} onClick={()=>handleDeletePost(post)}>
-                        <span style={{color:'red', fontWeight:'500', marginLeft:'10px'}}>Delete Post</span>
-                    </NavDropdown.Item>:""
-                    }
+                {user._id == post.author._id ? (
+                  <NavDropdown.Item
+                    style={{ marginTop: "8px" }}
+                    onClick={() => handleDeletePost(post)}
+                  >
+                    <span
+                      style={{
+                        color: "red",
+                        fontWeight: "500",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      Delete Post
+                    </span>
+                  </NavDropdown.Item>
+                ) : (
+                  ""
+                )}
               </NavDropdown>
             </div>
           </div>
@@ -672,8 +662,6 @@ const PostCard = ({
               setShowComment(!showComment);
             }
 
-            // console.log("postReFetched?._id:", postReFetched?._id);
-            // console.log("post?._id:", post?._id);
             if (postReFetched) {
               if (postReFetched?._id === post?._id) {
                 setSelected(postReFetched);
@@ -689,13 +677,10 @@ const PostCard = ({
           }}
         >
           <div>
-    
             {post && Object.keys(post).length !== 0 && (
               <div className="d-flex flex-column">
                 <div
                   className="post-content"
-                
-
                   // No Need for truncate here as it hides some tags like Bold & Underline
                   dangerouslySetInnerHTML={{
                     __html: trimmed
@@ -724,6 +709,12 @@ const PostCard = ({
             />
           )}
         </Card.Body>
+        {post.likes.length > 0 && (
+          <div className="text-muted d-flex align-items-center">
+            <AiFillLike color="#086a6d" className="mx-2" />
+            <span>{likes(post.likes)}</span>
+          </div>
+        )}
 
         {/* <Card.Footer
           className={`mx-1 d-flex justify-content-between bg-white ${styles.footer}`}
@@ -774,7 +765,6 @@ const PostCard = ({
                       style={{ marginLeft: "7px" }}
                       className="mx-2 text-secondary"
                     >
-                 
                       {postReFetched
                         ? postReFetched?._id === post?._id
                           ? postReFetched?.likes?.length || 0
