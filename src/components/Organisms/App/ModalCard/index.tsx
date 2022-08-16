@@ -70,6 +70,7 @@ import { ModalRowShare, useModalWithShare } from "@/hooks/useModalWithData";
 import { MdOutlineCancel } from "react-icons/md";
 import { BiArrowBack } from "react-icons/bi";
 import { FiEdit } from "react-icons/fi";
+import likes from "@/utils/like";
 
 const ModalCard = ({
   post: postComingIn,

@@ -75,6 +75,7 @@ import makeSecuredRequest, {
   deleteSecuredRequest,
 } from "@/utils/makeSecuredRequest";
 import { FiEdit } from "react-icons/fi";
+import likes from "@/utils/like";
 // import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
