@@ -9,7 +9,7 @@ import { ReactEditor } from "slate-react";
 
 import styles from "../../../../../styles/SlateEditor/Embed_Slate.module.scss";
 import { Modal, Button as BsBtn, Form } from "react-bootstrap";
-// import DragAndDropFiles from "../DropZone/DragAndDropFiles";
+import DragAndDropFiles from "../DropZone/DragAndDropFiles";
 
 const Embed = ({ editor, format }) => {
   const urlInputRef = useRef();

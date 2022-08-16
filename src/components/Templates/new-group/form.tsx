@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import styles from "../../../styles/templates/new-group/formField.module.css";
 import { AiOutlineCloudUpload } from "react-icons/ai";
@@ -6,21 +6,21 @@ import { toast, ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 
-const FormField = ({handleChange, data, moveToNewTab}) => {
-  const handleSubmit = (e:any)=>{
-    e.preventDefault()
-    if(data.name==""||data.description==""){
+const FormField = ({ handleChange, data, moveToNewTab }) => {
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    if (data.name == "" || data.description == "") {
       return toast.error("Field cannot be left empty", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: '2',
+        toastId: "2",
       });
     }
-    moveToNewTab(1)
-  }
+    moveToNewTab(1);
+  };
 
   return (
     <div className={styles.formContainer}>
-      <ToastContainer/>
+      <ToastContainer />
       <Form>
         <Form.Group className={styles.formGroup}>
           <Form.Label className={styles.formLabel}> Group Name</Form.Label>
@@ -31,7 +31,7 @@ const FormField = ({handleChange, data, moveToNewTab}) => {
             // minlength="3"
             value={data.name}
             required
-            onChange={(e)=>handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </Form.Group>
 
@@ -48,7 +48,7 @@ const FormField = ({handleChange, data, moveToNewTab}) => {
             value={data.description}
             // minlength="5"
             required
-            onChange={(e)=>handleChange(e)}
+            onChange={(e) => handleChange(e)}
           />
         </Form.Group>
 
@@ -60,7 +60,12 @@ const FormField = ({handleChange, data, moveToNewTab}) => {
           </div>
         </Form.Group>
 
-        <Button onClick={(e)=>handleSubmit(e)} variant="primary" className="d-flex mx-auto" type="submit">
+        <Button
+          onClick={(e) => handleSubmit(e)}
+          variant="primary"
+          className="d-flex mx-auto"
+          type="submit"
+        >
           Continue
         </Button>
       </Form>

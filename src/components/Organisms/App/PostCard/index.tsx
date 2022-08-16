@@ -81,9 +81,7 @@ const PostCard = ({
   // post: postComingIn,
   post,
   trimmed,
-}: {
-  post: Record<string, any>;
-  trimmed?: Boolean;
+  handleDeletePost,
 }) => {
   // console.log("PastCard Loaded+++++");
   // console.log("postComingIn:", postComingIn);
@@ -209,7 +207,27 @@ const PostCard = ({
     {
       name: "Comment",
       reaction: true,
-      icon: <FaRegCommentDots size={24} />,
+      icon: (
+        <FaRegCommentDots
+          size={24}
+          onClick={async () => {
+            // console.log("postReFetched?._id:", postReFetched?._id);
+            // console.log("post?._id:", post?._id);
+            if (postReFetched) {
+              if (postReFetched?._id === post?._id) {
+                setSelected(postReFetched);
+                toggle();
+              } else {
+                setSelected(post);
+                toggle();
+              }
+            } else {
+              setSelected(post);
+              toggle();
+            }
+          }}
+        />
+      ),
     },
     {
       name: "Bookmark",
@@ -612,6 +630,24 @@ const PostCard = ({
                     </NavDropdown.Item>
                   </>
                 ) : null}
+                {user._id == post.author._id ? (
+                  <NavDropdown.Item
+                    style={{ marginTop: "8px" }}
+                    onClick={() => handleDeletePost(post)}
+                  >
+                    <span
+                      style={{
+                        color: "red",
+                        fontWeight: "500",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      Delete Post
+                    </span>
+                  </NavDropdown.Item>
+                ) : (
+                  ""
+                )}
               </NavDropdown>
             </div>
           </div>
@@ -702,9 +738,9 @@ const PostCard = ({
                         handleLike();
                       }
                     }
-                    if (item.name === "Comment") {
-                      setShowComment(!showComment);
-                    }
+                    // if (item.name === "Comment") {
+                    //   setShowComment(!showComment);
+                    // }
 
                     if (item.name === "Share") {
                       // modalOpen;
@@ -729,19 +765,6 @@ const PostCard = ({
                       style={{ marginLeft: "7px" }}
                       className="mx-2 text-secondary"
                     >
-                      {/* {post?.likes?.length || 0} */}
-                      {/* if (postReFetched) {
-              if (postReFetched?._id === post?._id) {
-                setSelected(postReFetched);
-                toggle();
-              } else {
-                setSelected(post);
-                toggle();
-              }
-            } else {
-              setSelected(post);
-              toggle();
-            } */}
                       {postReFetched
                         ? postReFetched?._id === post?._id
                           ? postReFetched?.likes?.length || 0

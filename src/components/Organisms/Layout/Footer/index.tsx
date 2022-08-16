@@ -21,7 +21,11 @@ const Footer = () => {
           <Container>
             <Row className="px-3">
               <Col md={3} xs={12}>
-                <Logo />
+                <Link href="/" passHref>
+                  <Nav.Item style={{ cursor: "pointer" }}>
+                    <Logo />
+                  </Nav.Item>
+                </Link>
                 <div className="footer-text">follow us</div>
                 <div className="footer-icons">
                   <BsInstagram size={23} className="footer-icon" />
@@ -34,23 +38,37 @@ const Footer = () => {
               <Col md={3} xs={6} className="desktop-only">
                 <h3 className={"heading"}> About Us</h3>
                 <div className="footer-text">
-                  <a href="">Our Story</a>
+                  <Link href="/about" passHref>
+                    <Nav.Item style={{ cursor: "pointer" }}>Our Story</Nav.Item>
+                  </Link>
                 </div>
               </Col>
 
               <Col md={3} xs={6} className="desktop-only">
                 <h3 className={"heading"}> Support</h3>
                 <div className="footer-text">
-                  <a href="">FAQ</a>
-                  <a href="">Contact</a>
+                  <Link href="/faq" passHref>
+                    <Nav.Item style={{ cursor: "pointer" }}>FAQ</Nav.Item>
+                  </Link>
+                  <Link href="/contact" passHref>
+                    <Nav.Item style={{ cursor: "pointer" }}>Contact</Nav.Item>
+                  </Link>
                 </div>
               </Col>
 
               <Col md={3} xs={6} className="desktop-only">
                 <h3 className={"heading"}>Legal</h3>
                 <div className="footer-text">
-                  <a href="">Privacy Policy</a>
-                  <a href="">Terms and Conditions</a>
+                  <Link href="/privacy" passHref>
+                    <Nav.Item style={{ cursor: "pointer" }}>
+                      Privacy Policy
+                    </Nav.Item>
+                  </Link>
+                  <Link href="#" passHref>
+                    <Nav.Item style={{ cursor: "pointer" }}>
+                      Terms and Conditions (noPage)
+                    </Nav.Item>
+                  </Link>
                 </div>
               </Col>
               <Col
@@ -72,7 +90,11 @@ const Footer = () => {
                     </Accordion.Header>
                     <Accordion.Body style={{ backgroundColor: "#F0F0F1" }}>
                       <div className="footer-text">
-                        <a href="">Our Story</a>
+                        <Link href="/about" passHref>
+                          <Nav.Item style={{ cursor: "pointer" }}>
+                            Our Story
+                          </Nav.Item>
+                        </Link>
                       </div>
                     </Accordion.Body>
                   </Accordion.Item>
@@ -89,8 +111,14 @@ const Footer = () => {
                     </Accordion.Header>
                     <Accordion.Body style={{ backgroundColor: "#F0F0F1" }}>
                       <div className="footer-text">
-                        <a href="">FAQ</a>
-                        <a href="">Contact</a>
+                        <Link href="/faq" passHref>
+                          <Nav.Item style={{ cursor: "pointer" }}>FAQ</Nav.Item>
+                        </Link>
+                        <Link href="/contact" passHref>
+                          <Nav.Item style={{ cursor: "pointer" }}>
+                            Contact
+                          </Nav.Item>
+                        </Link>
                       </div>
                     </Accordion.Body>
                   </Accordion.Item>
@@ -107,8 +135,16 @@ const Footer = () => {
                     </Accordion.Header>
                     <Accordion.Body style={{ backgroundColor: "#F0F0F1" }}>
                       <div className="footer-text">
-                        <a href="">Privacy Policy</a>
-                        <a href="">Terms and Conditions</a>
+                        <Link href="/privacy" passHref>
+                          <Nav.Item style={{ cursor: "pointer" }}>
+                            Privacy Policy
+                          </Nav.Item>
+                        </Link>
+                        <Link href="#" passHref>
+                          <Nav.Item style={{ cursor: "pointer" }}>
+                            Terms and Conditions (noPage)
+                          </Nav.Item>
+                        </Link>
                       </div>
                     </Accordion.Body>
                   </Accordion.Item>
