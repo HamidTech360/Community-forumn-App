@@ -34,9 +34,9 @@ export default usePaginationBlogAll;
 export const usePaginationBlogHousing = (url: string, pageIndex: number) => {
   // const pageSize = 6;
   const getKey = () => {
-    // return `${config.serverUrl}${url}?perPage=${pageSize}&page=${pageIndex}`; // SWR key
+    return `${config.serverUrl}${url}&perPage=${pageSize}&page=${pageIndex}`; // SWR key
     // return `${config.serverUrl}${url}&perPage=${pageSize}&page=${pageIndex}`; // SWR key
-    return `${config.serverUrl}${url}`; // SWR key
+    // return `${config.serverUrl}${url}`; // SWR key
   };
   const fetcher = async function (url) {
     const response = await axios.get(`${url}`);

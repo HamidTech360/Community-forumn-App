@@ -7,49 +7,41 @@ import ChatFooterBtn from "./ChatFooterBtn";
 import FeedFooterBtn from "./FeedFooterBtn";
 import GroupsFooterBtn from "./GroupsFooterBtn";
 
-// function FooterButtons({ editorID }:any) {
-//   const router = useRouter();
-
-//   return (
-//     <>
-//       {router.asPath === "/explore" ? (
-//         <BlogPostFooterBtn   editorID={editorID} />
-//       ) : router.asPath === "/gist" ? (
-//         <GistFooterBtn editorID={editorID} />
-//       ) : router.asPath === "/chat" ? (
-//         <ChatFooterBtn editorID={editorID} />
-//       ) : router.asPath === "/feed" ? (
-//         <FeedFooterBtn editorID={editorID} />
-//       ) : (
-//         <BlogPostFooterBtn editorID={editorID} />
-//       )}
-//     </>
-//   );
-// }
-
 function FooterButtons({
   editorID,
   pageAt,
+  editorContentValue,
 }: {
   editorID: any;
   pageAt: string;
 }) {
-  // console.log("pageAt:", pageAt);
-
   return (
     <>
       {pageAt === "/explore" ? (
-        <BlogPostFooterBtn editorID={editorID} />
+        <BlogPostFooterBtn
+          editorID={editorID}
+          editorContentValue={editorContentValue}
+        />
       ) : pageAt === "/gist" ? (
-        <GistFooterBtn editorID={editorID} />
-      ) : pageAt === "/chat" ? (
-        null
-      ) : pageAt === "/feed" ? (
-        <FeedFooterBtn editorID={editorID} />
+        <GistFooterBtn
+          editorID={editorID}
+          editorContentValue={editorContentValue}
+        />
+      ) : pageAt === "/chat" ? null : pageAt === "/feed" ? (
+        <FeedFooterBtn
+          editorID={editorID}
+          editorContentValue={editorContentValue}
+        />
       ) : pageAt === "/groups" ? (
-        <GroupsFooterBtn editorID={editorID} />
+        <GroupsFooterBtn
+          editorID={editorID}
+          editorContentValue={editorContentValue}
+        />
       ) : (
-        <BlogPostFooterBtn editorID={editorID} />
+        <BlogPostFooterBtn
+          editorID={editorID}
+          editorContentValue={editorContentValue}
+        />
       )}
     </>
   );

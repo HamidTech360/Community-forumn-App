@@ -2,7 +2,7 @@
 import MessageButton from "@/components/Atoms/messageButton";
 import Head from "next/head";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import config from "../../config";
 import {
   Container,
@@ -38,22 +38,24 @@ import Follow from "@/components/Organisms/App/Follow";
 import { useDispatch, useSelector } from "@/redux/store";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 import { getNotification } from "@/reduxFeatures/api/notifications";
+import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 // import Editor from "@/components/Organisms/SlateEditor/Editor";
 import { ModalRow, useModalWithData } from "@/hooks/useModalWithData";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useRouter } from "next/router";
 // import { FaTimes } from "react-icons/fa";
 
 // import { FacebookShareButton, TwitterShareButton } from "react-share";
 // import { FacebookIcon, TwitterIcon } from "react-share";
 
 const Feed = () => {
+  const router = useRouter();
   // const data = useSelector(selectUser);
   const dispatch = useDispatch();
   const stateUser = useSelector(selectUser);
   const newFeed = useSelector(selectNewFeed);
   const [posts, setPosts] = useState([]);
   const { modalOpen, toggle, selected, setSelected } = useModalWithData();
-
 
   const {
     paginatedData,
@@ -78,8 +80,6 @@ const Feed = () => {
       dispatch(setFollowing(currentlyFollowing));
     }
   }, [stateUser]);
-
-
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -110,24 +110,31 @@ const Feed = () => {
     }
   }, [paginatedData]);
 
-  const handleDeletePost = async (item)=>{
-      const newPosts = posts.filter(el=>el._id!==item._id)
-      console.log(posts,newPosts);
-      
-      setPosts(posts.filter(el=>el._id!==item._id))
-    
-    try{
-      const {data} = await axios.delete(`${config.serverUrl}/api/feed?id=${item._id}`, {headers:{
-        authorization:`Bearer ${localStorage.getItem('accessToken')}`
-      }})
-      console.log(data, item._id)
-      
-      
-    }catch(error){
-      console.log(error.response?.data);
-      
+  const handleDeletePost = async (item) => {
+    // const newPosts = posts.filter((el) => el._id !== item._id);
+    // console.log(posts, newPosts);
+    setPosts(posts.filter((el) => el._id !== item._id));
+
+    try {
+      const { data } = await axios.delete(
+        `${config.serverUrl}/api/feed?id=${item._id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      // console.log(data, item._id);
+    } catch (error) {
+      // console.log(error.response?.data);
     }
-  }
+  };
+
+  const handleEditPost = async (item) => {
+    console.log("item:", item);
+    dispatch(setSlatePostToEdit(item));
+    document.getElementById("createFeedPost").click();
+  };
 
   return (
     <AuthContent>
@@ -187,6 +194,7 @@ const Feed = () => {
                   key={`activity-post-${index}-${post?.id}`}
                   trimmed
                   handleDeletePost={handleDeletePost}
+                  handleEditPost={handleEditPost}
                 />
               ))}
               {isValidating && (

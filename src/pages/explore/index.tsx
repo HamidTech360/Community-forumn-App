@@ -82,8 +82,8 @@ const Explore = ({}) => {
     mutateBlogHousing,
     isLoadingBlogHousing,
     errorBlogHousing,
-  } = usePaginationBlogHousing("/api/posts?category=study_abroad", pageIndex);
-  // } = usePaginationBlogHousing("/api/posts?category=work_abroad", pageIndex);
+    // } = usePaginationBlogHousing("/api/posts?category=study_abroad", pageIndex);
+  } = usePaginationBlogHousing("/api/posts?category=work_abroad", pageIndex);
   // } = usePaginationBlogHousing("/api/posts?category=live_abroad", pageIndex);
   // } = usePaginationBlogHousing("/api/posts?category=pg_studies", pageIndex);
   // } = usePaginationBlogHousing("/api/posts?category=housing", pageIndex);
@@ -157,19 +157,19 @@ const Explore = ({}) => {
   }, [paginatedBlogAll]);
 
   useEffect(() => {
-    console.log("paginatedBlogAll:", paginatedBlogAll);
+    // console.log("paginatedBlogAll:", paginatedBlogAll);
     // console.log("paginatedStudyAbroadData:", paginatedStudyAbroadData);
     console.log("paginatedBlogHousing:", paginatedBlogHousing);
-  }, []);
+  }, [paginatedBlogAll, paginatedBlogHousing]);
 
   useEffect(() => {
     (async () => {
       try {
         const { data } = await axios.get(`${config.serverUrl}/api/category`);
         setCategories(data.allCategories);
-        console.log("all categories data", data.allCategories);
+        // console.log("all categories data", data.allCategories);
       } catch (error) {
-        console.log(error.response?.data);
+        // console.log(error.response?.data);
       }
     })();
   }, []);
@@ -179,14 +179,14 @@ const Explore = ({}) => {
   };
 
   const filterPost = (item) => {
-    console.log("key is", item);
+    // console.log("key is", item);
     setKey(item);
     if (item === "all") {
       return;
     }
 
     const filtered = showPost?.posts.filter((post) => post.category === item);
-    console.log("filtered post:", filtered);
+    // console.log("filtered post:", filtered);
 
     // const filtered = showPost.filter((post) => post.category === item);
     // console.log("filtered post:", filtered);
@@ -486,8 +486,3 @@ const Explore = ({}) => {
 };
 
 export default Explore;
-
-const activatedStyle = {
-  backgroundColor: "blue",
-  color: "white",
-};

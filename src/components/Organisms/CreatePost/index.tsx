@@ -11,35 +11,21 @@ import styles2 from "@/styles/feed.module.scss";
 // import formStyles from "../../../styles/templates/new-group/formField.module.css";
 import Editor from "@/components/Organisms/SlateEditor/Editor";
 
+import { selectSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
+
 import {
   selectCreatePostModal,
   setShowCreatePostModal,
 } from "@/reduxFeatures/app/createPost";
 import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
 
-// const CreatePost = ({ DisplayModal }) => {
 const CreatePost = ({ pageAt }) => {
-  const router = useRouter();
-  // const { user } = useUser();
-  // const { data } = useSelector((s) => s.user);
   const data = useSelector(selectUser);
   const showModal = useSelector(selectCreatePostModal);
   const dispatch = useDispatch();
-  // const newCreatePost = useSelector(selectNewCreatePost);
   const newCreatePost = useSelector(selectNewGroupFeed);
-  // const [showModal, setShowModal] = useState(false);
-  // const handleChange = (e) => {
-  //   dispatch(setPostTitle(e.currentTarget.value));
-  // };
 
-  // const handleModal = () => {
-  //   // console.log(router.pathname);
-  //   if (router.pathname === "/feed") return;
-  //   setShowModal(true);
-  //   dispatch(setShowPostModal(true));
-  // };
   return (
-    // <Card className="p-4 shadow" style={{ border: "none" }}>
     <Card className="p-4">
       <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
         <>
@@ -57,13 +43,12 @@ const CreatePost = ({ pageAt }) => {
             style={{ width: "100%", border: "1px solid rgba(0, 0, 0, 0.125)" }}
           >
             <Form.Control
-              // className={`radius-20 shadow-sm ${styles.form}`}
+              id="createFeedPost"
               className={`radius-20 ${styles.form}`}
               style={{ width: "100%" }}
               placeholder={`Hey ${
                 data?.firstName && data.firstName.split(" ")[0]
               }! wanna say something?`}
-              // onClick={() => DisplayModal()}
               onClick={() => dispatch(setShowCreatePostModal(true))}
               onChange={() => dispatch(setShowCreatePostModal(true))}
             />
@@ -72,14 +57,12 @@ const CreatePost = ({ pageAt }) => {
       </div>
 
       <Modal
-        // show={showModal && showPostModal}
         show={showModal}
         className={styles2.GistModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
         size="lg"
       >
-        {/* <span className={styles.closeBtn}> */}
         <span className={styles2.closeBtn}>
           {" "}
           <FaTimes
@@ -89,31 +72,6 @@ const CreatePost = ({ pageAt }) => {
             onClick={() => dispatch(setShowCreatePostModal(false))}
           />{" "}
         </span>
-        {/* <div className="col-12 px-5">
-          <Form
-            className={styles.newGistModal}
-          >
-            <Form.Group className={formStyles.formGroup}>
-              <Form.Label className={formStyles.formLabel}>
-                {" "}
-                Post Title
-              </Form.Label>
-              <Form.Control
-                id="createPostID"
-                size="lg"
-                name="postTitle"
-                type="text"
-                required
-                onChange={(e) => handleChange(e)}
-              />
-            </Form.Group>
-          </Form>
-
-          <div style={{ marginTop: "40px" }}>
-            <Editor slim={false} pageAt={pageAt} />
-          </div>
-          <div className="mb-4"></div>
-        </div> */}
         <div className="col-12 px-4 mt-2 mb-4">
           <Editor slim={false} pageAt={pageAt} />
         </div>

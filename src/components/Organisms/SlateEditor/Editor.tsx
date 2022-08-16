@@ -1,6 +1,6 @@
 //@ts-nocheck
 import React, { useCallback, useMemo, useState } from "react";
-import { BaseEditor, createEditor } from "slate";
+import { BaseEditor, createEditor, Descendant } from "slate";
 import { HistoryEditor, withHistory } from "slate-history";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
 import Toolbar from "./Toolbar/Toolbar";
@@ -13,6 +13,10 @@ import styles from "../../../styles/SlateEditor/Editor_Slate.module.scss";
 import { CtrlShiftCombo } from "./utils/CtrlShiftCombo";
 import FooterButtons from "./footerButtons/FooterButtons";
 import { useRouter } from "next/router";
+import deserializeFromHtml from "./utils/serializer";
+
+import { selectSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
+import { useSelector } from "@/redux/store";
 
 // Best Practice Is To Declear & Export Custom Types
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor;
@@ -51,34 +55,10 @@ const Leaf = ({ attributes, children, leaf }) => {
   return <span {...attributes}>{children}</span>;
 };
 
-// const Editor = ({ slim }: { slim: boolean }) => {
 const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
-  // console.log("Editor pageAt:", pageAt);
+  const editSlatePost = useSelector(selectSlatePostToEdit);
   const router = useRouter();
   const editorID = `${router.asPath}-slateRefId`;
-  // console.log((editorID));
-
-  const editor = useMemo(
-    () => withHistory(withEmbeds(withLinks(withReact(createEditor())))),
-    []
-  );
-  // Below ifelse would prevent "cannot find a descendant path [0] error"
-  if (editor.children.length === 0) {
-    editor.children.push({
-      type: "paragraph",
-      children: [{ text: "" }],
-    });
-  }
-  const [value, setValue] = useState([
-    {
-      type: "paragraph",
-      children: [{ text: "" }],
-    },
-  ]);
-
-  const handleEditorChange = (newValue) => {
-    setValue(newValue);
-  };
 
   const renderElement = useCallback((props) => <Element {...props} />, []);
 
@@ -86,13 +66,43 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
     return <Leaf {...props} />;
   }, []);
 
+  // Create Editor Instance
+  const editor = useMemo(
+    () => withHistory(withEmbeds(withLinks(withReact(createEditor())))),
+    []
+  );
+
+  // Below ifelse would prevent "cannot find a descendant path [0] error"
+  if (editor.children.length === 0) {
+    editor.children.push({
+      type: "paragraph",
+      children: [{ text: "" }],
+    });
+  }
+  // console.log(
+  //   "deserializeFromHtml(editSlatePost.post):",
+  //   deserializeFromHtml(editSlatePost?.post)
+  // );
+
+  const initialState: Descendant[] = editSlatePost?.post
+    ? deserializeFromHtml(editSlatePost?.post)
+    : [
+        {
+          type: "paragraph",
+          children: [{ text: "" }],
+        },
+      ];
+
+  const [value, setValue] = useState(initialState);
+
+  const handleEditorChange = (newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <div className={slim ? "container-fluid px-0 mx-0" : "container"}>
       <div className={`row justify-content-center ${slim && "px-0 mx-0"}`}>
         <div
-          // className={`${
-          //   slim ? "col-10 col-md-11 px-0 me-0" : "col-12"
-          // } shadow ${styles.main}`}
           className={`${slim ? "col-10 col-md-11 px-0 me-0" : "col-12"} ${
             styles.main
           }`}
@@ -127,6 +137,8 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
                     placeholder={slim ? "" : "Start writing your thoughts"}
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
+                    spellCheck
+                    autoFocus
                     onKeyDown={(event) => CtrlShiftCombo(event, editor)}
                   />
                 </div>
@@ -138,7 +150,11 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
                     >
                       <Toolbar position="bottom" />
                     </div>
-                    <FooterButtons editorID={editorID} pageAt={pageAt} />
+                    <FooterButtons
+                      editorID={editorID}
+                      pageAt={pageAt}
+                      editorContentValue={value}
+                    />
                   </div>
                 )}
               </div>
@@ -153,7 +169,11 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
               marginBottom: "1rem",
             }}
           >
-            <FooterButtons editorID={editorID} pageAt={pageAt} />
+            <FooterButtons
+              editorID={editorID}
+              pageAt={pageAt}
+              editorContentValue={value}
+            />
           </div>
         )}
       </div>

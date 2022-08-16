@@ -2,6 +2,7 @@
 import Link from "next/link";
 import strip from "striptags";
 import React, { useEffect, useState } from "react";
+import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 import {
   Button,
   Card,
@@ -13,7 +14,7 @@ import {
   Row,
 } from "react-bootstrap";
 import { HiDotsVertical } from "react-icons/hi";
-import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
+import { RiClipboardFill, RiDeleteBin5Line, RiFlagFill } from "react-icons/ri";
 import {
   BsFolderFill,
   BsXCircleFill,
@@ -55,6 +56,8 @@ import {
   selectLikeChangedModal,
   setUnLikeChangedModal,
   selectUnLikeChangedModal,
+  selectModalCardPostEdited,
+  setModalCardPostEdited,
   // setBookMarkChangedModal,
   // selectBookMarkChangedModal,
 } from "@/reduxFeatures/app/postModalCardSlice";
@@ -66,6 +69,7 @@ import makeSecuredRequest, {
 import { ModalRowShare, useModalWithShare } from "@/hooks/useModalWithData";
 import { MdOutlineCancel } from "react-icons/md";
 import { BiArrowBack } from "react-icons/bi";
+import { FiEdit } from "react-icons/fi";
 
 const ModalCard = ({
   post: postComingIn,
@@ -81,6 +85,7 @@ const ModalCard = ({
   // const bookmarkChanged = useSelector(selectBookMarkChanged);
   const likeChangedModal = useSelector(selectLikeChangedModal);
   const unLikeChangedModal = useSelector(selectUnLikeChangedModal);
+  const modalCardPostEdited = useSelector(selectModalCardPostEdited);
   // const bookmarkChangedModal = useSelector(selectBookMarkChangedModal);
   const router = useRouter();
 
@@ -100,14 +105,16 @@ const ModalCard = ({
   const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
     useModalWithShare();
 
-  // useEffect(() => {
-  //   // first;
+  useEffect(() => {
+    // Update modalPost when post has been edited
+    if (modalCardPostEdited) {
+      setPostComingIn({ ...post, post: modalCardPostEdited });
+    }
 
-  //   return () => {
-  //     dispatch(setLikeChanged([]));
-  //     dispatch(setBookMarkChanged([]));
-  //   };
-  // }, []);
+    return () => {
+      dispatch(setModalCardPostEdited(null));
+    };
+  }, [modalCardPostEdited]);
 
   useEffect(() => {
     if (post?.likes?.includes(user._id)) {
@@ -480,6 +487,31 @@ const ModalCard = ({
     }
   };
 
+  const handleDeletePost = async (post) => {
+    // const newPosts = posts.filter((el) => el._id !== post._id);
+    // console.log(posts, newPosts);
+    // setPosts(posts.filter((el) => el._id !== post._id));
+    try {
+      const { data } = await axios.delete(
+        `${config.serverUrl}/api/feed?id=${post._id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      console.log(data, post._id);
+    } catch (error) {
+      // console.log(error.response?.data);
+    }
+  };
+
+  const handleEditPost = async (post) => {
+    console.log("post:", post);
+    dispatch(setSlatePostToEdit(post));
+    document.getElementById("createFeedPost").click();
+  };
+
   return (
     <>
       <Row>
@@ -626,6 +658,36 @@ const ModalCard = ({
                         </NavDropdown.Item>
                       </>
                     ) : null}
+                    {user._id == post.author._id && (
+                      <>
+                        <NavDropdown.Item
+                          className={styles.item}
+                          // style={{ marginTop: "8px" }}
+                          style={{
+                            borderBottom: "1px solid gray",
+                          }}
+                          onClick={() => handleEditPost(post)}
+                        >
+                          <FiEdit /> Edit Post
+                        </NavDropdown.Item>
+
+                        <NavDropdown.Item
+                          // style={{ marginTop: "8px" }}
+                          style={{ borderBottom: "1px solid gray" }}
+                          onClick={() => handleDeletePost(post)}
+                        >
+                          <span
+                            style={{
+                              color: "red",
+                              // fontWeight: "500",
+                              // marginLeft: "10px",
+                            }}
+                          >
+                            <RiDeleteBin5Line /> Delete Post
+                          </span>
+                        </NavDropdown.Item>
+                      </>
+                    )}
                   </NavDropdown>
                 </div>
               </div>

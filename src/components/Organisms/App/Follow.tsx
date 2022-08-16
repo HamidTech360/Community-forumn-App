@@ -38,7 +38,7 @@ const Follow = () => {
             },
           }
         );
-        console.log("response.+++++:", response.data);
+        console.log("All connections+++++:", response.data);
       } catch (error) {
         console.log("ERROR:", error);
       }

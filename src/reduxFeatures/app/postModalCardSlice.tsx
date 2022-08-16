@@ -8,6 +8,7 @@ export type PostModalCardState = {
   // bookmarkChanged: any;
   likeChangedModal: string;
   unLikeChangedModal: string;
+  modalCardPostEdited: any;
   // bookmarkChangedModal: any;
 };
 
@@ -16,6 +17,7 @@ const initialState: PostModalCardState = {
   // bookmarkChanged: [],
   likeChangedModal: "",
   unLikeChangedModal: "",
+  modalCardPostEdited: null,
   // bookmarkChangedModal: [],
 };
 
@@ -35,6 +37,9 @@ export const postModalCardSlice = createSlice({
     setUnLikeChangedModal: (state, action: PayloadAction<string>) => {
       state.unLikeChangedModal = action.payload;
     },
+    setModalCardPostEdited: (state, action: PayloadAction<any>) => {
+      state.modalCardPostEdited = action.payload;
+    },
     // setBookMarkChangedModal: (state, action: PayloadAction<any>) => {
     //   state.bookmarkChangedModal = action.payload;
     // },
@@ -46,6 +51,7 @@ export const {
   // setBookMarkChanged,
   setLikeChangedModal,
   setUnLikeChangedModal,
+  setModalCardPostEdited,
   // setBookMarkChangedModal,
 } = postModalCardSlice.actions;
 
@@ -58,6 +64,8 @@ export const selectLikeChangedModal = (state: RootState) =>
   state.postModalCard.likeChangedModal;
 export const selectUnLikeChangedModal = (state: RootState) =>
   state.postModalCard.unLikeChangedModal;
+export const selectModalCardPostEdited = (state: RootState) =>
+  state.postModalCard.modalCardPostEdited;
 // export const selectBookMarkChangedModal = (state: RootState) =>
 //   state.postModalCard.bookmarkChangedModal;
 

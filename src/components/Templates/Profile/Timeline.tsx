@@ -67,23 +67,49 @@ const Timeline = ({ Posts }) => {
     };
   }, [posts, scrollInitialized]);
 
-  const handleDeletePost = async (item)=>{
-    const newPosts = Posts.filter(el=>el._id!==item._id)
-    console.log(posts,newPosts);
-    Posts=[...newPosts]
-   // setTimeLinePosts(newPosts)
-  try{
-    const {data} = await axios.delete(`${config.serverUrl}/api/feed?id=${item._id}`, {headers:{
-      authorization:`Bearer ${localStorage.getItem('accessToken')}`
-    }})
-    console.log(data, item._id)
-    
-    
-  }catch(error){
-    console.log(error.response?.data);
-    
-  }
-}
+  const handleDeletePost = async (item) => {
+    const newPosts = Posts.filter((el) => el._id !== item._id);
+    console.log(posts, newPosts);
+    Posts = [...newPosts];
+    // setTimeLinePosts(newPosts)
+    try {
+      const { data } = await axios.delete(
+        `${config.serverUrl}/api/feed?id=${item._id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      console.log(data, item._id);
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
+
+  const handleEditPost = async (item) => {
+    // setEditPosts(item);
+    document.getElementById("createFeedPost").click();
+    // document.getElementById(`${router.asPath}-slateRefId`).textContent =
+    //   item.post;
+    console.log("item:", item);
+
+    // try {
+    //   const { data } = await axios.put(
+    //     // `${config.serverUrl}/api/feed?id=${item._id}`,
+    //     `${config.serverUrl}/api/feed/${item._id}`,
+    //     { post: "Hello World... 🌍 2" },
+    //     {
+    //       headers: {
+    //         authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    //       },
+    //     }
+    //   );
+    //   console.log("Edited data", data);
+    // } catch (error) {
+    //   console.error("Edit Error:", error.response?.data);
+    // }
+  };
 
   return (
     <div className={styles.profileWrapper}>
@@ -104,6 +130,7 @@ const Timeline = ({ Posts }) => {
           key={`activity-post-${index}-${post.id}`}
           trimmed
           handleDeletePost={handleDeletePost}
+          handleEditPost={handleEditPost}
         />
       ))}
       {isFetchingMore && (

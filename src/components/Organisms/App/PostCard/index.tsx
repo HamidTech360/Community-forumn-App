@@ -27,7 +27,7 @@ import truncate from "trunc-html";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
+import { RiClipboardFill, RiDeleteBin5Line, RiFlagFill } from "react-icons/ri";
 import {
   BsFolderFill,
   BsXCircleFill,
@@ -70,21 +70,23 @@ import {
 import { selectCreatePostModal } from "@/reduxFeatures/app/createPost";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 import { useRouter } from "next/router";
-import Comment from "@/components/Organisms/App/Comment";
+// import Comment from "@/components/Organisms/App/Comment";
 import makeSecuredRequest, {
   deleteSecuredRequest,
 } from "@/utils/makeSecuredRequest";
+import { FiEdit } from "react-icons/fi";
 // import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
   // post: postComingIn,
   post,
   trimmed,
-  handleDeletePost
-}
-) => {
+  handleDeletePost,
+  handleEditPost,
+}) => {
   // console.log("PastCard Loaded+++++");
   // console.log("postComingIn:", postComingIn);
+  // console.log("post:", post);
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   // const posts = useSelector(selectPost);
@@ -109,7 +111,7 @@ const PostCard = ({
   // - comment section
   const [modalPost, setModalPost] = useState<Record<string, any>>({});
   const [commentPost, setCommentPost] = useState("");
-  const [showComment, setShowComment] = useState(false);
+  // const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
   // const [noOfLikes, setNoOfLikes] = useState(0)
 
@@ -207,24 +209,25 @@ const PostCard = ({
     {
       name: "Comment",
       reaction: true,
-      icon: <FaRegCommentDots size={24}
-        onClick={async () => {
-          // console.log("postReFetched?._id:", postReFetched?._id);
-          // console.log("post?._id:", post?._id);
-          if (postReFetched) {
-            if (postReFetched?._id === post?._id) {
-              setSelected(postReFetched);
-              toggle();
+      icon: (
+        <FaRegCommentDots
+          size={24}
+          onClick={async () => {
+            if (postReFetched) {
+              if (postReFetched?._id === post?._id) {
+                setSelected(postReFetched);
+                toggle();
+              } else {
+                setSelected(post);
+                toggle();
+              }
             } else {
               setSelected(post);
               toggle();
             }
-          } else {
-            setSelected(post);
-            toggle();
-          }
-        }}
-       />,
+          }}
+        />
+      ),
     },
     {
       name: "Bookmark",
@@ -241,29 +244,29 @@ const PostCard = ({
     },
   ];
 
-  const postComment = async () => {
-    const body = {
-      content: commentPost,
-    };
+  // const postComment = async () => {
+  //   const body = {
+  //     content: commentPost,
+  //   };
 
-    setLoading(true);
-    const res = await axios.post(
-      `${config.serverUrl}/api/comments?type=feed&id=${post?._id}`,
-      body,
-      {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      }
-    );
-    // console.log(res);
-    let comments = post?.comments;
-    comments?.unshift(res.data);
-    setModalPost({ ...post, comments });
+  //   setLoading(true);
+  //   const res = await axios.post(
+  //     `${config.serverUrl}/api/comments?type=feed&id=${post?._id}`,
+  //     body,
+  //     {
+  //       headers: {
+  //         authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  //       },
+  //     }
+  //   );
+  //   // console.log(res);
+  //   let comments = post?.comments;
+  //   comments?.unshift(res.data);
+  //   setModalPost({ ...post, comments });
 
-    setLoading(false);
-    setShowComment(false);
-  };
+  //   setLoading(false);
+  //   // setShowComment(false);
+  // };
 
   const handleLike = async () => {
     await likeIt(true);
@@ -515,8 +518,6 @@ const PostCard = ({
     }
   };
 
-  
-
   return (
     <>
       <Card
@@ -597,13 +598,11 @@ const PostCard = ({
                   </Button>
                 }
               >
-                
                 <NavDropdown.Item
                   className={styles.item}
-                  style={{ backgroundColor: "rgb(237, 236, 236)" }}
+                  // style={{ backgroundColor: "rgb(237, 236, 236)" }}
+                  style={{ borderBlock: "1px solid gray" }}
                   onClick={async () => {
-                    // console.log("postReFetched?._id:", postReFetched?._id);
-                    // console.log("post?._id:", post?._id);
                     if (postReFetched) {
                       if (postReFetched?._id === post?._id) {
                         setSelected(postReFetched);
@@ -618,21 +617,25 @@ const PostCard = ({
                     }
                   }}
                 >
-                  <BsFolderFill className="text-muted" /> Open Post
+                  <BsFolderFill /> Open Post
                 </NavDropdown.Item>
 
                 {user?._id !== post?.author?._id ? (
                   <>
-                    <NavDropdown.Item className={styles.item}>
-                      <RiFlagFill className="text-muted" /> Report post
+                    <NavDropdown.Item
+                      className={styles.item}
+                      style={{ borderBottom: "1px solid gray" }}
+                    >
+                      <RiFlagFill /> Report post
                     </NavDropdown.Item>
                     <NavDropdown.Item
                       className={styles.item}
+                      style={{ borderBottom: "1px solid gray" }}
                       onClick={async () => changeFollowingStatus(post)}
                     >
                       {currentlyFollowing.includes(post?.author?._id) ? (
                         <>
-                          <BsXCircleFill className="text-muted" />{" "}
+                          <BsXCircleFill />{" "}
                           <span id={`followStr-${post?.author?._id}`}>
                             {/* NOTE: Don't change the "Unfollow" Text From PascalCase, else unfollowing wouldn't work */}
                             Unfollow
@@ -640,7 +643,7 @@ const PostCard = ({
                         </>
                       ) : (
                         <>
-                          <RiUserFollowFill className="text-muted" />{" "}
+                          <RiUserFollowFill />{" "}
                           <span id={`followStr-${post?.author?._id}`}>
                             {/* NOTE: Don't change the "Follow" Text From PascalCase, else following wouldn't work */}
                             Follow
@@ -650,14 +653,38 @@ const PostCard = ({
                       @{post?.author?.firstName?.split(" ")[0]}
                       {post?.author?.lastName?.substring(0, 1)}
                     </NavDropdown.Item>
-                    
                   </>
                 ) : null}
-                {user._id==post.author._id?
-                    <NavDropdown.Item style={{marginTop:'8px'}} onClick={()=>handleDeletePost(post)}>
-                        <span style={{color:'red', fontWeight:'500', marginLeft:'10px'}}>Delete Post</span>
-                    </NavDropdown.Item>:""
-                    }
+                {user._id == post.author._id && (
+                  <>
+                    <NavDropdown.Item
+                      className={styles.item}
+                      // style={{ marginTop: "8px" }}
+                      style={{
+                        borderBottom: "1px solid gray",
+                      }}
+                      onClick={() => handleEditPost(post)}
+                    >
+                      <FiEdit /> Edit Post
+                    </NavDropdown.Item>
+
+                    <NavDropdown.Item
+                      // style={{ marginTop: "8px" }}
+                      style={{ borderBottom: "1px solid gray" }}
+                      onClick={() => handleDeletePost(post)}
+                    >
+                      <span
+                        style={{
+                          color: "red",
+                          // fontWeight: "500",
+                          // marginLeft: "10px",
+                        }}
+                      >
+                        <RiDeleteBin5Line /> Delete Post
+                      </span>
+                    </NavDropdown.Item>
+                  </>
+                )}
               </NavDropdown>
             </div>
           </div>
@@ -668,12 +695,6 @@ const PostCard = ({
             cursor: "pointer",
           }}
           onClick={async () => {
-            if (showComment) {
-              setShowComment(!showComment);
-            }
-
-            // console.log("postReFetched?._id:", postReFetched?._id);
-            // console.log("post?._id:", post?._id);
             if (postReFetched) {
               if (postReFetched?._id === post?._id) {
                 setSelected(postReFetched);
@@ -689,13 +710,10 @@ const PostCard = ({
           }}
         >
           <div>
-    
             {post && Object.keys(post).length !== 0 && (
               <div className="d-flex flex-column">
                 <div
                   className="post-content"
-                
-
                   // No Need for truncate here as it hides some tags like Bold & Underline
                   dangerouslySetInnerHTML={{
                     __html: trimmed
@@ -704,12 +722,20 @@ const PostCard = ({
                   }}
                 />
                 {router.asPath === "/feed" ||
-                  (router?.pathname.includes("profile") && (
-                    <small style={{ color: "gray", fontSize: "13px" }}>
-                      {" "}
-                      See more
-                    </small>
-                  ))}
+                router?.pathname.includes("profile") ? (
+                  <small
+                    style={{
+                      color: "gray",
+                      fontSize: "11px",
+                      position: "relative",
+                      left: "40%",
+                      // bottom: "0",
+                    }}
+                  >
+                    {" "}
+                    See more...
+                  </small>
+                ) : null}
               </div>
             )}
           </div>
@@ -774,7 +800,6 @@ const PostCard = ({
                       style={{ marginLeft: "7px" }}
                       className="mx-2 text-secondary"
                     >
-                 
                       {postReFetched
                         ? postReFetched?._id === post?._id
                           ? postReFetched?.likes?.length || 0
@@ -784,27 +809,65 @@ const PostCard = ({
                   )}
 
                   {item.name === "Comment" && (
-                    <span
-                      style={{ marginLeft: "7px" }}
-                      className="mx-2 text-secondary"
-                    >
-                      {post?.comments?.length || 0}
-                    </span>
+                    <>
+                      <span
+                        style={{ marginLeft: "7px" }}
+                        className="mx-2 text-secondary"
+                        onClick={async () => {
+                          if (postReFetched) {
+                            if (postReFetched?._id === post?._id) {
+                              setSelected(postReFetched);
+                              toggle();
+                            } else {
+                              setSelected(post);
+                              toggle();
+                            }
+                          } else {
+                            setSelected(post);
+                            toggle();
+                          }
+                        }}
+                      >
+                        {post?.comments?.length || 0}
+                      </span>
+                      <span
+                        className="d-none d-xl-block"
+                        style={{ marginLeft: "7px" }}
+                        onClick={async () => {
+                          if (postReFetched) {
+                            if (postReFetched?._id === post?._id) {
+                              setSelected(postReFetched);
+                              toggle();
+                            } else {
+                              setSelected(post);
+                              toggle();
+                            }
+                          } else {
+                            setSelected(post);
+                            toggle();
+                          }
+                        }}
+                      >
+                        {item.name}
+                      </span>
+                    </>
                   )}
 
-                  <span
-                    className="d-none d-xl-block"
-                    style={{ marginLeft: "7px" }}
-                  >
-                    {item.name}
-                  </span>
+                  {item.name !== "Comment" && (
+                    <span
+                      className="d-none d-xl-block"
+                      style={{ marginLeft: "7px" }}
+                    >
+                      {item.name}
+                    </span>
+                  )}
                 </Button>
               </div>
             ))}
           </div>
         </Card.Footer>
 
-        {showComment && (
+        {/* {showComment && (
           <section>
             <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
             <div className="row">
@@ -817,7 +880,6 @@ const PostCard = ({
                 />
               </div>
               <div className="col-7 col-md-10">
-                {/* <div className="form-floating shadow"> */}
                 <div
                   className="form-floating"
                   style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
@@ -848,7 +910,7 @@ const PostCard = ({
               </div>
             </div>
           </section>
-        )}
+        )} */}
       </Card>
       <Modal
         show={modalOpen}
