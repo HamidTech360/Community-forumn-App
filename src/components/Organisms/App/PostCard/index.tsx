@@ -36,7 +36,7 @@ import {
 } from "react-icons/bs";
 import { RiUserFollowFill } from "react-icons/ri";
 import { AiOutlineLike, AiFillLike, AiOutlineShareAlt } from "react-icons/ai";
-import { FaRegCommentDots } from "react-icons/fa";
+import { FaRegCommentDots, FaThumbsUp } from "react-icons/fa";
 import Age from "../../../Atoms/Age";
 import DOMPurify from "dompurify";
 import styles from "@/styles/profile.module.scss";
@@ -526,13 +526,9 @@ const PostCard = ({
         style={{
           border: "1px solid rgba(0, 0, 0, 0.125)",
           width: "100%",
-          // padding: "-3rem",
         }}
       >
-        <Card.Title
-          // className={`position-relative d-flex justify-content-start gap-2 pb-2 border-bottom ${styles.title}`}
-          className={`border-bottom ${styles.title}`}
-        >
+        <Card.Title className={`border-bottom ${styles.title}`}>
           <div className="row">
             <div className="col-1">
               <Image
@@ -546,13 +542,8 @@ const PostCard = ({
               />
             </div>
 
-            {/* <div className="col-6 col-sm-9 col-xl-10 ms-4 ms-lg-1 ms-xl-0"> */}
             <div className="col-6 col-sm-8 ms-4 me-xl-5">
-              <div
-                className={styles.div}
-                // onClick={redirectPage}
-                // style={{ cursor: "pointer" }}
-              >
+              <div className={styles.div}>
                 <span
                   style={{
                     fontWeight: 500,
@@ -582,18 +573,9 @@ const PostCard = ({
 
             <div className="col-1" style={{ marginTop: "-.8rem" }}>
               <NavDropdown
-                // className={`position-absolute end-0 ${styles.dropdown}`}
-                // className={`${styles.dropdown}`}
                 drop="down"
                 title={
-                  <Button
-                    // variant="light"
-                    variant="link"
-                    className="text-dark"
-                    size="lg"
-                    // className="dot-btn"
-                    // style={{ background: "none" }}
-                  >
+                  <Button variant="link" className="text-dark" size="lg">
                     <HiDotsVertical size={25} />
                   </Button>
                 }
@@ -637,7 +619,6 @@ const PostCard = ({
                         <>
                           <BsXCircleFill />{" "}
                           <span id={`followStr-${post?.author?._id}`}>
-                            {/* NOTE: Don't change the "Unfollow" Text From PascalCase, else unfollowing wouldn't work */}
                             Unfollow
                           </span>
                         </>
@@ -645,7 +626,6 @@ const PostCard = ({
                         <>
                           <RiUserFollowFill />{" "}
                           <span id={`followStr-${post?.author?._id}`}>
-                            {/* NOTE: Don't change the "Follow" Text From PascalCase, else following wouldn't work */}
                             Follow
                           </span>
                         </>
@@ -750,6 +730,12 @@ const PostCard = ({
             />
           )}
         </Card.Body>
+        {post.likes.length > 0 && (
+          <div className="text-muted d-flex align-items-center">
+            <AiFillLike color="#086a6d" className="mx-2" />
+            <span>{likes(post.likes)}</span>
+          </div>
+        )}
 
         {/* <Card.Footer
           className={`mx-1 d-flex justify-content-between bg-white ${styles.footer}`}

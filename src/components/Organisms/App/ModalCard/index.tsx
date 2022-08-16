@@ -731,6 +731,12 @@ const ModalCard = ({
                   />
                 )}
               </div>
+              {post.likes.length > 0 && (
+                <div className="text-muted d-flex align-items-center">
+                  <AiFillLike color="#086a6d" className="mx-2" />
+                  <span>{likes(post.likes)}</span>
+                </div>
+              )}
             </Card.Body>
 
             {/* <Card.Footer
