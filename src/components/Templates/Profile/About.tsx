@@ -18,10 +18,11 @@ import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import styles from "@/styles/profile.module.scss";
 import "react-toastify/dist/ReactToastify.css";
 
-const About = () => {
+const About = ({User}:any) => {
   const user = useSelector(selectUser);
   const router = useRouter();
-
+  console.log(User);
+  
   const formStyle = {
     marginLeft:'20px',
     marginRight:'20px'
@@ -69,13 +70,13 @@ const About = () => {
   })
 
   const [formValues, setFormValues]= useState({
-    bio:user?.bio,
-    interests:user?.interests,
-    gender:user?.gender,
-    dob:user?.dob,
-    fullAddress:user?.fullAddress,
-    websites:user?.websites,
-    mobileNumber:user.mobileNumber
+    bio:User?.bio,
+    interests:User?.interests,
+    gender:User?.gender,
+    dob:User?.dob,
+    fullAddress:User?.fullAddress,
+    websites:User?.websites,
+    mobileNumber:User.mobileNumber
   })
 
   const handleEdit= (item)=>{
@@ -152,7 +153,7 @@ const About = () => {
           <p className="col-12 text-muted" id="bioText"></p>
           {!editMode.bio ? (
             <p className="text-muted ms-4" style={{ marginTop: "-.8rem" }}>
-              {formValues.bio ||  `I am ${user.firstName} ${user.lastName}...` }
+              {formValues.bio ||  `I am ${User.firstName} ${User.lastName}...` }
            </p>
           ) : (
             <FormControl

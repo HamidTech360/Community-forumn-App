@@ -60,7 +60,7 @@ const Profile = () => {
 
   const Components: IComponents = {
     timeline: <Timeline Posts={data} />,
-    about: <About />,
+    about: <About User={user} />,
     media: <Media />,
     connections: <Friends user={user} />,
     articles: <Articles />,
