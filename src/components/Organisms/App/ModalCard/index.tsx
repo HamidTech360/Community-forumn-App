@@ -696,30 +696,39 @@ const ModalCard = ({
 
             <Card.Body>
               {post && Object.keys(post).length !== 0 && (
-                <div
-                  className="post-content"
-                  // dangerouslySetInnerHTML={{
-                  //   __html: trimmed
-                  //     ? sanitizer(truncate(post?.postBody, 250).html) ||
-                  //       sanitizer(truncate(post?.post, 250).html)
-                  //     : sanitizer(truncate(post?.postBody, 250).html) ||
-                  //       sanitizer(truncate(post?.post, 250).html),
-                  // }}
+                <>
+                  <div
+                    className="post-content"
+                    // dangerouslySetInnerHTML={{
+                    //   __html: trimmed
+                    //     ? sanitizer(truncate(post?.postBody, 250).html) ||
+                    //       sanitizer(truncate(post?.post, 250).html)
+                    //     : sanitizer(truncate(post?.postBody, 250).html) ||
+                    //       sanitizer(truncate(post?.post, 250).html),
+                    // }}
 
-                  // No Need for truncate here as it hides some tags like Bold & Underline
-                  dangerouslySetInnerHTML={{
-                    __html: trimmed
-                      ? sanitizer(post?.postBody) || sanitizer(post?.post)
-                      : sanitizer(post?.postBody) || sanitizer(post?.post),
-                  }}
-                  // dangerouslySetInnerHTML={{
-                  //   __html: trimmed
-                  //     ? post?.postBody?.slice(0, 500) ||
-                  //       post?.post?.slice(0, 500) + "..." ||
-                  //       post?.postBody
-                  //     : post?.postBody || post?.post,
-                  // }}
-                />
+                    // No Need for truncate here as it hides some tags like Bold & Underline
+                    dangerouslySetInnerHTML={{
+                      __html: trimmed
+                        ? sanitizer(post?.postBody) || sanitizer(post?.post)
+                        : sanitizer(post?.postBody) || sanitizer(post?.post),
+                    }}
+                    // dangerouslySetInnerHTML={{
+                    //   __html: trimmed
+                    //     ? post?.postBody?.slice(0, 500) ||
+                    //       post?.post?.slice(0, 500) + "..." ||
+                    //       post?.postBody
+                    //     : post?.postBody || post?.post,
+                    // }}
+                  />
+                  {post.createdAt !== post.updatedAt && (
+                    <span>
+                      <small style={{ color: "gray", fontSize: "12px" }}>
+                        (edited)
+                      </small>
+                    </span>
+                  )}
+                </>
               )}
 
               <div className={styles.trimmed}>

@@ -699,6 +699,13 @@ const PostCard = ({
                       : sanitizer(post?.postBody) || sanitizer(post?.post),
                   }}
                 />
+                {post.createdAt !== post.updatedAt && (
+                  <span>
+                    <small style={{ color: "gray", fontSize: "12px" }}>
+                      (edited)
+                    </small>
+                  </span>
+                )}
                 {router.asPath === "/feed" ||
                 router?.pathname.includes("profile") ? (
                   <small

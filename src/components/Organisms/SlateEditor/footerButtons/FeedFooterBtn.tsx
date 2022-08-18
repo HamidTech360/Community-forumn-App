@@ -142,7 +142,11 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         className="my-1 me-1"
         onClick={createPost}
       >
-        {uploading ? "uploading..." : "Continue"}
+        {uploading
+          ? "uploading..."
+          : !slatePostToEdit
+          ? "Continue"
+          : "Edit Post"}
       </Button>
     </>
   );

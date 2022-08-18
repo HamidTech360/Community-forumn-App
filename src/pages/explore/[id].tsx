@@ -38,7 +38,6 @@ import makeSecuredRequest, {
 
 const BlogPost = () => {
   const user = useSelector(selectUser);
-  const followingUser = useSelector(selectFollowing);
   const [blogPost, setBlogPost] = useState<Record<string, any>>({});
   const [followed, setFollowed] = useState(false);
   const [commentPost, setCommentPost] = useState("");
@@ -69,10 +68,7 @@ const BlogPost = () => {
   }, [user]);
 
   useEffect(() => {
-    // console.log("blogPost?.author?._id:", blogPost?.author?._id);
-    // console.log("user:", user);
-
-    if (followingUser.includes(blogPost?.author?._id)) {
+    if (currentlyFollowing.includes(blogPost?.author?._id)) {
       setFollowed(true);
     } else {
       setFollowed(false);
@@ -179,6 +175,8 @@ const BlogPost = () => {
   };
 
   const handleFollow = async (id) => {
+    // Preset following
+    setFollowed(true);
     try {
       await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
@@ -196,11 +194,15 @@ const BlogPost = () => {
         }
       })();
     } catch (error) {
+      // Revert on axios  failure
+      setFollowed(false);
       // console.error("follow Error:", error);
     }
   };
 
   const handleUnFollow = async (id) => {
+    // Preset following
+    setFollowed(false);
     try {
       await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
@@ -218,6 +220,8 @@ const BlogPost = () => {
         }
       })();
     } catch (error) {
+      // Revert on axios  failure
+      setFollowed(true);
       // console.error("follow Error:", error);
     }
   };
@@ -241,14 +245,13 @@ const BlogPost = () => {
             <div className="card mb-3 border-0 mt-md-2 p-md-4">
               <div className="card-Header text-center text-md-start">
                 <div className="row">
-                  <div className="col-9">
+                  <div className="col-7 col-lg-10">
                     {/* <h4 className="card-title text-primary"> */}
                     <h4 className="text-primary">{blogPost?.postTitle}</h4>
                   </div>
-                  <div className="col-3">
+                  <div className="col-1">
                     <NavDropdown
                       drop="start"
-                      // menuVariant="dark"
                       title={
                         <Button variant="link" className="text-dark" size="sm">
                           <HiDotsVertical size={22} />
@@ -299,9 +302,10 @@ const BlogPost = () => {
                               changeFollowingStatus(blogPost)
                             }
                           >
-                            {currentlyFollowing.includes(
+                            {/* {currentlyFollowing.includes(
                               blogPost?.author?._id
-                            ) ? (
+                            ) ? ( */}
+                            {followed ? (
                               <>
                                 <BsXCircleFill />{" "}
                                 <span
