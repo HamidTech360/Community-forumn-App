@@ -68,6 +68,8 @@ export const toggleMark = (editor, format) => {
 };
 export const isMarkActive = (editor, format) => {
   const marks = Editor.marks(editor);
+  // console.log("marks:", marks);
+  // console.log("format:", format);
 
   return marks ? marks[format] === true : false;
 };
@@ -125,27 +127,18 @@ export const getMarked = (leaf, children) => {
 };
 
 export const getBlock = (props) => {
-  const { element, children } = props;
-  const attributes = props.attributes ?? {};
+  const { element, children, attributes } = props;
 
   switch (element.type) {
     case "blockquote":
       return (
-        <blockquote
-          className={styles.blockquote}
-          {...attributes}
-          {...element.attr}
-        >
+        <blockquote className={styles.blockquote} {...attributes}>
           {children}
         </blockquote>
       );
     case "alignLeft":
       return (
-        <div
-          style={{ listStylePosition: "inside" }}
-          {...attributes}
-          {...element.attr}
-        >
+        <div style={{ listStylePosition: "inside" }} {...attributes}>
           {children}
         </div>
       );
@@ -159,7 +152,6 @@ export const getBlock = (props) => {
             flexDirection: "column",
           }}
           {...attributes}
-          {...element.attr}
         >
           {children}
         </div>
@@ -174,17 +166,12 @@ export const getBlock = (props) => {
             flexDirection: "column",
           }}
           {...attributes}
-          {...element.attr}
         >
           {children}
         </div>
       );
     case "list-item":
-      return (
-        <li {...attributes} {...element.attr}>
-          {children}
-        </li>
-      );
+      return <li {...attributes}>{children}</li>;
     case "orderedList":
       return (
         <ol type="1" {...attributes}>
@@ -201,10 +188,6 @@ export const getBlock = (props) => {
     case "video":
       return <Video {...props} />;
     default:
-      return (
-        <div {...element.attr} {...attributes}>
-          {children}
-        </div>
-      );
+      return <div {...attributes}>{children}</div>;
   }
 };

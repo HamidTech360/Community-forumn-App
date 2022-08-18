@@ -50,16 +50,16 @@ const Toolbar = ({ position }) => {
     // Set Focus on Editor. This is to prevent editor.selection Error when Editor isn't in focus
     ReactEditor.focus(editor);
 
-    // For good measure, you can reset the history as well
-    editor.history = { redos: [], undos: [] };
+    // // For good measure, you can reset the history as well
+    // editor.history = { redos: [], undos: [] };
 
-    // Delete Editor Content
-    Transforms.delete(editor, {
-      at: {
-        anchor: Editor?.start(editor, []),
-        focus: Editor?.end(editor, []),
-      },
-    });
+    // // Delete Editor Content
+    // Transforms.delete(editor, {
+    //   at: {
+    //     anchor: Editor?.start(editor, []),
+    //     focus: Editor?.end(editor, []),
+    //   },
+    // });
   }, [editor, reFocusChatEditor]);
 
   const BlockButton = ({ format, toolTip }) => {

@@ -38,13 +38,15 @@ import {
 } from "@/reduxFeatures/api/postSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 // import usePagination, { Loader } from "@/hooks/usePagination";
-import usePaginationPage, {
+import usePaginationBlogAll, {
   LoaderPage,
+  usePaginationBlogHousing,
   usePaginationStudyAbroad,
-} from "@/hooks/usePaginationPage";
+} from "@/hooks/usePaginationBlog";
 // import InfiniteScroll from "react-infinite-scroll-component";
 import config from "@/config";
 import ReactPaginate from "react-paginate";
+import ExplorePostEditorModal from "@/components/Organisms/App/ModalPopUp/ExplorePostEditorModal";
 
 const Explore = ({}) => {
   const router = useRouter();
@@ -74,13 +76,25 @@ const Explore = ({}) => {
 
   // const { paginatedData, isReachedEnd, error, fetchNextPage, isValidating } =
   //   usePagination("/api/posts", "posts");
-  const { paginatedPageData, mutate, isLoadingPageData, errorPage } =
-    usePaginationPage("/api/posts", pageIndex);
+  const { paginatedBlogAll, mutateBlogAll, isLoadingBlogAll, errorBlogAll } =
+    usePaginationBlogAll("/api/posts", pageIndex);
   const {
-    paginatedStudyAbroadData,
-    isLoadingStudyAbroadData,
-    errorStudyAbroad,
-  } = usePaginationStudyAbroad("/api/posts/?category=Study Abroad", pageIndex);
+    paginatedBlogHousing,
+    mutateBlogHousing,
+    isLoadingBlogHousing,
+    errorBlogHousing,
+    // } = usePaginationBlogHousing("/api/posts?category=study_abroad", pageIndex);
+  } = usePaginationBlogHousing("/api/posts?category=work_abroad", pageIndex);
+  // } = usePaginationBlogHousing("/api/posts?category=live_abroad", pageIndex);
+  // } = usePaginationBlogHousing("/api/posts?category=pg_studies", pageIndex);
+  // } = usePaginationBlogHousing("/api/posts?category=housing", pageIndex);
+  // } = usePaginationBlogHousing("/api/posts?category=pt_jobs", pageIndex);
+
+  // const {
+  //   paginatedStudyAbroadData,
+  //   isLoadingStudyAbroadData,
+  //   errorStudyAbroad,
+  // } = usePaginationStudyAbroad("/api/post?category=housing", pageIndex);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -119,20 +133,20 @@ const Explore = ({}) => {
   // Auto Re-render on new post
   useEffect(() => {
     // console.log("Mutation");
-    mutate();
+    mutateBlogAll();
   }, [newPost]);
 
   useEffect(() => {
-    if (paginatedPageData) {
-      if (JSON.stringify(showPost) !== JSON.stringify(paginatedPageData)) {
-        dispatch(setPosts(paginatedPageData));
+    if (paginatedBlogAll) {
+      if (JSON.stringify(showPost) !== JSON.stringify(paginatedBlogAll)) {
+        dispatch(setPosts(paginatedBlogAll));
       }
     }
-  }, [paginatedPageData]);
+  }, [paginatedBlogAll]);
 
   useEffect(() => {
-    console.log("paginatedStudyAbroadData:", paginatedStudyAbroadData);
-    dispatch(setPosts(paginatedPageData));
+    // console.log("paginatedStudyAbroadData:", paginatedStudyAbroadData);
+    dispatch(setPosts(paginatedBlogAll));
 
     let pageCount = showPost?.numPages;
 
@@ -141,33 +155,39 @@ const Explore = ({}) => {
     // } else {
     //   // pageIndex
     // }
-  }, [paginatedPageData]);
+  }, [paginatedBlogAll]);
+
+  useEffect(() => {
+    // console.log("paginatedBlogAll:", paginatedBlogAll);
+    // console.log("paginatedStudyAbroadData:", paginatedStudyAbroadData);
+    console.log("paginatedBlogHousing:", paginatedBlogHousing);
+  }, [paginatedBlogAll, paginatedBlogHousing]);
 
   useEffect(() => {
     (async () => {
       try {
         const { data } = await axios.get(`${config.serverUrl}/api/category`);
         setCategories(data.allCategories);
-        console.log("all categories data", data.allCategories);
+        // console.log("all categories data", data.allCategories);
       } catch (error) {
-        console.log(error.response?.data);
+        // console.log(error.response?.data);
       }
     })();
   }, []);
 
-  const handleChange = (e) => {
-    dispatch(setPostTitle(e.currentTarget.value));
-  };
+  // const handleChange = (e) => {
+  //   dispatch(setPostTitle(e.currentTarget.value));
+  // };
 
   const filterPost = (item) => {
-    console.log("key is", item);
+    // console.log("key is", item);
     setKey(item);
     if (item === "all") {
       return;
     }
 
     const filtered = showPost?.posts.filter((post) => post.category === item);
-    console.log("filtered post:", filtered);
+    // console.log("filtered post:", filtered);
 
     // const filtered = showPost.filter((post) => post.category === item);
     // console.log("filtered post:", filtered);
@@ -312,8 +332,8 @@ const Explore = ({}) => {
               )}
             </InfiniteScroll> */}
             {/* {!showPost?.length && <p>No posts under this category </p>} */}
-            {/* {console.log("paginatedPageData:", paginatedPageData)}
-            {paginatedPageData.map((page) => (
+            {/* {console.log("paginatedBlogAll:", paginatedBlogAll)}
+            {paginatedBlogAll.map((page) => (
               <>
                 <Row className="d-flex justify-content-start w-100">
                   {(filteredPosts.length > 0 ? filteredPosts : showPost)?.map(
@@ -357,9 +377,9 @@ const Explore = ({}) => {
               ))}
             </Row>
 
-            {isLoadingPageData && <LoaderPage />}
+            {isLoadingBlogAll && <LoaderPage />}
 
-            {errorPage && (
+            {errorBlogAll && (
               <p
                 style={{
                   textAlign: "center",
@@ -407,7 +427,9 @@ const Explore = ({}) => {
         <Followers />
       </section>
 
-      <Modal
+      {showPostModal && <ExplorePostEditorModal />}
+
+      {/* <Modal
         show={showPostModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -461,14 +483,9 @@ const Explore = ({}) => {
             <Editor slim={false} pageAt="/explore" />
           </div>
         </div>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
 
 export default Explore;
-
-const activatedStyle = {
-  backgroundColor: "blue",
-  color: "white",
-};

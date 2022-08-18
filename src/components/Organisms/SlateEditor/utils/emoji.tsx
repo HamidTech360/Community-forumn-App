@@ -5,14 +5,14 @@ type emojiCreator = Object;
 
 type createEmojiNode = {
   type: "emoji";
-  emoji: string;
+  // emoji: string;
   children: [{ text: "" }];
 };
 
 export const insertEmoji = (editor, emoji) => {
   const emojiCreator: createEmojiNode = {
     type: "emoji",
-    emoji,
+    // emoji,
     children: [{ text: emoji }],
   };
 

@@ -13,10 +13,16 @@ import {
   setIsFetching,
   selectShowPostModal,
   selectPost,
+  setPostTitle,
 } from "@/reduxFeatures/api/postSlice";
 import { setNewPost } from "@/reduxFeatures/api/postSlice";
+import {
+  selectSlatePostToEdit,
+  setSlatePostToEdit,
+} from "@/reduxFeatures/app/editSlatePostSlice";
+import { serialize } from "../utils/serializer";
 
-function BlogPostFooterBtn({ editorID, handleClick }: any) {
+function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
   const router = useRouter();
 
   const [uploading, setUploading] = useState(false);
@@ -24,8 +30,35 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
   const dispatch = useDispatch();
   const showPostTitle = useSelector(selectPostTitle);
   const showPostModal = useSelector(selectShowPostModal);
+  const slatePostToEdit = useSelector(selectSlatePostToEdit);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+
+  useEffect(() => {
+    return () => {
+      // Reset Content in SlatePostToEdit State when component unmount
+      dispatch(setSlatePostToEdit(null));
+    };
+  }, []);
+
+  useEffect(() => {
+    // Get Post Category Name
+    const getCategories = categories.map((category) => {
+      let categoryName;
+      if (category?.tag === slatePostToEdit?.category) {
+        // console.log("category.name:", category.name);
+        categoryName = category.name;
+      }
+      return categoryName;
+    });
+
+    // Set category for post editing
+    if (slatePostToEdit) {
+      setSelectedCategory({
+        name: getCategories,
+      });
+    }
+  }, [categories]);
 
   useEffect(() => {
     if (router.query.path == "timeline") {
@@ -34,13 +67,20 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
   }, []);
 
   useEffect(() => {
+    if (slatePostToEdit) {
+      // Set Post Title
+      document.getElementById("createPostID").value = slatePostToEdit.postTitle;
+
+      dispatch(setPostTitle(slatePostToEdit.postTitle));
+    }
+
     (async () => {
       try {
         const { data } = await axios.get(`${config.serverUrl}/api/category`);
         // console.log(data);
         setCategories(data.allCategories);
       } catch (error) {
-        console.log(error.response?.data);
+        // console.log(error.response?.data);
       }
     })();
   }, []);
@@ -48,8 +88,7 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
   const createPost = async (e) => {
     e.preventDefault();
     //console.log(selectedCategory);
-    
-    
+
     const editorInnerHtml = (
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
@@ -68,57 +107,120 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
       return;
     }
 
+    if (!selectedCategory) {
+      toast.warn("Select A Post Category To Proceed", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1",
+      });
+      return;
+    }
+
     if (editorInnerHtml.trim() !== "") {
       setUploading(true);
 
-      try {
-        const response = await axios.post(
-          `${config.serverUrl}/api/posts`,
-          { postTitle: showPostTitle, postBody: editorInnerHtml, groupId, category:selectedCategory.tag },
-          {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      // Serialize Html
+      let serializeNode = {
+        children: editorContentValue,
+      };
+      // let edited =
+      //   '<span><small style="color: gray; font-size: 12px">(edited)</small><span>';
+
+      const serializedHtml = serialize(serializeNode);
+
+      // console.log("editorContentValue:", editorContentValue);
+      // console.log("serializedHtml:", serializedHtml);
+      console.log("slatePostToEdit:", slatePostToEdit);
+
+      if (!slatePostToEdit) {
+        // New Post
+        try {
+          const response = await axios.post(
+            `${config.serverUrl}/api/posts`,
+            {
+              postTitle: showPostTitle,
+              postBody: serializedHtml,
+              groupId,
+              category: selectedCategory.tag,
             },
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          // console.log(response.data.post);
+
+          toast.success("Post uploaded successfully", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+
+          // Auto update Blog Post in /explore
+          dispatch(setNewPost(response.data.post));
+          setUploading(false);
+          dispatch(setShowPostModal(false));
+        } catch (error) {
+          // console.log(error.response?.data);
+          if (!localStorage.getItem("accessToken")) {
+            toast.error("You must login to create a post", {
+              position: toast.POSITION.TOP_RIGHT,
+              toastId: "1",
+            });
+          } else {
+            toast.error("Failed to upload post: Try Again", {
+              position: toast.POSITION.TOP_RIGHT,
+              toastId: "1",
+            });
           }
-        );
-        // console.log(response.data.post);
-
-        toast.success("Post uploaded successfully", {
-          position: toast.POSITION.TOP_RIGHT,
-          toastId: "1",
-        });
-
-        // Auto update Blog Post in /explore
-        dispatch(setNewPost(response.data.post));
-        setUploading(false);
-        dispatch(setShowPostModal(false));
-      } catch (error) {
-         console.log(error.response?.data);
-        if (!localStorage.getItem("accessToken")) {
-          toast.error("You must login to create a post", {
-            position: toast.POSITION.TOP_RIGHT,
-            toastId: "1",
-          });
-        } else {
-          toast.error("Failed to upload post: Try Again", {
-            position: toast.POSITION.TOP_RIGHT,
-            toastId: "1",
-          });
+          setUploading(false);
         }
-        setUploading(false);
+      } else {
+        console.log("EDITING POST");
+        // Edit Post
+        try {
+          const response = await axios.put(
+            `${config.serverUrl}/api/posts/${slatePostToEdit?._id}`,
+            {
+              postTitle: showPostTitle,
+              postBody: serializedHtml,
+              groupId,
+              category: selectedCategory.tag,
+            },
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          // console.log(response.data.post);
+
+          toast.success("Post edited successfully", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+
+          // Auto update Blog Post in /explore
+          dispatch(setNewPost({ postEdited: Math.random() * 50 }));
+          setUploading(false);
+          dispatch(setShowPostModal(false));
+        } catch (error) {
+          console.log(error.response?.data);
+          if (!localStorage.getItem("accessToken")) {
+            toast.error("You must login to create a post", {
+              position: toast.POSITION.TOP_RIGHT,
+              toastId: "1",
+            });
+          } else {
+            toast.error("Failed to upload post: Try Again", {
+              position: toast.POSITION.TOP_RIGHT,
+              toastId: "1",
+            });
+          }
+          setUploading(false);
+        }
       }
     }
   };
-
-  // try {
-  //   // const response = await axios.get(`/api/posts`);
-  //   const response = await axios.get(`${config.serverUrl}/api/posts`);
-  //   dispatch(setPosts(response.data.posts));
-  //   dispatch(setIsFetching(false));
-  // } catch (error) {
-  //   console.error(error.response?.data);
-  //   dispatch(setIsFetching(false));
-  // }
 
   return (
     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
@@ -176,7 +278,11 @@ function BlogPostFooterBtn({ editorID, handleClick }: any) {
           className="my-1 me-1"
           onClick={createPost}
         >
-          {uploading ? "uploading..." : "Create Post"}
+          {uploading
+            ? "uploading..."
+            : !slatePostToEdit
+            ? "Create Post"
+            : "Edit Post"}
         </Button>
       </div>
     </div>

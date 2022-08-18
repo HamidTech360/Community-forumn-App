@@ -2,27 +2,79 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Image } from "react-bootstrap";
-import { HiOutlineArrowLeft } from "react-icons/hi";
-import { BsDot } from "react-icons/bs";
+import { Button, Dropdown, Image, NavDropdown } from "react-bootstrap";
+import { HiDotsVertical, HiOutlineArrowLeft } from "react-icons/hi";
+import { BsDot, BsFolderFill, BsXCircleFill } from "react-icons/bs";
 import Comment from "@/components/Organisms/App/Comment";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Age from "@/components/Atoms/Age";
 import config from "@/config";
 import DOMPurify from "dompurify";
-import { useSelector } from "@/redux/store"
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import { useDispatch, useSelector } from "@/redux/store";
+import {
+  selectFollowing,
+  user as userAuth,
+  selectUser,
+  setFollowers,
+  setFollowing,
+} from "@/reduxFeatures/authState/authStateSlice";
+import {
+  setPosts,
+  selectPost,
+  setShowPostModal,
+  selectShowPostModal,
+  setPostTitle,
+  selectNewPost,
+} from "@/reduxFeatures/api/postSlice";
+
+import styles from "@/styles/profile.module.scss";
+import { RiDeleteBin5Line, RiFlagFill, RiUserFollowFill } from "react-icons/ri";
+import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
+import ExplorePostEditorModal from "@/components/Organisms/App/ModalPopUp/ExplorePostEditorModal";
+import makeSecuredRequest, {
+  deleteSecuredRequest,
+} from "@/utils/makeSecuredRequest";
 
 const BlogPost = () => {
+  const user = useSelector(selectUser);
   const [blogPost, setBlogPost] = useState<Record<string, any>>({});
-
+  const [followed, setFollowed] = useState(false);
   const [commentPost, setCommentPost] = useState("");
   const [loading, setLoading] = useState(false);
-  const user = useSelector(selectUser)
+  const dispatch = useDispatch();
+  const showPostModal = useSelector(selectShowPostModal);
+  const postEdited = useSelector(selectNewPost);
   const router = useRouter();
   const { id } = router.query;
   const [queryId, setQueryId] = useState(id);
+  const currentlyFollowing = useSelector(selectFollowing);
+
+  useEffect(() => {
+    // Re-Fetch Post After Editing Post
+    if (Object.keys(postEdited).length !== 0) {
+      FetchData();
+    }
+  }, [postEdited]);
+
+  // Update users following in AuthUser because it's a frontend resolved data
+  useEffect(() => {
+    if (user) {
+      const currentlyFollowing = user.following.map((follow) => {
+        return follow._id;
+      });
+      dispatch(setFollowing(currentlyFollowing));
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (currentlyFollowing.includes(blogPost?.author?._id)) {
+      setFollowed(true);
+    } else {
+      setFollowed(false);
+    }
+  }, [blogPost]);
+
   // Allow Rerender Bases On ID Change Even When Route Is Same Path
   if (id && id !== queryId) setQueryId(id);
 
@@ -47,8 +99,6 @@ const BlogPost = () => {
       router.back();
     }
   };
-  //console.log(user);
-  
 
   const postComment = async () => {
     const body = {
@@ -78,18 +128,103 @@ const BlogPost = () => {
   const likeComment = () => {};
   const replyComment = () => {};
 
-  const deletePost =async ()=>{
-    try{
-      const {data} = await axios.delete(`${config.serverUrl}/api/posts/${router.query.id}`, {headers:{
-        authorization:`Bearer ${localStorage.getItem('accessToken')}`
-      }})
-      console.log(data);
-       router.push('/explore')
-      
-    }catch(error){
-      console.log(error.response?.data)
+  const deletePost = async () => {
+    try {
+      const { data } = await axios.delete(
+        `${config.serverUrl}/api/posts/${router.query.id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      // console.log(data);
+      router.push("/explore");
+    } catch (error) {
+      // console.log(error.response?.data);
     }
-  }
+  };
+
+  const editPost = async (post) => {
+    // Notify Slate Editor Of Post Editing
+    dispatch(setSlatePostToEdit(post));
+
+    if (router?.pathname.includes("explore") || router.asPath === "/explore") {
+      // Open Blog Post Modal
+      dispatch(setShowPostModal(true));
+    }
+  };
+
+  const changeFollowingStatus = (post) => {
+    if (
+      document.getElementById(`followStr-${blogPost?.author?._id}-page`)
+        .innerText === "Follow"
+    ) {
+      handleFollow(post?.author?._id);
+    } else if (
+      document.getElementById(`followStr-${blogPost?.author?._id}-page`)
+        .innerText === "Unfollow"
+    ) {
+      // let confirmUnFollow = window.confirm(
+      //   `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
+      // );
+      // if (confirmUnFollow) {
+      handleUnFollow(post?.author?._id);
+      // }
+    }
+  };
+
+  const handleFollow = async (id) => {
+    // Preset following
+    setFollowed(true);
+    try {
+      await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
+
+      // Update Auth User State
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
+    } catch (error) {
+      // Revert on axios  failure
+      setFollowed(false);
+      // console.error("follow Error:", error);
+    }
+  };
+
+  const handleUnFollow = async (id) => {
+    // Preset following
+    setFollowed(false);
+    try {
+      await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
+
+      // Update Auth User State
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
+    } catch (error) {
+      // Revert on axios  failure
+      setFollowed(true);
+      // console.error("follow Error:", error);
+    }
+  };
 
   return (
     <>
@@ -109,9 +244,94 @@ const BlogPost = () => {
           <div className="col-12 col-md-8">
             <div className="card mb-3 border-0 mt-md-2 p-md-4">
               <div className="card-Header text-center text-md-start">
-                <h4 className="card-title text-primary">
-                  {blogPost?.postTitle}
-                </h4>
+                <div className="row">
+                  <div className="col-7 col-lg-10">
+                    {/* <h4 className="card-title text-primary"> */}
+                    <h4 className="text-primary">{blogPost?.postTitle}</h4>
+                  </div>
+                  <div className="col-1">
+                    <NavDropdown
+                      drop="start"
+                      title={
+                        <Button variant="link" className="text-dark" size="sm">
+                          <HiDotsVertical size={22} />
+                        </Button>
+                      }
+                      style={{ marginTop: "-1rem" }}
+                    >
+                      {blogPost.author?._id === user?._id && (
+                        <>
+                          <NavDropdown.Item
+                            className={styles.item}
+                            style={{
+                              borderBottom: "1px solid gray",
+                            }}
+                            onClick={() => editPost(blogPost)}
+                          >
+                            <BsFolderFill /> Edit Post
+                          </NavDropdown.Item>
+
+                          <NavDropdown.Item
+                            style={{ borderBottom: "1px solid gray" }}
+                            onClick={() => deletePost()}
+                          >
+                            <span
+                              style={{
+                                color: "red",
+                              }}
+                            >
+                              <RiDeleteBin5Line /> Delete Post
+                            </span>
+                          </NavDropdown.Item>
+                        </>
+                      )}
+
+                      {blogPost?.author?._id !== user?._id && (
+                        <>
+                          <NavDropdown.Item
+                            className={styles.item}
+                            style={{ borderBottom: "1px solid gray" }}
+                          >
+                            <RiFlagFill /> Report post
+                          </NavDropdown.Item>
+
+                          <NavDropdown.Item
+                            className={styles.item}
+                            style={{ borderBottom: "1px solid gray" }}
+                            onClick={async () =>
+                              changeFollowingStatus(blogPost)
+                            }
+                          >
+                            {/* {currentlyFollowing.includes(
+                              blogPost?.author?._id
+                            ) ? ( */}
+                            {followed ? (
+                              <>
+                                <BsXCircleFill />{" "}
+                                <span
+                                  id={`followStr-${blogPost?.author?._id}-page`}
+                                >
+                                  Unfollow
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <RiUserFollowFill />{" "}
+                                <span
+                                  id={`followStr-${blogPost?.author?._id}-page`}
+                                >
+                                  Follow
+                                </span>
+                              </>
+                            )}{" "}
+                            @{blogPost?.author?.firstName?.split(" ")[0]}
+                            {blogPost?.author?.lastName?.substring(0, 1)}
+                          </NavDropdown.Item>
+                        </>
+                      )}
+                    </NavDropdown>
+                  </div>
+                </div>
                 <div className="row">
                   <div className="col-md-9">
                     By{" "}
@@ -123,9 +343,7 @@ const BlogPost = () => {
                       <BsDot />
                       {<Age time={blogPost?.createdAt} />}
                     </small>
-                    
                   </div>
-                 
                 </div>
                 <div className="row">
                   <div className="col"></div>
@@ -203,7 +421,17 @@ const BlogPost = () => {
                   </div>
                 </div>
               </section>
-              {blogPost.author?._id==user?._id ? <h6 onClick={()=>deletePost()} style={{color:'red', marginTop:'15px', cursor:'pointer'}}>Delete post</h6>:""}
+              {/* {blogPost.author?._id == user?._id ? (
+                <h6
+                  onClick={() => deletePost()}
+                  style={{ color: "red", marginTop: "15px", cursor: "pointer" }}
+                >
+                  Delete post
+                </h6>
+              ) : (
+                ""
+              )} */}
+              {showPostModal && <ExplorePostEditorModal />}
             </div>
           </div>
         </div>

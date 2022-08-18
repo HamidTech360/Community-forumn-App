@@ -4,35 +4,57 @@ import config from "@/config";
 import axios from "axios";
 import { Spinner } from "react-bootstrap";
 
-const usePaginationPage = (url: string, pageIndex: number) => {
-  const pageSize = 6;
+const pageSize = 6;
 
+const usePaginationBlogAll = (url: string, pageIndex: number) => {
+  // const pageSize = 6;
   const getKey = () => {
     return `${config.serverUrl}${url}?perPage=${pageSize}&page=${pageIndex}`; // SWR key
   };
-
   const fetcher = async function (url) {
     const response = await axios.get(`${url}`);
     return response.data;
   };
-
   const { data: post, mutate, error } = useSWR(getKey, fetcher);
-
-  const paginatedPageData = post;
-
-  const isLoadingPageData = !post && !error;
-
-  const errorPage = error;
+  const paginatedBlogAll = post;
+  const isLoadingBlogAll = !post && !error;
+  const mutateBlogAll = mutate;
+  const errorBlogAll = error;
 
   return {
-    paginatedPageData,
-    mutate,
-    isLoadingPageData,
-    errorPage,
+    paginatedBlogAll,
+    mutateBlogAll,
+    isLoadingBlogAll,
+    errorBlogAll,
   };
 };
 
-export default usePaginationPage;
+export default usePaginationBlogAll;
+
+export const usePaginationBlogHousing = (url: string, pageIndex: number) => {
+  // const pageSize = 6;
+  const getKey = () => {
+    return `${config.serverUrl}${url}&perPage=${pageSize}&page=${pageIndex}`; // SWR key
+    // return `${config.serverUrl}${url}&perPage=${pageSize}&page=${pageIndex}`; // SWR key
+    // return `${config.serverUrl}${url}`; // SWR key
+  };
+  const fetcher = async function (url) {
+    const response = await axios.get(`${url}`);
+    return response.data;
+  };
+  const { data: post, mutate, error } = useSWR(getKey, fetcher);
+  const paginatedBlogHousing = post;
+  const isLoadingBlogHousing = !post && !error;
+  const mutateBlogHousing = mutate;
+  const errorBlogHousing = error;
+
+  return {
+    paginatedBlogHousing,
+    mutateBlogHousing,
+    isLoadingBlogHousing,
+    errorBlogHousing,
+  };
+};
 
 export const usePaginationStudyAbroad = (url: string, pageIndex: number) => {
   const pageSize = 6;

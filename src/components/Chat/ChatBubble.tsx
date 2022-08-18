@@ -3,8 +3,8 @@ import DOMPurify from "dompurify";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { useSelector } from "@/redux/store";
 
-function ChatBubble({message}) {
-  const user = useSelector(selectUser)
+function ChatBubble({ message }) {
+  const user = useSelector(selectUser);
   const self = `bg-primary text-light mb-3 p-3 ms-auto`;
   const self2 = `ms-auto`;
   const recipient = `bg-secondary text-light mb-3 p-3`;
@@ -15,7 +15,7 @@ function ChatBubble({message}) {
 
   const sanitizer = DOMPurify.sanitize;
   //console.log(`sender is ${message.sender._id} and user is ${user._d}`);
-  
+
   return (
     <div style={{ fontSize: "14px" }}>
       <div
@@ -30,7 +30,11 @@ function ChatBubble({message}) {
       </div>
       <div className="d-flex">
         <div
-          className={message.sender?._id===user._id || message.sender===user._id?'bg-primary text-light mb-3 p-3 ms-auto':'bg-secondary text-light mb-3 p-3'}
+          className={
+            message.sender?._id === user._id || message.sender === user._id
+              ? "bg-primary text-light mb-3 p-3 ms-auto"
+              : "bg-secondary text-light mb-3 p-3"
+          }
           style={{
             letterSpacing: "1px",
             maxWidth: "80%",

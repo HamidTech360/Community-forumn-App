@@ -27,7 +27,7 @@ import truncate from "trunc-html";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { RiClipboardFill, RiFlagFill } from "react-icons/ri";
+import { RiClipboardFill, RiDeleteBin5Line, RiFlagFill } from "react-icons/ri";
 import {
   BsFolderFill,
   BsXCircleFill,
@@ -70,10 +70,11 @@ import {
 import { selectCreatePostModal } from "@/reduxFeatures/app/createPost";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 import { useRouter } from "next/router";
-import Comment from "@/components/Organisms/App/Comment";
+// import Comment from "@/components/Organisms/App/Comment";
 import makeSecuredRequest, {
   deleteSecuredRequest,
 } from "@/utils/makeSecuredRequest";
+import { FiEdit } from "react-icons/fi";
 import likes from "@/utils/like";
 // import { follow, unFollow } from "../followAndUnFollow";
 
@@ -82,9 +83,11 @@ const PostCard = ({
   post,
   trimmed,
   handleDeletePost,
+  handleEditPost,
 }) => {
   // console.log("PastCard Loaded+++++");
   // console.log("postComingIn:", postComingIn);
+  // console.log("post:", post);
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   // const posts = useSelector(selectPost);
@@ -109,7 +112,7 @@ const PostCard = ({
   // - comment section
   const [modalPost, setModalPost] = useState<Record<string, any>>({});
   const [commentPost, setCommentPost] = useState("");
-  const [showComment, setShowComment] = useState(false);
+  // const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
   // const [noOfLikes, setNoOfLikes] = useState(0)
 
@@ -211,8 +214,6 @@ const PostCard = ({
         <FaRegCommentDots
           size={24}
           onClick={async () => {
-            // console.log("postReFetched?._id:", postReFetched?._id);
-            // console.log("post?._id:", post?._id);
             if (postReFetched) {
               if (postReFetched?._id === post?._id) {
                 setSelected(postReFetched);
@@ -244,29 +245,29 @@ const PostCard = ({
     },
   ];
 
-  const postComment = async () => {
-    const body = {
-      content: commentPost,
-    };
+  // const postComment = async () => {
+  //   const body = {
+  //     content: commentPost,
+  //   };
 
-    setLoading(true);
-    const res = await axios.post(
-      `${config.serverUrl}/api/comments?type=feed&id=${post?._id}`,
-      body,
-      {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      }
-    );
-    // console.log(res);
-    let comments = post?.comments;
-    comments?.unshift(res.data);
-    setModalPost({ ...post, comments });
+  //   setLoading(true);
+  //   const res = await axios.post(
+  //     `${config.serverUrl}/api/comments?type=feed&id=${post?._id}`,
+  //     body,
+  //     {
+  //       headers: {
+  //         authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  //       },
+  //     }
+  //   );
+  //   // console.log(res);
+  //   let comments = post?.comments;
+  //   comments?.unshift(res.data);
+  //   setModalPost({ ...post, comments });
 
-    setLoading(false);
-    setShowComment(false);
-  };
+  //   setLoading(false);
+  //   // setShowComment(false);
+  // };
 
   const handleLike = async () => {
     await likeIt(true);
@@ -582,7 +583,8 @@ const PostCard = ({
               >
                 <NavDropdown.Item
                   className={styles.item}
-                  style={{ backgroundColor: "rgb(237, 236, 236)" }}
+                  // style={{ backgroundColor: "rgb(237, 236, 236)" }}
+                  style={{ borderBlock: "1px solid gray" }}
                   onClick={async () => {
                     if (postReFetched) {
                       if (postReFetched?._id === post?._id) {
@@ -598,28 +600,32 @@ const PostCard = ({
                     }
                   }}
                 >
-                  <BsFolderFill className="text-muted" /> Open Post
+                  <BsFolderFill /> Open Post
                 </NavDropdown.Item>
 
                 {user?._id !== post?.author?._id ? (
                   <>
-                    <NavDropdown.Item className={styles.item}>
-                      <RiFlagFill className="text-muted" /> Report post
+                    <NavDropdown.Item
+                      className={styles.item}
+                      style={{ borderBottom: "1px solid gray" }}
+                    >
+                      <RiFlagFill /> Report post
                     </NavDropdown.Item>
                     <NavDropdown.Item
                       className={styles.item}
+                      style={{ borderBottom: "1px solid gray" }}
                       onClick={async () => changeFollowingStatus(post)}
                     >
                       {currentlyFollowing.includes(post?.author?._id) ? (
                         <>
-                          <BsXCircleFill className="text-muted" />{" "}
+                          <BsXCircleFill />{" "}
                           <span id={`followStr-${post?.author?._id}`}>
                             Unfollow
                           </span>
                         </>
                       ) : (
                         <>
-                          <RiUserFollowFill className="text-muted" />{" "}
+                          <RiUserFollowFill />{" "}
                           <span id={`followStr-${post?.author?._id}`}>
                             Follow
                           </span>
@@ -630,23 +636,32 @@ const PostCard = ({
                     </NavDropdown.Item>
                   </>
                 ) : null}
-                {user._id == post.author._id ? (
-                  <NavDropdown.Item
-                    style={{ marginTop: "8px" }}
-                    onClick={() => handleDeletePost(post)}
-                  >
-                    <span
+                {user._id == post.author._id && (
+                  <>
+                    <NavDropdown.Item
+                      className={styles.item}
+                      // style={{ marginTop: "8px" }}
                       style={{
-                        color: "red",
-                        fontWeight: "500",
-                        marginLeft: "10px",
+                        borderBottom: "1px solid gray",
                       }}
+                      onClick={() => handleEditPost(post)}
                     >
-                      Delete Post
-                    </span>
-                  </NavDropdown.Item>
-                ) : (
-                  ""
+                      <FiEdit /> Edit Post
+                    </NavDropdown.Item>
+
+                    <NavDropdown.Item
+                      style={{ borderBottom: "1px solid gray" }}
+                      onClick={() => handleDeletePost(post)}
+                    >
+                      <span
+                        style={{
+                          color: "red",
+                        }}
+                      >
+                        <RiDeleteBin5Line /> Delete Post
+                      </span>
+                    </NavDropdown.Item>
+                  </>
                 )}
               </NavDropdown>
             </div>
@@ -658,10 +673,6 @@ const PostCard = ({
             cursor: "pointer",
           }}
           onClick={async () => {
-            if (showComment) {
-              setShowComment(!showComment);
-            }
-
             if (postReFetched) {
               if (postReFetched?._id === post?._id) {
                 setSelected(postReFetched);
@@ -688,13 +699,28 @@ const PostCard = ({
                       : sanitizer(post?.postBody) || sanitizer(post?.post),
                   }}
                 />
-                {router.asPath === "/feed" ||
-                  (router?.pathname.includes("profile") && (
-                    <small style={{ color: "gray", fontSize: "13px" }}>
-                      {" "}
-                      See more
+                {post.createdAt !== post.updatedAt && (
+                  <span>
+                    <small style={{ color: "gray", fontSize: "12px" }}>
+                      (edited)
                     </small>
-                  ))}
+                  </span>
+                )}
+                {router.asPath === "/feed" ||
+                router?.pathname.includes("profile") ? (
+                  <small
+                    style={{
+                      color: "gray",
+                      fontSize: "11px",
+                      position: "relative",
+                      left: "42%",
+                      // bottom: "0",
+                    }}
+                  >
+                    {" "}
+                    See more...
+                  </small>
+                ) : null}
               </div>
             )}
           </div>
@@ -774,27 +800,65 @@ const PostCard = ({
                   )}
 
                   {item.name === "Comment" && (
-                    <span
-                      style={{ marginLeft: "7px" }}
-                      className="mx-2 text-secondary"
-                    >
-                      {post?.comments?.length || 0}
-                    </span>
+                    <>
+                      <span
+                        style={{ marginLeft: "7px" }}
+                        className="mx-2 text-secondary"
+                        onClick={async () => {
+                          if (postReFetched) {
+                            if (postReFetched?._id === post?._id) {
+                              setSelected(postReFetched);
+                              toggle();
+                            } else {
+                              setSelected(post);
+                              toggle();
+                            }
+                          } else {
+                            setSelected(post);
+                            toggle();
+                          }
+                        }}
+                      >
+                        {post?.comments?.length || 0}
+                      </span>
+                      <span
+                        className="d-none d-xl-block"
+                        style={{ marginLeft: "7px" }}
+                        onClick={async () => {
+                          if (postReFetched) {
+                            if (postReFetched?._id === post?._id) {
+                              setSelected(postReFetched);
+                              toggle();
+                            } else {
+                              setSelected(post);
+                              toggle();
+                            }
+                          } else {
+                            setSelected(post);
+                            toggle();
+                          }
+                        }}
+                      >
+                        {item.name}
+                      </span>
+                    </>
                   )}
 
-                  <span
-                    className="d-none d-xl-block"
-                    style={{ marginLeft: "7px" }}
-                  >
-                    {item.name}
-                  </span>
+                  {item.name !== "Comment" && (
+                    <span
+                      className="d-none d-xl-block"
+                      style={{ marginLeft: "7px" }}
+                    >
+                      {item.name}
+                    </span>
+                  )}
                 </Button>
               </div>
             ))}
           </div>
         </Card.Footer>
 
-        {showComment && (
+        {/* {showComment && (
           <section>
             <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
             <div className="row">
@@ -807,7 +871,6 @@ const PostCard = ({
                 />
               </div>
               <div className="col-7 col-md-10">
-                {/* <div className="form-floating shadow"> */}
                 <div
                   className="form-floating"
                   style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
@@ -838,7 +901,7 @@ const PostCard = ({
               </div>
             </div>
           </section>
-        )}
+        )} */}
       </Card>
       <Modal
         show={modalOpen}

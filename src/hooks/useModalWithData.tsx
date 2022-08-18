@@ -56,7 +56,7 @@ export const useModalWithShare = () => {
 };
 
 export function ModalRow({ selected }) {
-  console.log("selected+++++:", selected);
+  // console.log("selected+++++:", selected);
   return (
     <>
       {selected.images ? (

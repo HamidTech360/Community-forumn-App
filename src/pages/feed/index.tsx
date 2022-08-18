@@ -2,7 +2,7 @@
 import MessageButton from "@/components/Atoms/messageButton";
 import Head from "next/head";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import config from "../../config";
 import {
   Container,
@@ -29,31 +29,26 @@ import {
   selectFollowing,
 } from "@/reduxFeatures/authState/authStateSlice";
 import { MdOutlineCancel } from "react-icons/md";
-// import { usePagination } from "@/hooks/usePagination";
 import usePagination, { Loader } from "@/hooks/usePagination";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/feed.module.scss";
-// import formStyles from "../../styles/templates/new-group/formField.module.css";
 import Follow from "@/components/Organisms/App/Follow";
 import { useDispatch, useSelector } from "@/redux/store";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 import { getNotification } from "@/reduxFeatures/api/notifications";
-// import Editor from "@/components/Organisms/SlateEditor/Editor";
+import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 import { ModalRow, useModalWithData } from "@/hooks/useModalWithData";
 import InfiniteScroll from "react-infinite-scroll-component";
-// import { FaTimes } from "react-icons/fa";
-
-// import { FacebookShareButton, TwitterShareButton } from "react-share";
-// import { FacebookIcon, TwitterIcon } from "react-share";
+import { useRouter } from "next/router";
 
 const Feed = () => {
+  const router = useRouter();
   // const data = useSelector(selectUser);
   const dispatch = useDispatch();
   const stateUser = useSelector(selectUser);
   const newFeed = useSelector(selectNewFeed);
   const [posts, setPosts] = useState([]);
   const { modalOpen, toggle, selected, setSelected } = useModalWithData();
-
 
   const {
     paginatedData,
@@ -78,8 +73,6 @@ const Feed = () => {
       dispatch(setFollowing(currentlyFollowing));
     }
   }, [stateUser]);
-
-
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -114,24 +107,40 @@ const Feed = () => {
     }
   }, [paginatedData]);
 
-  const handleDeletePost = async (item)=>{
-      const newPosts = posts.filter(el=>el._id!==item._id)
-      console.log(posts,newPosts);
-      
-      setPosts(posts.filter(el=>el._id!==item._id))
-    
-    try{
-      const {data} = await axios.delete(`${config.serverUrl}/api/feed?id=${item._id}`, {headers:{
-        authorization:`Bearer ${localStorage.getItem('accessToken')}`
-      }})
-      console.log(data, item._id)
-      
-      
-    }catch(error){
-      console.log(error.response?.data);
-      
+  const handleDeletePost = async (item) => {
+    // const newPosts = posts.filter((el) => el._id !== item._id);
+    // console.log(posts, newPosts);
+    setPosts(posts.filter((el) => el._id !== item._id));
+
+    try {
+      const { data } = await axios.delete(
+        `${config.serverUrl}/api/feed?id=${item._id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      // console.log(data, item._id);
+    } catch (error) {
+      // console.log(error.response?.data);
     }
-  }
+  };
+
+  const handleEditPost = async (item) => {
+    console.log("item:", item);
+    // Notify Slate Editor Of Post Editing
+    dispatch(setSlatePostToEdit(item));
+
+    if (router.asPath === "/feed") {
+      // Open Feed Post Modal
+      document.getElementById("createFeedPost").click();
+    }
+
+    // if (router?.pathname.includes("profile")) {
+    //   dispatch(setShowPostModal(true));
+    // }
+  };
 
   return (
     <AuthContent>
@@ -164,15 +173,6 @@ const Feed = () => {
             id="posts"
           >
             <CreatePost pageAt={"/feed"} />
-            {/* <div
-              id="instersection"
-              style={{
-                height: "30vh",
-                width: "100%",
-                position: "fixed",
-                bottom: 0,
-              }}
-            ></div> */}
 
             <InfiniteScroll
               next={fetchNextPage}
@@ -191,6 +191,7 @@ const Feed = () => {
                   key={`activity-post-${index}-${post?.id}`}
                   trimmed
                   handleDeletePost={handleDeletePost}
+                  handleEditPost={handleEditPost}
                 />
               ))}
               {isValidating && (
