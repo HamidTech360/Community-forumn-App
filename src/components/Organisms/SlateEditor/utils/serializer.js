@@ -4,7 +4,7 @@ import { jsx } from "slate-hyperscript";
 
 // Serialize Html
 export const serialize = (node) => {
-  console.log("node:", node);
+  // console.log("node:", node);
   if (Text.isText(node)) {
     let string = escapeHtml(node.text);
 
@@ -34,7 +34,7 @@ export const serialize = (node) => {
     case "paragraph":
       return `<p>${children}</p>`;
     case "link":
-      console.log("node:", node);
+      // console.log("node:", node);
       return `<p><a href="${escapeHtml(
         node?.href ? node?.href : node?.url
       )}" target="_blank" rel="noreferrer">${children}</a></p>`;

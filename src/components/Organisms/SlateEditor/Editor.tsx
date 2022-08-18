@@ -57,6 +57,7 @@ const Leaf = ({ attributes, children, leaf }) => {
 
 const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   const editSlatePost = useSelector(selectSlatePostToEdit);
+  console.log("editSlatePost:", editSlatePost);
   const router = useRouter();
   const editorID = `${router.asPath}-slateRefId`;
 
@@ -86,6 +87,8 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
 
   const initialState: Descendant[] = editSlatePost?.post
     ? deserializeFromHtml(editSlatePost?.post)
+    : editSlatePost?.postBody
+    ? deserializeFromHtml(editSlatePost?.postBody)
     : [
         {
           type: "paragraph",

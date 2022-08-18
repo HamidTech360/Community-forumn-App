@@ -46,6 +46,7 @@ import usePaginationBlogAll, {
 // import InfiniteScroll from "react-infinite-scroll-component";
 import config from "@/config";
 import ReactPaginate from "react-paginate";
+import ExplorePostEditorModal from "@/components/Organisms/App/ModalPopUp/ExplorePostEditorModal";
 
 const Explore = ({}) => {
   const router = useRouter();
@@ -174,9 +175,9 @@ const Explore = ({}) => {
     })();
   }, []);
 
-  const handleChange = (e) => {
-    dispatch(setPostTitle(e.currentTarget.value));
-  };
+  // const handleChange = (e) => {
+  //   dispatch(setPostTitle(e.currentTarget.value));
+  // };
 
   const filterPost = (item) => {
     // console.log("key is", item);
@@ -426,7 +427,9 @@ const Explore = ({}) => {
         <Followers />
       </section>
 
-      <Modal
+      {showPostModal && <ExplorePostEditorModal />}
+
+      {/* <Modal
         show={showPostModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -480,7 +483,7 @@ const Explore = ({}) => {
             <Editor slim={false} pageAt="/explore" />
           </div>
         </div>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

@@ -10,9 +10,19 @@ import config from "@/config";
 
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { useRouter } from "next/router";
+import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
+import { useDispatch, useSelector } from "@/redux/store";
+import {
+  selectShowPostModal,
+  setShowPostModal,
+} from "@/reduxFeatures/api/postSlice";
+// import ExplorePostEditorModal from "@/components/Organisms/App/ModalPopUp/ExplorePostEditorModal";
+import ExplorePostEditorModal from "../../../components/Organisms/App/ModalPopUp/ExplorePostEditorModal";
 
 const Timeline = ({ Posts }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const showPostModal = useSelector(selectShowPostModal);
   const [scrollInitialized, setScrollInitialized] = useState(false);
   const { posts, hasMore, isFetchingMore } = usePagination();
   const intersection = useRef();
@@ -88,27 +98,17 @@ const Timeline = ({ Posts }) => {
   };
 
   const handleEditPost = async (item) => {
-    // setEditPosts(item);
-    document.getElementById("createFeedPost").click();
-    // document.getElementById(`${router.asPath}-slateRefId`).textContent =
-    //   item.post;
-    console.log("item:", item);
+    // Notify Slate Editor Of Post Editing
+    dispatch(setSlatePostToEdit(item));
 
-    // try {
-    //   const { data } = await axios.put(
-    //     // `${config.serverUrl}/api/feed?id=${item._id}`,
-    //     `${config.serverUrl}/api/feed/${item._id}`,
-    //     { post: "Hello World... 🌍 2" },
-    //     {
-    //       headers: {
-    //         authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-    //       },
-    //     }
-    //   );
-    //   console.log("Edited data", data);
-    // } catch (error) {
-    //   console.error("Edit Error:", error.response?.data);
+    // if (router.asPath === "/feed") {
+    //   document.getElementById("createFeedPost").click();
     // }
+
+    if (router?.pathname.includes("profile")) {
+      // Open Explore Post Modal
+      dispatch(setShowPostModal(true));
+    }
   };
 
   return (
@@ -123,7 +123,7 @@ const Timeline = ({ Posts }) => {
           bottom: 0,
         }}
       ></div>
-      {/* {console.log("POST+++", Posts)} */}
+      {console.log("POST+++", Posts)}
       {Posts?.map((post, index) => (
         <PostCard
           post={post}
@@ -145,6 +145,7 @@ const Timeline = ({ Posts }) => {
           <b>Yay! You have seen it all</b>
         </p>
       )}
+      {showPostModal && <ExplorePostEditorModal />}
     </div>
   );
 };

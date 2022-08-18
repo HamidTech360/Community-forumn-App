@@ -48,8 +48,8 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       let serializeNode = {
         children: editorContentValue,
       };
-      let edited =
-        '<span><small style="color: gray; font-size: 12px">(edited)</small><span>';
+      // let edited =
+      //   '<span><small style="color: gray; font-size: 12px">(edited)</small><span>';
 
       const serializedHtml = serialize(serializeNode);
 
@@ -97,14 +97,14 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         try {
           await axios.put(
             `${config.serverUrl}/api/feed/${slatePostToEdit?._id}`,
-            { post: serializedHtml + edited },
+            { post: serializedHtml },
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
               },
             }
           );
-          toast.success("Post uploaded successfully", {
+          toast.success("Post edited successfully", {
             position: toast.POSITION.TOP_RIGHT,
             toastId: "1",
           });
@@ -112,7 +112,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           // Auto update & Rerender Feed Post
           dispatch(setNewFeed({ postEdited: Math.random() * 50 }));
           // Auto Update modalCard Post While Opened
-          dispatch(setModalCardPostEdited(serializedHtml + edited));
+          dispatch(setModalCardPostEdited(serializedHtml));
           dispatch(setShowCreatePostModal(false));
           setUploading(false);
         } catch (error) {

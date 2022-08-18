@@ -650,15 +650,12 @@ const PostCard = ({
                     </NavDropdown.Item>
 
                     <NavDropdown.Item
-                      // style={{ marginTop: "8px" }}
                       style={{ borderBottom: "1px solid gray" }}
                       onClick={() => handleDeletePost(post)}
                     >
                       <span
                         style={{
                           color: "red",
-                          // fontWeight: "500",
-                          // marginLeft: "10px",
                         }}
                       >
                         <RiDeleteBin5Line /> Delete Post
@@ -709,7 +706,7 @@ const PostCard = ({
                       color: "gray",
                       fontSize: "11px",
                       position: "relative",
-                      left: "40%",
+                      left: "42%",
                       // bottom: "0",
                     }}
                   >

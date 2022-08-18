@@ -29,24 +29,17 @@ import {
   selectFollowing,
 } from "@/reduxFeatures/authState/authStateSlice";
 import { MdOutlineCancel } from "react-icons/md";
-// import { usePagination } from "@/hooks/usePagination";
 import usePagination, { Loader } from "@/hooks/usePagination";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/feed.module.scss";
-// import formStyles from "../../styles/templates/new-group/formField.module.css";
 import Follow from "@/components/Organisms/App/Follow";
 import { useDispatch, useSelector } from "@/redux/store";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 import { getNotification } from "@/reduxFeatures/api/notifications";
 import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
-// import Editor from "@/components/Organisms/SlateEditor/Editor";
 import { ModalRow, useModalWithData } from "@/hooks/useModalWithData";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/router";
-// import { FaTimes } from "react-icons/fa";
-
-// import { FacebookShareButton, TwitterShareButton } from "react-share";
-// import { FacebookIcon, TwitterIcon } from "react-share";
 
 const Feed = () => {
   const router = useRouter();
@@ -132,8 +125,17 @@ const Feed = () => {
 
   const handleEditPost = async (item) => {
     console.log("item:", item);
+    // Notify Slate Editor Of Post Editing
     dispatch(setSlatePostToEdit(item));
-    document.getElementById("createFeedPost").click();
+
+    if (router.asPath === "/feed") {
+      // Open Feed Post Modal
+      document.getElementById("createFeedPost").click();
+    }
+
+    // if (router?.pathname.includes("profile")) {
+    //   dispatch(setShowPostModal(true));
+    // }
   };
 
   return (
@@ -167,15 +169,6 @@ const Feed = () => {
             id="posts"
           >
             <CreatePost pageAt={"/feed"} />
-            {/* <div
-              id="instersection"
-              style={{
-                height: "30vh",
-                width: "100%",
-                position: "fixed",
-                bottom: 0,
-              }}
-            ></div> */}
 
             <InfiniteScroll
               next={fetchNextPage}
