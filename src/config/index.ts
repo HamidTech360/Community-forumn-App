@@ -1,5 +1,5 @@
 const config = {
-      serverUrl:'https://setlinn.net',
+     serverUrl:'https://setlinn.net',
      //serverUrl:'http://localhost:4000'
 }
 

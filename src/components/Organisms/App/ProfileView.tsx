@@ -37,6 +37,7 @@ import makeSecuredRequest, {
 } from "@/utils/makeSecuredRequest";
 
 import styles from "@/styles/profile.module.scss";
+import { datacatalog } from "googleapis/build/src/apis/datacatalog";
 
 interface IComponents {
   about: ReactNode;
@@ -217,15 +218,16 @@ const ProfileView = ({
                   </>
                 )}
               </div>
+              <Link href={`/chat?active=${profile?._id}`}>
               <div className="col-5 col-sm-3 col-lg-2 btn btn-sm btn-outline-primary mx-1 p-0">
-                <RiMessage2Fill className={styles.mouseOverBtn} />{" "}
-                <span> message</span>
+                  <RiMessage2Fill className={styles.mouseOverBtn} />{" "}
+                  <span> message</span>
               </div>
+              </Link>
             </div>
           </div>
           <div className="text-muted text-center">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
-            illum quasi voluptatem explicabo, tempore enim!
+                  {profile?.bio || ' Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapienteillum quasi voluptatem explicabo, tempore enim!'}
           </div>
           <div
             className="d-flex justify-content-between"

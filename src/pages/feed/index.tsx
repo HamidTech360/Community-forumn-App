@@ -102,6 +102,10 @@ const Feed = () => {
     }
   }, [newFeed]);
 
+  useEffect(()=>{
+    mutate()
+  },[posts])
+
   useEffect(() => {
     if (paginatedData) {
       if (JSON.stringify(posts) !== JSON.stringify(paginatedData)) {

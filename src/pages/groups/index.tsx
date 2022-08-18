@@ -11,30 +11,13 @@ import { useRouter } from "next/router";
 import config from "@/config";
 import axios from "axios";
 import {FaUser} from 'react-icons/fa'
-const posts = [
-  {
-    image: "/images/article.png",
-    title: "5 ways to work Abroad",
-    author: "by Mike Dike",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum varius aliquam habitasse gravida. Tincidunt sollicitudin leo quis id in amet, auctor.",
-  },
-  {
-    image: "/images/article.png",
-    title: "5 ways to work Abroad",
-    author: "by Mike Dike",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum varius aliquam habitasse gravida. Tincidunt sollicitudin leo quis id in amet, auctor.",
-  },
-  {
-    image: "/images/article.png",
-    title: "5 ways to work Abroad",
-    author: "by Mike Dike",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum varius aliquam habitasse gravida. Tincidunt sollicitudin leo quis id in amet, auctor.",
-  },
-];
+
+
 const Groups = () => {
   const router = useRouter();
   const [groups, setGroups] = useState([]);
   const [Posts, setPosts] = useState([]);
+  const [searchResult, setSearchResult] = useState([])
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
     (async () => {
@@ -65,6 +48,27 @@ const Groups = () => {
       document.body.style.backgroundColor = "initial";
     };
   }, []);
+
+  const handleSearch = async (e)=>{
+     console.log(e.currentTarget.value)
+    // if(e.currentTarget.value=="") {
+    //   setSearchResult([])
+    //   return
+    // }
+    if(e.currentTarget.value!==""){
+      try{
+        const {data} = await axios.get(`${config.serverUrl}/api/search/?type=group&keyword=${e.currentTarget.value}`)
+        //console.log(data);
+        setSearchResult(data)
+      }catch(error){
+        console.error(error.response?.data);
+      }
+      
+    }else{
+      setSearchResult([])
+    }
+  }
+
   return (
     <AuthContent>
       <Head>
@@ -88,10 +92,10 @@ const Groups = () => {
                 borderRadius: "10px",
               }}
             >
-              <Form.Control placeholder="search" />
+              <Form.Control placeholder="search" onChange={(e)=>handleSearch(e)} />
             </div>
             <div className={`${styles.groupLists}`}>
-              {groups.map((item, i) => (
+              {(searchResult.length<=0?groups:searchResult).map((item, i) => (
                 <Link href={`/groups/${item._id}/timeline`} key={i} passHref>
                   <div className={styles.groupCard}>
                     <div>

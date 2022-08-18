@@ -42,8 +42,7 @@ const UserCard = () => {
         className="row text-muted mx-auto mt-2 text-center"
         style={{ fontSize: "12px" }}
       >
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Suscipit,
-        perspiciatis.
+        {data?.bio || 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Suscipit perspiciatis.'}
       </small>
       <div
         className="d-flex justify-content-between"

@@ -7,6 +7,7 @@ import {FiSend} from 'react-icons/fi'
 import { BsArrowLeft, BsDot } from "react-icons/bs";
 import Editor from "@/components/Organisms/SlateEditor/Editor";
 import axios from 'axios'
+import { useRouter } from "next/router";
 import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
 import config from "@/config";
@@ -22,6 +23,7 @@ const Chat = () => {
   const user = useSelector(selectUser)
   // const mainDisplay = useRef();
   // const mainSidebar = useRef();
+  const router = useRouter()
   const [conversations, setConversations] = useState([])
   const [currentChat, setCurrentChat] = useState(null)
   const [messages, setMessages] = useState([])
@@ -93,6 +95,7 @@ useEffect(()=>{
           authorization:`Bearer ${localStorage.getItem('accessToken')}`
         }})
         console.log(data);
+        
         setConversations(data.conversations)
       }catch(error){
         console.log(error.response?.data); 
@@ -100,69 +103,90 @@ useEffect(()=>{
     })()
   },[])
 
-const selectChat = async (activeChat)=>{
-    console.log(activeChat);
-    setCurrentChat(activeChat)
+  useEffect(()=>{
+    if(router.query.active){
+      const current =conversations?.find(item=>item.receiver._id===router.query.active || item.sender._id==router.query.active)
+     const mate = user?._id!==current?.receiver._id?current?.receiver:current?.sender
+     setCurrentChat(mate)
+      
+      fetchChat(mate)
+      
+     }
+  },[router.query.active, conversations])
+
+  const fetchChat = async (activeChat)=>{
     setMessages([])
+      try{
+          const {data} = await axios.get(`${config.serverUrl}/api/chats/?mate=${activeChat._id}`, {headers:{
+              authorization:`Bearer ${localStorage.getItem('accessToken')}`
+          }})
+          //console.log(data);
+          setMessages(data.messages)
+          if ( window.innerWidth <= 768){
+            setShowConversationList(false)
+            setShowMsgArea(true)
+          }
+          
+      }catch(error){
+          console.log(error.response?.data);
+      }
+  }
+
+  const selectChat = async (activeChat)=>{
+      console.log(activeChat);
+      setCurrentChat(activeChat)
+      fetchChat(activeChat)
+      if(router.query.active){
+        router.push('/chat')
+      }
+  }
+  const handleChange = (e)=>{
+    setNewMsg(e.currentTarget.value)
+    console.log(newMsg);
+    
+  }
+  const sendMessage = async (e)=>{
+    e.preventDefault()
+    console.log(newMsg);
+    // alert(newMsg)
+    
+    
+    if(!currentChat) return
+    if(newMsg===""){
+      return
+    }
+    
+    
+    socket.current.emit("sendMessage", {
+        senderId:user?._id,
+        receiverId:currentChat._id,
+        message:newMsg
+    })
+
     try{
-        const {data} = await axios.get(`${config.serverUrl}/api/chats/?mate=${activeChat._id}`, {headers:{
+        const {data}= await axios.post(`${config.serverUrl}/api/chats/?mate=${currentChat._id}`, {message:newMsg}, {headers:{
             authorization:`Bearer ${localStorage.getItem('accessToken')}`
         }})
         console.log(data);
-        setMessages(data.messages)
-        if ( window.innerWidth <= 768){
-          setShowConversationList(false)
-          setShowMsgArea(true)
-        }
-        
+        setMessages([...messages, data.newMessage])
+      // document.getElementById('/chat-slateRefId').innerHTML = emptyEditorInnerHtml
+        setNewMsg('')
     }catch(error){
         console.log(error.response?.data);
+        
     }
-}
-const handleChange = (e)=>{
-  setNewMsg(e.currentTarget.value)
-  console.log(newMsg);
-  
-}
-const sendMessage = async (e)=>{
-  e.preventDefault()
-  console.log(newMsg);
-  // alert(newMsg)
-  
-  
-  if(!currentChat) return
-  if(newMsg===""){
-    return
   }
-  
-  
-  socket.current.emit("sendMessage", {
-      senderId:user?._id,
-      receiverId:currentChat._id,
-      message:newMsg
-  })
 
-  try{
-      const {data}= await axios.post(`${config.serverUrl}/api/chats/?mate=${currentChat._id}`, {message:newMsg}, {headers:{
-          authorization:`Bearer ${localStorage.getItem('accessToken')}`
-      }})
-      console.log(data);
-      setMessages([...messages, data.newMessage])
-     // document.getElementById('/chat-slateRefId').innerHTML = emptyEditorInnerHtml
-       setNewMsg('')
-  }catch(error){
-      console.log(error.response?.data);
-      
+  const backToConversationList = ()=>{
+    setCurrentChat(null)
+    setShowConversationList(true)
+    if(router.query.active){
+      router.push('/chat')
+    }
+    if(window.innerWidth <= 768){
+      setShowMsgArea(false)
+    }
   }
-}
-
-const backToConversationList = ()=>{
-  setCurrentChat(null)
-  setShowConversationList(true)
-  if(window.innerWidth <= 768){
-    setShowMsgArea(false)
-  }
-}
 
   return (
     <AuthContent>

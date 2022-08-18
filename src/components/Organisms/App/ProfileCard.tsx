@@ -70,8 +70,7 @@ const ProfileCard = ({
         </div>
         <div className="text-muting">@{data?.username || data?.firstName}</div>
         <div className="text-muted text-center">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
-          illum quasi voluptatem explicabo, tempore enim!
+           {data.bio || ' Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapienteillum quasi voluptatem explicabo, tempore enim!'}
         </div>
         <div
           className="d-flex justify-content-between"
@@ -99,6 +98,7 @@ const ProfileCard = ({
           {Object.keys(Components).map((item, index) => (
             <Nav.Item
               key={item}
+              style={{cursor:'pointer'}}
               onClick={() => handlePath(item.toLowerCase())}
               className={item === active ? "text-primary" : "text-secondary"}
             >
