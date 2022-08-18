@@ -338,7 +338,7 @@ const Explore = ({}) => {
               </>
             ))} */}
 
-            <Row className="d-flex justify-content-start w-100">
+            <Row className="d-flex justify-content-start">
               {showPost?.posts.map((post, key) => (
                 <Col
                   key={`posts_${key}`}
