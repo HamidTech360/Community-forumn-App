@@ -33,18 +33,6 @@ const Timeline = ({ Posts }) => {
     }
   };
 
-  // useEffect(()=>{
-  //   (async ()=>{
-  //     try{
-  //       const response = await axios.get(`${config.serverUrl}/api/posts/group/random`)
-  //       console.log(response.data.posts);
-  //       setPosts(response.data.posts)
-  //     }catch(error){
-  //       console.log(error.response?.data)
-  //     }
-  //   })()
-  // },[])
-
   useEffect(() => {
     window.addEventListener("scroll", checkScroll);
 
