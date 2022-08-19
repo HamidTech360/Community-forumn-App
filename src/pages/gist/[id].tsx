@@ -12,6 +12,14 @@ import config from "@/config";
 
 import { useDispatch, useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import GistPostEditorModal from "@/components/Organisms/App/ModalPopUp/GistPostEditorModal";
+import {
+  selectGistData,
+  selectShowGistModal,
+} from "@/reduxFeatures/api/gistSlice";
+
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Gist = ({
   gist,
@@ -29,61 +37,25 @@ const Gist = ({
   const [commentPost, setCommentPost] = useState("");
   const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const postComment = async () => {
-    const body = {
-      content: commentPost,
-    };
-
-    setLoading(true);
-    const res = await axios.post(
-      `${config.serverUrl}/api/comments?type=gist&id=${router.query.id}`,
-      body,
-      {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      }
-    );
-    console.log(res);
-    let comments = data?.comments;
-    comments?.unshift(res.data);
-    setData({ ...data, comments });
-
-    setLoading(false);
-    setShowComment(false);
-  };
-  // const [user, setUser] = useState({});
+  const showGistModal = useSelector(selectShowGistModal);
+  const gistEdited = useSelector(selectGistData);
+  const user = useSelector(selectUser);
   const [queryId, setQueryId] = useState(id);
+
   // Allow Rerender Bases On ID Change Even When Route Is Same Path
   if (id && id !== queryId) setQueryId(id);
 
-  const user = useSelector(selectUser);
+  useEffect(() => {
+    // Re-Fetch Post After Editing Post
+    if (gistEdited !== null && gistEdited !== undefined) {
+      if (Object?.keys(gistEdited).length !== 0) {
+        FetchData();
+      }
+    }
+  }, [gistEdited]);
 
   useEffect(() => {
-    (async function () {
-      try {
-        const response = await axios.get(
-          `${config.serverUrl}/api/gists/${router.query.id}`,
-          {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }
-        );
-        // const userResponse = await axios.get("/api/auth", {
-        //   headers: {
-        //     authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        //   },
-        // });
-        // setUser(userResponse.data);
-        //console.log(response.data);
-        setData(response.data.gist);
-      } catch (error) {
-        router.replace("/gist");
-        // console.error("Error fetching individual gist", error.response?.data);
-      }
-    })();
+    FetchData();
 
     document.body.style.backgroundColor = "#f6f6f6";
     // console.log(replies);
@@ -92,12 +64,59 @@ const Gist = ({
     };
   }, [queryId]);
 
+  const FetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${config.serverUrl}/api/gists/${router.query.id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      setData(response.data.gist);
+    } catch (error) {
+      router.replace("/gist");
+    }
+  };
+
+  const postComment = async () => {
+    try {
+      const body = {
+        content: commentPost,
+      };
+
+      setLoading(true);
+      const res = await axios.post(
+        `${config.serverUrl}/api/comments?type=gist&id=${router.query.id}`,
+        body,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      // console.log(res);
+      let comments = data?.comments;
+      comments?.unshift(res.data);
+      setData({ ...data, comments });
+      (document.getElementById("articleTextarea") as HTMLInputElement).value =
+        "";
+
+      setLoading(false);
+      setShowComment(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Container>
       <Head>
         <title>{gist?.title.raw.replace("&amp;", "&")}</title>
       </Head>
-
+      <ToastContainer />
       <Row>
         <Col md={4} className="desktop-only">
           <Contributors contributors={[user]} />
@@ -168,6 +187,8 @@ const Gist = ({
           </div> */}
         </Col>
       </Row>
+
+      {showGistModal && <GistPostEditorModal />}
     </Container>
   );
 };

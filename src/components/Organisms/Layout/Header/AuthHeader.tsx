@@ -126,25 +126,32 @@ const AuthHeader = () => {
     }
   };
 
-  useEffect(()=>{
-    (async ()=>{
-      try{
-        const response = await axios.get(`${config.serverUrl}/api/notifications`, {headers:{
-          authorization:`Bearer ${localStorage.getItem('accessToken')}`
-        }})
-        console.log(response.data);
-        dispatch(getNotification(response.data))
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get(
+          `${config.serverUrl}/api/notifications`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        // console.log(response.data);
+        dispatch(getNotification(response.data));
         //setNotifications(response.data.notifications)
-      }catch(error){
-        console.log(error.response?.data); 
+      } catch (error) {
+        console.log(error.response?.data);
       }
-    })()
-  },[])
-  
+    })();
+  }, []);
+
   //@ts-ignore
-  const notifications = useSelector(state=>state.notification.data?.notifications)
+  const notifications = useSelector(
+    (state) => state.notification.data?.notifications
+  );
   // console.log('lenght of notifications is ', notifications?.length);
-  
+
   return (
     <>
       <Head>
@@ -239,7 +246,7 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
-              <Badge className={styles.badge}>{notifications?.length}</Badge> 
+              <Badge className={styles.badge}>{notifications?.length}</Badge>
             </Button>
           </div>
           <NavDropdown

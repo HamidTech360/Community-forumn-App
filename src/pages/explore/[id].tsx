@@ -27,7 +27,8 @@ import {
   setPostTitle,
   selectNewPost,
 } from "@/reduxFeatures/api/postSlice";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import styles from "@/styles/profile.module.scss";
 import { RiDeleteBin5Line, RiFlagFill, RiUserFollowFill } from "react-icons/ri";
 import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
@@ -52,8 +53,10 @@ const BlogPost = () => {
 
   useEffect(() => {
     // Re-Fetch Post After Editing Post
-    if (Object.keys(postEdited).length !== 0) {
-      FetchData();
+    if (postEdited !== null && postEdited !== undefined) {
+      if (Object.keys(postEdited).length !== 0) {
+        FetchData();
+      }
     }
   }, [postEdited]);
 
@@ -67,6 +70,7 @@ const BlogPost = () => {
     }
   }, [user]);
 
+  // Set Following Status
   useEffect(() => {
     if (currentlyFollowing.includes(blogPost?.author?._id)) {
       setFollowed(true);
@@ -87,7 +91,6 @@ const BlogPost = () => {
     });
   };
 
-  // const sanitizer = DOMPurify.sanitize;
   const FetchData = async () => {
     try {
       const exploreResponse = await axios.get(
@@ -96,7 +99,7 @@ const BlogPost = () => {
       setBlogPost(exploreResponse.data.post);
       // console.log("This is explore response", exploreResponse.data.post);
     } catch (error) {
-      router.back();
+      router.replace("/explore");
     }
   };
 
@@ -128,7 +131,7 @@ const BlogPost = () => {
   const likeComment = () => {};
   const replyComment = () => {};
 
-  const deletePost = async () => {
+  const handleDeletePost = async () => {
     try {
       const { data } = await axios.delete(
         `${config.serverUrl}/api/posts/${router.query.id}`,
@@ -145,7 +148,7 @@ const BlogPost = () => {
     }
   };
 
-  const editPost = async (post) => {
+  const handleEditPost = async (post) => {
     // Notify Slate Editor Of Post Editing
     dispatch(setSlatePostToEdit(post));
 
@@ -157,13 +160,13 @@ const BlogPost = () => {
 
   const changeFollowingStatus = (post) => {
     if (
-      document.getElementById(`followStr-${blogPost?.author?._id}-page`)
-        .innerText === "Follow"
+      document.getElementById(`followStr-${post?.author?._id}`).innerText ===
+      "Follow"
     ) {
       handleFollow(post?.author?._id);
     } else if (
-      document.getElementById(`followStr-${blogPost?.author?._id}-page`)
-        .innerText === "Unfollow"
+      document.getElementById(`followStr-${post?.author?._id}`).innerText ===
+      "Unfollow"
     ) {
       // let confirmUnFollow = window.confirm(
       //   `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
@@ -231,6 +234,7 @@ const BlogPost = () => {
       <Head>
         <title>Blog</title>
       </Head>
+      <ToastContainer />
       <div className="container">
         <div className="row justify-content-center mt-4">
           <div
@@ -266,14 +270,14 @@ const BlogPost = () => {
                             style={{
                               borderBottom: "1px solid gray",
                             }}
-                            onClick={() => editPost(blogPost)}
+                            onClick={() => handleEditPost(blogPost)}
                           >
                             <BsFolderFill /> Edit Post
                           </NavDropdown.Item>
 
                           <NavDropdown.Item
                             style={{ borderBottom: "1px solid gray" }}
-                            onClick={() => deletePost()}
+                            onClick={() => handleDeletePost()}
                           >
                             <span
                               style={{
@@ -302,24 +306,17 @@ const BlogPost = () => {
                               changeFollowingStatus(blogPost)
                             }
                           >
-                            {/* {currentlyFollowing.includes(
-                              blogPost?.author?._id
-                            ) ? ( */}
                             {followed ? (
                               <>
                                 <BsXCircleFill />{" "}
-                                <span
-                                  id={`followStr-${blogPost?.author?._id}-page`}
-                                >
+                                <span id={`followStr-${blogPost?.author?._id}`}>
                                   Unfollow
                                 </span>
                               </>
                             ) : (
                               <>
                                 <RiUserFollowFill />{" "}
-                                <span
-                                  id={`followStr-${blogPost?.author?._id}-page`}
-                                >
+                                <span id={`followStr-${blogPost?.author?._id}`}>
                                   Follow
                                 </span>
                               </>
@@ -421,16 +418,6 @@ const BlogPost = () => {
                   </div>
                 </div>
               </section>
-              {/* {blogPost.author?._id == user?._id ? (
-                <h6
-                  onClick={() => deletePost()}
-                  style={{ color: "red", marginTop: "15px", cursor: "pointer" }}
-                >
-                  Delete post
-                </h6>
-              ) : (
-                ""
-              )} */}
               {showPostModal && <ExplorePostEditorModal />}
             </div>
           </div>

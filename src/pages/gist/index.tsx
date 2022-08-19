@@ -44,9 +44,11 @@ import {
   selectIsFetching,
 } from "@/reduxFeatures/api/gistSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-import Editor from "@/components/Organisms/SlateEditor/Editor";
+// import Editor from "@/components/Organisms/SlateEditor/Editor";
 import { useRouter } from "next/router";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
+import GistPostEditorModal from "@/components/Organisms/App/ModalPopUp/GistPostEditorModal";
 
 const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   const router = useRouter();
@@ -119,12 +121,12 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     }
   }, [paginatedData]);
 
-  const handleChange = (e) => {
-    dispatch(setGistTitle(e.currentTarget.value));
-  };
+  // const handleChange = (e) => {
+  //   dispatch(setGistTitle(e.currentTarget.value));
+  // };
 
   const filterCategory = (item) => {
-    console.log(item);
+    // console.log(item);
 
     const filtered = allGists.filter((gist) => gist.categories === item.name);
     if (filtered.length <= 0) {
@@ -241,7 +243,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
               <div className="justify-content-center">
                 {(filteredGists.length > 0 ? filteredGists : allGists).map(
                   (post, key) => (
-                    <GistCard gist={post} key={`gist-${key}`} trimmed />
+                    <GistCard key={`gist-${key}`} gist={post} trimmed />
                   )
                 )}
               </div>
@@ -267,7 +269,9 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         </Row>
       </Container>
 
-      <Modal
+      {showGistModal && <GistPostEditorModal />}
+
+      {/* <Modal
         show={showGistModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -320,7 +324,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
             <Editor slim={false} pageAt="/gist" />
           </div>
         </div>
-      </Modal>
+      </Modal> */}
     </section>
   );
 };
