@@ -1,8 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import config from "@/config";
-import axios from 'axios'
+import axios from "axios";
 import { RootState } from "@/redux/store";
 
+// declaring the types for our state
+export type App = {
+  data: any;
+};
 
 export const notificationSlice = createSlice({
     name:'notifications',
@@ -20,9 +24,10 @@ export const notificationSlice = createSlice({
     }
 
 
-})
+
 
 
 export const {getNotification, updateNumberOfNotifications} = notificationSlice.actions
 export const selectNotifications = (state: RootState) => state.notification.data;
 export default notificationSlice.reducer
+

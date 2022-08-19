@@ -29,6 +29,7 @@ import {
   selectSearchModal,
 } from "@/reduxFeatures/app/appSlice";
 import { selectUser, logout } from "@/reduxFeatures/authState/authStateSlice";
+import { selectNotifications } from "@/reduxFeatures/api/notifications";
 import {
   AiFillHome,
   AiOutlineHome,
@@ -51,6 +52,7 @@ import SearchTabs from "@/components/Molecules/SearchTabs";
 const AuthHeader = () => {
   const dispatch = useDispatch();
   const showing = useSelector(selectSearchModal);
+  const stateNotifications = useSelector(selectNotifications);
 
   const handleClosing = () => dispatch(setSearchModal(false));
   const handleShowing = () => dispatch(setSearchModal(true));
@@ -126,6 +128,7 @@ const AuthHeader = () => {
     }
   };
 
+
   useEffect(()=>{
     (async ()=>{
       try{
@@ -149,6 +152,7 @@ const AuthHeader = () => {
   const totalNotifications = useSelector(state=>state.notification.noOfNotifications)
   // console.log('lenght of notifications is ', notifications?.length);
   
+
   return (
     <>
       <Head>
@@ -244,6 +248,7 @@ const AuthHeader = () => {
                 <MdOutlineNotificationsActive />
               )}
               <Badge className={styles.badge}>{totalNotifications}</Badge> 
+
             </Button>
           </div>
           <NavDropdown

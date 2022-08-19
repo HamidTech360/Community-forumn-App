@@ -18,30 +18,74 @@ import {
   setIsFetching,
 } from "@/reduxFeatures/api/gistSlice";
 import config from "../../../../config";
+import {
+  selectSlatePostToEdit,
+  setSlatePostToEdit,
+} from "@/reduxFeatures/app/editSlatePostSlice";
+import { serialize } from "../utils/serializer";
 
-function GistFooterBtn({ editorID }) {
+function GistFooterBtn({ editorID, editorContentValue }: any) {
   const gistIsLoading = useSelector(selectGistIsLoading);
   const [uploading, setUploading] = useState(false);
   const dispatch = useDispatch();
   // const showGistModal = useSelector(selectShowGistModal);
   const showGistTitle = useSelector(selectGistTitle);
+  const slatePostToEdit = useSelector(selectSlatePostToEdit);
   // const gistError = useSelector(selectGistError);
   // const gistIsSuccess = useSelector(selectGistIsSuccess);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   // const router = useRouter();
+
   useEffect(() => {
+    // console.log("selectedCategory:", selectedCategory);
+    return () => {
+      // Reset Content in SlatePostToEdit State when component unmount
+      dispatch(setSlatePostToEdit(null));
+
+      // Reset Post Title State when component unmount
+      dispatch(setGistTitle(""));
+    };
+  }, []);
+
+  useEffect(() => {
+    // Get Post Category name
+    const getCategories = categories.filter((category) => {
+      if (category?.name === slatePostToEdit?.categories) {
+        return category?.name;
+      }
+    });
+    // Set category for post editing
+    if (slatePostToEdit) {
+      setSelectedCategory(getCategories[0]?.name);
+    }
+    // console.log("categories:", categories);
+    // console.log("slatePostToEdit?.category:", slatePostToEdit?.categories);
+    // console.log("categoryName:", categoryName);
+    // console.log("getCategories:", getCategories);
+  }, [categories]);
+
+  useEffect(() => {
+    // Set Post Title On Load If slatePostToEdit
+    if (slatePostToEdit) {
+      // Set Gist Title
+      document.getElementById("createGistID")?.value = slatePostToEdit?.title;
+
+      dispatch(setGistTitle(slatePostToEdit.title));
+    }
+
     (async () => {
       try {
         const { data } = await axios.get(`${config.serverUrl}/api/category`);
         // console.log(data);
         setCategories(data.allCategories);
       } catch (error) {
-        console.log(error.response?.data);
+        // console.log(error.response?.data);
       }
     })();
   }, []);
+
   const createGist = async (e) => {
     e.preventDefault();
 
@@ -52,11 +96,20 @@ function GistFooterBtn({ editorID }) {
     let emptyEditorInnerHtml =
       '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
 
+    // console.log("showGistTitle:", showGistTitle);
     if (
       showGistTitle.trim() === "" ||
       editorInnerHtml === emptyEditorInnerHtml
     ) {
-      toast.warn("Type your message to proceed", {
+      toast.warn("Type your Message Title and Message to proceed", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1",
+      });
+      return;
+    }
+
+    if (!selectedCategory) {
+      toast.warn("Select A Post Category To Proceed", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
       });
@@ -65,44 +118,107 @@ function GistFooterBtn({ editorID }) {
 
     if (editorInnerHtml.trim() !== "") {
       setUploading(true);
-      try {
-        const response = await axios.post(
-          `${config.serverUrl}/api/gists`,
-          {
-            title: showGistTitle,
-            post: editorInnerHtml,
-            categories: selectedCategory ? selectedCategory : "none",
-            country: "Ghana",
-          },
-          {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }
-        );
-        toast.success("Gist uploaded successfully", {
-          position: toast.POSITION.TOP_RIGHT,
-          toastId: "1",
-        });
 
-        // console.log("Gist Post:", response.data.gist);
-        setUploading(false);
-        dispatch(uploadSuccess(response.data.gist));
-        dispatch(setShowGistModal(false));
-      } catch (error) {
-        if (!localStorage.getItem("accessToken")) {
-          toast.error("You must login to create a Gist", {
+      // Serialize Html
+      let serializeNode = {
+        children: editorContentValue,
+      };
+
+      const serializedHtml = serialize(serializeNode);
+
+      // console.log("editorContentValue:", editorContentValue);
+      // console.log("serializedHtml:", serializedHtml);
+      // console.log("slatePostToEdit:", slatePostToEdit);
+
+      if (!slatePostToEdit) {
+        // console.log("selectedCategory:", selectedCategory);
+        // New Post
+        try {
+          const response = await axios.post(
+            `${config.serverUrl}/api/gists`,
+            {
+              title: showGistTitle,
+              post: serializedHtml,
+              // categories: selectedCategory ? selectedCategory : "none",
+              categories: selectedCategory,
+              country: "Ghana",
+            },
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          toast.success("Gist uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,
             toastId: "1",
           });
-        } else {
-          toast.error("Failed to upload Gist: Try Again", {
-            position: toast.POSITION.TOP_RIGHT,
-            toastId: "1",
-          });
+          // console.log("Gist Post:", response.data.gist);
+          setUploading(false);
+          dispatch(uploadSuccess(response.data.gist));
+          dispatch(setShowGistModal(false));
+        } catch (error) {
+          if (!localStorage.getItem("accessToken")) {
+            toast.error("You must login to create a Gist", {
+              position: toast.POSITION.TOP_RIGHT,
+              toastId: "1",
+            });
+          } else {
+            toast.error("Failed to upload Gist: Try Again", {
+              position: toast.POSITION.TOP_RIGHT,
+              toastId: "1",
+            });
+          }
+          dispatch(uploadFailed(error.response?.data));
+          setUploading(false);
         }
-        dispatch(uploadFailed(error.response?.data));
-        setUploading(false);
+      } else {
+        // console.log("showGistTitle:", showGistTitle);
+        // console.log("serializedHtml:", serializedHtml);
+        // console.log("selectedCategory:", selectedCategory);
+        // console.log("EDITING POST");
+        // Edit Post
+        try {
+          const response = await axios.put(
+            `${config.serverUrl}/api/gists/${slatePostToEdit?._id}`,
+            {
+              title: showGistTitle,
+              post: serializedHtml,
+              categories: selectedCategory,
+              country: "Ghana",
+            },
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          toast.success("Gist uploaded successfully", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+
+          // console.log("Gist Post:", response.data.gist);
+          setUploading(false);
+          // dispatch(uploadSuccess(response.data.gist));
+          dispatch(uploadSuccess({ postEdited: Math.random() * 50 }));
+          dispatch(setShowGistModal(false));
+        } catch (error) {
+          // console.log(error.response?.data);
+          if (!localStorage.getItem("accessToken")) {
+            toast.error("You must login to create a Gist", {
+              position: toast.POSITION.TOP_RIGHT,
+              toastId: "1",
+            });
+          } else {
+            toast.error("Failed to upload Gist: Try Again", {
+              position: toast.POSITION.TOP_RIGHT,
+              toastId: "1",
+            });
+          }
+          dispatch(uploadFailed(error.response?.data));
+          setUploading(false);
+        }
       }
     }
   };
