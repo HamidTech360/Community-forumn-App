@@ -26,7 +26,7 @@ import {
 import { useRouter } from "next/router";
 
 import { selectNotifications } from "@/reduxFeatures/api/notifications";
-import { getNotification } from "@/reduxFeatures/api/notifications";
+import { getNotification, updateNumberOfNotifications } from "@/reduxFeatures/api/notifications";
 
 
 import Link from "next/link";
@@ -37,8 +37,8 @@ const Notifications = () => {
   const [radioValue, setRadioValue] = useState("1");
   const [Notifications, setNotifications] = useState([]);
   let router = useRouter(null);
-  const allNotifications = useSelector(state=>state.notification.data.notifications)
- 
+  const allNotifications = useSelector(state=>state.notification.data)
+  const totalNotifications = useSelector(state=>state.notification.noOfNotifications)
   const dispatch = useDispatch();
 
   const radios = [
@@ -54,14 +54,33 @@ const Notifications = () => {
     };
   }, []);
 
-  const navigateToItem = (item) => {
-    if (item.forItem === "post") {
-      router.push(`/explore/${item.itemId}`);
-    } else if (item.forItem === "gist") {
-      router.push(`/gist/${item.itemId}`);
-    } else if (item.forItem === "follow") {
-      //console.log(item);
-      router.push(`/profile/${item.itemId}`);
+  const navigateToItem = async (item) => {
+    dispatch(updateNumberOfNotifications({total:totalNotifications-1}))
+    //alert(allNotifications.indexOf(item))
+    const index = allNotifications.indexOf(item)
+    
+    
+   
+    try{
+      const {data} = await axios.delete(`${config.serverUrl}/api/notifications?id=${item._id}`, {headers:{
+        authorization:`Bearer ${localStorage.getItem('accessToken')}`
+      }})
+      console.log(data)
+      let notifications_c= [...allNotifications]
+      notifications_c[index] = {...notifications_c[index], read:true}
+      dispatch(getNotification(notifications_c))
+    
+      
+      
+      if (item.forItem === "post") {
+        router.push(`/explore/${item.itemId}`);
+      } else if (item.forItem === "gist") {
+        router.push(`/gist/${item.itemId}`);
+      } else if (item.forItem === "follow") {
+        router.push(`/profile/${item.itemId}`);
+      }
+    }catch(error){
+      console.log(error.response?.data)
     }
 
     dispatch(notificationsOffcanvas(false));
@@ -201,7 +220,7 @@ const Notifications = () => {
                 </div>
 
                 {allNotifications?.map((notification, index) => (
-                  <div key={index} onClick={()=>navigateToItem(notification)} >
+                  <div style={{backgroundColor:!notification.read?'#4a7277':''}} key={index} onClick={()=>navigateToItem(notification)} >
                       <NotificationRender notification={notification} />
 
                   </div>

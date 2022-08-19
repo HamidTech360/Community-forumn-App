@@ -7,13 +7,15 @@ import { RootState } from "@/redux/store";
 export const notificationSlice = createSlice({
     name:'notifications',
     initialState:{
-        data:[]
+        data:[],
+        noOfNotifications:0
     },
     reducers:{
         getNotification:  (state, action: PayloadAction<any>) => {
-            //console.log(action.payload);
-            
             state.data=action.payload
+        },
+        updateNumberOfNotifications: (state, action: PayloadAction<any>) => {
+            state.noOfNotifications = action.payload.total
         }
     }
 
@@ -21,6 +23,6 @@ export const notificationSlice = createSlice({
 })
 
 
-export const {getNotification} = notificationSlice.actions
+export const {getNotification, updateNumberOfNotifications} = notificationSlice.actions
 export const selectNotifications = (state: RootState) => state.notification.data;
 export default notificationSlice.reducer
