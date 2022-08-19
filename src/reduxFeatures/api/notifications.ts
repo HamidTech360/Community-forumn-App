@@ -22,7 +22,7 @@ export const notificationSlice = createSlice({
             state.noOfNotifications = action.payload.total
         }
     }
-
+})
 
 
 
