@@ -38,6 +38,9 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
     return () => {
       // Reset Content in SlatePostToEdit State when component unmount
       dispatch(setSlatePostToEdit(null));
+
+      // Reset Post Title State when component unmount
+      dispatch(setPostTitle(""));
     };
   }, []);
 
@@ -67,6 +70,7 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
   }, []);
 
   useEffect(() => {
+    // Set Post Title On Load If slatePostToEdit
     if (slatePostToEdit) {
       // Set Post Title
       document.getElementById("createPostID").value = slatePostToEdit.postTitle;
@@ -129,7 +133,7 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
 
       // console.log("editorContentValue:", editorContentValue);
       // console.log("serializedHtml:", serializedHtml);
-      console.log("slatePostToEdit:", slatePostToEdit);
+      // console.log("slatePostToEdit:", slatePostToEdit);
 
       if (!slatePostToEdit) {
         // New Post
@@ -175,7 +179,6 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
           setUploading(false);
         }
       } else {
-        console.log("EDITING POST");
         // Edit Post
         try {
           const response = await axios.put(
@@ -204,7 +207,7 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
           setUploading(false);
           dispatch(setShowPostModal(false));
         } catch (error) {
-          console.log(error.response?.data);
+          // console.log(error.response?.data);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a post", {
               position: toast.POSITION.TOP_RIGHT,

@@ -57,7 +57,7 @@ const Leaf = ({ attributes, children, leaf }) => {
 
 const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   const editSlatePost = useSelector(selectSlatePostToEdit);
-  console.log("editSlatePost:", editSlatePost);
+  // console.log("editSlatePost:", editSlatePost);
   const router = useRouter();
   const editorID = `${router.asPath}-slateRefId`;
 
@@ -95,7 +95,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
           children: [{ text: "" }],
         },
       ];
-
+  // console.log("initialState:", initialState);
   const [value, setValue] = useState(initialState);
 
   const handleEditorChange = (newValue) => {

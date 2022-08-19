@@ -29,6 +29,7 @@ import {
   selectSearchModal,
 } from "@/reduxFeatures/app/appSlice";
 import { selectUser, logout } from "@/reduxFeatures/authState/authStateSlice";
+import { selectNotifications } from "@/reduxFeatures/api/notifications";
 import {
   AiFillHome,
   AiOutlineHome,
@@ -51,6 +52,7 @@ import SearchTabs from "@/components/Molecules/SearchTabs";
 const AuthHeader = () => {
   const dispatch = useDispatch();
   const showing = useSelector(selectSearchModal);
+  const stateNotifications = useSelector(selectNotifications);
 
   const handleClosing = () => dispatch(setSearchModal(false));
   const handleShowing = () => dispatch(setSearchModal(true));
@@ -126,25 +128,33 @@ const AuthHeader = () => {
     }
   };
 
-  useEffect(()=>{
-    (async ()=>{
-      try{
-        const response = await axios.get(`${config.serverUrl}/api/notifications`, {headers:{
-          authorization:`Bearer ${localStorage.getItem('accessToken')}`
-        }})
-        console.log(response.data);
-        dispatch(getNotification(response.data))
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get(
+          `${config.serverUrl}/api/notifications`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+        // console.log(response.data);
+        dispatch(getNotification(response.data));
         //setNotifications(response.data.notifications)
-      }catch(error){
-        console.log(error.response?.data); 
+      } catch (error) {
+        console.log(error.response?.data);
       }
-    })()
-  },[])
-  
+    })();
+  }, []);
+
   //@ts-ignore
-  const notifications = useSelector(state=>state.notification.data?.notifications)
-  // console.log('lenght of notifications is ', notifications?.length);
-  
+  // const notifications = useSelector(
+  //   (state) => state?.notification?.data?.notifications
+  // );
+  const notifications = stateNotifications?.notifications;
+  // console.log("lenght of notifications is ", notifications?.length);
+
   return (
     <>
       <Head>
@@ -239,7 +249,7 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
-              <Badge className={styles.badge}>{notifications?.length}</Badge> 
+              <Badge className={styles.badge}>{notifications?.length}</Badge>
             </Button>
           </div>
           <NavDropdown
