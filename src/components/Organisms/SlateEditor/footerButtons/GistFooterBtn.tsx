@@ -85,6 +85,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
     let emptyEditorInnerHtml =
       '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
 
+    // console.log("showGistTitle:", showGistTitle);
     if (
       showGistTitle.trim() === "" ||
       editorInnerHtml === emptyEditorInnerHtml
@@ -135,7 +136,6 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
             position: toast.POSITION.TOP_RIGHT,
             toastId: "1",
           });
-
           setUploading(false);
           dispatch(uploadSuccess(response.data.gist));
           dispatch(setShowGistModal(false));

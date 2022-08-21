@@ -95,7 +95,6 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
         }
       );
 
-      console.log("Deleted data:", data);
       if (router.query.id) {
         // Go to the gist page when viewing an individual post
         router.push("/gist");
@@ -319,7 +318,6 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
             </div>
           </div>
         </Card.Title>
-
         <Card.Body
           className="px-3 py-0 mt-3"
           // align="justify"

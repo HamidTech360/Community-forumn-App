@@ -11,7 +11,6 @@ import styles from "@/styles/gist.module.scss";
 import config from "@/config";
 
 import { useDispatch, useSelector } from "@/redux/store";
-// import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import GistPostEditorModal from "@/components/Organisms/App/ModalPopUp/GistPostEditorModal";
 import {
   selectGistData,
@@ -21,7 +20,6 @@ import {
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { count } from "console";
 
 const Gist = ({
   gist,
@@ -42,7 +40,6 @@ const Gist = ({
   const [loading, setLoading] = useState(false);
   const showGistModal = useSelector(selectShowGistModal);
   const gistEdited = useSelector(selectGistData);
-  // const user = useSelector(selectUser);
   const [queryId, setQueryId] = useState(id);
 
   // Allow Rerender Bases On ID Change Even When Route Is Same Path
