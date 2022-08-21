@@ -28,6 +28,7 @@ import makeSecuredRequest, {
   deleteSecuredRequest,
 } from "@/utils/makeSecuredRequest";
 import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
+import PostIsEdited from "@/components/Templates/PostIsEdited";
 // interface IGist {
 //   gist: {
 //     author: {
@@ -68,7 +69,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
       setFollowed(false);
       // dispatch(setFollowed(false));
     }
-  }, [gist]);
+  }, [gist, currentlyFollowing]);
 
   const redirectPage = () => {
     router.push({
@@ -94,6 +95,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
         }
       );
 
+      console.log("Deleted data:", data);
       if (router.query.id) {
         // Go to the gist page when viewing an individual post
         router.push("/gist");
@@ -188,7 +190,6 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
           borderRadius: "10px",
         }}
       >
-        {/* <Card.Header className="border-0"> */}
         <Card.Title>
           <div className="row">
             <div className="col-2 pt-2 pt-md-3 align-items-center">
@@ -244,13 +245,13 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
                 style={{ color: "white" }}
                 drop="start"
                 title={
-                  <Button variant="link" className="text-dark" size="sm">
-                    <HiDotsVertical style={{ color: "black" }} size={22} />
+                  <Button variant="link" size="sm">
+                    <HiDotsVertical size={22} />
                   </Button>
                 }
                 // style={{ marginTop: "-1rem" }}
               >
-                {gist.author?._id === user?._id && (
+                {gist?.author?._id === user?._id && (
                   <>
                     <NavDropdown.Item
                       className={styles.item}
@@ -318,10 +319,9 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
             </div>
           </div>
         </Card.Title>
-        {/* </Card.Header> */}
 
         <Card.Body
-          className="p-0 mt-3"
+          className="px-3 py-0 mt-3"
           // align="justify"
         >
           {gist?.post && (
@@ -329,7 +329,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
               dangerouslySetInnerHTML={{
                 __html: sanitizer(
                   trimmed
-                    ? gist.post.slice(0, 500) || gist.post.slice(0, 500)
+                    ? gist.post.slice(0, 300) || gist.post.slice(0, 300)
                     : gist.post || gist.post
                 ),
               }}
@@ -340,6 +340,8 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
               }}
             />
           )}
+
+          <PostIsEdited post={gist} />
 
           {!primary && (
             <div className="d-flex justify-content-end mt-2">

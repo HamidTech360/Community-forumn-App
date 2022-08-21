@@ -28,7 +28,10 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
 
   const createPost = async (e) => {
     e.preventDefault();
-    const editorInnerHtml = document.getElementById(editorID).innerHTML;
+
+    const editorInnerHtml = (
+      document.getElementById(editorID) as HTMLInputElement
+    ).innerHTML;
 
     let emptyEditorInnerHtml =
       '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
@@ -48,13 +51,8 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       let serializeNode = {
         children: editorContentValue,
       };
-      // let edited =
-      //   '<span><small style="color: gray; font-size: 12px">(edited)</small><span>';
 
       const serializedHtml = serialize(serializeNode);
-
-      // console.log("editorContentValue:", editorContentValue);
-      // console.log("serializedHtml:", serializedHtml);
 
       if (!slatePostToEdit) {
         // New Post
@@ -78,7 +76,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           dispatch(setShowCreatePostModal(false));
           setUploading(false);
         } catch (error) {
-          // console.error(error);
+         
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
               position: toast.POSITION.TOP_RIGHT,
@@ -111,12 +109,11 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
 
           // Auto update & Rerender Feed Post
           dispatch(setNewFeed({ postEdited: Math.random() * 50 }));
-          // Auto Update modalCard Post While Opened
+          // Auto Update & Rerender modalCard Post While Opened
           dispatch(setModalCardPostEdited(serializedHtml));
           dispatch(setShowCreatePostModal(false));
           setUploading(false);
         } catch (error) {
-          // console.error(error);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
               position: toast.POSITION.TOP_RIGHT,

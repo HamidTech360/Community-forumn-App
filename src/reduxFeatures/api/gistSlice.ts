@@ -14,6 +14,7 @@ export type GistState = {
       gistTitle: string;
     };
     isFetching: boolean;
+    topContributors: any;
   };
 };
 
@@ -28,6 +29,7 @@ const initialState: GistState = {
       gistTitle: "",
     },
     isFetching: false,
+    topContributors: [],
   },
 };
 
@@ -62,6 +64,9 @@ export const gistSlice = createSlice({
     setIsFetching: (state, action: PayloadAction<boolean>) => {
       state.gist.isFetching = action.payload;
     },
+    setTopContributors: (state, action: PayloadAction<any>) => {
+      state.gist.topContributors = action.payload;
+    },
   },
 });
 // Here we are just exporting the actions from this slice, so that we can call them anywhere in our app.
@@ -73,6 +78,7 @@ export const {
   setShowGistModal,
   setGistTitle,
   setIsFetching,
+  setTopContributors,
 } = gistSlice.actions;
 
 // calling the above actions would be useless if we could not access the data in the state. So, we use something called a selector which allows us to select a value from the state.
@@ -87,6 +93,8 @@ export const selectGistTitle = (state: RootState) =>
   state.gist.gist.gistFormData.gistTitle;
 export const selectIsFetching = (state: RootState) =>
   state.gist.gist.isFetching;
+export const selectTopContributors = (state: RootState) =>
+  state.gist.gist.topContributors;
 
 // exporting the reducer here, as we need to add this to the store
 export default gistSlice.reducer;

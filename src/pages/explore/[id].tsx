@@ -36,6 +36,7 @@ import ExplorePostEditorModal from "@/components/Organisms/App/ModalPopUp/Explor
 import makeSecuredRequest, {
   deleteSecuredRequest,
 } from "@/utils/makeSecuredRequest";
+import PostIsEdited from "@/components/Templates/PostIsEdited";
 
 const BlogPost = () => {
   const user = useSelector(selectUser);
@@ -77,7 +78,7 @@ const BlogPost = () => {
     } else {
       setFollowed(false);
     }
-  }, [blogPost]);
+  }, [blogPost, currentlyFollowing]);
 
   // Allow Rerender Bases On ID Change Even When Route Is Same Path
   if (id && id !== queryId) setQueryId(id);
@@ -256,12 +257,12 @@ const BlogPost = () => {
                   <div className="col-1">
                     <NavDropdown
                       drop="start"
+                      style={{ marginTop: "-1rem", color: "white" }}
                       title={
-                        <Button variant="link" className="text-dark" size="sm">
+                        <Button variant="link" size="sm">
                           <HiDotsVertical size={22} />
                         </Button>
                       }
-                      style={{ marginTop: "-1rem" }}
                     >
                       {blogPost.author?._id === user?._id && (
                         <>
@@ -342,19 +343,23 @@ const BlogPost = () => {
                     </small>
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col"></div>
+                <div className="row justify-content-center">
+                  <div className="col-12">
+                    <Image
+                      src={blogPost.blogImage || "/images/formbg.png"}
+                      className="img-fluid shadow-sm mt-2"
+                      alt="Blog Post Image"
+                    ></Image>
+                  </div>
                 </div>
-                <Image
-                  src={blogPost.blogImage || "/images/formbg.png"}
-                  className="img-fluid shadow-sm mt-2"
-                  alt="Blog Post Image"
-                ></Image>
               </div>
               <article
                 className="my-3"
                 dangerouslySetInnerHTML={{ __html: blogPost.postBody }}
               />
+
+              <PostIsEdited post={blogPost} />
+
               <section>
                 <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
                 <div className="row">

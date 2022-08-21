@@ -1,20 +1,32 @@
 //@ts-nocheck
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import config from "../../../../config";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useDispatch } from "@/redux/store";
+import { useDispatch, useSelector } from "@/redux/store";
 import { setShowCreatePostModal } from "@/reduxFeatures/app/createPost";
 import { setNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
 import { useRouter } from "next/router";
+import { serialize } from "../utils/serializer";
+import {
+  selectSlatePostToEdit,
+  setSlatePostToEdit,
+} from "@/reduxFeatures/app/editSlatePostSlice";
+import { setModalCardPostEdited } from "@/reduxFeatures/app/postModalCardSlice";
 
-function GroupsFooterBtn({ editorID }) {
+function GroupsFooterBtn({ editorID, editorContentValue }) {
   const router = useRouter();
-
   const [uploading, setUploading] = useState(false);
-
   const dispatch = useDispatch();
+  const slatePostToEdit = useSelector(selectSlatePostToEdit);
+
+  useEffect(() => {
+    return () => {
+      // Reset Content in SlatePostToEdit State when component unmount
+      dispatch(setSlatePostToEdit(null));
+    };
+  }, []);
 
   const createPost = async (e) => {
     e.preventDefault();
@@ -37,38 +49,84 @@ function GroupsFooterBtn({ editorID }) {
     if (editorInnerHtml.trim() !== "") {
       setUploading(true);
 
-      try {
-        const response = await axios.post(
-          `${config.serverUrl}/api/feed`,
-          { post: editorInnerHtml, group: router?.query?.id },
-          {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+      // Serialize Html
+      let serializeNode = {
+        children: editorContentValue,
+      };
+      const serializedHtml = serialize(serializeNode);
+
+      if (!slatePostToEdit) {
+        // New Post
+        try {
+          const response = await axios.post(
+            `${config.serverUrl}/api/feed`,
+            { post: serializedHtml, group: router?.query?.id },
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          toast.success("Post uploaded successfully", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+
+          // Auto update feeds in /feed
+          dispatch(setNewGroupFeed(response.data.feed));
+          dispatch(setShowCreatePostModal(false));
+          setUploading(false);
+        } catch (error) {
+          if (!localStorage.getItem("accessToken")) {
+            toast.error("You must login to create a Post", {
+              position: toast.POSITION.TOP_RIGHT,
+              toastId: "1",
+            });
+          } else {
+            toast.error("Failed to upload Post: Try Again", {
+              position: toast.POSITION.TOP_RIGHT,
+              toastId: "1",
+            });
           }
-        );
-        toast.success("Post uploaded successfully", {
-          position: toast.POSITION.TOP_RIGHT,
-          toastId: "1",
-        });
-        // console.log("Groups Response data:", response.data.feed);
-        // Auto update feeds in /feed
-        dispatch(setNewGroupFeed(response.data.feed));
-        dispatch(setShowCreatePostModal(false));
-        setUploading(false);
-      } catch (error) {
-        if (!localStorage.getItem("accessToken")) {
-          toast.error("You must login to create a Post", {
-            position: toast.POSITION.TOP_RIGHT,
-            toastId: "1",
-          });
-        } else {
-          toast.error("Failed to upload Post: Try Again", {
-            position: toast.POSITION.TOP_RIGHT,
-            toastId: "1",
-          });
+          setUploading(false);
         }
-        setUploading(false);
+      } else {
+        // Edit Post
+        try {
+          const response = await axios.put(
+            `${config.serverUrl}/api/feed/${slatePostToEdit?._id}`,
+            { post: serializedHtml, group: router?.query?.id },
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          toast.success("Post uploaded successfully", {
+            position: toast.POSITION.TOP_RIGHT,
+            toastId: "1",
+          });
+
+          // Auto update & Rerender Groups Post
+          dispatch(setNewGroupFeed({ postEdited: Math.random() * 50 }));
+          // Auto Update & Rerender modalCard Post While Opened
+          dispatch(setModalCardPostEdited(serializedHtml));
+          dispatch(setShowCreatePostModal(false));
+          setUploading(false);
+        } catch (error) {
+          if (!localStorage.getItem("accessToken")) {
+            toast.error("You must login to create a Post", {
+              position: toast.POSITION.TOP_RIGHT,
+              toastId: "1",
+            });
+          } else {
+            toast.error("Failed to upload Post: Try Again", {
+              position: toast.POSITION.TOP_RIGHT,
+              toastId: "1",
+            });
+          }
+          setUploading(false);
+        }
       }
     }
   };
@@ -81,7 +139,11 @@ function GroupsFooterBtn({ editorID }) {
         className="my-1 me-1"
         onClick={createPost}
       >
-        {uploading ? "uploading..." : "Continue"}
+        {uploading
+          ? "uploading..."
+          : !slatePostToEdit
+          ? "Continue"
+          : "Edit Post"}
       </Button>
     </>
   );

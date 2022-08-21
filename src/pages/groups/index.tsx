@@ -10,14 +10,28 @@ import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { useRouter } from "next/router";
 import config from "@/config";
 import axios from "axios";
-import {FaUser} from 'react-icons/fa'
-
+import { FaUser } from "react-icons/fa";
+import usePagination from "@/hooks/usePagination";
 
 const Groups = () => {
   const router = useRouter();
   const [groups, setGroups] = useState([]);
   const [Posts, setPosts] = useState([]);
-  const [searchResult, setSearchResult] = useState([])
+  const [searchResult, setSearchResult] = useState([]);
+
+  // const {
+  //   paginatedData,
+  //   isReachedEnd,
+  //   error,
+  //   fetchNextPage,
+  //   mutate,
+  //   isValidating,
+  // } = usePagination("/api/feed/groups", "groups");
+
+  // useEffect(() => {
+  //   console.log("paginatedData:", paginatedData);
+  // }, [paginatedData]);
+
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
     (async () => {
@@ -49,25 +63,26 @@ const Groups = () => {
     };
   }, []);
 
-  const handleSearch = async (e)=>{
-     console.log(e.currentTarget.value)
+  const handleSearch = async (e) => {
+    console.log(e.currentTarget.value);
     // if(e.currentTarget.value=="") {
     //   setSearchResult([])
     //   return
     // }
-    if(e.currentTarget.value!==""){
-      try{
-        const {data} = await axios.get(`${config.serverUrl}/api/search/?type=group&keyword=${e.currentTarget.value}`)
+    if (e.currentTarget.value !== "") {
+      try {
+        const { data } = await axios.get(
+          `${config.serverUrl}/api/search/?type=group&keyword=${e.currentTarget.value}`
+        );
         //console.log(data);
-        setSearchResult(data)
-      }catch(error){
+        setSearchResult(data);
+      } catch (error) {
         console.error(error.response?.data);
       }
-      
-    }else{
-      setSearchResult([])
+    } else {
+      setSearchResult([]);
     }
-  }
+  };
 
   return (
     <AuthContent>
@@ -92,29 +107,34 @@ const Groups = () => {
                 borderRadius: "10px",
               }}
             >
-              <Form.Control placeholder="search" onChange={(e)=>handleSearch(e)} />
+              <Form.Control
+                placeholder="search"
+                onChange={(e) => handleSearch(e)}
+              />
             </div>
             <div className={`${styles.groupLists}`}>
-              {(searchResult.length<=0?groups:searchResult).map((item, i) => (
-                <Link href={`/groups/${item._id}/timeline`} key={i} passHref>
-                  <div className={styles.groupCard}>
-                    <div>
-                      {/* <img */}
-                      <Image
-                        src="/images/groups2.png"
-                        className={styles.groupProfileImg}
-                        alt=""
-                      />
-                    </div>
-                    <div>
-                      <div>{item.name} </div>
-                      <div className={styles.groupAdminName}>
-                        Admin: {item.admin?.firstName}{" "}
+              {(searchResult.length <= 0 ? groups : searchResult).map(
+                (item, i) => (
+                  <Link href={`/groups/${item._id}/timeline`} key={i} passHref>
+                    <div className={styles.groupCard}>
+                      <div>
+                        {/* <img */}
+                        <Image
+                          src="/images/groups2.png"
+                          className={styles.groupProfileImg}
+                          alt=""
+                        />
+                      </div>
+                      <div>
+                        <div>{item.name} </div>
+                        <div className={styles.groupAdminName}>
+                          Admin: {item.admin?.firstName}{" "}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                )
+              )}
             </div>
           </Card>
 
@@ -136,7 +156,7 @@ const Groups = () => {
                       <p className="bold">{post.postTitle}</p>
                       <h6>{post.group.name}</h6>
                       <small className="text-muted">
-                       <FaUser color="black" /> {post.author?.firstName}
+                        <FaUser color="black" /> {post.author?.firstName}
                       </small>
                       {/* <Image
                         width={20}

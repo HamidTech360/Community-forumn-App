@@ -55,8 +55,7 @@ export const useModalWithShare = () => {
   };
 };
 
-export function ModalRow({ selected }) {
-  // console.log("selected+++++:", selected);
+export function ModalRow({ selected, modalToggle, mutate }) {
   return (
     <>
       {selected.images ? (
@@ -64,13 +63,21 @@ export function ModalRow({ selected }) {
           <Col lg={6}></Col>
           <Col lg={6}>
             {" "}
-            <ModalCard post={selected} />
+            <ModalCard
+              post={selected}
+              modalToggle={modalToggle}
+              mutate={mutate}
+            />
           </Col>
         </Row>
       ) : (
         <Row>
           <Col lg={12} className="px-3 px-lg-4">
-            <ModalCard post={selected} />
+            <ModalCard
+              post={selected}
+              modalToggle={modalToggle}
+              mutate={mutate}
+            />
           </Col>
         </Row>
       )}
