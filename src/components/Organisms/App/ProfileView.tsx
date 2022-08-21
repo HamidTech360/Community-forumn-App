@@ -199,6 +199,7 @@ const ProfileView = ({
           </div>
           <div className="text-muting">@{profile?.firstName}</div>
 
+          {/* Don't Display Below Option For Logged-in Users */}
           {profile?._id !== user?._id && (
             <div className="container">
               <div className="row justify-content-center mx-auto">
