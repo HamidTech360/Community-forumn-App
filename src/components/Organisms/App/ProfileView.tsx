@@ -199,35 +199,39 @@ const ProfileView = ({
           </div>
           <div className="text-muting">@{profile?.firstName}</div>
 
-          <div className="container">
-            <div className="row justify-content-center mx-auto">
-              <div
-                className="col-5 col-sm-3 col-lg-2 btn btn-sm btn-outline-primary mx-1 p-0"
-                onClick={followStatusFunc}
-                // style={{ cursor: "pointer" }}
-              >
-                {followStatus === true ? (
-                  <>
-                    <BsXCircleFill className={styles.mouseOverBtn} />{" "}
-                    <span>Unfollow</span>
-                  </>
-                ) : (
-                  <>
-                    <RiUserFollowFill className={styles.mouseOverBtn} />{" "}
-                    <span>Follow</span>
-                  </>
-                )}
+          {profile?._id !== user?._id && (
+            <div className="container">
+              <div className="row justify-content-center mx-auto">
+                <div
+                  className="col-5 col-sm-3 col-lg-2 btn btn-sm btn-outline-primary mx-1 p-0"
+                  onClick={followStatusFunc}
+                  // style={{ cursor: "pointer" }}
+                >
+                  {followStatus === true ? (
+                    <>
+                      <BsXCircleFill className={styles.mouseOverBtn} />{" "}
+                      <span>Unfollow</span>
+                    </>
+                  ) : (
+                    <>
+                      <RiUserFollowFill className={styles.mouseOverBtn} />{" "}
+                      <span>Follow</span>
+                    </>
+                  )}
+                </div>
+                <Link href={`/chat?active=${profile?._id}`}>
+                  <div className="col-5 col-sm-3 col-lg-2 btn btn-sm btn-outline-primary mx-1 p-0">
+                    <RiMessage2Fill className={styles.mouseOverBtn} />{" "}
+                    <span> message</span>
+                  </div>
+                </Link>
               </div>
-              <Link href={`/chat?active=${profile?._id}`}>
-              <div className="col-5 col-sm-3 col-lg-2 btn btn-sm btn-outline-primary mx-1 p-0">
-                  <RiMessage2Fill className={styles.mouseOverBtn} />{" "}
-                  <span> message</span>
-              </div>
-              </Link>
             </div>
-          </div>
+          )}
+
           <div className="text-muted text-center">
-                  {profile?.bio || ' Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapienteillum quasi voluptatem explicabo, tempore enim!'}
+            {profile?.bio ||
+              " Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapienteillum quasi voluptatem explicabo, tempore enim!"}
           </div>
           <div
             className="d-flex justify-content-between"

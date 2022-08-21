@@ -78,6 +78,7 @@ import makeSecuredRequest, {
 import { FiEdit } from "react-icons/fi";
 import likes from "@/utils/like";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
+import ChangeFollowingStatus from "../ChangeFollowingStatus";
 // import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
@@ -647,7 +648,6 @@ const PostCard = ({
                       style={{ borderBottom: "1px solid gray" }}
                       onClick={async () => changeFollowingStatus(post)}
                     >
-                      {/* {currentlyFollowing.includes(post?.author?._id) ? ( */}
                       {followed ? (
                         <>
                           <BsXCircleFill />{" "}
