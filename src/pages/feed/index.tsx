@@ -223,7 +223,7 @@ const Feed = () => {
         </div>
       </Container>
 
-      <Modal
+      {/* <Modal
         show={modalOpen}
         className={styles.FeedModal}
         aria-labelledby="contained-modal-title-vcenter"
@@ -238,9 +238,8 @@ const Feed = () => {
             onClick={() => toggle()}
           />
         </span>
-        {/* modalToggle & mutate Does,'t Need Props As There Are Optional & The ModalRow Has Direct Access To What Is Needed Here */}
         <ModalRow selected={selected} modalToggle mutate />
-      </Modal>
+      </Modal> */}
     </AuthContent>
   );
 };

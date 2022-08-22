@@ -268,7 +268,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         </Row>
       </Container>
 
-      {showGistModal && <GistPostEditorModal />}
+      {/* Open Editor Modal */}
+      {showGistModal && <GistPostEditorModal pageAt="/gist" />}
 
       {/* <Modal
         show={showGistModal}

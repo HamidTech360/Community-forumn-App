@@ -21,17 +21,17 @@ const Timeline = ({ groupId }: any) => {
   // Allow Rerender Bases On ID Change Even When Route Is Same Path
   if (id && id !== queryId) setQueryId(id);
 
-  useEffect(() => {
-    /* Add New Post To The Top (before axios fetch in other to enable fast rerender)
-     ** This is a Preset as Author's name would return undefined as only author's id is returned in newlyCreatedPost
-     ** Author's name would be fixed upon axios fetxh
-     */
-    if (Object.entries(newlyCreatedPost).length !== 0) {
-      let currentTimeline = [...timeLinePosts];
-      currentTimeline.unshift(newlyCreatedPost);
-      setTimeLinePosts(currentTimeline);
-    }
-  }, [newlyCreatedPost]);
+  // useEffect(() => {
+  //   /* Add New Post To The Top (before axios fetch in other to enable fast rerender)
+  //    ** This is a Preset as Author's name would return undefined as only author's id is returned in newlyCreatedPost
+  //    ** Author's name would be fixed upon axios fetxh
+  //    */
+  //   if (Object.entries(newlyCreatedPost).length !== 0) {
+  //     let currentTimeline = [...timeLinePosts];
+  //     currentTimeline.unshift(newlyCreatedPost); // Adding newlyCreatedPost here Is Causing Editing Error
+  //     setTimeLinePosts(currentTimeline);
+  //   }
+  // }, [newlyCreatedPost]);
 
   useEffect(() => {
     (async function () {

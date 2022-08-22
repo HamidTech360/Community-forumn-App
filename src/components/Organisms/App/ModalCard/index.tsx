@@ -72,7 +72,12 @@ import { BiArrowBack } from "react-icons/bi";
 import { FiEdit } from "react-icons/fi";
 import likes from "@/utils/like";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
-import { setShowCreatePostModal } from "@/reduxFeatures/app/createPost";
+import {
+  selectCreatePostModal,
+  setShowCreatePostModal,
+} from "@/reduxFeatures/app/createPost";
+import OpenShareModal from "../ModalPopUp/OpenShareModal";
+import FeedPostEditorModal from "../ModalPopUp/FeedPostEditorModal";
 
 const ModalCard = ({
   post: postComingIn,
@@ -108,6 +113,7 @@ const ModalCard = ({
   const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
   const currentlyFollowing = useSelector(selectFollowing);
+  const showModal = useSelector(selectCreatePostModal);
 
   const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
     useModalWithShare();
@@ -519,9 +525,9 @@ const ModalCard = ({
   };
 
   const handleEditPost = async (post) => {
-    console.log("post:", post);
+    // Notify Slate Editor Of Post Editing
     dispatch(setSlatePostToEdit(post));
-    document.getElementById("createFeedPost").click();
+    dispatch(setShowCreatePostModal(true));
   };
 
   return (
@@ -892,7 +898,18 @@ const ModalCard = ({
         </Col>
       </Row>
 
-      <Modal
+      {/* Open Editor Modal */}
+      {showModal && <FeedPostEditorModal pageAt={router.asPath} />}
+
+      {modalOpenShare && (
+        <OpenShareModal
+          modalOpenShare={modalOpenShare}
+          toggleShare={toggleShare}
+          selectedShare={selectedShare}
+        />
+      )}
+
+      {/* <Modal
         show={modalOpenShare}
         className={styles.FeedModal}
         aria-labelledby="contained-modal-title-vcenter"
@@ -917,7 +934,7 @@ const ModalCard = ({
           />{" "}
         </span>
         <ModalRowShare selectedShare={selectedShare} />
-      </Modal>
+      </Modal> */}
     </>
   );
 };

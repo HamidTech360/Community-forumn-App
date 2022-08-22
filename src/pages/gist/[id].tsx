@@ -252,7 +252,8 @@ const Gist = ({
         </Col>
       </Row>
 
-      {showGistModal && <GistPostEditorModal />}
+      {/* Open Editor Modal */}
+      {showGistModal && <GistPostEditorModal pageAt="/gist" />}
     </Container>
   );
 };

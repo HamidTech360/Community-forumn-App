@@ -427,7 +427,7 @@ const Explore = ({}) => {
         <Followers />
       </section>
 
-      {showPostModal && <ExplorePostEditorModal />}
+      {showPostModal && <ExplorePostEditorModal  pageAt="/explore" />}
 
       {/* <Modal
         show={showPostModal}

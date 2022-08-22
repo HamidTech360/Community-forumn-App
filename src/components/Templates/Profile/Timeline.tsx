@@ -18,14 +18,19 @@ import {
 } from "@/reduxFeatures/api/postSlice";
 // import ExplorePostEditorModal from "@/components/Organisms/App/ModalPopUp/ExplorePostEditorModal";
 import ExplorePostEditorModal from "../../../components/Organisms/App/ModalPopUp/ExplorePostEditorModal";
-import { setShowCreatePostModal } from "@/reduxFeatures/app/createPost";
+import {
+  setShowCreatePostModal,
+  selectCreatePostModal,
+} from "@/reduxFeatures/app/createPost";
+import FeedPostEditorModal from "@/components/Organisms/App/ModalPopUp/FeedPostEditorModal";
 
 const Timeline = ({ Posts: postComingIn }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const showPostModal = useSelector(selectShowPostModal);
   const [Posts, setPostComingIn] = useState(postComingIn);
-  const intersection = useRef();
+  const showModal = useSelector(selectCreatePostModal);
+  // const intersection = useRef();
 
   useEffect(() => {
     if (postComingIn) {
@@ -46,6 +51,7 @@ const Timeline = ({ Posts: postComingIn }) => {
       );
       setPostComingIn(newPosts);
     } catch (error) {
+      setPostComingIn(Posts);
       // console.log(error.response?.data);
     }
   };
@@ -67,7 +73,7 @@ const Timeline = ({ Posts: postComingIn }) => {
   return (
     <div className={styles.profileWrapper}>
       {/* <CreatePost DisplayModal={""} /> */}
-      <div
+      {/* <div
         ref={intersection}
         style={{
           height: "10vh",
@@ -75,7 +81,7 @@ const Timeline = ({ Posts: postComingIn }) => {
           position: "fixed",
           bottom: 0,
         }}
-      ></div>
+      ></div> */}
       {Posts?.map((post, index) => (
         <PostCard
           post={post}
@@ -86,7 +92,9 @@ const Timeline = ({ Posts: postComingIn }) => {
           mutate
         />
       ))}
-      {showPostModal && <ExplorePostEditorModal />}
+
+      {/* Open Editor Modal */}
+      {showModal && <FeedPostEditorModal pageAt={router.asPath} />}
     </div>
   );
 };

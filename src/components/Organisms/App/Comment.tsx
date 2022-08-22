@@ -11,6 +11,7 @@ import config from "@/config";
 import axios from "axios";
 import { toast } from "react-toastify";
 import styles from "@/styles/utils.module.scss";
+import PostMenu from "./ModalPopUp/PostMenu";
 
 const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
   const [liked, setLiked] = useState(false);
@@ -160,6 +161,9 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
             </small>
           </h6>
         </div>
+        {/* <div className="ms-auto">
+          <PostMenu />
+        </div> */}
       </div>
       {/* {console.log("comment?.content", comment?.content)} */}
       <Card.Body

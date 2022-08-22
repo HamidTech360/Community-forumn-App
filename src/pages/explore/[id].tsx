@@ -423,7 +423,9 @@ const BlogPost = () => {
                   </div>
                 </div>
               </section>
-              {showPostModal && <ExplorePostEditorModal />}
+
+              {/* Open Editor Modal */}
+              {showPostModal && <ExplorePostEditorModal pageAt="/explore" />}
             </div>
           </div>
         </div>
