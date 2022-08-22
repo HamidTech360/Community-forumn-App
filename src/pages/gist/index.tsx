@@ -107,7 +107,6 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         setAllGists(paginatedData);
 
         dispatch(uploadCleanUp({}));
-        // dispatch(setShowGistModal(false));
       }
     }
   }, [gistIsSuccess]);

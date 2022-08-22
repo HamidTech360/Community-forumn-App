@@ -21,7 +21,7 @@ import { HiDotsVertical } from "react-icons/hi";
 import { RiDeleteBin5Line, RiFlagFill, RiUserFollowFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "@/redux/store";
 import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
-import { setShowGistModal } from "@/reduxFeatures/api/gistSlice";
+import { setShowGistModal, uploadSuccess } from "@/reduxFeatures/api/gistSlice";
 import axios from "axios";
 // import ChangeFollowingStatus from "../../../Organisms/App/ChangeFollowingStatus";
 import makeSecuredRequest, {
@@ -81,9 +81,10 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
   };
 
   const handleDeletePost = async () => {
-    console.log("router.query.id:", router.query.id);
-    console.log("gist_id:", gist._id);
+    // console.log("router.query.id:", router.query.id);
+    // console.log("gist_id:", gist._id);
     try {
+      // Delete while on /gist or /gist/:id
       const { data } = await axios.delete(
         `${config.serverUrl}/api/gists/${
           router.query.id ? router.query.id : gist._id
@@ -99,6 +100,8 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
         // Go to the gist page when viewing an individual post
         router.push("/gist");
       }
+      // Auto update & Rerender Groups Post
+      dispatch(uploadSuccess({ postEdited: Math.random() * 50 }));
     } catch (error) {
       console.error(error.response?.data);
     }
