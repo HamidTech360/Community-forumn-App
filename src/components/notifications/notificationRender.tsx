@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { GoPrimitiveDot } from "react-icons/go";
 import styles from "../../styles/notifications.module.css";
 
-function NotificationRender({ notification }) {
+function NotificationRender({ notification, style }) {
 
   const [author, setAuthor] = useState([])
   const [otherStrings, setOtherStrings] = useState([])
@@ -23,7 +23,7 @@ function NotificationRender({ notification }) {
       <div className="col-10 col-sm-11 pe-0">
         <div
           className={`${styles.notificationMessages}`}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer",...style }}
         >
           <Card.Text className={styles.notificationMessages} > 
               <span className={styles.authorName}>{`${author[0]} ${author[1]} `}</span>
@@ -31,7 +31,7 @@ function NotificationRender({ notification }) {
                 <span>{string} </span>
               )}
           </Card.Text>
-          <hr />
+          <hr  />
           {/* <div>
             <small className="text-muted" style={{ fontSize: "11px" }}>
               <div className="mt-3">

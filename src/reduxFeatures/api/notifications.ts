@@ -8,26 +8,26 @@ export type App = {
   data: any;
 };
 
-const initialState: App = {
-  data: [],
-};
-
 export const notificationSlice = createSlice({
-  name: "notifications",
-  initialState,
-  //   initialState: {
-  //     data: [],
-  //   },
-  reducers: {
-    getNotification: (state, action: PayloadAction<any>) => {
-      //console.log(action.payload);
-
-      state.data = action.payload;
+    name:'notifications',
+    initialState:{
+        data:[],
+        noOfNotifications:0
     },
-  },
-});
+    reducers:{
+        getNotification:  (state, action: PayloadAction<any>) => {
+            state.data=action.payload
+        },
+        updateNumberOfNotifications: (state, action: PayloadAction<any>) => {
+            state.noOfNotifications = action.payload.total
+        }
+    }
+})
 
-export const { getNotification } = notificationSlice.actions;
-export const selectNotifications = (state: RootState) =>
-  state.notification.data;
-export default notificationSlice.reducer;
+
+
+
+export const {getNotification, updateNumberOfNotifications} = notificationSlice.actions
+export const selectNotifications = (state: RootState) => state.notification.data;
+export default notificationSlice.reducer
+
