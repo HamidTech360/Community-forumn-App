@@ -12,9 +12,8 @@ import { useRouter } from "next/router";
 
 const Timeline = ({ groupId }: any) => {
   const [timeLinePosts, setTimeLinePosts] = useState([]);
-  //console.log('group Id from timeline is '+ groupId);
 
-  const newCreatePost = useSelector(selectNewGroupFeed);
+  const newlyCreatedPost = useSelector(selectNewGroupFeed);
 
   const router = useRouter();
   const { id } = router.query;
@@ -23,9 +22,20 @@ const Timeline = ({ groupId }: any) => {
   if (id && id !== queryId) setQueryId(id);
 
   useEffect(() => {
+    /* Add New Post To The Top (before axios fetch in other to enable fast rerender)
+     ** This is a Preset as Author's name would return undefined as only author's id is returned in newlyCreatedPost
+     ** Author's name would be fixed upon axios fetxh
+     */
+    if (Object.entries(newlyCreatedPost).length !== 0) {
+      let currentTimeline = [...timeLinePosts];
+      currentTimeline.unshift(newlyCreatedPost);
+      setTimeLinePosts(currentTimeline);
+    }
+  }, [newlyCreatedPost]);
+
+  useEffect(() => {
     (async function () {
       const response = await axios.get(
-        // `${config.serverUrl}/api/posts/group/one/${groupId}`,
         `${config.serverUrl}/api/feed/groups/${groupId}`,
         {
           headers: {
@@ -33,12 +43,10 @@ const Timeline = ({ groupId }: any) => {
           },
         }
       );
-      // console.log("+++:", response.data);
       setTimeLinePosts(response.data.posts);
     })();
-  }, [newCreatePost, queryId]);
+  }, [newlyCreatedPost, queryId]);
 
- 
   return (
     <>
       <div>

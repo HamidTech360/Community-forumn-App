@@ -71,12 +71,18 @@ import { MdOutlineCancel } from "react-icons/md";
 import { BiArrowBack } from "react-icons/bi";
 import { FiEdit } from "react-icons/fi";
 import likes from "@/utils/like";
+import PostIsEdited from "@/components/Templates/PostIsEdited";
+import { setShowCreatePostModal } from "@/reduxFeatures/app/createPost";
 
 const ModalCard = ({
   post: postComingIn,
+  modalToggle,
+  mutate,
   trimmed,
 }: {
   post: Record<string, any>;
+  modalToggle?: Function;
+  mutate?: Function;
   trimmed?: Boolean;
 }) => {
   const dispatch = useDispatch();
@@ -435,12 +441,12 @@ const ModalCard = ({
       document.getElementById(`followStr-modal-${post?.author?._id}`)
         .innerText === "Unfollow"
     ) {
-      let confirmUnFollow = window.confirm(
-        `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
-      );
-      if (confirmUnFollow) {
-        handleUnFollow(post?.author?._id);
-      }
+      // let confirmUnFollow = window.confirm(
+      //   `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
+      // );
+      // if (confirmUnFollow) {
+      handleUnFollow(post?.author?._id);
+      // }
     }
   };
 
@@ -489,8 +495,8 @@ const ModalCard = ({
   };
 
   const handleDeletePost = async (post) => {
-    // const newPosts = posts.filter((el) => el._id !== post._id);
-    // console.log(posts, newPosts);
+    // const newPosts = post.filter((el) => el._id !== post._id);
+    // console.log(post);
     // setPosts(posts.filter((el) => el._id !== post._id));
     try {
       const { data } = await axios.delete(
@@ -502,6 +508,11 @@ const ModalCard = ({
         }
       );
       console.log(data, post._id);
+
+      // Close Modal
+      modalToggle();
+      // Re-render Update Post From SWR
+      mutate();
     } catch (error) {
       // console.log(error.response?.data);
     }
@@ -613,13 +624,15 @@ const ModalCard = ({
                 <div className="col-1 col-md-2" style={{ marginTop: "-.8rem" }}>
                   <NavDropdown
                     // className={`position-absolute end-0 ${styles.dropdown}`}
-                    drop="down"
+                    drop="start"
+                    style={{ color: "white" }}
                     title={
                       <Button
                         variant="link"
                         // className="dot-btn"
-                        className="text-dark"
+                        // style={{ color: "white" }}
                         size="lg"
+                        // style={{ color: "green" }}
                       >
                         <HiDotsVertical size={25} />
                       </Button>
@@ -659,7 +672,7 @@ const ModalCard = ({
                         </NavDropdown.Item>
                       </>
                     ) : null}
-                    {user._id == post.author._id && (
+                    {user?._id == post?.author?._id && (
                       <>
                         <NavDropdown.Item
                           className={styles.item}
@@ -721,13 +734,8 @@ const ModalCard = ({
                     //     : post?.postBody || post?.post,
                     // }}
                   />
-                  {post.createdAt !== post.updatedAt && (
-                    <span>
-                      <small style={{ color: "gray", fontSize: "12px" }}>
-                        (edited)
-                      </small>
-                    </span>
-                  )}
+
+                  <PostIsEdited post={post} />
                 </>
               )}
 
@@ -741,10 +749,10 @@ const ModalCard = ({
                   />
                 )}
               </div>
-              {post.likes.length > 0 && (
+              {post?.likes?.length > 0 && (
                 <div className="text-muted d-flex align-items-center">
                   <AiFillLike color="#086a6d" className="mx-2" />
-                  <span>{likes(post.likes)}</span>
+                  <span>{likes(post?.likes)}</span>
                 </div>
               )}
             </Card.Body>

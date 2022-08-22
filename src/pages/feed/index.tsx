@@ -95,9 +95,9 @@ const Feed = () => {
     }
   }, [newFeed]);
 
-  useEffect(()=>{
-    mutate()
-  },[posts])
+  useEffect(() => {
+    mutate();
+  }, [posts]);
 
   useEffect(() => {
     if (paginatedData) {
@@ -128,7 +128,6 @@ const Feed = () => {
   };
 
   const handleEditPost = async (item) => {
-    console.log("item:", item);
     // Notify Slate Editor Of Post Editing
     dispatch(setSlatePostToEdit(item));
 
@@ -192,6 +191,7 @@ const Feed = () => {
                   trimmed
                   handleDeletePost={handleDeletePost}
                   handleEditPost={handleEditPost}
+                  mutate={mutate}
                 />
               ))}
               {isValidating && (
@@ -238,7 +238,8 @@ const Feed = () => {
             onClick={() => toggle()}
           />
         </span>
-        <ModalRow selected={selected} />
+        {/* modalToggle & mutate Does,'t Need Props As There Are Optional & The ModalRow Has Direct Access To What Is Needed Here */}
+        <ModalRow selected={selected} modalToggle mutate />
       </Modal>
     </AuthContent>
   );

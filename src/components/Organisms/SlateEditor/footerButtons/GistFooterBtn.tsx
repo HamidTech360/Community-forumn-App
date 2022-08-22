@@ -28,18 +28,12 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
   const gistIsLoading = useSelector(selectGistIsLoading);
   const [uploading, setUploading] = useState(false);
   const dispatch = useDispatch();
-  // const showGistModal = useSelector(selectShowGistModal);
   const showGistTitle = useSelector(selectGistTitle);
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
-  // const gistError = useSelector(selectGistError);
-  // const gistIsSuccess = useSelector(selectGistIsSuccess);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  // const router = useRouter();
-
   useEffect(() => {
-    // console.log("selectedCategory:", selectedCategory);
     return () => {
       // Reset Content in SlatePostToEdit State when component unmount
       dispatch(setSlatePostToEdit(null));
@@ -60,10 +54,6 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
     if (slatePostToEdit) {
       setSelectedCategory(getCategories[0]?.name);
     }
-    // console.log("categories:", categories);
-    // console.log("slatePostToEdit?.category:", slatePostToEdit?.categories);
-    // console.log("categoryName:", categoryName);
-    // console.log("getCategories:", getCategories);
   }, [categories]);
 
   useEffect(() => {
@@ -78,7 +68,6 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
     (async () => {
       try {
         const { data } = await axios.get(`${config.serverUrl}/api/category`);
-        // console.log(data);
         setCategories(data.allCategories);
       } catch (error) {
         // console.log(error.response?.data);
@@ -126,12 +115,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
 
       const serializedHtml = serialize(serializeNode);
 
-      // console.log("editorContentValue:", editorContentValue);
-      // console.log("serializedHtml:", serializedHtml);
-      // console.log("slatePostToEdit:", slatePostToEdit);
-
       if (!slatePostToEdit) {
-        // console.log("selectedCategory:", selectedCategory);
         // New Post
         try {
           const response = await axios.post(
@@ -139,7 +123,6 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
             {
               title: showGistTitle,
               post: serializedHtml,
-              // categories: selectedCategory ? selectedCategory : "none",
               categories: selectedCategory,
               country: "Ghana",
             },
@@ -153,7 +136,6 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
             position: toast.POSITION.TOP_RIGHT,
             toastId: "1",
           });
-          // console.log("Gist Post:", response.data.gist);
           setUploading(false);
           dispatch(uploadSuccess(response.data.gist));
           dispatch(setShowGistModal(false));
@@ -173,10 +155,6 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
           setUploading(false);
         }
       } else {
-        // console.log("showGistTitle:", showGistTitle);
-        // console.log("serializedHtml:", serializedHtml);
-        // console.log("selectedCategory:", selectedCategory);
-        // console.log("EDITING POST");
         // Edit Post
         try {
           const response = await axios.put(
@@ -198,13 +176,11 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
             toastId: "1",
           });
 
-          // console.log("Gist Post:", response.data.gist);
-          setUploading(false);
-          // dispatch(uploadSuccess(response.data.gist));
+          // Auto update & Rerender Groups Post
           dispatch(uploadSuccess({ postEdited: Math.random() * 50 }));
+          setUploading(false);
           dispatch(setShowGistModal(false));
         } catch (error) {
-          // console.log(error.response?.data);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Gist", {
               position: toast.POSITION.TOP_RIGHT,

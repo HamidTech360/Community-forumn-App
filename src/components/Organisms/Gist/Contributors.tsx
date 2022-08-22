@@ -1,9 +1,15 @@
+import { useSelector } from "@/redux/store";
+import { selectTopContributors } from "@/reduxFeatures/api/gistSlice";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 import { Card, Col, Image, Row } from "react-bootstrap";
 
-const Contributors = ({ contributors }: any) => {
-  // console.log(contributors[0]);
+const Contributors = ({ data }) => {
+  const router = useRouter();
+  const user = useSelector(selectUser);
+  const topContributors = useSelector(selectTopContributors);
 
   return (
     <Card className="p-3 mt-4">
@@ -14,26 +20,54 @@ const Contributors = ({ contributors }: any) => {
           style={{
             fontSize: "0.9rem",
           }}
-        >
-          {/* &nbsp; < href={`/gist/contributors`}>See more</> */}
-        </span>
+        ></span>
       </Card.Title>
-      {contributors?.map((item, key) => (
-        <div
-          key={key}
-          className="d-flex align-items-center justify-content-start gap-2 m-2"
-        >
-          <Image
-            src={item?.images?.avatar || "/images/imagePlaceholder.jpg"}
-            fluid
-            alt={item?.firstName}
-            roundedCircle
-            width={50}
-            height={50}
-          />
+      {/* Author */}
+      <div
+        className="d-flex align-items-center justify-content-start gap-2 m-2"
+        style={{ cursor: "pointer" }}
+        onClick={() => router.push(`/profile/${data.author?._id}`)}
+      >
+        <Image
+          src={user?.images?.avatar || "/images/imagePlaceholder.jpg"}
+          fluid
+          alt={user?.firstName}
+          roundedCircle
+          width={30}
+          height={30}
+        />
 
-          <h6>{item?.firstName} </h6>
-        </div>
+        <h6>{`${data?.author?.firstName} ${data?.author?.lastName}`} </h6>
+      </div>
+
+      {/* Top Contributors */}
+      {topContributors?.map((contributor, key) => (
+        <>
+          {contributor[0] !==
+            `${data.author?.firstName} ${data.author?.lastName}` && (
+            <div
+              key={key}
+              className="d-flex align-items-center justify-content-start gap-2 m-2"
+              style={{ cursor: "pointer" }}
+              onClick={() => router.push(`/profile/${contributor[1].id}`)}
+            >
+              <>
+                <Image
+                  src={
+                    contributor?.images?.avatar ||
+                    "/images/imagePlaceholder.jpg"
+                  }
+                  fluid
+                  alt={contributor?.firstName}
+                  roundedCircle
+                  width={30}
+                  height={30}
+                />
+                <h6>{contributor[0]}</h6>
+              </>
+            </div>
+          )}
+        </>
       ))}
     </Card>
   );

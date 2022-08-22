@@ -11,11 +11,11 @@ import styles from "@/styles/gist.module.scss";
 import config from "@/config";
 
 import { useDispatch, useSelector } from "@/redux/store";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import GistPostEditorModal from "@/components/Organisms/App/ModalPopUp/GistPostEditorModal";
 import {
   selectGistData,
   selectShowGistModal,
+  setTopContributors,
 } from "@/reduxFeatures/api/gistSlice";
 
 import { toast, ToastContainer } from "react-toastify";
@@ -33,13 +33,13 @@ const Gist = ({
   const router = useRouter();
   const { id } = router.query;
 
+  const dispatch = useDispatch();
   const [data, setData] = useState<Record<string, any>>({});
   const [commentPost, setCommentPost] = useState("");
   const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
   const showGistModal = useSelector(selectShowGistModal);
   const gistEdited = useSelector(selectGistData);
-  const user = useSelector(selectUser);
   const [queryId, setQueryId] = useState(id);
 
   // Allow Rerender Bases On ID Change Even When Route Is Same Path
@@ -81,6 +81,70 @@ const Gist = ({
     }
   };
 
+  useEffect(() => {
+    // Top Contributors Logic
+    if (data) {
+      // Get Comment
+      const arr = data?.comments;
+
+      // Ensure Comment is not  undefined or null
+      if (arr) {
+        const counts = {};
+        (async () => {
+          // Comments
+          await arr.forEach(async (element) => {
+            let authorsName = `${element.author.firstName} ${element.author.lastName}`;
+            let postReplies = element.replies;
+
+            if (counts[authorsName]) {
+              counts[authorsName] = {
+                num: counts[authorsName]["num"] + 1,
+                id: element.author._id,
+              };
+            } else {
+              counts[authorsName] = { num: 1, id: element.author._id };
+            }
+
+            // Replies
+            await postReplies.forEach(async (reply) => {
+              let commentReply = `${reply.author.firstName} ${reply.author.lastName}`;
+              let secondLevelReply = reply.replies;
+
+              if (counts[commentReply]) {
+                counts[commentReply] = {
+                  num: counts[commentReply]["num"] + 1,
+                  id: element.author._id,
+                };
+              } else {
+                counts[commentReply] = { num: 1, id: element.author._id };
+              }
+
+              // 2nd level replies
+              await secondLevelReply.forEach(async (element) => {
+                let replyAuthorsName = `${element.author.firstName} ${element.author.lastName}`;
+
+                if (counts[replyAuthorsName]) {
+                  counts[replyAuthorsName] = {
+                    num: counts[replyAuthorsName]["num"] + 1,
+                    id: element.author._id,
+                  };
+                } else {
+                  counts[replyAuthorsName] = { num: 1, id: element.author._id };
+                }
+              });
+            });
+          });
+        })();
+
+        // Split & Sort The Object Values Into An Array
+        const sortedContributors = Object.entries(counts).sort(
+          ([, v1]: any, [, v2]: any) => v2.num - v1.num
+        );
+        dispatch(setTopContributors(sortedContributors));
+      }
+    }
+  }, [data]);
+
   const postComment = async () => {
     try {
       const body = {
@@ -119,7 +183,7 @@ const Gist = ({
       <ToastContainer />
       <Row>
         <Col md={4} className="desktop-only">
-          <Contributors contributors={[user]} />
+          <Contributors data={data} />
         </Col>
         <Col md={8}>
           <GistCard gist={data} primary />

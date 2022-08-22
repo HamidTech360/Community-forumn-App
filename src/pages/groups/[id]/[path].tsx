@@ -59,10 +59,11 @@ const Group = () => {
   }, []);
 
   useEffect(() => {
-   
     (async function () {
       try {
-        const response = await axios.get(`${config.serverUrl}/api/groups/group/${id}`);
+        const response = await axios.get(
+          `${config.serverUrl}/api/groups/group/${id}`
+        );
         setGroupData(response.data);
       } catch (error) {
         console.log(error.response?.data);

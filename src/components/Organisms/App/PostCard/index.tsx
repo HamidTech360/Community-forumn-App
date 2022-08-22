@@ -52,7 +52,7 @@ import {
 import {
   user as userAuth,
   selectUser,
-  // setFollowing,
+  setFollowing,
   selectFollowing,
 } from "@/reduxFeatures/authState/authStateSlice";
 import {
@@ -69,6 +69,7 @@ import {
 } from "@/reduxFeatures/app/postModalCardSlice";
 import { selectCreatePostModal } from "@/reduxFeatures/app/createPost";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
+// import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
 import { useRouter } from "next/router";
 // import Comment from "@/components/Organisms/App/Comment";
 import makeSecuredRequest, {
@@ -76,6 +77,8 @@ import makeSecuredRequest, {
 } from "@/utils/makeSecuredRequest";
 import { FiEdit } from "react-icons/fi";
 import likes from "@/utils/like";
+import PostIsEdited from "@/components/Templates/PostIsEdited";
+import ChangeFollowingStatus from "../ChangeFollowingStatus";
 // import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
@@ -84,6 +87,7 @@ const PostCard = ({
   trimmed,
   handleDeletePost,
   handleEditPost,
+  mutate,
 }) => {
   // console.log("PastCard Loaded+++++");
   // console.log("postComingIn:", postComingIn);
@@ -99,6 +103,7 @@ const PostCard = ({
   const newFeed = useSelector(selectNewFeed);
   // const bookmarkChangedModal = useSelector(selectBookMarkChangedModal);
   const router = useRouter();
+  const [followed, setFollowed] = useState(false);
 
   // const [post, setPostComingIn] = useState(postComingIn);
   const [postReFetched, setPostComingIn] = useState(undefined);
@@ -126,9 +131,26 @@ const PostCard = ({
   const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
     useModalWithShare();
 
-  // useEffect(() => {
-  //   console.log("POST CHANGED:", post);
-  // }, [post]);
+  // Update users following in AuthUser because it's a frontend resolved data
+  useEffect(() => {
+    if (user) {
+      const currentlyFollowing = user.following.map((follow) => {
+        return follow._id;
+      });
+      dispatch(setFollowing(currentlyFollowing));
+    }
+  }, [user]);
+
+  // Set Following Status
+  useEffect(() => {
+    if (currentlyFollowing.includes(post?.author?._id)) {
+      setFollowed(true);
+      // dispatch(setFollowed(true));
+    } else {
+      setFollowed(false);
+      // dispatch(setFollowed(false));
+    }
+  }, [post, currentlyFollowing]);
 
   // Monitor Likes In ModalCard & Let It Reflect In PastCard
   useEffect(() => {
@@ -457,6 +479,7 @@ const PostCard = ({
   };
 
   const changeFollowingStatus = (post) => {
+    console.log("post:", post);
     if (
       document.getElementById(`followStr-${post?.author?._id}`).innerText ===
       "Follow"
@@ -476,6 +499,8 @@ const PostCard = ({
   };
 
   const handleFollow = async (id) => {
+    // Preset following
+    setFollowed(true);
     try {
       await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
@@ -493,11 +518,15 @@ const PostCard = ({
         }
       })();
     } catch (error) {
+      // Revert on axios  failure
+      setFollowed(false);
       // console.error("follow Error:", error);
     }
   };
 
   const handleUnFollow = async (id) => {
+    // Preset following
+    setFollowed(false);
     try {
       await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
@@ -515,6 +544,8 @@ const PostCard = ({
         }
       })();
     } catch (error) {
+      // Revert on axios  failure
+      setFollowed(true);
       // console.error("follow Error:", error);
     }
   };
@@ -574,9 +605,10 @@ const PostCard = ({
 
             <div className="col-1" style={{ marginTop: "-.8rem" }}>
               <NavDropdown
-                drop="down"
+                drop="start"
+                style={{ color: "white" }}
                 title={
-                  <Button variant="link" className="text-dark" size="lg">
+                  <Button variant="link" size="lg">
                     <HiDotsVertical size={25} />
                   </Button>
                 }
@@ -616,7 +648,7 @@ const PostCard = ({
                       style={{ borderBottom: "1px solid gray" }}
                       onClick={async () => changeFollowingStatus(post)}
                     >
-                      {currentlyFollowing.includes(post?.author?._id) ? (
+                      {followed ? (
                         <>
                           <BsXCircleFill />{" "}
                           <span id={`followStr-${post?.author?._id}`}>
@@ -699,22 +731,18 @@ const PostCard = ({
                       : sanitizer(post?.postBody) || sanitizer(post?.post),
                   }}
                 />
-                {post.createdAt !== post.updatedAt && (
-                  <span>
-                    <small style={{ color: "gray", fontSize: "12px" }}>
-                      (edited)
-                    </small>
-                  </span>
-                )}
+
+                <PostIsEdited post={post} />
+
                 {router.asPath === "/feed" ||
-                router?.pathname.includes("profile") ? (
+                router?.pathname.includes("profile") ||
+                router?.pathname.includes("groups") ? (
                   <small
                     style={{
                       color: "gray",
                       fontSize: "11px",
                       position: "relative",
                       left: "42%",
-                      // bottom: "0",
                     }}
                   >
                     {" "}
@@ -927,7 +955,8 @@ const PostCard = ({
             onClick={() => toggle()}
           />{" "}
         </span>
-        <ModalRow selected={selected} />
+        {/* modalToggle & mutate Needs Props For Modal Post Deletion Update */}
+        <ModalRow selected={selected} modalToggle={toggle} mutate={mutate} />
       </Modal>
 
       <Modal
