@@ -73,10 +73,9 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
 
           // Auto update & Rerender Feed Post
           dispatch(setNewFeed(response.data.feed));
-          dispatch(setShowCreatePostModal(false));
           setUploading(false);
+          dispatch(setShowCreatePostModal(false));
         } catch (error) {
-         
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
               position: toast.POSITION.TOP_RIGHT,
@@ -111,8 +110,8 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           dispatch(setNewFeed({ postEdited: Math.random() * 50 }));
           // Auto Update & Rerender modalCard Post While Opened
           dispatch(setModalCardPostEdited(serializedHtml));
-          dispatch(setShowCreatePostModal(false));
           setUploading(false);
+          dispatch(setShowCreatePostModal(false));
         } catch (error) {
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {

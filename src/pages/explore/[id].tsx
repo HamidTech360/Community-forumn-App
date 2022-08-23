@@ -37,6 +37,7 @@ import makeSecuredRequest, {
   deleteSecuredRequest,
 } from "@/utils/makeSecuredRequest";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
+import { PostMenu } from "@/components/Organisms/App/PostMenu";
 
 const BlogPost = () => {
   const user = useSelector(selectUser);
@@ -255,7 +256,16 @@ const BlogPost = () => {
                     <h4 className="text-primary">{blogPost?.postTitle}</h4>
                   </div>
                   <div className="col-1">
-                    <NavDropdown
+                    {/* Menu Dots */}
+                    <PostMenu
+                      user={user}
+                      currentlyFollowing={currentlyFollowing}
+                      post={blogPost}
+                      handleEditPost={handleEditPost}
+                      handleDeletePost={handleDeletePost}
+                      changeFollowingStatus={changeFollowingStatus}
+                    />
+                    {/* <NavDropdown
                       drop="start"
                       style={{ marginTop: "-1rem", color: "white" }}
                       title={
@@ -327,7 +337,7 @@ const BlogPost = () => {
                           </NavDropdown.Item>
                         </>
                       )}
-                    </NavDropdown>
+                    </NavDropdown> */}
                   </div>
                 </div>
                 <div className="row">

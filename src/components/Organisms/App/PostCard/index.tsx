@@ -81,6 +81,7 @@ import PostIsEdited from "@/components/Templates/PostIsEdited";
 import ChangeFollowingStatus from "../ChangeFollowingStatus";
 import { FeedPostEditorModal_Modal } from "../ModalPopUp/FeedPostEditorModal";
 import OpenShareModal from "../ModalPopUp/OpenShareModal";
+import PostCardMenu from "../PostMenu";
 // import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
@@ -606,7 +607,18 @@ const PostCard = ({
             </div>
 
             <div className="col-1" style={{ marginTop: "-.8rem" }}>
-              <NavDropdown
+              <PostCardMenu
+                user={user}
+                post={post}
+                followed={followed}
+                changeFollowingStatus={changeFollowingStatus}
+                postReFetched={postReFetched}
+                setSelected={setSelected}
+                toggle={toggle}
+                handleEditPost={handleEditPost}
+                handleDeletePost={handleDeletePost}
+              />
+              {/* <NavDropdown
                 drop="start"
                 style={{ color: "white" }}
                 title={
@@ -617,7 +629,6 @@ const PostCard = ({
               >
                 <NavDropdown.Item
                   className={styles.item}
-                  // style={{ backgroundColor: "rgb(237, 236, 236)" }}
                   style={{ borderBlock: "1px solid gray" }}
                   onClick={async () => {
                     if (postReFetched) {
@@ -674,7 +685,6 @@ const PostCard = ({
                   <>
                     <NavDropdown.Item
                       className={styles.item}
-                      // style={{ marginTop: "8px" }}
                       style={{
                         borderBottom: "1px solid gray",
                       }}
@@ -697,7 +707,7 @@ const PostCard = ({
                     </NavDropdown.Item>
                   </>
                 )}
-              </NavDropdown>
+              </NavDropdown> */}
             </div>
           </div>
         </Card.Title>

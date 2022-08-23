@@ -58,6 +58,10 @@ import {
   selectUnLikeChangedModal,
   selectModalCardPostEdited,
   setModalCardPostEdited,
+  selectShowCommentModal,
+  setShowCommentModal,
+  setEditableComment,
+  setCommentIsDeleted,
   // setBookMarkChangedModal,
   // selectBookMarkChangedModal,
 } from "@/reduxFeatures/app/postModalCardSlice";
@@ -78,6 +82,8 @@ import {
 } from "@/reduxFeatures/app/createPost";
 import OpenShareModal from "../ModalPopUp/OpenShareModal";
 import FeedPostEditorModal from "../ModalPopUp/FeedPostEditorModal";
+import CommentModal from "../ModalPopUp/CommentModal";
+import { PostMenu } from "../PostMenu";
 
 const ModalCard = ({
   post: postComingIn,
@@ -114,6 +120,7 @@ const ModalCard = ({
   const [loading, setLoading] = useState(false);
   const currentlyFollowing = useSelector(selectFollowing);
   const showModal = useSelector(selectCreatePostModal);
+  // const showCommentModal = useSelector(selectShowCommentModal);
 
   const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
     useModalWithShare();
@@ -530,6 +537,33 @@ const ModalCard = ({
     dispatch(setShowCreatePostModal(true));
   };
 
+  const handleEditComment = async (comment) => {
+    // Send Comment To Be Edited To CommentModal
+    dispatch(setEditableComment(comment));
+    // Show Edit Comment Modal
+    dispatch(setShowCommentModal(true));
+  };
+
+  const handleDeleteComment = async (comment) => {
+    console.log("DelETE NOW");
+    // const newPosts = comment.filter((el) => el._id !== comment._id);
+    // console.log("comment:", comment);
+    try {
+      const { data } = await axios.delete(
+        `${config.serverUrl}/api/comments/${comment._id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      dispatch(setCommentIsDeleted(comment._id));
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
+
   return (
     <>
       <Row>
@@ -628,17 +662,22 @@ const ModalCard = ({
                 </div>
 
                 <div className="col-1 col-md-2" style={{ marginTop: "-.8rem" }}>
-                  <NavDropdown
-                    // className={`position-absolute end-0 ${styles.dropdown}`}
+                  {/* Menu Dots */}
+                  <PostMenu
+                    user={user}
+                    currentlyFollowing={currentlyFollowing}
+                    post={post}
+                    handleEditPost={handleEditPost}
+                    handleDeletePost={handleDeletePost}
+                    changeFollowingStatus={changeFollowingStatus}
+                  />
+                  {/* <NavDropdown
                     drop="start"
                     style={{ color: "white" }}
                     title={
                       <Button
                         variant="link"
-                        // className="dot-btn"
-                        // style={{ color: "white" }}
                         size="lg"
-                        // style={{ color: "green" }}
                       >
                         <HiDotsVertical size={25} />
                       </Button>
@@ -660,7 +699,6 @@ const ModalCard = ({
                             <>
                               <BsXCircleFill className="text-muted" />{" "}
                               <span id={`followStr-modal-${post?.author?._id}`}>
-                                {/* NOTE: Don't change the "Unfollow" Text From PascalCase, else unfollowing wouldn't work */}
                                 Unfollow
                               </span>
                             </>
@@ -668,7 +706,6 @@ const ModalCard = ({
                             <>
                               <RiUserFollowFill className="text-muted" />{" "}
                               <span id={`followStr-modal-${post?.author?._id}`}>
-                                {/* NOTE: Don't change the "Follow" Text From PascalCase, else following wouldn't work */}
                                 Follow
                               </span>
                             </>
@@ -682,7 +719,6 @@ const ModalCard = ({
                       <>
                         <NavDropdown.Item
                           className={styles.item}
-                          // style={{ marginTop: "8px" }}
                           style={{
                             borderBottom: "1px solid gray",
                           }}
@@ -692,15 +728,12 @@ const ModalCard = ({
                         </NavDropdown.Item>
 
                         <NavDropdown.Item
-                          // style={{ marginTop: "8px" }}
                           style={{ borderBottom: "1px solid gray" }}
                           onClick={() => handleDeletePost(post)}
                         >
                           <span
                             style={{
                               color: "red",
-                              // fontWeight: "500",
-                              // marginLeft: "10px",
                             }}
                           >
                             <RiDeleteBin5Line /> Delete Post
@@ -708,7 +741,7 @@ const ModalCard = ({
                         </NavDropdown.Item>
                       </>
                     )}
-                  </NavDropdown>
+                  </NavDropdown> */}
                 </div>
               </div>
             </Card.Title>
@@ -844,13 +877,11 @@ const ModalCard = ({
                     }
                     width={50}
                     height={50}
-                    // className="img-fluid"
                     roundedCircle={true}
                     alt="Author's Image"
                   />
                 </div>
                 <div className="col-12 col-md-10">
-                  {/* <div className="form-floating shadow"> */}
                   <div style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}>
                     <textarea
                       id="articleTextarea"
@@ -859,7 +890,6 @@ const ModalCard = ({
                       onChange={(e) => setCommentPost(e.target.value)}
                       style={{ height: "100px" }}
                     ></textarea>
-                    {/* <label htmlFor="articleTextarea">Comments</label> */}
                   </div>
                 </div>
                 <div className="col-5 ms-auto d-grid">
@@ -888,7 +918,14 @@ const ModalCard = ({
                     post?.comments?.map((comment, index) => {
                       // console.log("comment:", comment);
                       return (
-                        <Comment key={`post_${index}`} comment={comment} />
+                        <Comment
+                          key={`post_${index}`}
+                          currentlyFollowing={currentlyFollowing}
+                          comment={comment}
+                          handleEditComment={handleEditComment}
+                          handleDeleteComment={handleDeleteComment}
+                          changeFollowingStatus={changeFollowingStatus}
+                        />
                       );
                     })}
                 </div>
@@ -908,6 +945,8 @@ const ModalCard = ({
           selectedShare={selectedShare}
         />
       )}
+
+      {/* {showCommentModal && <CommentModal />} */}
 
       {/* <Modal
         show={modalOpenShare}

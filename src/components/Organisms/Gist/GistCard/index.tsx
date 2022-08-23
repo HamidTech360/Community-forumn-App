@@ -29,6 +29,7 @@ import makeSecuredRequest, {
 } from "@/utils/makeSecuredRequest";
 import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
+import {PostMenu} from "../../App/PostMenu";
 // interface IGist {
 //   gist: {
 //     author: {
@@ -242,7 +243,16 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
               </div>
             </div>
             <div className="col-3 col-sm-2 ms-auto p-0">
-              <NavDropdown
+              {/* Menu Dots */}
+              <PostMenu
+                user={user}
+                currentlyFollowing={currentlyFollowing}
+                post={gist}
+                handleEditPost={handleEditPost}
+                handleDeletePost={handleDeletePost}
+                changeFollowingStatus={changeFollowingStatus}
+              />
+              {/* <NavDropdown
                 className="p-0"
                 style={{ color: "white" }}
                 drop="start"
@@ -251,7 +261,6 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
                     <HiDotsVertical size={22} />
                   </Button>
                 }
-                // style={{ marginTop: "-1rem" }}
               >
                 {gist?.author?._id === user?._id && (
                   <>
@@ -293,9 +302,6 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
                       className={styles.item}
                       style={{ borderBottom: "1px solid gray" }}
                       onClick={async () => changeFollowingStatus(gist)}
-                      // onClick={async () => (
-                      //   <ChangeFollowingStatus post={gist} />
-                      // )}
                     >
                       {followed ? (
                         <>
@@ -317,7 +323,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
                     </NavDropdown.Item>
                   </>
                 )}
-              </NavDropdown>
+              </NavDropdown> */}
             </div>
           </div>
         </Card.Title>
