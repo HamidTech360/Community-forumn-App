@@ -19,8 +19,8 @@ import {
 import PostIsEdited from "@/components/Templates/PostIsEdited";
 
 const Comment = ({
-  currentlyFollowing,
   comment: commentComingIn,
+  currentlyFollowing,
   handleEditComment,
   handleDeleteComment,
   changeFollowingStatus,
@@ -51,7 +51,7 @@ const Comment = ({
     }
   }, [commentIsEdited]);
 
-  // Auto Render Comment after post Deletion
+  // Auto Render Comment after Post Deletion
   useEffect(() => {
     if (comment?._id === commentIsDeleted?._id) {
       setCommentComingIn(commentIsDeleted);
@@ -59,6 +59,7 @@ const Comment = ({
   }, [commentIsDeleted]);
 
   useEffect(() => {
+    // Monitor & Set Like Status
     if (comment?.likes?.includes(user?._id)) {
       setLiked(true);
     } else {
@@ -168,6 +169,7 @@ const Comment = ({
       className="row px-2"
       style={{ border: "none", background: "none", lineHeight: "1.2" }}
     >
+      {console.log("comment:", comment)}
       <hr className="w-75 mx-auto text-muted" />
       <div className="col-12 d-flex align-items-center justify-content-start gap-2 mt-1">
         <Image
@@ -272,7 +274,16 @@ const Comment = ({
           {comment.replies?.length > 0 &&
             comment.replies?.map((reply, index) => {
               // console.log("Comment Reply:", reply);
-              return <Replies key={`comment_${index}`} reply={reply} />;
+              return (
+                <Replies
+                  key={`comment_${index}`}
+                  reply={reply}
+                  currentlyFollowing={currentlyFollowing}
+                  handleEditComment={handleEditComment}
+                  handleDeleteComment={handleDeleteComment}
+                  changeFollowingStatus={changeFollowingStatus}
+                />
+              );
             })}
         </div>
       )}

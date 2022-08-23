@@ -540,7 +540,7 @@ const ModalCard = ({
   const handleEditComment = async (comment) => {
     // Send Comment To Be Edited To CommentModal
     dispatch(setEditableComment(comment));
-    // Show Edit Comment Modal
+    // Show CommentModal Editor
     dispatch(setShowCommentModal(true));
   };
 
@@ -922,8 +922,8 @@ const ModalCard = ({
                       return (
                         <Comment
                           key={`post_${index}`}
-                          currentlyFollowing={currentlyFollowing}
                           comment={comment}
+                          currentlyFollowing={currentlyFollowing}
                           handleEditComment={handleEditComment}
                           handleDeleteComment={handleDeleteComment}
                           changeFollowingStatus={changeFollowingStatus}
