@@ -547,10 +547,11 @@ const ModalCard = ({
   const handleDeleteComment = async (comment) => {
     console.log("DelETE NOW");
     // const newPosts = comment.filter((el) => el._id !== comment._id);
-    // console.log("comment:", comment);
+    console.log("comment:", comment);
+    console.log("comment._id:", comment?._id);
     try {
       const { data } = await axios.delete(
-        `${config.serverUrl}/api/comments/${comment._id}`,
+        `${config.serverUrl}/api/comments/${comment?._id}`,
         {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -558,7 +559,8 @@ const ModalCard = ({
         }
       );
 
-      dispatch(setCommentIsDeleted(comment._id));
+      console.log("Deleted  Comment:", data);
+      dispatch(setCommentIsDeleted(comment?._id));
     } catch (error) {
       console.log(error.response?.data);
     }
