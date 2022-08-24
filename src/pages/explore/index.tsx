@@ -90,6 +90,8 @@ const Explore = ({}) => {
   const [pageIndexHousing, setPageIndexHousing] = useState(0);
   const [pageIndexPtJobs, setPageIndexPtJobs] = useState(0);
 
+  // const [initPageCategoryIndex, setInitPageCategoryIndex] = useState(0);
+
   // SWR usePagination
   const { paginatedBlogAll, mutateBlogAll, isLoadingBlogAll, errorBlogAll } =
     usePaginationBlogAll("/api/posts", pageIndexAll);
@@ -142,9 +144,9 @@ const Explore = ({}) => {
     errorBlogPtJobs,
   } = usePaginationBlogPtJobs("/api/posts?category=pt_jobs", pageIndexPtJobs);
 
-  // useEffect(() => {
-  //   console.log("showPost:", showPost);
-  // }, []);
+  useEffect(() => {
+    console.log("showPost:", showPost);
+  }, [showPost]);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -194,7 +196,16 @@ const Explore = ({}) => {
   }, []);
 
   const filterCategory = (item) => {
-    console.log("key is", item);
+    // console.log("key is", item);
+
+    // console.log("pageIndexAll:", pageIndexAll);
+    // console.log("pageIndexStudyAbroad:", pageIndexStudyAbroad);
+    // console.log("pageIndexWorkAbroad:", pageIndexWorkAbroad);
+    // console.log("pageIndexLiveAbroad:", pageIndexLiveAbroad);
+    // console.log("pageIndexPgStudies:", pageIndexPgStudies);
+    // console.log("pageIndexHousing:", pageIndexHousing);
+    // console.log("pageIndexPtJobs:", pageIndexPtJobs);
+
     setKey(item);
 
     let paginatedKey = "All";
@@ -230,6 +241,34 @@ const Explore = ({}) => {
 
     // setFilteredPosts(filtered);
   };
+
+  // useEffect(() => {
+  //   // Adjust React Paginator Active Page On Tab Change Based on Active Category Last Index
+  //   if (paginateCategory) {
+  //     if (paginateCategory === "paginatedBlogAll") {
+  //       setInitPageCategoryIndex(pageIndexAll);
+  //       // filterCategory({ selected: pageIndexAll });
+  //     } else if (paginateCategory === "paginatedBlogStudyAbroad") {
+  //       setInitPageCategoryIndex(pageIndexStudyAbroad);
+  //       // filterCategory({ selected: pageIndexStudyAbroad });
+  //     } else if (paginateCategory === "paginatedBlogWorkAbroad") {
+  //       setInitPageCategoryIndex(pageIndexWorkAbroad);
+  //       // filterCategory({ selected: pageIndexWorkAbroad });
+  //     } else if (paginateCategory === "paginatedBlogLiveAbroad") {
+  //       setInitPageCategoryIndex(pageIndexLiveAbroad);
+  //       // filterCategory({ selected: pageIndexLiveAbroad });
+  //     } else if (paginateCategory === "paginatedBlogPgStudies") {
+  //       setInitPageCategoryIndex(pageIndexPgStudies);
+  //       // filterCategory({ selected: pageIndexPgStudies });
+  //     } else if (paginateCategory === "paginatedBlogHousing") {
+  //       setInitPageCategoryIndex(pageIndexHousing);
+  //       // filterCategory({ selected: pageIndexHousing });
+  //     } else if (paginateCategory === "paginatedBlogPtJobs") {
+  //       setInitPageCategoryIndex(pageIndexPtJobs);
+  //       // filterCategory({ selected: pageIndexPtJobs });
+  //     }
+  //   }
+  // }, [paginateCategory]);
 
   useEffect(() => {
     // Re-render Only The Changed Category For New Post Only If Tab Is Active
@@ -364,7 +403,7 @@ const Explore = ({}) => {
   // };
 
   const handlePageChange = (page) => {
-    // console.log("Page Clicked:", page.selected);
+    console.log("Page Clicked:", page.selected);
 
     // setPageIndexAll(page.selected);
     //
@@ -458,10 +497,9 @@ const Explore = ({}) => {
               defaultActiveKey={"all"}
             >
               <Tab title="All" eventKey="all" key="all" />
-              {categories.map((category, i) => (
+              {categories.map((category) => (
                 <Tab
-                  key={i}
-                  onClick={() => filterCategory(category)}
+                  key={category.name}
                   eventKey={category.name}
                   title={category.name}
                 />
@@ -521,7 +559,7 @@ const Explore = ({}) => {
             previousLabel={paginatorDisplay.previous}
             nextLabel={paginatorDisplay.next}
             breakLabel="..."
-            pageCount={showPost?.numPages}
+            pageCount={isNaN(showPost?.numPages) ? 0 : showPost?.numPages}
             marginPagesDisplayed={paginatorDisplay.pageMargin}
             pageRangeDisplayed={paginatorDisplay.pageRange}
             onPageChange={handlePageChange}
@@ -534,30 +572,35 @@ const Explore = ({}) => {
             nextLinkClassName="page-link"
             breakClassName="page-item"
             breakLinkClassName="page-link"
+            activeClassName="bg-primary text-light"
             activeLinkClassName="bg-primary text-light"
             // eslint-disable-next-line no-unused-vars
             hrefBuilder={(page, pageCount, selected) =>
               page >= 1 && page <= pageCount ? `/explore/${page}` : "#"
             }
             hrefAllControls
+            // disableInitialCallback={true}
+            // initialPage={2}
+            // initialPage={initPageCategoryIndex}
+
             // forcePage={pageIndexAll}
-            forcePage={
-              paginateCategory === "paginatedBlogAll"
-                ? pageIndexAll
-                : paginateCategory === "paginatedBlogStudyAbroad"
-                ? paginatedBlogStudyAbroad
-                : paginateCategory === "paginatedBlogWorkAbroad"
-                ? paginatedBlogWorkAbroad
-                : paginateCategory === "paginatedBlogLiveAbroad"
-                ? paginatedBlogLiveAbroad
-                : paginateCategory === "paginatedBlogPgStudies"
-                ? paginatedBlogPgStudies
-                : paginateCategory === "paginatedBlogHousing"
-                ? paginatedBlogHousing
-                : paginateCategory === "paginatedBlogPtJobs"
-                ? paginatedBlogPtJobs
-                : null
-            }
+            // forcePage={
+            //   paginateCategory === "paginatedBlogAll"
+            //     ? pageIndexAll
+            //     : paginateCategory === "paginatedBlogStudyAbroad"
+            //     ? paginatedBlogStudyAbroad
+            //     : paginateCategory === "paginatedBlogWorkAbroad"
+            //     ? paginatedBlogWorkAbroad
+            //     : paginateCategory === "paginatedBlogLiveAbroad"
+            //     ? paginatedBlogLiveAbroad
+            //     : paginateCategory === "paginatedBlogPgStudies"
+            //     ? paginatedBlogPgStudies
+            //     : paginateCategory === "paginatedBlogHousing"
+            //     ? paginatedBlogHousing
+            //     : paginateCategory === "paginatedBlogPtJobs"
+            //     ? paginatedBlogPtJobs
+            //     : null
+            // }
             renderOnZeroPageCount={null}
           />
         </Container>
