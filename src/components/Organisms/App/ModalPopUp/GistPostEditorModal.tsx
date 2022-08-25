@@ -14,7 +14,7 @@ import styles from "@/styles/gist.module.scss";
 import formStyles from "@/styles/templates/new-group/formField.module.css";
 import "react-toastify/dist/ReactToastify.css";
 
-function GistPostEditorModal() {
+function GistPostEditorModal({ pageAt }) {
   const dispatch = useDispatch();
   const showGistModal = useSelector(selectShowGistModal);
 
@@ -74,7 +74,8 @@ function GistPostEditorModal() {
           </Form>
         </div>
         <div className="col-12 mt-2 mb-4 px-lg-4">
-          <Editor slim={false} pageAt="/gist" />
+          {/* <Editor slim={false} pageAt="/gist" /> */}
+          <Editor slim={false} pageAt={pageAt} />
         </div>
       </div>
     </Modal>

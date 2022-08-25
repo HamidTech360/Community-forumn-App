@@ -43,7 +43,6 @@ const Group = () => {
   const router = useRouter();
   const { path, id } = router.query;
   const [groupData, setGroupData] = useState([]);
-  // const newCreatePost = useSelector(selectNewCreatePost);
   const newCreatePost = useSelector(selectNewGroupFeed);
 
   const [queryId, setQueryId] = useState(id);

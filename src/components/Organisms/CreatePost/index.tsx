@@ -18,12 +18,13 @@ import {
   setShowCreatePostModal,
 } from "@/reduxFeatures/app/createPost";
 import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
+import FeedPostEditorModal from "../App/ModalPopUp/FeedPostEditorModal";
 
 const CreatePost = ({ pageAt }) => {
   const data = useSelector(selectUser);
   const showModal = useSelector(selectCreatePostModal);
   const dispatch = useDispatch();
-  const newCreatePost = useSelector(selectNewGroupFeed);
+  // const newCreatePost = useSelector(selectNewGroupFeed);
 
   return (
     <Card className="p-4">
@@ -56,7 +57,10 @@ const CreatePost = ({ pageAt }) => {
         </>
       </div>
 
-      <Modal
+      {/* Open Editor Modal */}
+      {showModal && <FeedPostEditorModal pageAt={pageAt} />}
+
+      {/* <Modal
         show={showModal}
         className={styles2.GistModal}
         aria-labelledby="contained-modal-title-vcenter"
@@ -75,7 +79,7 @@ const CreatePost = ({ pageAt }) => {
         <div className="col-12 px-4 mt-2 mb-4">
           <Editor slim={false} pageAt={pageAt} />
         </div>
-      </Modal>
+      </Modal> */}
     </Card>
   );
 };

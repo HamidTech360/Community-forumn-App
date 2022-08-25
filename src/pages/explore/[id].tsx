@@ -37,6 +37,12 @@ import makeSecuredRequest, {
   deleteSecuredRequest,
 } from "@/utils/makeSecuredRequest";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
+import { PostMenu } from "@/components/Organisms/App/PostMenu";
+import {
+  setCommentIsDeleted,
+  setEditableComment,
+  setShowCommentModal,
+} from "@/reduxFeatures/app/postModalCardSlice";
 
 const BlogPost = () => {
   const user = useSelector(selectUser);
@@ -124,6 +130,7 @@ const BlogPost = () => {
     comments.unshift(res.data);
     setBlogPost({ ...blogPost, comments });
     setLoading(false);
+    (document.getElementById("articleTextarea") as HTMLInputElement).value = "";
   };
 
   useEffect(() => {
@@ -156,6 +163,35 @@ const BlogPost = () => {
     if (router?.pathname.includes("explore") || router.asPath === "/explore") {
       // Open Blog Post Modal
       dispatch(setShowPostModal(true));
+    }
+  };
+
+  const handleEditComment = async (comment) => {
+    // Send Comment To Be Edited To CommentModal
+    dispatch(setEditableComment(comment));
+    // Show CommentModal Editor
+    dispatch(setShowCommentModal(true));
+  };
+
+  const handleDeleteComment = async (comment) => {
+    console.log("DelETE NOW");
+    // const newPosts = comment.filter((el) => el._id !== comment._id);
+    console.log("comment:", comment);
+    console.log("comment._id:", comment?._id);
+    try {
+      const { data } = await axios.delete(
+        `${config.serverUrl}/api/comments/${comment?._id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      console.log("Deleted  Comment:", data);
+      dispatch(setCommentIsDeleted(comment?._id));
+    } catch (error) {
+      console.log(error.response?.data);
     }
   };
 
@@ -255,7 +291,16 @@ const BlogPost = () => {
                     <h4 className="text-primary">{blogPost?.postTitle}</h4>
                   </div>
                   <div className="col-1">
-                    <NavDropdown
+                    {/* Menu Dots */}
+                    <PostMenu
+                      user={user}
+                      currentlyFollowing={currentlyFollowing}
+                      post={blogPost}
+                      handleEditPost={handleEditPost}
+                      handleDeletePost={handleDeletePost}
+                      changeFollowingStatus={changeFollowingStatus}
+                    />
+                    {/* <NavDropdown
                       drop="start"
                       style={{ marginTop: "-1rem", color: "white" }}
                       title={
@@ -327,7 +372,7 @@ const BlogPost = () => {
                           </NavDropdown.Item>
                         </>
                       )}
-                    </NavDropdown>
+                    </NavDropdown> */}
                   </div>
                 </div>
                 <div className="row">
@@ -414,16 +459,26 @@ const BlogPost = () => {
                     {blogPost.comments?.length > 0 &&
                       [...blogPost.comments].reverse().map((comment, index) => {
                         return (
+                          // <Comment
+                          //   key={`blogPost_${index}`}
+                          //   comment={comment}
+                          // />
                           <Comment
                             key={`blogPost_${index}`}
                             comment={comment}
+                            currentlyFollowing={currentlyFollowing}
+                            handleEditComment={handleEditComment}
+                            handleDeleteComment={handleDeleteComment}
+                            changeFollowingStatus={changeFollowingStatus}
                           />
                         );
                       })}
                   </div>
                 </div>
               </section>
-              {showPostModal && <ExplorePostEditorModal />}
+
+              {/* Open Editor Modal */}
+              {showPostModal && <ExplorePostEditorModal pageAt="/explore" />}
             </div>
           </div>
         </div>

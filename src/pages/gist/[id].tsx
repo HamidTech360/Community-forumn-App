@@ -20,6 +20,20 @@ import {
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  user as userAuth,
+  selectFollowing,
+} from "@/reduxFeatures/authState/authStateSlice";
+import {
+  selectShowCommentModal,
+  setCommentIsDeleted,
+  setEditableComment,
+  setShowCommentModal,
+} from "@/reduxFeatures/app/postModalCardSlice";
+import makeSecuredRequest, {
+  deleteSecuredRequest,
+} from "@/utils/makeSecuredRequest";
+import CommentModal from "@/components/Organisms/App/ModalPopUp/CommentModal";
 
 const Gist = ({
   gist,
@@ -40,7 +54,9 @@ const Gist = ({
   const [loading, setLoading] = useState(false);
   const showGistModal = useSelector(selectShowGistModal);
   const gistEdited = useSelector(selectGistData);
+  const currentlyFollowing = useSelector(selectFollowing);
   const [queryId, setQueryId] = useState(id);
+  const showCommentModal = useSelector(selectShowCommentModal);
 
   // Allow Rerender Bases On ID Change Even When Route Is Same Path
   if (id && id !== queryId) setQueryId(id);
@@ -175,6 +191,96 @@ const Gist = ({
     }
   };
 
+  const changeFollowingStatus = (post) => {
+    if (
+      document.getElementById(`followStr-modal-${post?.author?._id}`)
+        .innerText === "Follow"
+    ) {
+      handleFollow(post?.author?._id);
+    } else if (
+      document.getElementById(`followStr-modal-${post?.author?._id}`)
+        .innerText === "Unfollow"
+    ) {
+      // let confirmUnFollow = window.confirm(
+      //   `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
+      // );
+      // if (confirmUnFollow) {
+      handleUnFollow(post?.author?._id);
+      // }
+    }
+  };
+
+  const handleFollow = async (id) => {
+    try {
+      await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
+
+      // Update Auth User State
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
+    } catch (error) {
+      // console.error("follow Error:", error);
+    }
+  };
+
+  const handleUnFollow = async (id) => {
+    try {
+      await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
+
+      // Update Auth User State
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
+    } catch (error) {
+      // console.error("follow Error:", error);
+    }
+  };
+
+  const handleEditComment = async (comment) => {
+    // Send Comment To Be Edited To CommentModal
+    dispatch(setEditableComment(comment));
+    // Show Edit Comment Modal
+    dispatch(setShowCommentModal(true));
+  };
+
+  const handleDeleteComment = async (comment) => {
+    console.log("DelETE NOW");
+    // const newPosts = comment.filter((el) => el._id !== comment._id);
+    // console.log("comment:", comment);
+    try {
+      const { data } = await axios.delete(
+        `${config.serverUrl}/api/comments/${comment._id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      dispatch(setCommentIsDeleted(comment._id));
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
+
   return (
     <Container>
       <Head>
@@ -238,7 +344,17 @@ const Gist = ({
               <div className="col-12 mt-4">
                 {data?.comments?.length > 0 &&
                   [...data?.comments].reverse().map((comment, index) => {
-                    return <Comment key={`data_${index}`} comment={comment} />;
+                    // return <Comment key={`data_${index}`} comment={comment} />;
+                    return (
+                      <Comment
+                        key={`data_${index}`}
+                        comment={comment}
+                        currentlyFollowing={currentlyFollowing}
+                        handleEditComment={handleEditComment}
+                        handleDeleteComment={handleDeleteComment}
+                        changeFollowingStatus={changeFollowingStatus}
+                      />
+                    );
                   })}
               </div>
             </div>
@@ -252,7 +368,10 @@ const Gist = ({
         </Col>
       </Row>
 
-      {showGistModal && <GistPostEditorModal />}
+      {/* Open Editor Modal */}
+      {showGistModal && <GistPostEditorModal pageAt="/gist" />}
+      {/* Open Comment Modal */}
+      {/* {showCommentModal && <CommentModal />} */}
     </Container>
   );
 };

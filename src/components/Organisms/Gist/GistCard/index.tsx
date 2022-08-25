@@ -21,7 +21,7 @@ import { HiDotsVertical } from "react-icons/hi";
 import { RiDeleteBin5Line, RiFlagFill, RiUserFollowFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "@/redux/store";
 import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
-import { setShowGistModal } from "@/reduxFeatures/api/gistSlice";
+import { setShowGistModal, uploadSuccess } from "@/reduxFeatures/api/gistSlice";
 import axios from "axios";
 // import ChangeFollowingStatus from "../../../Organisms/App/ChangeFollowingStatus";
 import makeSecuredRequest, {
@@ -29,6 +29,7 @@ import makeSecuredRequest, {
 } from "@/utils/makeSecuredRequest";
 import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
+import {PostMenu} from "../../App/PostMenu";
 // interface IGist {
 //   gist: {
 //     author: {
@@ -81,9 +82,10 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
   };
 
   const handleDeletePost = async () => {
-    console.log("router.query.id:", router.query.id);
-    console.log("gist_id:", gist._id);
+    // console.log("router.query.id:", router.query.id);
+    // console.log("gist_id:", gist._id);
     try {
+      // Delete while on /gist or /gist/:id
       const { data } = await axios.delete(
         `${config.serverUrl}/api/gists/${
           router.query.id ? router.query.id : gist._id
@@ -99,6 +101,8 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
         // Go to the gist page when viewing an individual post
         router.push("/gist");
       }
+      // Auto update & Rerender Groups Post
+      dispatch(uploadSuccess({ postEdited: Math.random() * 50 }));
     } catch (error) {
       console.error(error.response?.data);
     }
@@ -239,7 +243,16 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
               </div>
             </div>
             <div className="col-3 col-sm-2 ms-auto p-0">
-              <NavDropdown
+              {/* Menu Dots */}
+              <PostMenu
+                user={user}
+                currentlyFollowing={currentlyFollowing}
+                post={gist}
+                handleEditPost={handleEditPost}
+                handleDeletePost={handleDeletePost}
+                changeFollowingStatus={changeFollowingStatus}
+              />
+              {/* <NavDropdown
                 className="p-0"
                 style={{ color: "white" }}
                 drop="start"
@@ -248,7 +261,6 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
                     <HiDotsVertical size={22} />
                   </Button>
                 }
-                // style={{ marginTop: "-1rem" }}
               >
                 {gist?.author?._id === user?._id && (
                   <>
@@ -290,9 +302,6 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
                       className={styles.item}
                       style={{ borderBottom: "1px solid gray" }}
                       onClick={async () => changeFollowingStatus(gist)}
-                      // onClick={async () => (
-                      //   <ChangeFollowingStatus post={gist} />
-                      // )}
                     >
                       {followed ? (
                         <>
@@ -314,7 +323,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
                     </NavDropdown.Item>
                   </>
                 )}
-              </NavDropdown>
+              </NavDropdown> */}
             </div>
           </div>
         </Card.Title>

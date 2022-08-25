@@ -74,8 +74,8 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
 
           // Auto update feeds in /feed
           dispatch(setNewGroupFeed(response.data.feed));
-          dispatch(setShowCreatePostModal(false));
           setUploading(false);
+          dispatch(setShowCreatePostModal(false));
         } catch (error) {
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Post", {
@@ -111,8 +111,8 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
           dispatch(setNewGroupFeed({ postEdited: Math.random() * 50 }));
           // Auto Update & Rerender modalCard Post While Opened
           dispatch(setModalCardPostEdited(serializedHtml));
-          dispatch(setShowCreatePostModal(false));
           setUploading(false);
+          dispatch(setShowCreatePostModal(false));
         } catch (error) {
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Post", {

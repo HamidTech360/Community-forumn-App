@@ -136,8 +136,8 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
             position: toast.POSITION.TOP_RIGHT,
             toastId: "1",
           });
-          setUploading(false);
           dispatch(uploadSuccess(response.data.gist));
+          setUploading(false);
           dispatch(setShowGistModal(false));
         } catch (error) {
           if (!localStorage.getItem("accessToken")) {

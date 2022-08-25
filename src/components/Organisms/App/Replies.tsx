@@ -6,15 +6,29 @@ import Age from "../../Atoms/Age";
 import DOMPurify from "dompurify";
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import {
+  selectCommentIsDeleted,
+  selectCommentIsEdited,
+} from "@/reduxFeatures/app/postModalCardSlice";
 import config from "@/config";
 import axios from "axios";
 
 import styles from "@/styles/utils.module.scss";
+import { PostMenuModal } from "./PostMenu";
 
-const Replies = ({ reply: replyComingIn }: Record<string, any>) => {
+const Replies = ({
+  reply: replyComingIn,
+  currentlyFollowing,
+  handleEditComment,
+  handleDeleteComment,
+  changeFollowingStatus,
+}: Record<string, any>) => {
   const [liked, setLiked] = useState(false);
+  // const [comment, setCommentComingIn] = useState(commentComingIn);
   const [reply, setReplyComingIn] = useState(replyComingIn);
   const user = useSelector(selectUser);
+  const replyIsEdited = useSelector(selectCommentIsEdited);
+  const replyIsDeleted = useSelector(selectCommentIsDeleted);
   const sanitizer = DOMPurify.sanitize;
   // console.log(reply);
 
@@ -22,6 +36,29 @@ const Replies = ({ reply: replyComingIn }: Record<string, any>) => {
   useEffect(() => {
     setReplyComingIn(replyComingIn);
   }, [replyComingIn]);
+
+  // Auto Render Comment after post Edit
+  useEffect(() => {
+    if (reply?._id === replyIsEdited?._id) {
+      setReplyComingIn(replyIsEdited);
+    }
+  }, [replyIsEdited]);
+
+  // Auto Render Reply after post Deletion
+  useEffect(() => {
+    if (reply?._id === replyIsDeleted?._id) {
+      setReplyComingIn(replyIsDeleted);
+    }
+  }, [replyIsDeleted]);
+
+  useEffect(() => {
+    // Monitor & Set Like Status
+    if (reply?.likes?.includes(user?._id)) {
+      setLiked(true);
+    } else {
+      setLiked(false);
+    }
+  }, [reply]);
 
   const handleLike = async () => {
     try {
@@ -73,11 +110,6 @@ const Replies = ({ reply: replyComingIn }: Record<string, any>) => {
     }
   };
 
-  useEffect(() => {
-    if (reply?.likes?.includes(user?._id)) {
-      setLiked(true);
-    }
-  }, []);
   return (
     <Card
       className={`${styles.replies} mt-3 `}
@@ -88,6 +120,7 @@ const Replies = ({ reply: replyComingIn }: Record<string, any>) => {
         lineHeight: "1.2",
       }}
     >
+      {console.log("reply:", reply)}
       <hr
         className="w-75 mx-auto text-primary"
         style={{ marginTop: "-.2rem" }}
@@ -114,6 +147,17 @@ const Replies = ({ reply: replyComingIn }: Record<string, any>) => {
             </small>
           </h6>
         </div>
+        <div className="col-2 ms-auto me-5">
+          {/* Menu Dots */}
+          <PostMenuModal
+            user={user}
+            currentlyFollowing={currentlyFollowing}
+            comment={reply}
+            handleEditComment={handleEditComment}
+            handleDeleteComment={handleDeleteComment}
+            changeFollowingStatus={changeFollowingStatus}
+          />
+        </div>
       </div>
       <Card.Body
         className="container px-md-5"
@@ -134,7 +178,7 @@ const Replies = ({ reply: replyComingIn }: Record<string, any>) => {
             }
           }}
         >
-          {reply.likes?.length > 0 && (
+          {reply?.likes?.length > 0 && (
             <small className="badge rounded-pill bg-primary px-2 py-1 text-white">
               {reply.likes?.length}
             </small>

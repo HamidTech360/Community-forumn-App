@@ -12,7 +12,7 @@ import { FaTimes } from "react-icons/fa";
 import styles from "../../../../styles/explore.module.scss";
 import formStyles from "../../../../styles/templates/new-group/formField.module.css";
 
-const ExplorePostEditorModal = () => {
+const ExplorePostEditorModal = ({ pageAt }) => {
   const dispatch = useDispatch();
   const showPostModal = useSelector(selectShowPostModal);
 
@@ -73,7 +73,7 @@ const ExplorePostEditorModal = () => {
           </Form>
         </div>
         <div className="col-12 mt-2 mb-4 px-lg-4">
-          <Editor slim={false} pageAt="/explore" />
+          <Editor slim={false} pageAt={pageAt} />
         </div>
       </div>
     </Modal>

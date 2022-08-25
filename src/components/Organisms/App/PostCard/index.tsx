@@ -79,6 +79,9 @@ import { FiEdit } from "react-icons/fi";
 import likes from "@/utils/like";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
 import ChangeFollowingStatus from "../ChangeFollowingStatus";
+import { FeedPostEditorModal_Modal } from "../ModalPopUp/FeedPostEditorModal";
+import OpenShareModal from "../ModalPopUp/OpenShareModal";
+import PostCardMenu from "../PostMenu";
 // import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
@@ -604,7 +607,18 @@ const PostCard = ({
             </div>
 
             <div className="col-1" style={{ marginTop: "-.8rem" }}>
-              <NavDropdown
+              <PostCardMenu
+                user={user}
+                post={post}
+                followed={followed}
+                changeFollowingStatus={changeFollowingStatus}
+                postReFetched={postReFetched}
+                setSelected={setSelected}
+                toggle={toggle}
+                handleEditPost={handleEditPost}
+                handleDeletePost={handleDeletePost}
+              />
+              {/* <NavDropdown
                 drop="start"
                 style={{ color: "white" }}
                 title={
@@ -615,7 +629,6 @@ const PostCard = ({
               >
                 <NavDropdown.Item
                   className={styles.item}
-                  // style={{ backgroundColor: "rgb(237, 236, 236)" }}
                   style={{ borderBlock: "1px solid gray" }}
                   onClick={async () => {
                     if (postReFetched) {
@@ -672,7 +685,6 @@ const PostCard = ({
                   <>
                     <NavDropdown.Item
                       className={styles.item}
-                      // style={{ marginTop: "8px" }}
                       style={{
                         borderBottom: "1px solid gray",
                       }}
@@ -695,7 +707,7 @@ const PostCard = ({
                     </NavDropdown.Item>
                   </>
                 )}
-              </NavDropdown>
+              </NavDropdown> */}
             </div>
           </div>
         </Card.Title>
@@ -885,53 +897,18 @@ const PostCard = ({
             ))}
           </div>
         </Card.Footer>
-
-        {/* {showComment && (
-          <section>
-            <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
-            <div className="row">
-              <div className="col-2 col-md-2">
-                <Image
-                  src={modalPost.authorImage || "/images/imagePlaceholder.jpg"}
-                  className="img-fluid"
-                  roundedCircle={true}
-                  alt="Author's Image"
-                />
-              </div>
-              <div className="col-7 col-md-10">
-                <div
-                  className="form-floating"
-                  style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
-                >
-                  <textarea
-                    id="articleTextarea"
-                    className="form-control"
-                    placeholder="."
-                    onChange={(e) => setCommentPost(e.target.value)}
-                    style={{ height: "100px" }}
-                  ></textarea>
-                  <label htmlFor="articleTextarea">Comments</label>
-                </div>
-              </div>
-              <div className="col-3 col-md-2 ms-auto d-md-grid">
-                <button
-                  className="btn btn-sm btn-primary mt-3 d-inline"
-                  onClick={postComment}
-                >
-                  Send
-                  {loading && (
-                    <div
-                      className="spinner-grow spinner-grow-sm text-light"
-                      role="status"
-                    ></div>
-                  )}
-                </button>
-              </div>
-            </div>
-          </section>
-        )} */}
       </Card>
-      <Modal
+
+      {/* // Open Feed Post Modal Body For Reading More */}
+      {modalOpen && (
+        <FeedPostEditorModal_Modal
+          modalOpen={modalOpen}
+          selected={selected}
+          modalToggle={toggle}
+          mutate={mutate}
+        />
+      )}
+      {/* <Modal
         show={modalOpen}
         className={`${styles.FeedModal}`}
         aria-labelledby="contained-modal-title-vcenter"
@@ -955,11 +932,18 @@ const PostCard = ({
             onClick={() => toggle()}
           />{" "}
         </span>
-        {/* modalToggle & mutate Needs Props For Modal Post Deletion Update */}
         <ModalRow selected={selected} modalToggle={toggle} mutate={mutate} />
-      </Modal>
+      </Modal> */}
 
-      <Modal
+      {modalOpenShare && (
+        <OpenShareModal
+          modalOpenShare={modalOpenShare}
+          toggleShare={toggleShare}
+          selectedShare={selectedShare}
+        />
+      )}
+
+      {/* <Modal
         show={modalOpenShare}
         className={styles.FeedModal}
         aria-labelledby="contained-modal-title-vcenter"
@@ -984,7 +968,7 @@ const PostCard = ({
           />{" "}
         </span>
         <ModalRowShare selectedShare={selectedShare} />
-      </Modal>
+      </Modal> */}
     </>
   );
 };

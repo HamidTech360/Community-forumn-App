@@ -11,11 +11,25 @@ import config from "@/config";
 import axios from "axios";
 import { toast } from "react-toastify";
 import styles from "@/styles/utils.module.scss";
+import PostMenu, { PostMenuModal } from "./PostMenu";
+import {
+  selectCommentIsDeleted,
+  selectCommentIsEdited,
+} from "@/reduxFeatures/app/postModalCardSlice";
+import PostIsEdited from "@/components/Templates/PostIsEdited";
 
-const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
+const Comment = ({
+  comment: commentComingIn,
+  currentlyFollowing,
+  handleEditComment,
+  handleDeleteComment,
+  changeFollowingStatus,
+}: Record<string, any>) => {
   const [liked, setLiked] = useState(false);
   const [comment, setCommentComingIn] = useState(commentComingIn);
   const user = useSelector(selectUser);
+  const commentIsEdited = useSelector(selectCommentIsEdited);
+  const commentIsDeleted = useSelector(selectCommentIsDeleted);
   const router = useRouter();
   const sanitizer = DOMPurify.sanitize;
 
@@ -25,16 +39,33 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
   const [showReplies, setShowReplies] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Auto Render Comment after post
+  // Auto Render Comment after new post
   useEffect(() => {
     setCommentComingIn(commentComingIn);
   }, [commentComingIn]);
 
+  // Auto Render Comment after post Edit
   useEffect(() => {
+    if (comment?._id === commentIsEdited?._id) {
+      setCommentComingIn(commentIsEdited);
+    }
+  }, [commentIsEdited]);
+
+  // Auto Render Comment after Post Deletion
+  useEffect(() => {
+    if (comment?._id === commentIsDeleted?._id) {
+      setCommentComingIn(commentIsDeleted);
+    }
+  }, [commentIsDeleted]);
+
+  useEffect(() => {
+    // Monitor & Set Like Status
     if (comment?.likes?.includes(user?._id)) {
       setLiked(true);
+    } else {
+      setLiked(false);
     }
-  }, []);
+  }, [comment]);
 
   // console.log("comment", comment);
   // console.log("commentComingIn:", commentComingIn);
@@ -135,11 +166,12 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
 
   return (
     <Card
-      className="px-2"
+      className="row px-2"
       style={{ border: "none", background: "none", lineHeight: "1.2" }}
     >
+      {console.log("comment:", comment)}
       <hr className="w-75 mx-auto text-muted" />
-      <div className="d-flex align-items-center justify-content-start gap-2 mt-1">
+      <div className="col-12 d-flex align-items-center justify-content-start gap-2 mt-1">
         <Image
           src="/images/friends3.png"
           alt="User avatar"
@@ -160,6 +192,17 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
             </small>
           </h6>
         </div>
+        <div className="col-2 ms-auto me-3">
+          {/* Menu Dots */}
+          <PostMenuModal
+            user={user}
+            currentlyFollowing={currentlyFollowing}
+            comment={comment}
+            handleEditComment={handleEditComment}
+            handleDeleteComment={handleDeleteComment}
+            changeFollowingStatus={changeFollowingStatus}
+          />
+        </div>
       </div>
       {/* {console.log("comment?.content", comment?.content)} */}
       <Card.Body
@@ -168,6 +211,11 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
           __html: sanitizer(comment?.content),
         }}
       />
+
+      <div className="px-md-5">
+        <PostIsEdited post={comment} />
+      </div>
+
       <div className="buttons d-flex gap-2 justify-content-end mr-4">
         <small
           className="text-muted"
@@ -226,7 +274,16 @@ const Comment = ({ comment: commentComingIn }: Record<string, any>) => {
           {comment.replies?.length > 0 &&
             comment.replies?.map((reply, index) => {
               // console.log("Comment Reply:", reply);
-              return <Replies key={`comment_${index}`} reply={reply} />;
+              return (
+                <Replies
+                  key={`comment_${index}`}
+                  reply={reply}
+                  currentlyFollowing={currentlyFollowing}
+                  handleEditComment={handleEditComment}
+                  handleDeleteComment={handleDeleteComment}
+                  changeFollowingStatus={changeFollowingStatus}
+                />
+              );
             })}
         </div>
       )}

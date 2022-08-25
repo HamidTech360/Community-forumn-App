@@ -42,11 +42,10 @@ const Contributors = ({ data }) => {
 
       {/* Top Contributors */}
       {topContributors?.map((contributor, key) => (
-        <>
+        <div key={key}>
           {contributor[0] !==
             `${data.author?.firstName} ${data.author?.lastName}` && (
             <div
-              key={key}
               className="d-flex align-items-center justify-content-start gap-2 m-2"
               style={{ cursor: "pointer" }}
               onClick={() => router.push(`/profile/${contributor[1].id}`)}
@@ -67,7 +66,7 @@ const Contributors = ({ data }) => {
               </>
             </div>
           )}
-        </>
+        </div>
       ))}
     </Card>
   );
