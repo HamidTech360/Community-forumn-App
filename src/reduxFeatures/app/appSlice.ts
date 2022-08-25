@@ -5,7 +5,7 @@ import type { RootState } from "../../redux/store";
 export type App = {
   notificationOffcanvas: { show: boolean };
   searchModal: { show: boolean };
-  followed: boolean;
+  followed: { isFollow: boolean; id: any };
 };
 
 const initialState: App = {
@@ -15,7 +15,7 @@ const initialState: App = {
   searchModal: {
     show: false,
   },
-  followed: false,
+  followed: { isFollow: false, id: null },
 };
 
 export const appSlice = createSlice({
@@ -28,7 +28,10 @@ export const appSlice = createSlice({
     setSearchModal: (state, action: PayloadAction<boolean>) => {
       state.searchModal.show = action.payload;
     },
-    setFollowed: (state, action: PayloadAction<boolean>) => {
+    setFollowed: (
+      state,
+      action: PayloadAction<{ isFollow: boolean; id: any }>
+    ) => {
       state.followed = action.payload;
     },
   },

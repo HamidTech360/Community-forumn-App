@@ -95,9 +95,9 @@ const Feed = () => {
     }
   }, [newFeed]);
 
-  useEffect(()=>{
-    mutate()
-  },[posts])
+  useEffect(() => {
+    mutate();
+  }, [posts]);
 
   useEffect(() => {
     if (paginatedData) {
@@ -128,7 +128,6 @@ const Feed = () => {
   };
 
   const handleEditPost = async (item) => {
-    console.log("item:", item);
     // Notify Slate Editor Of Post Editing
     dispatch(setSlatePostToEdit(item));
 
@@ -192,6 +191,7 @@ const Feed = () => {
                   trimmed
                   handleDeletePost={handleDeletePost}
                   handleEditPost={handleEditPost}
+                  mutate={mutate}
                 />
               ))}
               {isValidating && (
@@ -223,7 +223,7 @@ const Feed = () => {
         </div>
       </Container>
 
-      <Modal
+      {/* <Modal
         show={modalOpen}
         className={styles.FeedModal}
         aria-labelledby="contained-modal-title-vcenter"
@@ -238,8 +238,8 @@ const Feed = () => {
             onClick={() => toggle()}
           />
         </span>
-        <ModalRow selected={selected} />
-      </Modal>
+        <ModalRow selected={selected} modalToggle mutate />
+      </Modal> */}
     </AuthContent>
   );
 };

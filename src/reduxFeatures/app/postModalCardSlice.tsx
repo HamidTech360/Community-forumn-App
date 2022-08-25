@@ -10,6 +10,10 @@ export type PostModalCardState = {
   unLikeChangedModal: string;
   modalCardPostEdited: any;
   // bookmarkChangedModal: any;
+  commentModal: boolean;
+  editableComment: any;
+  commentIsEdited: any;
+  commentIsDeleted: any;
 };
 
 const initialState: PostModalCardState = {
@@ -19,6 +23,10 @@ const initialState: PostModalCardState = {
   unLikeChangedModal: "",
   modalCardPostEdited: null,
   // bookmarkChangedModal: [],
+  commentModal: false,
+  editableComment: null,
+  commentIsEdited: null,
+  commentIsDeleted: null,
 };
 
 export const postModalCardSlice = createSlice({
@@ -43,6 +51,18 @@ export const postModalCardSlice = createSlice({
     // setBookMarkChangedModal: (state, action: PayloadAction<any>) => {
     //   state.bookmarkChangedModal = action.payload;
     // },
+    setShowCommentModal: (state, action: PayloadAction<boolean>) => {
+      state.commentModal = action.payload;
+    },
+    setEditableComment: (state, action: PayloadAction<any>) => {
+      state.editableComment = action.payload;
+    },
+    setCommentIsEdited: (state, action: PayloadAction<any>) => {
+      state.commentIsEdited = action.payload;
+    },
+    setCommentIsDeleted: (state, action: PayloadAction<any>) => {
+      state.commentIsDeleted = action.payload;
+    },
   },
 });
 // Here we are just exporting the actions from this slice, so that we can call them anywhere in our app.
@@ -53,6 +73,10 @@ export const {
   setUnLikeChangedModal,
   setModalCardPostEdited,
   // setBookMarkChangedModal,
+  setShowCommentModal,
+  setEditableComment,
+  setCommentIsEdited,
+  setCommentIsDeleted,
 } = postModalCardSlice.actions;
 
 // calling the above actions would be useless if we could not access the data in the state. So, we use something called a selector which allows us to select a value from the state.
@@ -68,6 +92,14 @@ export const selectModalCardPostEdited = (state: RootState) =>
   state.postModalCard.modalCardPostEdited;
 // export const selectBookMarkChangedModal = (state: RootState) =>
 //   state.postModalCard.bookmarkChangedModal;
+export const selectShowCommentModal = (state: RootState) =>
+  state.postModalCard.commentModal;
+export const selectEditableComment = (state: RootState) =>
+  state.postModalCard.editableComment;
+export const selectCommentIsEdited = (state: RootState) =>
+  state.postModalCard.commentIsEdited;
+export const selectCommentIsDeleted = (state: RootState) =>
+  state.postModalCard.commentIsDeleted;
 
 // exporting the reducer here, as we need to add this to the store
 export default postModalCardSlice.reducer;

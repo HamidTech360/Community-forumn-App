@@ -58,6 +58,10 @@ import {
   selectUnLikeChangedModal,
   selectModalCardPostEdited,
   setModalCardPostEdited,
+  selectShowCommentModal,
+  setShowCommentModal,
+  setEditableComment,
+  setCommentIsDeleted,
   // setBookMarkChangedModal,
   // selectBookMarkChangedModal,
 } from "@/reduxFeatures/app/postModalCardSlice";
@@ -71,12 +75,25 @@ import { MdOutlineCancel } from "react-icons/md";
 import { BiArrowBack } from "react-icons/bi";
 import { FiEdit } from "react-icons/fi";
 import likes from "@/utils/like";
+import PostIsEdited from "@/components/Templates/PostIsEdited";
+import {
+  selectCreatePostModal,
+  setShowCreatePostModal,
+} from "@/reduxFeatures/app/createPost";
+import OpenShareModal from "../ModalPopUp/OpenShareModal";
+import FeedPostEditorModal from "../ModalPopUp/FeedPostEditorModal";
+import CommentModal from "../ModalPopUp/CommentModal";
+import { PostMenu } from "../PostMenu";
 
 const ModalCard = ({
   post: postComingIn,
+  modalToggle,
+  mutate,
   trimmed,
 }: {
   post: Record<string, any>;
+  modalToggle?: Function;
+  mutate?: Function;
   trimmed?: Boolean;
 }) => {
   const dispatch = useDispatch();
@@ -102,6 +119,8 @@ const ModalCard = ({
   const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
   const currentlyFollowing = useSelector(selectFollowing);
+  const showModal = useSelector(selectCreatePostModal);
+  // const showCommentModal = useSelector(selectShowCommentModal);
 
   const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
     useModalWithShare();
@@ -435,12 +454,12 @@ const ModalCard = ({
       document.getElementById(`followStr-modal-${post?.author?._id}`)
         .innerText === "Unfollow"
     ) {
-      let confirmUnFollow = window.confirm(
-        `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
-      );
-      if (confirmUnFollow) {
-        handleUnFollow(post?.author?._id);
-      }
+      // let confirmUnFollow = window.confirm(
+      //   `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
+      // );
+      // if (confirmUnFollow) {
+      handleUnFollow(post?.author?._id);
+      // }
     }
   };
 
@@ -489,8 +508,8 @@ const ModalCard = ({
   };
 
   const handleDeletePost = async (post) => {
-    // const newPosts = posts.filter((el) => el._id !== post._id);
-    // console.log(posts, newPosts);
+    // const newPosts = post.filter((el) => el._id !== post._id);
+    // console.log(post);
     // setPosts(posts.filter((el) => el._id !== post._id));
     try {
       const { data } = await axios.delete(
@@ -502,15 +521,49 @@ const ModalCard = ({
         }
       );
       console.log(data, post._id);
+
+      // Close Modal
+      modalToggle();
+      // Re-render Update Post From SWR
+      mutate();
     } catch (error) {
       // console.log(error.response?.data);
     }
   };
 
   const handleEditPost = async (post) => {
-    console.log("post:", post);
+    // Notify Slate Editor Of Post Editing
     dispatch(setSlatePostToEdit(post));
-    document.getElementById("createFeedPost").click();
+    dispatch(setShowCreatePostModal(true));
+  };
+
+  const handleEditComment = async (comment) => {
+    // Send Comment To Be Edited To CommentModal
+    dispatch(setEditableComment(comment));
+    // Show CommentModal Editor
+    dispatch(setShowCommentModal(true));
+  };
+
+  const handleDeleteComment = async (comment) => {
+    console.log("DelETE NOW");
+    // const newPosts = comment.filter((el) => el._id !== comment._id);
+    console.log("comment:", comment);
+    console.log("comment._id:", comment?._id);
+    try {
+      const { data } = await axios.delete(
+        `${config.serverUrl}/api/comments/${comment?._id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      console.log("Deleted  Comment:", data);
+      dispatch(setCommentIsDeleted(comment?._id));
+    } catch (error) {
+      console.log(error.response?.data);
+    }
   };
 
   return (
@@ -611,14 +664,21 @@ const ModalCard = ({
                 </div>
 
                 <div className="col-1 col-md-2" style={{ marginTop: "-.8rem" }}>
-                  <NavDropdown
-                    // className={`position-absolute end-0 ${styles.dropdown}`}
-                    drop="down"
+                  {/* Menu Dots */}
+                  <PostMenu
+                    user={user}
+                    currentlyFollowing={currentlyFollowing}
+                    post={post}
+                    handleEditPost={handleEditPost}
+                    handleDeletePost={handleDeletePost}
+                    changeFollowingStatus={changeFollowingStatus}
+                  />
+                  {/* <NavDropdown
+                    drop="start"
+                    style={{ color: "white" }}
                     title={
                       <Button
                         variant="link"
-                        // className="dot-btn"
-                        className="text-dark"
                         size="lg"
                       >
                         <HiDotsVertical size={25} />
@@ -641,7 +701,6 @@ const ModalCard = ({
                             <>
                               <BsXCircleFill className="text-muted" />{" "}
                               <span id={`followStr-modal-${post?.author?._id}`}>
-                                {/* NOTE: Don't change the "Unfollow" Text From PascalCase, else unfollowing wouldn't work */}
                                 Unfollow
                               </span>
                             </>
@@ -649,7 +708,6 @@ const ModalCard = ({
                             <>
                               <RiUserFollowFill className="text-muted" />{" "}
                               <span id={`followStr-modal-${post?.author?._id}`}>
-                                {/* NOTE: Don't change the "Follow" Text From PascalCase, else following wouldn't work */}
                                 Follow
                               </span>
                             </>
@@ -659,11 +717,10 @@ const ModalCard = ({
                         </NavDropdown.Item>
                       </>
                     ) : null}
-                    {user._id == post.author._id && (
+                    {user?._id == post?.author?._id && (
                       <>
                         <NavDropdown.Item
                           className={styles.item}
-                          // style={{ marginTop: "8px" }}
                           style={{
                             borderBottom: "1px solid gray",
                           }}
@@ -673,15 +730,12 @@ const ModalCard = ({
                         </NavDropdown.Item>
 
                         <NavDropdown.Item
-                          // style={{ marginTop: "8px" }}
                           style={{ borderBottom: "1px solid gray" }}
                           onClick={() => handleDeletePost(post)}
                         >
                           <span
                             style={{
                               color: "red",
-                              // fontWeight: "500",
-                              // marginLeft: "10px",
                             }}
                           >
                             <RiDeleteBin5Line /> Delete Post
@@ -689,7 +743,7 @@ const ModalCard = ({
                         </NavDropdown.Item>
                       </>
                     )}
-                  </NavDropdown>
+                  </NavDropdown> */}
                 </div>
               </div>
             </Card.Title>
@@ -721,13 +775,8 @@ const ModalCard = ({
                     //     : post?.postBody || post?.post,
                     // }}
                   />
-                  {post.createdAt !== post.updatedAt && (
-                    <span>
-                      <small style={{ color: "gray", fontSize: "12px" }}>
-                        (edited)
-                      </small>
-                    </span>
-                  )}
+
+                  <PostIsEdited post={post} />
                 </>
               )}
 
@@ -741,10 +790,10 @@ const ModalCard = ({
                   />
                 )}
               </div>
-              {post.likes.length > 0 && (
+              {post?.likes?.length > 0 && (
                 <div className="text-muted d-flex align-items-center">
                   <AiFillLike color="#086a6d" className="mx-2" />
-                  <span>{likes(post.likes)}</span>
+                  <span>{likes(post?.likes)}</span>
                 </div>
               )}
             </Card.Body>
@@ -830,13 +879,11 @@ const ModalCard = ({
                     }
                     width={50}
                     height={50}
-                    // className="img-fluid"
                     roundedCircle={true}
                     alt="Author's Image"
                   />
                 </div>
                 <div className="col-12 col-md-10">
-                  {/* <div className="form-floating shadow"> */}
                   <div style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}>
                     <textarea
                       id="articleTextarea"
@@ -845,7 +892,6 @@ const ModalCard = ({
                       onChange={(e) => setCommentPost(e.target.value)}
                       style={{ height: "100px" }}
                     ></textarea>
-                    {/* <label htmlFor="articleTextarea">Comments</label> */}
                   </div>
                 </div>
                 <div className="col-5 ms-auto d-grid">
@@ -874,7 +920,14 @@ const ModalCard = ({
                     post?.comments?.map((comment, index) => {
                       // console.log("comment:", comment);
                       return (
-                        <Comment key={`post_${index}`} comment={comment} />
+                        <Comment
+                          key={`post_${index}`}
+                          comment={comment}
+                          currentlyFollowing={currentlyFollowing}
+                          handleEditComment={handleEditComment}
+                          handleDeleteComment={handleDeleteComment}
+                          changeFollowingStatus={changeFollowingStatus}
+                        />
                       );
                     })}
                 </div>
@@ -884,7 +937,20 @@ const ModalCard = ({
         </Col>
       </Row>
 
-      <Modal
+      {/* Open Editor Modal */}
+      {showModal && <FeedPostEditorModal pageAt={router.asPath} />}
+
+      {modalOpenShare && (
+        <OpenShareModal
+          modalOpenShare={modalOpenShare}
+          toggleShare={toggleShare}
+          selectedShare={selectedShare}
+        />
+      )}
+
+      {/* {showCommentModal && <CommentModal />} */}
+
+      {/* <Modal
         show={modalOpenShare}
         className={styles.FeedModal}
         aria-labelledby="contained-modal-title-vcenter"
@@ -909,7 +975,7 @@ const ModalCard = ({
           />{" "}
         </span>
         <ModalRowShare selectedShare={selectedShare} />
-      </Modal>
+      </Modal> */}
     </>
   );
 };

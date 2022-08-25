@@ -21,13 +21,15 @@ import { HiDotsVertical } from "react-icons/hi";
 import { RiDeleteBin5Line, RiFlagFill, RiUserFollowFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "@/redux/store";
 import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
-import { setShowGistModal } from "@/reduxFeatures/api/gistSlice";
+import { setShowGistModal, uploadSuccess } from "@/reduxFeatures/api/gistSlice";
 import axios from "axios";
 // import ChangeFollowingStatus from "../../../Organisms/App/ChangeFollowingStatus";
 import makeSecuredRequest, {
   deleteSecuredRequest,
 } from "@/utils/makeSecuredRequest";
 import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
+import PostIsEdited from "@/components/Templates/PostIsEdited";
+import {PostMenu} from "../../App/PostMenu";
 // interface IGist {
 //   gist: {
 //     author: {
@@ -68,7 +70,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
       setFollowed(false);
       // dispatch(setFollowed(false));
     }
-  }, [gist]);
+  }, [gist, currentlyFollowing]);
 
   const redirectPage = () => {
     router.push({
@@ -80,9 +82,10 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
   };
 
   const handleDeletePost = async () => {
-    console.log("router.query.id:", router.query.id);
-    console.log("gist_id:", gist._id);
+    // console.log("router.query.id:", router.query.id);
+    // console.log("gist_id:", gist._id);
     try {
+      // Delete while on /gist or /gist/:id
       const { data } = await axios.delete(
         `${config.serverUrl}/api/gists/${
           router.query.id ? router.query.id : gist._id
@@ -98,6 +101,8 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
         // Go to the gist page when viewing an individual post
         router.push("/gist");
       }
+      // Auto update & Rerender Groups Post
+      dispatch(uploadSuccess({ postEdited: Math.random() * 50 }));
     } catch (error) {
       console.error(error.response?.data);
     }
@@ -188,7 +193,6 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
           borderRadius: "10px",
         }}
       >
-        {/* <Card.Header className="border-0"> */}
         <Card.Title>
           <div className="row">
             <div className="col-2 pt-2 pt-md-3 align-items-center">
@@ -239,16 +243,24 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
               </div>
             </div>
             <div className="col-3 col-sm-2 ms-auto p-0">
-              <NavDropdown
+              {/* Menu Dots */}
+              <PostMenu
+                user={user}
+                currentlyFollowing={currentlyFollowing}
+                post={gist}
+                handleEditPost={handleEditPost}
+                handleDeletePost={handleDeletePost}
+                changeFollowingStatus={changeFollowingStatus}
+              />
+              {/* <NavDropdown
                 className="p-0"
                 style={{ color: "white" }}
                 drop="start"
                 title={
-                  <Button variant="link" className="text-dark" size="sm">
-                    <HiDotsVertical style={{ color: "black" }} size={22} />
+                  <Button variant="link" size="sm">
+                    <HiDotsVertical size={22} />
                   </Button>
                 }
-                // style={{ marginTop: "-1rem" }}
               >
                 {gist?.author?._id === user?._id && (
                   <>
@@ -290,9 +302,6 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
                       className={styles.item}
                       style={{ borderBottom: "1px solid gray" }}
                       onClick={async () => changeFollowingStatus(gist)}
-                      // onClick={async () => (
-                      //   <ChangeFollowingStatus post={gist} />
-                      // )}
                     >
                       {followed ? (
                         <>
@@ -314,14 +323,12 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
                     </NavDropdown.Item>
                   </>
                 )}
-              </NavDropdown>
+              </NavDropdown> */}
             </div>
           </div>
         </Card.Title>
-        {/* </Card.Header> */}
-
         <Card.Body
-          className="p-0 mt-3"
+          className="px-3 py-0 mt-3"
           // align="justify"
         >
           {gist?.post && (
@@ -329,7 +336,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
               dangerouslySetInnerHTML={{
                 __html: sanitizer(
                   trimmed
-                    ? gist.post.slice(0, 500) || gist.post.slice(0, 500)
+                    ? gist.post.slice(0, 300) || gist.post.slice(0, 300)
                     : gist.post || gist.post
                 ),
               }}
@@ -340,6 +347,8 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
               }}
             />
           )}
+
+          <PostIsEdited post={gist} />
 
           {!primary && (
             <div className="d-flex justify-content-end mt-2">

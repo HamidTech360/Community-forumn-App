@@ -43,7 +43,6 @@ const Group = () => {
   const router = useRouter();
   const { path, id } = router.query;
   const [groupData, setGroupData] = useState([]);
-  // const newCreatePost = useSelector(selectNewCreatePost);
   const newCreatePost = useSelector(selectNewGroupFeed);
 
   const [queryId, setQueryId] = useState(id);
@@ -59,10 +58,11 @@ const Group = () => {
   }, []);
 
   useEffect(() => {
-   
     (async function () {
       try {
-        const response = await axios.get(`${config.serverUrl}/api/groups/group/${id}`);
+        const response = await axios.get(
+          `${config.serverUrl}/api/groups/group/${id}`
+        );
         setGroupData(response.data);
       } catch (error) {
         console.log(error.response?.data);

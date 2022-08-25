@@ -11,15 +11,29 @@ import styles from "@/styles/gist.module.scss";
 import config from "@/config";
 
 import { useDispatch, useSelector } from "@/redux/store";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import GistPostEditorModal from "@/components/Organisms/App/ModalPopUp/GistPostEditorModal";
 import {
   selectGistData,
   selectShowGistModal,
+  setTopContributors,
 } from "@/reduxFeatures/api/gistSlice";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  user as userAuth,
+  selectFollowing,
+} from "@/reduxFeatures/authState/authStateSlice";
+import {
+  selectShowCommentModal,
+  setCommentIsDeleted,
+  setEditableComment,
+  setShowCommentModal,
+} from "@/reduxFeatures/app/postModalCardSlice";
+import makeSecuredRequest, {
+  deleteSecuredRequest,
+} from "@/utils/makeSecuredRequest";
+import CommentModal from "@/components/Organisms/App/ModalPopUp/CommentModal";
 
 const Gist = ({
   gist,
@@ -33,14 +47,16 @@ const Gist = ({
   const router = useRouter();
   const { id } = router.query;
 
+  const dispatch = useDispatch();
   const [data, setData] = useState<Record<string, any>>({});
   const [commentPost, setCommentPost] = useState("");
   const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
   const showGistModal = useSelector(selectShowGistModal);
   const gistEdited = useSelector(selectGistData);
-  const user = useSelector(selectUser);
+  const currentlyFollowing = useSelector(selectFollowing);
   const [queryId, setQueryId] = useState(id);
+  const showCommentModal = useSelector(selectShowCommentModal);
 
   // Allow Rerender Bases On ID Change Even When Route Is Same Path
   if (id && id !== queryId) setQueryId(id);
@@ -81,6 +97,70 @@ const Gist = ({
     }
   };
 
+  useEffect(() => {
+    // Top Contributors Logic
+    if (data) {
+      // Get Comment
+      const arr = data?.comments;
+
+      // Ensure Comment is not  undefined or null
+      if (arr) {
+        const counts = {};
+        (async () => {
+          // Comments
+          await arr.forEach(async (element) => {
+            let authorsName = `${element.author.firstName} ${element.author.lastName}`;
+            let postReplies = element.replies;
+
+            if (counts[authorsName]) {
+              counts[authorsName] = {
+                num: counts[authorsName]["num"] + 1,
+                id: element.author._id,
+              };
+            } else {
+              counts[authorsName] = { num: 1, id: element.author._id };
+            }
+
+            // Replies
+            await postReplies.forEach(async (reply) => {
+              let commentReply = `${reply.author.firstName} ${reply.author.lastName}`;
+              let secondLevelReply = reply.replies;
+
+              if (counts[commentReply]) {
+                counts[commentReply] = {
+                  num: counts[commentReply]["num"] + 1,
+                  id: element.author._id,
+                };
+              } else {
+                counts[commentReply] = { num: 1, id: element.author._id };
+              }
+
+              // 2nd level replies
+              await secondLevelReply.forEach(async (element) => {
+                let replyAuthorsName = `${element.author.firstName} ${element.author.lastName}`;
+
+                if (counts[replyAuthorsName]) {
+                  counts[replyAuthorsName] = {
+                    num: counts[replyAuthorsName]["num"] + 1,
+                    id: element.author._id,
+                  };
+                } else {
+                  counts[replyAuthorsName] = { num: 1, id: element.author._id };
+                }
+              });
+            });
+          });
+        })();
+
+        // Split & Sort The Object Values Into An Array
+        const sortedContributors = Object.entries(counts).sort(
+          ([, v1]: any, [, v2]: any) => v2.num - v1.num
+        );
+        dispatch(setTopContributors(sortedContributors));
+      }
+    }
+  }, [data]);
+
   const postComment = async () => {
     try {
       const body = {
@@ -111,6 +191,96 @@ const Gist = ({
     }
   };
 
+  const changeFollowingStatus = (post) => {
+    if (
+      document.getElementById(`followStr-modal-${post?.author?._id}`)
+        .innerText === "Follow"
+    ) {
+      handleFollow(post?.author?._id);
+    } else if (
+      document.getElementById(`followStr-modal-${post?.author?._id}`)
+        .innerText === "Unfollow"
+    ) {
+      // let confirmUnFollow = window.confirm(
+      //   `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
+      // );
+      // if (confirmUnFollow) {
+      handleUnFollow(post?.author?._id);
+      // }
+    }
+  };
+
+  const handleFollow = async (id) => {
+    try {
+      await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
+
+      // Update Auth User State
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
+    } catch (error) {
+      // console.error("follow Error:", error);
+    }
+  };
+
+  const handleUnFollow = async (id) => {
+    try {
+      await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
+
+      // Update Auth User State
+      (async function () {
+        try {
+          const response = await axios.get(`${config.serverUrl}/api/auth`, {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+          dispatch(userAuth(response.data));
+        } catch (error) {
+          localStorage.removeItem("accessToken");
+        }
+      })();
+    } catch (error) {
+      // console.error("follow Error:", error);
+    }
+  };
+
+  const handleEditComment = async (comment) => {
+    // Send Comment To Be Edited To CommentModal
+    dispatch(setEditableComment(comment));
+    // Show Edit Comment Modal
+    dispatch(setShowCommentModal(true));
+  };
+
+  const handleDeleteComment = async (comment) => {
+    console.log("DelETE NOW");
+    // const newPosts = comment.filter((el) => el._id !== comment._id);
+    // console.log("comment:", comment);
+    try {
+      const { data } = await axios.delete(
+        `${config.serverUrl}/api/comments/${comment._id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      dispatch(setCommentIsDeleted(comment._id));
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
+
   return (
     <Container>
       <Head>
@@ -119,7 +289,7 @@ const Gist = ({
       <ToastContainer />
       <Row>
         <Col md={4} className="desktop-only">
-          <Contributors contributors={[user]} />
+          <Contributors data={data} />
         </Col>
         <Col md={8}>
           <GistCard gist={data} primary />
@@ -174,7 +344,17 @@ const Gist = ({
               <div className="col-12 mt-4">
                 {data?.comments?.length > 0 &&
                   [...data?.comments].reverse().map((comment, index) => {
-                    return <Comment key={`data_${index}`} comment={comment} />;
+                    // return <Comment key={`data_${index}`} comment={comment} />;
+                    return (
+                      <Comment
+                        key={`data_${index}`}
+                        comment={comment}
+                        currentlyFollowing={currentlyFollowing}
+                        handleEditComment={handleEditComment}
+                        handleDeleteComment={handleDeleteComment}
+                        changeFollowingStatus={changeFollowingStatus}
+                      />
+                    );
                   })}
               </div>
             </div>
@@ -188,7 +368,10 @@ const Gist = ({
         </Col>
       </Row>
 
-      {showGistModal && <GistPostEditorModal />}
+      {/* Open Editor Modal */}
+      {showGistModal && <GistPostEditorModal pageAt="/gist" />}
+      {/* Open Comment Modal */}
+      {/* {showCommentModal && <CommentModal />} */}
     </Container>
   );
 };

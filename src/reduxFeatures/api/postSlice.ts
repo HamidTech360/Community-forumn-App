@@ -5,7 +5,8 @@ import type { RootState } from "../../redux/store";
 // declaring the types for our state
 export type PostState = {
   post: any;
-  newPost: object;
+  // newPost: object;
+  newPost: any;
   modal: boolean;
   postFormData: {
     postTitle: string;
@@ -45,7 +46,8 @@ export const postSlice = createSlice({
     setIsFetching: (state, action: PayloadAction<boolean>) => {
       state.isFetching = action.payload;
     },
-    setNewPost: (state, action: PayloadAction<object>) => {
+    // setNewPost: (state, action: PayloadAction<object>) => {
+    setNewPost: (state, action: PayloadAction<any>) => {
       state.newPost = action.payload;
     },
   },
