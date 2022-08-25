@@ -250,7 +250,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
                 }
                 // style={{ marginTop: "-1rem" }}
               >
-                {gist.author?._id === user?._id && (
+                {gist?.author?._id === user?._id && (
                   <>
                     <NavDropdown.Item
                       className={styles.item}
