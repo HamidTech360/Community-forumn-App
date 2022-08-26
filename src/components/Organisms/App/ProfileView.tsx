@@ -7,8 +7,6 @@ import { useDispatch, useSelector } from "@/redux/store";
 import {
   selectUser,
   user as authUser,
-  setFollowers,
-  selectFollowers,
   setFollowing,
   selectFollowing,
 } from "@/reduxFeatures/authState/authStateSlice";
@@ -180,12 +178,12 @@ const ProfileView = ({
   return (
     <>
       <Card className="mt-2 mb-3">
-        <CardImg src="/images/formbg.png" className="image3" />
+        <CardImg src={profile?.images?.cover || "/images/formbg.png"} className="image3" />
         <Card.Body className="d-flex position-relative justify-content-center align-items-center flex-column ">
           <Image
             width={130}
             height={130}
-            src={profile?.images?.avater || "/images/formbg.png"}
+            src={profile?.images?.avatar || "/images/formbg.png"}
             alt="avatar"
             className="top-0 position-absolute"
             style={{
@@ -197,7 +195,7 @@ const ProfileView = ({
           <div className=" mt-4 bold text-center fs-7">
             {profile?.firstName} {profile?.lastName}
           </div>
-          <div className="text-muting">@{profile?.firstName}</div>
+          <div className="text-muting">@{profile.username || profile?.firstName}</div>
 
           {/* Don't Display Below Option For Logged-in Users */}
           {profile?._id !== user?._id && (

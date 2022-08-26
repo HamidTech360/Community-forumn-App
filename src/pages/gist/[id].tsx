@@ -30,6 +30,7 @@ import {
   setEditableComment,
   setShowCommentModal,
 } from "@/reduxFeatures/app/postModalCardSlice";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import makeSecuredRequest, {
   deleteSecuredRequest,
 } from "@/utils/makeSecuredRequest";
@@ -46,7 +47,7 @@ const Gist = ({
 }) => {
   const router = useRouter();
   const { id } = router.query;
-
+  const user = useSelector(selectUser)
   const dispatch = useDispatch();
   const [data, setData] = useState<Record<string, any>>({});
   const [commentPost, setCommentPost] = useState("");
@@ -298,7 +299,7 @@ const Gist = ({
             <div className="row">
               <div className="col-2 col-md-2">
                 <Image
-                  src="/images/imagePlaceholder.jpg"
+                  src={user?.images?.avatar || "/images/imagePlaceholder.jpg"}
                   className="img-fluid"
                   roundedCircle={true}
                   alt="Author's Image"

@@ -29,7 +29,7 @@ const FriendsData = ({ friendsList }: any) => {
                     >
                       <div>
                         <Image
-                          src={"/images/imagePlaceholder.jpg"}
+                          src={friend?.images?.avatar || "/images/imagePlaceholder.jpg"}
                           alt="user"
                           width={50}
                           height={50}

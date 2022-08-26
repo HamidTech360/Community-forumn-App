@@ -567,7 +567,7 @@ const PostCard = ({
           <div className="row">
             <div className="col-1">
               <Image
-                src={"/images/imagePlaceholder.jpg"}
+                src={post?.author?.images?.avatar || "/images/imagePlaceholder.jpg"}
                 width={45}
                 height={45}
                 alt=""

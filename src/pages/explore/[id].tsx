@@ -300,79 +300,7 @@ const BlogPost = () => {
                       handleDeletePost={handleDeletePost}
                       changeFollowingStatus={changeFollowingStatus}
                     />
-                    {/* <NavDropdown
-                      drop="start"
-                      style={{ marginTop: "-1rem", color: "white" }}
-                      title={
-                        <Button variant="link" size="sm">
-                          <HiDotsVertical size={22} />
-                        </Button>
-                      }
-                    >
-                      {blogPost.author?._id === user?._id && (
-                        <>
-                          <NavDropdown.Item
-                            className={styles.item}
-                            style={{
-                              borderBottom: "1px solid gray",
-                            }}
-                            onClick={() => handleEditPost(blogPost)}
-                          >
-                            <BsFolderFill /> Edit Post
-                          </NavDropdown.Item>
-
-                          <NavDropdown.Item
-                            style={{ borderBottom: "1px solid gray" }}
-                            onClick={() => handleDeletePost()}
-                          >
-                            <span
-                              style={{
-                                color: "red",
-                              }}
-                            >
-                              <RiDeleteBin5Line /> Delete Post
-                            </span>
-                          </NavDropdown.Item>
-                        </>
-                      )}
-
-                      {blogPost?.author?._id !== user?._id && (
-                        <>
-                          <NavDropdown.Item
-                            className={styles.item}
-                            style={{ borderBottom: "1px solid gray" }}
-                          >
-                            <RiFlagFill /> Report post
-                          </NavDropdown.Item>
-
-                          <NavDropdown.Item
-                            className={styles.item}
-                            style={{ borderBottom: "1px solid gray" }}
-                            onClick={async () =>
-                              changeFollowingStatus(blogPost)
-                            }
-                          >
-                            {followed ? (
-                              <>
-                                <BsXCircleFill />{" "}
-                                <span id={`followStr-${blogPost?.author?._id}`}>
-                                  Unfollow
-                                </span>
-                              </>
-                            ) : (
-                              <>
-                                <RiUserFollowFill />{" "}
-                                <span id={`followStr-${blogPost?.author?._id}`}>
-                                  Follow
-                                </span>
-                              </>
-                            )}{" "}
-                            @{blogPost?.author?.firstName?.split(" ")[0]}
-                            {blogPost?.author?.lastName?.substring(0, 1)}
-                          </NavDropdown.Item>
-                        </>
-                      )}
-                    </NavDropdown> */}
+                    
                   </div>
                 </div>
                 <div className="row">
@@ -411,7 +339,7 @@ const BlogPost = () => {
                   <div className="col-2 col-md-2">
                     <Image
                       src={
-                        blogPost.authorImage || "/images/imagePlaceholder.jpg"
+                        user?.images.avatar || "/images/imagePlaceholder.jpg"
                       }
                       className="img-fluid"
                       roundedCircle={true}

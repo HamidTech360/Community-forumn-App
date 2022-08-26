@@ -83,7 +83,7 @@ const Discussions = () => {
             >
               <div>
                 <Image
-                  src={"/images/formbg.png"}
+                  src={gist?.author?.images?.avatar || "/images/formbg.png"}
                   width={40}
                   height={40}
                   alt=""
