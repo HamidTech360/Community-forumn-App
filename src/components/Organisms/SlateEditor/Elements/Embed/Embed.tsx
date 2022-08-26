@@ -10,6 +10,7 @@ import { ReactEditor } from "slate-react";
 import styles from "../../../../../styles/SlateEditor/Embed_Slate.module.scss";
 import { Modal, Button as BsBtn, Form } from "react-bootstrap";
 import DragAndDropFiles from "../DropZone/DragAndDropFiles";
+import Uploader2 from "@/components/Organisms/DragAndDrop2/Uploader2";
 
 const Embed = ({ editor, format }) => {
   const urlInputRef = useRef();
@@ -46,17 +47,17 @@ const Embed = ({ editor, format }) => {
   const submitEmbed = (e) => {
     e.preventDefault();
 
-    let embedTitleValue = embedTitle.current.value;
-    let embedAddressValue = embedAddress.current.value;
+    // let embedTitleValue = embedTitle.current.value;
+    // let embedAddressValue = embedAddress.current.value;
 
-    editor.selection && Transforms.select(editor, editor.selection);
-    editor.selection && ReactEditor.focus(editor);
+    // editor.selection && Transforms.select(editor, editor.selection);
+    // editor.selection && ReactEditor.focus(editor);
 
-    insertEmbed(
-      editor,
-      { alt: embedTitleValue, url: embedAddressValue },
-      format
-    );
+    // insertEmbed(
+    //   editor,
+    //   { alt: embedTitleValue, url: embedAddressValue },
+    //   format
+    // );
     setShow((prev) => !prev);
   };
   // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -94,15 +95,16 @@ const Embed = ({ editor, format }) => {
             <Form.Group className="mb-3" controlId="formBasicAlt">
               <div>
                 {/* <DragAndDropFiles format={format} /> */}
-                <p
+                <Uploader2 />
+                {/* <p
                   style={{ textAlign: "center", opacity: "0.7", width: "100%" }}
                 >
                   OR
-                </p>
+                </p> */}
               </div>
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicAlt">
+            {/* <Form.Group className="mb-3" controlId="formBasicAlt">
               <Form.Label style={{ fontWeight: "600" }}>Alt:</Form.Label>
               <Form.Control
                 ref={embedTitle}
@@ -120,7 +122,7 @@ const Embed = ({ editor, format }) => {
                 placeholder="URL"
                 required
               />
-            </Form.Group>
+            </Form.Group> */}
           </Modal.Body>
 
           <Modal.Footer
@@ -128,6 +130,7 @@ const Embed = ({ editor, format }) => {
               border: "none",
               backgroundColor: "transparent",
               marginTop: "-1rem",
+              marginRight: "2.5rem",
             }}
           >
             <BsBtn variant="secondary" onClick={handleClose}>
