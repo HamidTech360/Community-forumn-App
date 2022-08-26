@@ -40,16 +40,16 @@ const Uploader2 = () => {
   const [acceptingFilesBase64, setAcceptingFilesBase64] = useState([]);
   const [rejectingFiles, setRejectingFiles] = useState([]);
 
-  // useEffect(() => {
-  //   // Set Upload Media
-  //   dispatch(setMediaUpload(acceptingFiles));
-  // }, [acceptingFiles]);
-
   useEffect(() => {
     // Set Upload Media
-    dispatch(setMediaUpload(acceptingFilesBase64));
-    console.log("acceptingFilesBase64:", acceptingFilesBase64);
-  }, [acceptingFilesBase64]);
+    dispatch(setMediaUpload(acceptingFiles));
+  }, [acceptingFiles]);
+
+  // useEffect(() => {
+  //   // Set Upload Media
+  //   dispatch(setMediaUpload(acceptingFilesBase64));
+  //   console.log("acceptingFilesBase64:", acceptingFilesBase64);
+  // }, [acceptingFilesBase64]);
 
   const onDrop = useCallback((acceptedFiles, fileRejections) => {
     // Normal File
@@ -69,7 +69,6 @@ const Uploader2 = () => {
       const reader = new FileReader();
       // reader.readAsDataURL
       reader.onload = () => {
-        // setAcceptingFilesBase64((pre) => [...pre, reader.result]);
         setAcceptingFilesBase64((pre) => [...pre, reader.result]);
         // dispatch(setFilesAcceptedBase64((pre) => [...pre, reader.result]));
       };

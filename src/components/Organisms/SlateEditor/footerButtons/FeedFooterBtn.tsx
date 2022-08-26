@@ -58,7 +58,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
 
       // Form Data
       let formData = new FormData();
-      // formData.append("post", serializedHtml);
+      formData.append("post", serializedHtml);
       mediaUpload.map((file) => {
         console.log("+++FILE+++:", file);
         formData.append("media", file);
@@ -74,8 +74,9 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
             //   media: formData,
             // },
             {
-              post: serializedHtml,
-              media: { ...formData },
+              // post: serializedHtml,
+              ...formData,
+              // media: { ...formData },
             },
             {
               headers: {
