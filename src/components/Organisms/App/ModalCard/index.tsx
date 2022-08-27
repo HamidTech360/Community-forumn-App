@@ -35,6 +35,7 @@ import { FaRegCommentDots } from "react-icons/fa";
 import Age from "../../../Atoms/Age";
 import DOMPurify from "dompurify";
 import styles from "@/styles/profile.module.scss";
+
 import axios from "axios";
 import config from "@/config";
 import { useDispatch } from "react-redux";
@@ -84,6 +85,13 @@ import OpenShareModal from "../ModalPopUp/OpenShareModal";
 import FeedPostEditorModal from "../ModalPopUp/FeedPostEditorModal";
 import CommentModal from "../ModalPopUp/CommentModal";
 import { PostMenu } from "../PostMenu";
+import {
+  setImageModalOpen,
+  selectImageModalOpen,
+  setImageModalImg,
+  selectImageModalImg,
+} from "@/reduxFeatures/app/postModalCardSlice";
+import ImageModal from "../ModalPopUp/ImageModal";
 
 const ModalCard = ({
   post: postComingIn,
@@ -124,6 +132,12 @@ const ModalCard = ({
 
   const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
     useModalWithShare();
+
+  const imageModalOpen = useSelector(selectImageModalOpen);
+  const imageModalImg = useSelector(selectImageModalImg);
+
+  // const [imageModalOpen, setImageModalOpen] = useState(false);
+  // const [imageModalImg, setImageModalImg] = useState(null);
 
   useEffect(() => {
     // Update modalPost when post has been edited
@@ -568,19 +582,66 @@ const ModalCard = ({
 
   return (
     <>
+      {console.log("POST:", post)}
       <Row>
-        <Col sm={12} md={12} lg={5} className={`${styles.column} pe-lg-0`}>
-          {!trimmed && (
-            <Image
-              src={"/images/formbg.png"}
-              alt={""}
-              className={styles.imgModal}
-              fluid
-            />
-          )}
-        </Col>
+        {post?.media?.length > 0 && (
+          <Col
+            sm={12}
+            md={12}
+            lg={5}
+            className={`${styles.column} pe-lg-0`}
+            // style={{ width: "450px", margin: "10px" }}
+          >
+            {/* {!trimmed && (
+              <Image
+                src={"/images/formbg.png"}
+                alt={""}
+                className={styles.imgModal}
+                fluid
+              />
+            )} */}
 
-        <Col sm={12} md={12} lg={7} className={`${styles.cardColumn} px-lg-0`}>
+            {/* {!trimmed && ( */}
+            <div
+              className="row"
+              style={{
+                height: "390px",
+                width: "100%",
+                overflowY: "auto",
+              }}
+            >
+              {post?.media?.map((img) => (
+                <div
+                  key={img}
+                  className="col-12"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    dispatch(setImageModalImg(img));
+                    dispatch(setImageModalOpen(true));
+                  }}
+                >
+                  <Image
+                    src={img}
+                    alt={""}
+                    className={styles.imgModal}
+                    width={"100%"}
+                    height={"100%"}
+                    // fluid
+                  />
+                </div>
+              ))}
+            </div>
+            {/* )} */}
+          </Col>
+        )}
+
+        {/* <Col sm={12} md={12} lg={7} className={`${styles.cardColumn} px-lg-0`}> */}
+        <Col
+          sm={12}
+          md={12}
+          lg={post?.media?.length > 0 ? 7 : 12}
+          className={`${styles.cardColumn} px-lg-0`}
+        >
           <Card
             id={post?.id}
             className="my-3 cards"
@@ -609,11 +670,7 @@ const ModalCard = ({
 
                 {/* <div className="d-flex flex-column"> */}
                 <div className="col-6 col-sm-8 ms-4 ms-lg-3 ms-xl-4 me-xl-0">
-                  <div
-                    className={styles.div}
-                    // onClick={redirectPage}
-                    // style={{ cursor: "pointer" }}
-                  >
+                  <div className={styles.div}>
                     <span
                       style={{
                         fontWeight: 500,
@@ -780,7 +837,7 @@ const ModalCard = ({
                 </>
               )}
 
-              <div className={styles.trimmed}>
+              {/* <div className={styles.trimmed}>
                 {!trimmed && (
                   <Image
                     src={"/images/formbg.png"}
@@ -789,6 +846,34 @@ const ModalCard = ({
                     className={styles.imgModal}
                   />
                 )}
+              </div> */}
+
+              <div
+                className={`${styles.trimmed} row justify-content-center`}
+                style={{
+                  height: "100%",
+                }}
+              >
+                {post?.media?.map((img) => (
+                  <div
+                    key={img}
+                    className="col-4 g-1"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      dispatch(setImageModalImg(img));
+                      dispatch(setImageModalOpen(true));
+                    }}
+                  >
+                    <Image
+                      // src={"/images/formbg.png"}
+                      src={img}
+                      alt={""}
+                      className={styles.imgModal}
+                      width={"100%"}
+                      height={"100%"}
+                    />
+                  </div>
+                ))}
               </div>
               {post?.likes?.length > 0 && (
                 <div className="text-muted d-flex align-items-center">
@@ -975,6 +1060,35 @@ const ModalCard = ({
           />{" "}
         </span>
         <ModalRowShare selectedShare={selectedShare} />
+      </Modal> */}
+
+      {imageModalOpen && <ImageModal />}
+      {/* <Modal
+        className="bg-secondary"
+        show={imageModalOpen}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        size="lg"
+        scrollable={true}
+      >
+        <span className="ms-auto m-2">
+          <MdOutlineCancel
+            style={{ cursor: "pointer" }}
+            size={30}
+            onClick={() => setImageModalOpen(false)}
+          />{" "}
+        </span>
+
+        <div className="row">
+          <div className="col-12 mx-auto">
+            <Image
+              src={imageModalImg}
+              alt={"image"}
+              className={styles.imgModal}
+              fluid
+            />
+          </div>
+        </div>
       </Modal> */}
     </>
   );

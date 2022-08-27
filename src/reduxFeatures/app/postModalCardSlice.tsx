@@ -14,6 +14,8 @@ export type PostModalCardState = {
   editableComment: any;
   commentIsEdited: any;
   commentIsDeleted: any;
+  imageModalOpen: boolean;
+  imageModalImg: string;
 };
 
 const initialState: PostModalCardState = {
@@ -27,6 +29,8 @@ const initialState: PostModalCardState = {
   editableComment: null,
   commentIsEdited: null,
   commentIsDeleted: null,
+  imageModalOpen: false,
+  imageModalImg: "",
 };
 
 export const postModalCardSlice = createSlice({
@@ -63,6 +67,12 @@ export const postModalCardSlice = createSlice({
     setCommentIsDeleted: (state, action: PayloadAction<any>) => {
       state.commentIsDeleted = action.payload;
     },
+    setImageModalOpen: (state, action: PayloadAction<boolean>) => {
+      state.imageModalOpen = action.payload;
+    },
+    setImageModalImg: (state, action: PayloadAction<string>) => {
+      state.imageModalImg = action.payload;
+    },
   },
 });
 // Here we are just exporting the actions from this slice, so that we can call them anywhere in our app.
@@ -77,6 +87,8 @@ export const {
   setEditableComment,
   setCommentIsEdited,
   setCommentIsDeleted,
+  setImageModalOpen,
+  setImageModalImg,
 } = postModalCardSlice.actions;
 
 // calling the above actions would be useless if we could not access the data in the state. So, we use something called a selector which allows us to select a value from the state.
@@ -100,6 +112,10 @@ export const selectCommentIsEdited = (state: RootState) =>
   state.postModalCard.commentIsEdited;
 export const selectCommentIsDeleted = (state: RootState) =>
   state.postModalCard.commentIsDeleted;
+export const selectImageModalOpen = (state: RootState) =>
+  state.postModalCard.imageModalOpen;
+export const selectImageModalImg = (state: RootState) =>
+  state.postModalCard.imageModalImg;
 
 // exporting the reducer here, as we need to add this to the store
 export default postModalCardSlice.reducer;
