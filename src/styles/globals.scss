@@ -436,17 +436,17 @@ section {
     // box-shadow: 0px 2px 15px rgba(33, 33, 52, 0.1);
     // border: 1px solid #eee;
 
-    @media screen and(max-width:1000px) {
+    @media screen and (max-width: 1000px) {
       width: 95% !important;
       font-size: medium !important;
     }
   }
 
-  @media screen and(max-width:1000px) {
+  @media screen and (max-width: 1000px) {
     width: 240px !important;
   }
 
-  @media screen and(max-width:500px) {
+  @media screen and (max-width: 500px) {
     width: 180px !important;
   }
 }
