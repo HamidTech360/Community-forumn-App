@@ -146,41 +146,8 @@ const Followers = () => {
     }
   }, [topWriters]);
 
-  // useEffect(() => {
-  //   console.log("response.data: response.data");
-  //   (async function () {
-  //     try {
-  //       const { data } = await axios.get(`${config.serverUrl}/api/users`);
 
-  //       let sliceNum = 9;
 
-  //       await data.users.sort(function (newUser) {
-  //         return 0.5 - Math.random();
-  //       });
-  //       console.log("data to follow:", data);
-
-  //       const notFollowing = await data.users.filter((person) => {
-  //         if (
-  //           person?._id.toString() !== user?._id.toString() &&
-  //           !currentlyFollowing.includes(person?._id)
-  //         ) {
-  //           return person;
-  //         }
-  //       });
-  //       console.log("data notFollowing:", notFollowing);
-
-  //       if (
-  //         JSON.stringify(currentlyFollowing) !== JSON.stringify(notFollowing)
-  //       ) {
-  //         // setUsers(notFollowing);
-  //         setUsers(notFollowing.slice(0, sliceNum));
-  //       }
-  //     } catch (error) {
-  //       // console.error(error.response?.data);
-  //       console.error("ERROR:", error);
-  //     }
-  //   })();
-  // }, [currentlyFollowing]);
   return (
     <section className={styles.write}>
       <Container>
@@ -195,7 +162,7 @@ const Followers = () => {
                 <Image
                   width={50}
                   height={50}
-                  src="/images/imagePlaceholder.jpg"
+                  src={user?.images?.avatar || "/images/imagePlaceholder.jpg"}
                   roundedCircle
                   alt={user?.firstName}
                 />

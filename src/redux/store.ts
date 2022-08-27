@@ -12,6 +12,7 @@ import searchReducer from "@/reduxFeatures/api/searchSlice";
 import editSlatePostReducer from "@/reduxFeatures/app/editSlatePostSlice";
 import postModalCardReducer from "@/reduxFeatures/app/postModalCardSlice";
 import notificationReducer from "@/reduxFeatures/api/notifications";
+import mediaUploadReducer from "@/reduxFeatures/app/mediaUpload";
 
 import {
   useDispatch as useDispatchBase,
@@ -36,6 +37,7 @@ export const store = configureStore({
     editSlatePost: editSlatePostReducer,
     postModalCard: postModalCardReducer,
     notification: notificationReducer,
+    mediaUpload: mediaUploadReducer,
   },
 
   // Prevent Age (dateTime) from returning unSterilized error

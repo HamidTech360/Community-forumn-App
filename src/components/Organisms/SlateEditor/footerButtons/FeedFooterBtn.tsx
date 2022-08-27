@@ -13,11 +13,13 @@ import {
 } from "@/reduxFeatures/app/editSlatePostSlice";
 import { serialize } from "../utils/serializer";
 import { setModalCardPostEdited } from "@/reduxFeatures/app/postModalCardSlice";
+import { selectMediaUpload } from "@/reduxFeatures/app/mediaUpload";
 
 function FeedFooterBtn({ editorID, editorContentValue }) {
   const dispatch = useDispatch();
   const [uploading, setUploading] = useState(false);
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
+  const mediaUpload = useSelector(selectMediaUpload);
 
   useEffect(() => {
     return () => {
@@ -54,15 +56,32 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
 
       const serializedHtml = serialize(serializeNode);
 
+      // Form Data
+      let formData = new FormData();
+      formData.append("post", serializedHtml);
+      mediaUpload.map((file) => {
+        console.log("+++FILE+++:", file);
+        formData.append("media", file);
+      });
+
       if (!slatePostToEdit) {
         // New Post
         try {
           const response = await axios.post(
             `${config.serverUrl}/api/feed`,
-            { post: serializedHtml },
+            // {
+            //   post: serializedHtml,
+            //   media: formData,
+            // },
+            {
+              // post: serializedHtml,
+              ...formData,
+              // media: { ...formData },
+            },
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "Content-Type": "multipart/form-data",
               },
             }
           );
@@ -76,6 +95,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           setUploading(false);
           dispatch(setShowCreatePostModal(false));
         } catch (error) {
+          // console.error(error);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
               position: toast.POSITION.TOP_RIGHT,
@@ -90,11 +110,21 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           setUploading(false);
         }
       } else {
+        // const formData = new FormData().append("data", {
+        //   path: "01.png",
+        //   preview:
+        //     "blob:http://localhost:3000/1b4aae90-df3e-4744-9a6c-8a6331bc136a",
+        // });
+
         // Edit Post
         try {
           await axios.put(
             `${config.serverUrl}/api/feed/${slatePostToEdit?._id}`,
-            { post: serializedHtml },
+            // { post: serializedHtml, media: [formData] },
+            {
+              // post: serializedHtml,
+              ...formData,
+            },
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,

@@ -108,9 +108,18 @@ const About = ({User}:any) => {
     
     setProgress(true)
     console.log(formValues);
+    let formData = new FormData()
+    for(const key in formValues){
+      formData.append(key, formValues[key])
+    }
     
     try{
-      const {data} = await axios.put(`${config.serverUrl}/api/users/${user._id}`, formValues)
+      const {data} = await axios.put(`${config.serverUrl}/api/users/${user._id}`, formData, {
+        headers:{
+          authorization:`Bearer ${localStorage.getItem('accessToken')}`,
+          "Content-Type": "multipart/form-data",
+        }
+      })
       setProgress(false)
       console.log(data);
       setFormValues({

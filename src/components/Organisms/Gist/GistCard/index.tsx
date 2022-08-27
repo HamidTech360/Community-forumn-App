@@ -42,7 +42,7 @@ import {PostMenu} from "../../App/PostMenu";
 //   };
 // }
 const GistCard = ({ gist, primary, trimmed }: any) => {
-  // console.log(gist);
+  console.log(gist);
   const sanitizer = DOMPurify.sanitize;
   const router = useRouter();
   const dispatch = useDispatch();
@@ -197,7 +197,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
           <div className="row">
             <div className="col-2 pt-2 pt-md-3 align-items-center">
               <Image
-                src={"/images/imagePlaceholder.jpg"}
+                src={gist?.author?.images?.avatar || "/images/imagePlaceholder.jpg"}
                 width={50}
                 height={50}
                 alt="Avatar"
@@ -252,78 +252,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
                 handleDeletePost={handleDeletePost}
                 changeFollowingStatus={changeFollowingStatus}
               />
-              {/* <NavDropdown
-                className="p-0"
-                style={{ color: "white" }}
-                drop="start"
-                title={
-                  <Button variant="link" size="sm">
-                    <HiDotsVertical size={22} />
-                  </Button>
-                }
-              >
-                {gist?.author?._id === user?._id && (
-                  <>
-                    <NavDropdown.Item
-                      className={styles.item}
-                      style={{
-                        borderBottom: "1px solid gray",
-                      }}
-                      onClick={() => handleEditPost(gist)}
-                    >
-                      <BsFolderFill /> Edit Post
-                    </NavDropdown.Item>
 
-                    <NavDropdown.Item
-                      style={{ borderBottom: "1px solid gray" }}
-                      onClick={() => handleDeletePost()}
-                    >
-                      <span
-                        style={{
-                          color: "red",
-                        }}
-                      >
-                        <RiDeleteBin5Line /> Delete Post
-                      </span>
-                    </NavDropdown.Item>
-                  </>
-                )}
-
-                {gist?.author?._id !== user?._id && (
-                  <>
-                    <NavDropdown.Item
-                      className={styles.item}
-                      style={{ borderBottom: "1px solid gray" }}
-                    >
-                      <RiFlagFill /> Report post
-                    </NavDropdown.Item>
-
-                    <NavDropdown.Item
-                      className={styles.item}
-                      style={{ borderBottom: "1px solid gray" }}
-                      onClick={async () => changeFollowingStatus(gist)}
-                    >
-                      {followed ? (
-                        <>
-                          <BsXCircleFill />{" "}
-                          <span id={`followStr-${gist?.author?._id}`}>
-                            Unfollow
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <RiUserFollowFill />{" "}
-                          <span id={`followStr-${gist?.author?._id}`}>
-                            Follow
-                          </span>
-                        </>
-                      )}{" "}
-                      @{gist?.author?.firstName?.split(" ")[0]}
-                      {gist?.author?.lastName?.substring(0, 1)}
-                    </NavDropdown.Item>
-                  </>
-                )}
-              </NavDropdown> */}
             </div>
           </div>
         </Card.Title>
