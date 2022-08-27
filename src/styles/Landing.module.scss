@@ -23,7 +23,7 @@
     top: -5%;
     z-index: 0;
     width: 25%;
-    @media screen and(max-width:768px) {
+    @media screen and (max-width: 768px) {
       display: none;
       overflow: hidden;
     }
@@ -32,23 +32,22 @@
 .main {
   min-height: 90vh;
 
-  @media screen and (max-width:1100px) {
+  @media screen and (max-width: 1100px) {
     margin: 3.5rem 0;
     min-height: 50vh;
   }
 
-  @media screen and (max-height:600px) {
+  @media screen and (max-height: 600px) {
     margin: 3.5rem 0;
     min-height: 80vh;
   }
 
-  @media screen and (max-width:1000px) {
+  @media screen and (max-width: 1000px) {
     margin: 0 0 1rem !important;
     min-height: 50vh;
-
   }
 
-  @media screen and (max-width:730px) {
+  @media screen and (max-width: 730px) {
     margin-bottom: 4rem !important;
   }
 
@@ -88,42 +87,40 @@
         top: 0;
       }
     }
-    p{
+    p {
       font-size: 1.5rem;
 
-      @media screen and (max-width: 900px){
+      @media screen and (max-width: 900px) {
         font-size: 1.2rem;
       }
 
-      @media screen and (max-width: 300px){
+      @media screen and (max-width: 300px) {
         font-size: 1rem;
       }
     }
-
   }
-  
 
   .image_section {
     position: relative;
   }
 }
 
-.msg{
-  font-size: 1.5rem ;
+.msg {
+  font-size: 1.5rem;
 
-  @media screen and (max-width: 1100px){
+  @media screen and (max-width: 1100px) {
     font-size: 1.3rem;
   }
 
-  @media screen and (max-width: 900px){
+  @media screen and (max-width: 900px) {
     font-size: 1.1rem;
   }
 
-  @media screen and (max-width: 800px){
+  @media screen and (max-width: 800px) {
     font-size: 1rem;
   }
 
-  @media screen and (max-width: 300px){
+  @media screen and (max-width: 300px) {
     font-size: 0.9rem;
   }
 }
