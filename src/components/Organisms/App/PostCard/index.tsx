@@ -23,7 +23,7 @@ import {
   useModalWithShare,
 } from "@/hooks/useModalWithData";
 // import ModalCard from "@/components/Organisms/App/ModalCard";
-import truncate from "trunc-html";
+import truncate from "truncate-html";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -69,6 +69,13 @@ import {
 } from "@/reduxFeatures/app/postModalCardSlice";
 import { selectCreatePostModal } from "@/reduxFeatures/app/createPost";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
+import {
+  setImageModalOpen,
+  selectImageModalOpen,
+  setImageModalImg,
+  selectImageModalImg,
+} from "@/reduxFeatures/app/postModalCardSlice";
+import ImageModal from "../ModalPopUp/ImageModal";
 // import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
 import { useRouter } from "next/router";
 // import Comment from "@/components/Organisms/App/Comment";
@@ -120,14 +127,9 @@ const PostCard = ({
   // - comment section
   const [modalPost, setModalPost] = useState<Record<string, any>>({});
   const [commentPost, setCommentPost] = useState("");
-  // const [showComment, setShowComment] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [noOfLikes, setNoOfLikes] = useState(0)
-
-  // useEffect(()=>{
-  //   setNoOfLikes(post?.likes?.length)
-  // },[])
   const currentlyFollowing = useSelector(selectFollowing);
+  const imageModalOpen = useSelector(selectImageModalOpen);
 
   // modal
   const { modalOpen, toggle, selected, setSelected } = useModalWithData();
@@ -148,10 +150,8 @@ const PostCard = ({
   useEffect(() => {
     if (currentlyFollowing.includes(post?.author?._id)) {
       setFollowed(true);
-      // dispatch(setFollowed(true));
     } else {
       setFollowed(false);
-      // dispatch(setFollowed(false));
     }
   }, [post, currentlyFollowing]);
 
@@ -159,7 +159,6 @@ const PostCard = ({
   useEffect(() => {
     // console.log("modalOpen OPEN");
     if (!modalOpen && likeChangedModal.length > 0) {
-      // if (likeChangedModal.includes(postComingIn?._id)) {
       if (likeChangedModal.includes(post?._id)) {
         // Refetch Specific Post So as to get updated like count The false argument is for iit not to sent an axios argument.
         (async () => await likeIt(false))();
@@ -167,7 +166,6 @@ const PostCard = ({
     }
 
     if (!modalOpen && unLikeChangedModal.length > 0) {
-      // if (unLikeChangedModal.includes(postComingIn?._id)) {
       if (unLikeChangedModal.includes(post?._id)) {
         // Refetch Specific Post So as to get updated like count. The false argument is for iit not to sent an axios argument.
         (async () => await unLikeIt(false))();
@@ -270,30 +268,6 @@ const PostCard = ({
     },
   ];
 
-  // const postComment = async () => {
-  //   const body = {
-  //     content: commentPost,
-  //   };
-
-  //   setLoading(true);
-  //   const res = await axios.post(
-  //     `${config.serverUrl}/api/comments?type=feed&id=${post?._id}`,
-  //     body,
-  //     {
-  //       headers: {
-  //         authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  //       },
-  //     }
-  //   );
-  //   // console.log(res);
-  //   let comments = post?.comments;
-  //   comments?.unshift(res.data);
-  //   setModalPost({ ...post, comments });
-
-  //   setLoading(false);
-  //   // setShowComment(false);
-  // };
-
   const handleLike = async () => {
     await likeIt(true);
   };
@@ -324,14 +298,11 @@ const PostCard = ({
       currentRoute == "/groups" ||
       currentRoute == "/groups/[id]/[path]"
     ) {
-      // type = "post";
       type = "feed";
     } else if (currentRoute.includes("profile")) {
       type = "post";
     }
 
-    // console.log("Post data:", post);
-    // try {
     if (bool) {
       try {
         // Like Post
@@ -343,8 +314,6 @@ const PostCard = ({
             },
           }
         );
-
-        // console.log("likeNew response.data:", likeNew.data);
       } catch (error) {
         // Reverse Like State Because of Axios Error
         let filterNewPostState = newPostState?.likes;
@@ -356,7 +325,6 @@ const PostCard = ({
         newPostState.likes = filterNewPostState;
         setPostComingIn(newPostState);
         setLiked(false);
-        // console.error(error);
       }
     }
   };
@@ -393,20 +361,17 @@ const PostCard = ({
       type = "post";
     }
 
-    // try {
     if (bool) {
       // Like Post
       try {
-        const unlikePost = await axios.delete(
+        await axios.delete(
           `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
-          // `${config.serverUrl}/api/${type}/${post?._id}`,
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
           }
         );
-        // console.log("unlikePost:", unlikePost);
       } catch (error) {
         // Reverse Like Because of Axios Error
         let newPostState = { ...currentPostState };
@@ -416,7 +381,6 @@ const PostCard = ({
 
         setPostComingIn(newPostState);
         setLiked(true);
-        // console.error(error);
       }
     }
   };
@@ -426,10 +390,8 @@ const PostCard = ({
      ** This would Auto-Sync Bookmark on both PastCard & ModalCard
      */
 
-    // if (!user?.bookmarks?.includes(post?._id)) {
     let newBookmarks = [...user?.bookmarks, post?._id];
     dispatch(userAuth({ ...user, bookmarks: newBookmarks }));
-    // }
 
     // Axios Bookmark Post
     try {
@@ -447,12 +409,9 @@ const PostCard = ({
       let fitterStateUser = user?.bookmarks.filter((filterUser) => {
         return filterUser !== post?._id;
       });
-      // console.log("fitterStateUser:", fitterStateUser);
-      // }
 
       // Reverse Bookmark State
       dispatch(userAuth({ ...user, bookmarks: fitterStateUser }));
-      // console.log(error);
     }
   };
 
@@ -477,7 +436,6 @@ const PostCard = ({
       // Reverse Bookmark Auth User State.
       let reverseBookmarks = [...user?.bookmarks, post?._id];
       dispatch(userAuth({ ...user, bookmarks: reverseBookmarks }));
-      // console.log(error.response?.data);
     }
   };
 
@@ -492,12 +450,7 @@ const PostCard = ({
       document.getElementById(`followStr-${post?.author?._id}`).innerText ===
       "Unfollow"
     ) {
-      // let confirmUnFollow = window.confirm(
-      //   `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
-      // );
-      // if (confirmUnFollow) {
       handleUnFollow(post?.author?._id);
-      // }
     }
   };
 
@@ -523,7 +476,6 @@ const PostCard = ({
     } catch (error) {
       // Revert on axios  failure
       setFollowed(false);
-      // console.error("follow Error:", error);
     }
   };
 
@@ -549,7 +501,6 @@ const PostCard = ({
     } catch (error) {
       // Revert on axios  failure
       setFollowed(true);
-      // console.error("follow Error:", error);
     }
   };
 
@@ -567,7 +518,9 @@ const PostCard = ({
           <div className="row">
             <div className="col-1">
               <Image
-                src={post?.author?.images?.avatar || "/images/imagePlaceholder.jpg"}
+                src={
+                  post?.author?.images?.avatar || "/images/imagePlaceholder.jpg"
+                }
                 width={45}
                 height={45}
                 alt=""
@@ -618,96 +571,6 @@ const PostCard = ({
                 handleEditPost={handleEditPost}
                 handleDeletePost={handleDeletePost}
               />
-              {/* <NavDropdown
-                drop="start"
-                style={{ color: "white" }}
-                title={
-                  <Button variant="link" size="lg">
-                    <HiDotsVertical size={25} />
-                  </Button>
-                }
-              >
-                <NavDropdown.Item
-                  className={styles.item}
-                  style={{ borderBlock: "1px solid gray" }}
-                  onClick={async () => {
-                    if (postReFetched) {
-                      if (postReFetched?._id === post?._id) {
-                        setSelected(postReFetched);
-                        toggle();
-                      } else {
-                        setSelected(post);
-                        toggle();
-                      }
-                    } else {
-                      setSelected(post);
-                      toggle();
-                    }
-                  }}
-                >
-                  <BsFolderFill /> Open Post
-                </NavDropdown.Item>
-
-                {user?._id !== post?.author?._id ? (
-                  <>
-                    <NavDropdown.Item
-                      className={styles.item}
-                      style={{ borderBottom: "1px solid gray" }}
-                    >
-                      <RiFlagFill /> Report post
-                    </NavDropdown.Item>
-                    <NavDropdown.Item
-                      className={styles.item}
-                      style={{ borderBottom: "1px solid gray" }}
-                      onClick={async () => changeFollowingStatus(post)}
-                    >
-                      {followed ? (
-                        <>
-                          <BsXCircleFill />{" "}
-                          <span id={`followStr-${post?.author?._id}`}>
-                            Unfollow
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <RiUserFollowFill />{" "}
-                          <span id={`followStr-${post?.author?._id}`}>
-                            Follow
-                          </span>
-                        </>
-                      )}{" "}
-                      @{post?.author?.firstName?.split(" ")[0]}
-                      {post?.author?.lastName?.substring(0, 1)}
-                    </NavDropdown.Item>
-                  </>
-                ) : null}
-                {user._id == post.author._id && (
-                  <>
-                    <NavDropdown.Item
-                      className={styles.item}
-                      style={{
-                        borderBottom: "1px solid gray",
-                      }}
-                      onClick={() => handleEditPost(post)}
-                    >
-                      <FiEdit /> Edit Post
-                    </NavDropdown.Item>
-
-                    <NavDropdown.Item
-                      style={{ borderBottom: "1px solid gray" }}
-                      onClick={() => handleDeletePost(post)}
-                    >
-                      <span
-                        style={{
-                          color: "red",
-                        }}
-                      >
-                        <RiDeleteBin5Line /> Delete Post
-                      </span>
-                    </NavDropdown.Item>
-                  </>
-                )}
-              </NavDropdown> */}
             </div>
           </div>
         </Card.Title>
@@ -733,35 +596,58 @@ const PostCard = ({
         >
           <div>
             {post && Object.keys(post).length !== 0 && (
-              <div className="d-flex flex-column">
-                <div
-                  className="post-content"
-                  // No Need for truncate here as it hides some tags like Bold & Underline
-                  dangerouslySetInnerHTML={{
-                    __html: trimmed
-                      ? sanitizer(post?.postBody) || sanitizer(post?.post)
-                      : sanitizer(post?.postBody) || sanitizer(post?.post),
-                  }}
-                />
-
-                <PostIsEdited post={post} />
-
-                {router.asPath === "/feed" ||
-                router?.pathname.includes("profile") ||
-                router?.pathname.includes("groups") ? (
-                  <small
-                    style={{
-                      color: "gray",
-                      fontSize: "11px",
-                      position: "relative",
-                      left: "42%",
+              <>
+                {post?.media?.map((img) => (
+                  <span
+                    key={img}
+                    className="col-1 mx-1"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      dispatch(setImageModalImg(img));
+                      dispatch(setImageModalOpen(true));
                     }}
                   >
-                    {" "}
-                    See more...
-                  </small>
-                ) : null}
-              </div>
+                    <Image
+                      src={img}
+                      alt={"Uploaded Image"}
+                      className="img-thumbnail mb-3"
+                      width={"20%"}
+                      height={"20%"}
+                    />
+                  </span>
+                ))}
+
+                <div className="d-flex flex-column">
+                  <div
+                    className="post-content"
+                    dangerouslySetInnerHTML={{
+                      __html: trimmed
+                        ? sanitizer(truncate(post?.postBody, 100)) ||
+                          sanitizer(truncate(post?.post, 100))
+                        : sanitizer(truncate(post?.postBody, 100)) ||
+                          sanitizer(truncate(post?.post, 100)),
+                    }}
+                  />
+
+                  <PostIsEdited post={post} />
+
+                  {router.asPath === "/feed" ||
+                  router?.pathname.includes("profile") ||
+                  router?.pathname.includes("groups") ? (
+                    <small
+                      style={{
+                        color: "gray",
+                        fontSize: "11px",
+                        position: "relative",
+                        left: "42%",
+                      }}
+                    >
+                      {" "}
+                      See more...
+                    </small>
+                  ) : null}
+                </div>
+              </>
             )}
           </div>
 
@@ -782,37 +668,26 @@ const PostCard = ({
           </div>
         )}
 
-        {/* <Card.Footer
-          className={`mx-1 d-flex justify-content-between bg-white ${styles.footer}`}
-        > */}
         <Card.Footer className="justify-content-between bg-white px-0">
           <div className="row">
             {postButton.map((item, key) => (
               <div className="col-3" key={key}>
                 <Button
                   variant="none"
-                  // disabled={item.name === "Like" && post?.likes?.includes(user._id)}
-                  // className="d-flex justify-content-center gap-1 align-items-center"
                   className="d-flex justify-content-center align-items-center"
                   onClick={() => {
                     if (item.name === "Like") {
                       if (liked) {
-                        // removeLike();
                         handleUnLike();
                       } else {
-                        // console.log("POST ID Init:", post?._id);
                         handleLike();
                       }
                     }
-                    // if (item.name === "Comment") {
-                    //   setShowComment(!showComment);
-                    // }
 
                     if (item.name === "Share") {
                       // modalOpen;
                       toggleShare();
                       setSelectedShare(post);
-                      // document.getElementById("dropDownId").click();
                     }
                     if (item.name === "Bookmark") {
                       if (bookmarked) {
@@ -908,33 +783,8 @@ const PostCard = ({
           mutate={mutate}
         />
       )}
-      {/* <Modal
-        show={modalOpen}
-        className={`${styles.FeedModal}`}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        size="xl"
-        scrollable={true}
-      >
-        <span className={styles.openBtn}>
-          {" "}
-          <MdOutlineCancel
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggle()}
-          />{" "}
-        </span>
-        <span className={styles.closeBtn}>
-          {" "}
-          <BiArrowBack
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggle()}
-          />{" "}
-        </span>
-        <ModalRow selected={selected} modalToggle={toggle} mutate={mutate} />
-      </Modal> */}
 
+      {/* Open Social Media Modal */}
       {modalOpenShare && (
         <OpenShareModal
           modalOpenShare={modalOpenShare}
@@ -943,32 +793,8 @@ const PostCard = ({
         />
       )}
 
-      {/* <Modal
-        show={modalOpenShare}
-        className={styles.FeedModal}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        size="sm"
-        scrollable={true}
-      >
-        <span className={styles.openBtn}>
-          {" "}
-          <MdOutlineCancel
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggleShare()}
-          />{" "}
-        </span>
-        <span className={styles.closeBtn}>
-          {" "}
-          <BiArrowBack
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggleShare()}
-          />{" "}
-        </span>
-        <ModalRowShare selectedShare={selectedShare} />
-      </Modal> */}
+      {/* Post Image Modal */}
+      {imageModalOpen && <ImageModal />}
     </>
   );
 };

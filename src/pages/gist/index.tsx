@@ -114,15 +114,10 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   useEffect(() => {
     if (paginatedData) {
       if (JSON.stringify(allGists) !== JSON.stringify(paginatedData)) {
-        // console.log("paginatedData - 1:", paginatedData);
         setAllGists(paginatedData);
       }
     }
   }, [paginatedData]);
-
-  // const handleChange = (e) => {
-  //   dispatch(setGistTitle(e.currentTarget.value));
-  // };
 
   const filterCategory = (item) => {
     // console.log(item);
@@ -131,7 +126,6 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     if (filtered.length <= 0) {
       alert("No Item in this category");
     }
-    // console.log('filtered gists:', filteredGists);
 
     setFilteredGists(filtered);
   };
@@ -166,7 +160,6 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         <Row className="mt-5">
           <Col md={3} className="desktop-only">
             <BCard
-              // className={`pt-1 px-1 shadow-sm ${styles.wrapper}`}
               className={`pt-1 px-1 ${styles.wrapper}`}
               style={{
                 position: "sticky",
@@ -237,7 +230,6 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                 </p>
               }
               dataLength={paginatedData?.length ?? 0}
-              // initialScrollY={0}
             >
               <div className="justify-content-center">
                 {(filteredGists.length > 0 ? filteredGists : allGists).map(
@@ -270,80 +262,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
 
       {/* Open Editor Modal */}
       {showGistModal && <GistPostEditorModal pageAt="/gist" />}
-
-      {/* <Modal
-        show={showGistModal}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        size="lg"
-        className="p-3"
-      >
-        <span className={styles.closeBtn}>
-          {" "}
-          <FaTimes
-            color="#207681"
-            style={{ cursor: "pointer" }}
-            size={35}
-            onClick={() => dispatch(setShowGistModal(false))}
-          />{" "}
-        </span>
-
-        <div className="row justify-content-center mx-1">
-          <div
-            className="col-11 col-sm-10 col-xl-11 col-xxl-10"
-            style={{ padding: "12px 0px" }}
-          >
-            <Form>
-              <Form.Group>
-                <Form.Label className={formStyles.formLabel}>
-                  Gist Title
-                </Form.Label>
-                <div
-                  style={{
-                    border: "1px solid rgba(0, 0, 0, 0.125)",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <Form.Control
-                    id="createGistID"
-                    size="lg"
-                    name="title"
-                    type="text"
-                    onChange={(e) => handleChange(e)}
-                    style={{
-                      backgroundColor: "rgb(248, 244, 244)",
-                      borderRadius: "10px",
-                    }}
-                    required
-                  />
-                </div>
-              </Form.Group>
-            </Form>
-          </div>
-          <div className="col-12 mt-2 mb-4 px-lg-4">
-            <Editor slim={false} pageAt="/gist" />
-          </div>
-        </div>
-      </Modal> */}
     </section>
   );
 };
-
-// export async function getStaticProps() {
-//   const gistsFetch = await fetch(
-//     `${process.env.REST}/buddyboss/v1/topics?_embed=user&order=desc&orderby=ID
-//     &per_page=10`,
-//     { method: "GET" }
-//   );
-//   const gists = await gistsFetch.json();
-
-//   return {
-//     props: {
-//       gists,
-
-//       revalidate: 1,
-//     },
-//   };
-// }
 
 export default Gist;

@@ -39,7 +39,7 @@ import styles from "@/styles/profile.module.scss";
 import axios from "axios";
 import config from "@/config";
 import { useDispatch } from "react-redux";
-import truncate from "trunc-html";
+import truncate from "truncate-html";
 
 import {
   selectPost,
@@ -580,6 +580,7 @@ const ModalCard = ({
     }
   };
 
+  let imageHeigth;
   return (
     <>
       {console.log("POST:", post)}
@@ -592,46 +593,39 @@ const ModalCard = ({
             className={`${styles.column} pe-lg-0`}
             // style={{ width: "450px", margin: "10px" }}
           >
-            {/* {!trimmed && (
-              <Image
-                src={"/images/formbg.png"}
-                alt={""}
-                className={styles.imgModal}
-                fluid
-              />
-            )} */}
-
-            {/* {!trimmed && ( */}
-            <div
-              className="row"
-              style={{
-                height: "390px",
-                width: "100%",
-                overflowY: "auto",
-              }}
-            >
-              {post?.media?.map((img) => (
-                <div
-                  key={img}
-                  className="col-12"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    dispatch(setImageModalImg(img));
-                    dispatch(setImageModalOpen(true));
-                  }}
-                >
-                  <Image
-                    src={img}
-                    alt={""}
-                    className={styles.imgModal}
-                    width={"100%"}
-                    height={"100%"}
-                    // fluid
-                  />
-                </div>
-              ))}
-            </div>
-            {/* )} */}
+            {(imageHeigth = post?.media?.length === 1 ? "auto" : "390px")}
+            {!trimmed && (
+              <div
+                className="row"
+                style={{
+                  width: "330px",
+                  // height: "390px",
+                  height: imageHeigth,
+                  overflowY: "auto",
+                }}
+              >
+                {post?.media?.map((img) => (
+                  <div
+                    key={img}
+                    className="col-12"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      dispatch(setImageModalImg(img));
+                      dispatch(setImageModalOpen(true));
+                    }}
+                  >
+                    <Image
+                      src={img}
+                      alt={"Uploaded Image"}
+                      className={`${styles.imgModal} img-thumbnail`}
+                      width={"100%"}
+                      height={"100%"}
+                      // fluid
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </Col>
         )}
 
@@ -696,12 +690,10 @@ const ModalCard = ({
                           }}
                           dangerouslySetInnerHTML={{
                             __html: trimmed
-                              ? sanitizer(
-                                  truncate(post?.postTitle, 250).html
-                                ) || sanitizer(truncate(post?.title, 250).html)
-                              : sanitizer(
-                                  truncate(post?.postTitle, 250).html
-                                ) || sanitizer(truncate(post?.title, 250).html),
+                              ? sanitizer(truncate(post?.postTitle, 250)) ||
+                                sanitizer(truncate(post?.title, 250))
+                              : sanitizer(truncate(post?.postTitle, 250)) ||
+                                sanitizer(truncate(post?.title, 250)),
                           }}
                         />
                         <br />
@@ -730,77 +722,6 @@ const ModalCard = ({
                     handleDeletePost={handleDeletePost}
                     changeFollowingStatus={changeFollowingStatus}
                   />
-                  {/* <NavDropdown
-                    drop="start"
-                    style={{ color: "white" }}
-                    title={
-                      <Button
-                        variant="link"
-                        size="lg"
-                      >
-                        <HiDotsVertical size={25} />
-                      </Button>
-                    }
-                  >
-                    {user?._id !== post?.author?._id ? (
-                      <>
-                        <NavDropdown.Item
-                          className={styles.item}
-                          style={{ backgroundColor: "rgb(237, 236, 236)" }}
-                        >
-                          <RiFlagFill className="text-muted" /> Report post
-                        </NavDropdown.Item>
-                        <NavDropdown.Item
-                          className={styles.item}
-                          onClick={async () => changeFollowingStatus(post)}
-                        >
-                          {currentlyFollowing.includes(post?.author?._id) ? (
-                            <>
-                              <BsXCircleFill className="text-muted" />{" "}
-                              <span id={`followStr-modal-${post?.author?._id}`}>
-                                Unfollow
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <RiUserFollowFill className="text-muted" />{" "}
-                              <span id={`followStr-modal-${post?.author?._id}`}>
-                                Follow
-                              </span>
-                            </>
-                          )}{" "}
-                          @{post?.author?.firstName?.split(" ")[0]}
-                          {post?.author?.lastName?.substring(0, 1)}
-                        </NavDropdown.Item>
-                      </>
-                    ) : null}
-                    {user?._id == post?.author?._id && (
-                      <>
-                        <NavDropdown.Item
-                          className={styles.item}
-                          style={{
-                            borderBottom: "1px solid gray",
-                          }}
-                          onClick={() => handleEditPost(post)}
-                        >
-                          <FiEdit /> Edit Post
-                        </NavDropdown.Item>
-
-                        <NavDropdown.Item
-                          style={{ borderBottom: "1px solid gray" }}
-                          onClick={() => handleDeletePost(post)}
-                        >
-                          <span
-                            style={{
-                              color: "red",
-                            }}
-                          >
-                            <RiDeleteBin5Line /> Delete Post
-                          </span>
-                        </NavDropdown.Item>
-                      </>
-                    )}
-                  </NavDropdown> */}
                 </div>
               </div>
             </Card.Title>
@@ -810,43 +731,16 @@ const ModalCard = ({
                 <>
                   <div
                     className="post-content"
-                    // dangerouslySetInnerHTML={{
-                    //   __html: trimmed
-                    //     ? sanitizer(truncate(post?.postBody, 250).html) ||
-                    //       sanitizer(truncate(post?.post, 250).html)
-                    //     : sanitizer(truncate(post?.postBody, 250).html) ||
-                    //       sanitizer(truncate(post?.post, 250).html),
-                    // }}
-
-                    // No Need for truncate here as it hides some tags like Bold & Underline
                     dangerouslySetInnerHTML={{
                       __html: trimmed
                         ? sanitizer(post?.postBody) || sanitizer(post?.post)
                         : sanitizer(post?.postBody) || sanitizer(post?.post),
                     }}
-                    // dangerouslySetInnerHTML={{
-                    //   __html: trimmed
-                    //     ? post?.postBody?.slice(0, 500) ||
-                    //       post?.post?.slice(0, 500) + "..." ||
-                    //       post?.postBody
-                    //     : post?.postBody || post?.post,
-                    // }}
                   />
 
                   <PostIsEdited post={post} />
                 </>
               )}
-
-              {/* <div className={styles.trimmed}>
-                {!trimmed && (
-                  <Image
-                    src={"/images/formbg.png"}
-                    alt={""}
-                    fluid
-                    className={styles.imgModal}
-                  />
-                )}
-              </div> */}
 
               <div
                 className={`${styles.trimmed} row justify-content-center`}
@@ -855,7 +749,7 @@ const ModalCard = ({
                 }}
               >
                 {post?.media?.map((img) => (
-                  <div
+                  <span
                     key={img}
                     className="col-4 g-1"
                     style={{ cursor: "pointer" }}
@@ -865,14 +759,13 @@ const ModalCard = ({
                     }}
                   >
                     <Image
-                      // src={"/images/formbg.png"}
                       src={img}
-                      alt={""}
-                      className={styles.imgModal}
+                      alt={"Uploaded Image"}
+                      className={`${styles.imgModal} img-thumbnail`}
                       width={"100%"}
                       height={"100%"}
                     />
-                  </div>
+                  </span>
                 ))}
               </div>
               {post?.likes?.length > 0 && (
@@ -883,24 +776,16 @@ const ModalCard = ({
               )}
             </Card.Body>
 
-            {/* <Card.Footer
-            className={`mx-1 d-flex justify-content-between bg-white ${styles.cardFooter}`}
-          > */}
             <Card.Footer className="justify-content-between bg-white px-0">
               <div className="row">
                 {postButton.map((item, key) => (
                   <div className="col-3" key={key}>
                     <Button
-                      // key={key}
-                      // onClick={() => item.name === "Like" && handleLike()}
                       variant="none"
-                      // disabled={item.name === "Like" && post.likes?.includes(user._id)}
-                      // className="d-flex justify-content-center gap-1 align-items-center"
                       className="d-flex justify-content-center align-items-center border-0"
                       onClick={() => {
                         if (item.name === "Like") {
                           if (liked) {
-                            // removeLike();
                             handleUnLike();
                           } else {
                             handleLike();
@@ -910,7 +795,6 @@ const ModalCard = ({
                           // modalOpen;
                           toggleShare();
                           setSelectedShare(postButton);
-                          // document.getElementById("dropDownId").click();
                         }
                         if (item.name === "Bookmark") {
                           if (bookmarked) {
@@ -935,14 +819,12 @@ const ModalCard = ({
                         <span
                           style={{ marginLeft: "7px" }}
                           className="mx-2 text-secondary"
-                          // onClick={() => setShowComment(!showComment)}
                         >
                           {post?.comments?.length || 0}
                         </span>
                       )}
 
                       <span
-                        // className={`d-none d-md-block ${styles.footerName}`}
                         className="d-none d-xl-block"
                         style={{ marginLeft: "7px" }}
                       >
@@ -1025,6 +907,7 @@ const ModalCard = ({
       {/* Open Editor Modal */}
       {showModal && <FeedPostEditorModal pageAt={router.asPath} />}
 
+      {/* Open Social Media Modal */}
       {modalOpenShare && (
         <OpenShareModal
           modalOpenShare={modalOpenShare}
@@ -1032,35 +915,6 @@ const ModalCard = ({
           selectedShare={selectedShare}
         />
       )}
-
-      {/* {showCommentModal && <CommentModal />} */}
-
-      {/* <Modal
-        show={modalOpenShare}
-        className={styles.FeedModal}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        size="sm"
-        scrollable={true}
-      >
-        <span className={styles.openBtn}>
-          {" "}
-          <MdOutlineCancel
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggleShare()}
-          />{" "}
-        </span>
-        <span className={styles.closeBtn}>
-          {" "}
-          <BiArrowBack
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggleShare()}
-          />{" "}
-        </span>
-        <ModalRowShare selectedShare={selectedShare} />
-      </Modal> */}
 
       {/* Post Image Modal */}
       {imageModalOpen && <ImageModal />}
