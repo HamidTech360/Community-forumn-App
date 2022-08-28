@@ -19,6 +19,7 @@ import {
 } from "@/reduxFeatures/app/createPost";
 import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
 import FeedPostEditorModal from "../App/ModalPopUp/FeedPostEditorModal";
+import Avatar from "@/components/Atoms/Avatar";
 
 const CreatePost = ({ pageAt }) => {
   const data = useSelector(selectUser);
@@ -30,13 +31,7 @@ const CreatePost = ({ pageAt }) => {
     <Card className="p-4">
       <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
         <>
-          <Image
-            src={data?.images?.avatar || "/images/formbg.png"}
-            width={50}
-            height={50}
-            alt="image"
-            roundedCircle
-          />
+          <Avatar src={data?.images?.avatar} name={data.firstName} />
         </>
         <>
           <Form

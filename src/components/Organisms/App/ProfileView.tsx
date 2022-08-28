@@ -36,6 +36,7 @@ import makeSecuredRequest, {
 
 import styles from "@/styles/profile.module.scss";
 import { datacatalog } from "googleapis/build/src/apis/datacatalog";
+import Avatar from "@/components/Atoms/Avatar";
 
 interface IComponents {
   about: ReactNode;
@@ -178,24 +179,25 @@ const ProfileView = ({
   return (
     <>
       <Card className="mt-2 mb-3">
-        <CardImg src={profile?.images?.cover || "/images/formbg.png"} className="image3" />
+        <CardImg
+          src={profile?.images?.cover || "/images/formbg.png"}
+          className="image3"
+        />
         <Card.Body className="d-flex position-relative justify-content-center align-items-center flex-column ">
-          <Image
-            width={130}
-            height={130}
-            src={profile?.images?.avatar || "/images/formbg.png"}
-            alt="avatar"
-            className="top-0 position-absolute"
-            style={{
-              transform: "translateY(-70%)",
-              border: "2px solid black",
-            }}
-            roundedCircle
-          />
+          <div className="position-absolute top-0">
+            <Avatar
+              src={profile?.images?.avatar}
+              name={profile.firstName}
+              width={130}
+              height={130}
+            />
+          </div>
           <div className=" mt-4 bold text-center fs-7">
             {profile?.firstName} {profile?.lastName}
           </div>
-          <div className="text-muting">@{profile.username || profile?.firstName}</div>
+          <div className="text-muting">
+            @{profile.username || profile?.firstName}
+          </div>
 
           {/* Don't Display Below Option For Logged-in Users */}
           {profile?._id !== user?._id && (

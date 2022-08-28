@@ -35,6 +35,7 @@ import makeSecuredRequest, {
   deleteSecuredRequest,
 } from "@/utils/makeSecuredRequest";
 import CommentModal from "@/components/Organisms/App/ModalPopUp/CommentModal";
+import Avatar from "@/components/Atoms/Avatar";
 
 const Gist = ({
   gist,
@@ -47,7 +48,7 @@ const Gist = ({
 }) => {
   const router = useRouter();
   const { id } = router.query;
-  const user = useSelector(selectUser)
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const [data, setData] = useState<Record<string, any>>({});
   const [commentPost, setCommentPost] = useState("");
@@ -298,12 +299,7 @@ const Gist = ({
             <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
             <div className="row">
               <div className="col-2 col-md-2">
-                <Image
-                  src={user?.images?.avatar || "/images/imagePlaceholder.jpg"}
-                  className="img-fluid"
-                  roundedCircle={true}
-                  alt="Author's Image"
-                />
+                <Avatar src={user?.images?.avatar} name={user.firstName} />
               </div>
               <div className="col-7 col-md-10">
                 {/* <div className="form-floating shadow"> */}

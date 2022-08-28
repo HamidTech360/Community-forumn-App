@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { Button, Card, Image } from "react-bootstrap";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { useSelector } from "@/redux/store";
+import Avatar from "@/components/Atoms/Avatar";
 
 const UserCard = () => {
   const data = useSelector(selectUser);
@@ -19,13 +20,9 @@ const UserCard = () => {
         className="d-flex justify-content-center  "
         style={{ transform: "translateY(-60%)" }}
       >
-        <Image
-          className="user-img"
-          src={data?.images?.avatar || "/images/formbg.png"}
-          alt=""
-          width={70}
-          height={70}
-          roundedCircle
+        <Avatar
+          src={data.images.avatar || "/images/imagePlaceholder.jpg"}
+          name={data.firstName}
         />
       </div>
 
@@ -42,7 +39,8 @@ const UserCard = () => {
         className="row text-muted mx-auto mt-2 text-center"
         style={{ fontSize: "12px" }}
       >
-        {data?.bio || 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Suscipit perspiciatis.'}
+        {data?.bio ||
+          "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Suscipit perspiciatis."}
       </small>
       <div
         className="d-flex justify-content-between"

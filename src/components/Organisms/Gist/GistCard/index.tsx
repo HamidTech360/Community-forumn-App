@@ -29,7 +29,8 @@ import makeSecuredRequest, {
 } from "@/utils/makeSecuredRequest";
 import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
-import {PostMenu} from "../../App/PostMenu";
+import { PostMenu } from "../../App/PostMenu";
+import Avatar from "@/components/Atoms/Avatar";
 // interface IGist {
 //   gist: {
 //     author: {
@@ -181,7 +182,6 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
     } catch (error) {
       // Revert on axios  failure
       setFollowed(true);
-      // console.error("follow Error:", error);
     }
   };
 
@@ -194,65 +194,47 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
         }}
       >
         <Card.Title>
-          <div className="row">
-            <div className="col-2 pt-2 pt-md-3 align-items-center">
-              <Image
-                src={gist?.author?.images?.avatar || "/images/imagePlaceholder.jpg"}
-                width={50}
-                height={50}
-                alt="Avatar"
-                roundedCircle
-                className={styles.img}
-                onClick={redirectPage}
-                style={{ cursor: "pointer" }}
+          <div className="d-flex g-2">
+            <div>
+              <Avatar
+                src={gist?.author?.images?.avatar}
+                name={gist?.author?.firstName}
               />
             </div>
-            <div className="col-7">
-              <div className="row">
-                <div className="col-9 col-sm-10 p-md-0">
-                  <div className={` ${styles.div}`}>
-                    <small
-                      className={`${styles.title} text-secondary text-capitalize `}
-                      onClick={redirectPage}
-                      style={{ cursor: "pointer", fontSize: "14px" }}
-                    >
-                      Started by: {gist?.author?.firstName}{" "}
-                      {gist?.author?.lastName}
-                    </small>
-                  </div>
-                </div>
 
-                <div className="row">
-                  <div className="col-12 p-md-0">
-                    <h5 className={`text-primary mt-1 ${styles.title}`}>
-                      {gist?.title?.replace("&amp;", "&")}
-                    </h5>
-                  </div>
-                  <div className="col-12 p-md-0">
-                    <div className="ms-auto mb-2 text-muted">
-                      <small
-                        className={`d-flex text-center ${styles.time}`}
-                        style={{ fontSize: "14px" }}
-                      >
-                        <Age time={gist?.createdAt} />{" "}
-                        <BsBookmarkDash className="ms-2" />
-                      </small>
-                    </div>
-                  </div>
-                </div>
+            <div className="d-flex flex-column justify-content-center me-auto">
+              <small
+                className={`${styles.title} text-secondary text-capitalize `}
+                onClick={redirectPage}
+                style={{ cursor: "pointer", fontSize: "14px" }}
+              >
+                Started by: {gist?.author?.firstName} {gist?.author?.lastName}
+              </small>
+              <div>
+                <h5 className={`text-primary mt-1 ${styles.title}`}>
+                  {gist?.title?.replace("&amp;", "&")}
+                </h5>
               </div>
             </div>
-            <div className="col-3 col-sm-2 ms-auto p-0">
-              {/* Menu Dots */}
-              <PostMenu
-                user={user}
-                currentlyFollowing={currentlyFollowing}
-                post={gist}
-                handleEditPost={handleEditPost}
-                handleDeletePost={handleDeletePost}
-                changeFollowingStatus={changeFollowingStatus}
-              />
 
+            <div
+              className={`ms-auto d-flex align-items-center justify-content-between text-center ${styles.time}`}
+              style={{ fontSize: "14px" }}
+            >
+              <Age time={gist?.createdAt} /> <BsBookmarkDash className="ms-2" />
+              {primary && (
+                <div>
+                  {/* Menu Dots */}
+                  <PostMenu
+                    user={user}
+                    currentlyFollowing={currentlyFollowing}
+                    post={gist}
+                    handleEditPost={handleEditPost}
+                    handleDeletePost={handleDeletePost}
+                    changeFollowingStatus={changeFollowingStatus}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </Card.Title>

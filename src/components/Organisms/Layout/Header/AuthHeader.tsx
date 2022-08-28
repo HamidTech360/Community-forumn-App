@@ -44,10 +44,14 @@ import {
   MdNotificationsActive,
   MdOutlineNotificationsActive,
 } from "react-icons/md";
-import { getNotification, updateNumberOfNotifications } from "@/reduxFeatures/api/notifications";
+import {
+  getNotification,
+  updateNumberOfNotifications,
+} from "@/reduxFeatures/api/notifications";
 import Head from "next/head";
 import styles from "@/styles/utils.module.scss";
 import SearchTabs from "@/components/Molecules/SearchTabs";
+import Avatar from "@/components/Atoms/Avatar";
 
 const AuthHeader = () => {
   const dispatch = useDispatch();
@@ -128,30 +132,34 @@ const AuthHeader = () => {
     }
   };
 
-
-  useEffect(()=>{
-    (async ()=>{
-      try{
-        const response = await axios.get(`${config.serverUrl}/api/notifications`, {headers:{
-          authorization:`Bearer ${localStorage.getItem('accessToken')}`
-        }})
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get(
+          `${config.serverUrl}/api/notifications`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
         console.log(response.data);
-        
-        dispatch(getNotification(response.data.notifications))
-        const unRead = response.data.notifications.filter(item=>!item.read)
-        dispatch(updateNumberOfNotifications({total:unRead.length}))
-      }catch(error){
-        console.log(error.response?.data); 
-      }
-    })()
-  },[])
 
-  
+        dispatch(getNotification(response.data.notifications));
+        const unRead = response.data.notifications.filter((item) => !item.read);
+        dispatch(updateNumberOfNotifications({ total: unRead.length }));
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    })();
+  }, []);
+
   //@ts-ignore
   //const notifications = useSelector(state=>state.notification.data?.notifications)
-  const totalNotifications = useSelector(state=>state.notification.noOfNotifications)
+  const totalNotifications = useSelector(
+    (state) => state.notification.noOfNotifications
+  );
   // console.log('lenght of notifications is ', notifications?.length);
-  
 
   return (
     <>
@@ -247,47 +255,41 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
-              <Badge className={styles.badge}>{totalNotifications}</Badge> 
-
+              <Badge className={styles.badge}>{totalNotifications}</Badge>
             </Button>
           </div>
           <NavDropdown
             className={`d-md-block ${styles.header}`}
             style={{ color: "black" }}
             title={
-              <>
-                <Image
-                  src={data?.images?.avatar || "/images/formbg.png"}
-                  alt=""
-                  className={styles.img}
-                  roundedCircle
+              <div className="d-flex align-items-center g-2">
+                <Avatar
+                  src={data?.images?.avatar}
+                  name={data.firstName}
+                  width={40}
+                  height={40}
                 />
                 <span className={`mx-2 ${styles.span}`}>
                   {data?.firstName?.split(" ")[0]}
                 </span>
-              </>
+              </div>
             }
           >
             <div className={styles.navDrop}>
               <NavDropdown.Header className={styles.navHead}>
-                {/* <div  
-                style={{
-                  cursor: "pointer",	
-                }}
-                onClick = {directProfile}> */}
-                <Image
-                  src={data?.images?.avatar || "/images/formbg.png"}
-                  alt=""
-                  width={20}
-                  height={20}
-                  roundedCircle
-                />
-                <Link href="/profile" passHref>
-                  <span className="mx-2" style={{ cursor: "pointer" }}>
-                    {data?.firstName}&nbsp; {data?.lastName}
-                  </span>
-                </Link>{" "}
-                {/* </div> */}
+                <div className="d-flex g-2 align-items-center">
+                  <Avatar
+                    src={data?.images?.avatar}
+                    name={data.firstName}
+                    width={40}
+                    height={40}
+                  />
+                  <Link href="/profile" passHref>
+                    <span className="mx-2" style={{ cursor: "pointer" }}>
+                      {data?.firstName}&nbsp; {data?.lastName}
+                    </span>
+                  </Link>
+                </div>
               </NavDropdown.Header>
               <NavDropdown.Divider />
               <NavDropdown.Item className={styles.navMenu}>
