@@ -8,6 +8,7 @@ import Age from "../../../Atoms/Age";
 import config from "@/config";
 import striptags from "striptags";
 import DOMPurify from "dompurify";
+import truncate from "truncate-html";
 import {
   selectFollowing,
   user as userAuth,
@@ -29,7 +30,7 @@ import makeSecuredRequest, {
 } from "@/utils/makeSecuredRequest";
 import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
-import {PostMenu} from "../../App/PostMenu";
+import { PostMenu } from "../../App/PostMenu";
 // interface IGist {
 //   gist: {
 //     author: {
@@ -197,7 +198,9 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
           <div className="row">
             <div className="col-2 pt-2 pt-md-3 align-items-center">
               <Image
-                src={gist?.author?.images?.avatar || "/images/imagePlaceholder.jpg"}
+                src={
+                  gist?.author?.images?.avatar || "/images/imagePlaceholder.jpg"
+                }
                 width={50}
                 height={50}
                 alt="Avatar"
@@ -252,7 +255,6 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
                 handleDeletePost={handleDeletePost}
                 changeFollowingStatus={changeFollowingStatus}
               />
-
             </div>
           </div>
         </Card.Title>
@@ -264,9 +266,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
             <Card.Body
               dangerouslySetInnerHTML={{
                 __html: sanitizer(
-                  trimmed
-                    ? gist.post.slice(0, 300) || gist.post.slice(0, 300)
-                    : gist.post || gist.post
+                  trimmed ? truncate(gist.post, 100) : truncate(gist.post)
                 ),
               }}
               style={{
@@ -288,7 +288,6 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
           )}
         </Card.Body>
       </Card>
-      {/* </div> */}
     </div>
   );
 };
