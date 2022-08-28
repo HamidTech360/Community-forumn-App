@@ -597,26 +597,6 @@ const PostCard = ({
           <div>
             {post && Object.keys(post).length !== 0 && (
               <>
-                {post?.media?.map((img) => (
-                  <span
-                    key={img}
-                    className="col-1 mx-1"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      dispatch(setImageModalImg(img));
-                      dispatch(setImageModalOpen(true));
-                    }}
-                  >
-                    <Image
-                      src={img}
-                      alt={"Uploaded Image"}
-                      className="img-thumbnail mb-3"
-                      width={"20%"}
-                      height={"20%"}
-                    />
-                  </span>
-                ))}
-
                 <div className="d-flex flex-column">
                   <div
                     className="post-content"
@@ -631,7 +611,7 @@ const PostCard = ({
 
                   <PostIsEdited post={post} />
 
-                  {router.asPath === "/feed" ||
+                  {/* {router.asPath === "/feed" ||
                   router?.pathname.includes("profile") ||
                   router?.pathname.includes("groups") ? (
                     <small
@@ -645,8 +625,51 @@ const PostCard = ({
                       {" "}
                       See more...
                     </small>
-                  ) : null}
+                  ) : null} */}
                 </div>
+
+                {post?.media?.map((img, index) => (
+                  <span
+                    key={img}
+                    className="col-1 mx-1"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      dispatch(
+                        setImageModalImg({
+                          media: post.media,
+                          activeIndex: index,
+                        })
+                      );
+                      dispatch(setImageModalOpen(true));
+                    }}
+                  >
+                    <Image
+                      src={img}
+                      alt={"Uploaded Image"}
+                      className="img-thumbnail my-3"
+                      width={"20%"}
+                      height={"20%"}
+                    />
+                  </span>
+                ))}
+
+                {router.asPath === "/feed" ||
+                router?.pathname.includes("profile") ||
+                router?.pathname.includes("groups") ? (
+                  <div>
+                    <small
+                      style={{
+                        color: "gray",
+                        fontSize: "11px",
+                        position: "relative",
+                        left: "42%",
+                      }}
+                    >
+                      {" "}
+                      See more...
+                    </small>
+                  </div>
+                ) : null}
               </>
             )}
           </div>

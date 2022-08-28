@@ -580,7 +580,6 @@ const ModalCard = ({
     }
   };
 
-  let imageHeigth;
   return (
     <>
       {console.log("POST:", post)}
@@ -593,24 +592,28 @@ const ModalCard = ({
             className={`${styles.column} pe-lg-0`}
             // style={{ width: "450px", margin: "10px" }}
           >
-            {(imageHeigth = post?.media?.length === 1 ? "auto" : "390px")}
             {!trimmed && (
               <div
                 className="row"
                 style={{
                   width: "330px",
                   // height: "390px",
-                  height: imageHeigth,
+                  height: post?.media?.length === 1 ? "auto" : "390px",
                   overflowY: "auto",
                 }}
               >
-                {post?.media?.map((img) => (
+                {post?.media?.map((img, index) => (
                   <div
                     key={img}
                     className="col-12"
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      dispatch(setImageModalImg(img));
+                      dispatch(
+                        setImageModalImg({
+                          media: post.media,
+                          activeIndex: index,
+                        })
+                      );
                       dispatch(setImageModalOpen(true));
                     }}
                   >
@@ -748,13 +751,18 @@ const ModalCard = ({
                   height: "100%",
                 }}
               >
-                {post?.media?.map((img) => (
+                {post?.media?.map((img, index) => (
                   <span
                     key={img}
                     className="col-4 g-1"
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      dispatch(setImageModalImg(img));
+                      dispatch(
+                        setImageModalImg({
+                          media: post.media,
+                          activeIndex: index,
+                        })
+                      );
                       dispatch(setImageModalOpen(true));
                     }}
                   >
