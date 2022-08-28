@@ -1062,34 +1062,8 @@ const ModalCard = ({
         <ModalRowShare selectedShare={selectedShare} />
       </Modal> */}
 
+      {/* Post Image Modal */}
       {imageModalOpen && <ImageModal />}
-      {/* <Modal
-        className="bg-secondary"
-        show={imageModalOpen}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        size="lg"
-        scrollable={true}
-      >
-        <span className="ms-auto m-2">
-          <MdOutlineCancel
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => setImageModalOpen(false)}
-          />{" "}
-        </span>
-
-        <div className="row">
-          <div className="col-12 mx-auto">
-            <Image
-              src={imageModalImg}
-              alt={"image"}
-              className={styles.imgModal}
-              fluid
-            />
-          </div>
-        </div>
-      </Modal> */}
     </>
   );
 };
