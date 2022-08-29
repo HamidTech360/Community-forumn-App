@@ -200,6 +200,15 @@ const Feed = () => {
                   <b>Fetching Post...</b>
                 </p>
               )}
+              {!isValidating && !isReachedEnd ? (
+                <p
+                  className="text-primary"
+                  style={{ textAlign: "center", color: "gray" }}
+                  onClick={() => mutate()}
+                >
+                  <b>See more...</b>
+                </p>
+              ) : null}
               {error && (
                 <p
                   style={{
@@ -213,34 +222,11 @@ const Feed = () => {
               )}
             </InfiniteScroll>
           </main>
-          <div
-            // style={{ width: 270 }}
-            // className="position-fixed d-none d-xxl-flex end-0 me-5 vh-100 "
-            // className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-3 me-xl-2 ms-xxl-4 vh-100"
-            className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-3 me-xl-2 ms-xxl-4 vh-100"
-          >
+          <div className="d-none d-lg-flex col-lg-3 col-xl-3 position-fixed end-0 ps-lg-5 ps-xxl-3 me-xl-2 ms-xxl-4 vh-100">
             <Follow />
           </div>
         </div>
       </Container>
-
-      {/* <Modal
-        show={modalOpen}
-        className={styles.FeedModal}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        size="xl"
-        scrollable={true}
-      >
-        <span className={styles.openBtn}>
-          <MdOutlineCancel
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggle()}
-          />
-        </span>
-        <ModalRow selected={selected} modalToggle mutate />
-      </Modal> */}
     </AuthContent>
   );
 };

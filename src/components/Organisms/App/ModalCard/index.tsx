@@ -586,7 +586,7 @@ const ModalCard = ({
       {console.log("POST:", post)}
       <Row>
         {post?.media?.length > 0 && (
-          <Col sm={12} md={12} lg={5}>
+          <Col sm={12} md={12} lg={5} className={styles.column}>
             {!trimmed && (
               <div
                 className="row"
