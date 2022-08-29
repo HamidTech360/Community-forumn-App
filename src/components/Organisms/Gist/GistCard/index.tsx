@@ -8,6 +8,7 @@ import Age from "../../../Atoms/Age";
 import config from "@/config";
 import striptags from "striptags";
 import DOMPurify from "dompurify";
+import truncate from "truncate-html";
 import {
   selectFollowing,
   user as userAuth,
@@ -30,7 +31,9 @@ import makeSecuredRequest, {
 import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
 import { PostMenu } from "../../App/PostMenu";
+
 import Avatar from "@/components/Atoms/Avatar";
+
 // interface IGist {
 //   gist: {
 //     author: {
@@ -217,24 +220,16 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
               </div>
             </div>
 
-            <div
-              className={`ms-auto d-flex align-items-center justify-content-between text-center ${styles.time}`}
-              style={{ fontSize: "14px" }}
-            >
-              <Age time={gist?.createdAt} /> <BsBookmarkDash className="ms-2" />
-              {primary && (
-                <div>
-                  {/* Menu Dots */}
-                  <PostMenu
-                    user={user}
-                    currentlyFollowing={currentlyFollowing}
-                    post={gist}
-                    handleEditPost={handleEditPost}
-                    handleDeletePost={handleDeletePost}
-                    changeFollowingStatus={changeFollowingStatus}
-                  />
-                </div>
-              )}
+            <div className="col-3 col-sm-2 ms-auto p-0">
+              {/* Menu Dots */}
+              <PostMenu
+                user={user}
+                currentlyFollowing={currentlyFollowing}
+                post={gist}
+                handleEditPost={handleEditPost}
+                handleDeletePost={handleDeletePost}
+                changeFollowingStatus={changeFollowingStatus}
+              />
             </div>
           </div>
         </Card.Title>
@@ -246,9 +241,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
             <Card.Body
               dangerouslySetInnerHTML={{
                 __html: sanitizer(
-                  trimmed
-                    ? gist.post.slice(0, 300) || gist.post.slice(0, 300)
-                    : gist.post || gist.post
+                  trimmed ? truncate(gist.post, 100) : truncate(gist.post)
                 ),
               }}
               style={{
@@ -270,7 +263,6 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
           )}
         </Card.Body>
       </Card>
-      {/* </div> */}
     </div>
   );
 };

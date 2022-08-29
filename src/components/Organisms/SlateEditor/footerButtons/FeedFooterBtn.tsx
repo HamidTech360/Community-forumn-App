@@ -74,8 +74,8 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
             //   media: formData,
             // },
             {
-              // post: serializedHtml,
-              ...formData,
+              post: serializedHtml,
+              // ...formData,
               // media: { ...formData },
             },
             {

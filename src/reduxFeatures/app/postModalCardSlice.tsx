@@ -15,7 +15,7 @@ export type PostModalCardState = {
   commentIsEdited: any;
   commentIsDeleted: any;
   imageModalOpen: boolean;
-  imageModalImg: string;
+  imageModalImg: { media: any; activeIndex: number };
 };
 
 const initialState: PostModalCardState = {
@@ -30,7 +30,7 @@ const initialState: PostModalCardState = {
   commentIsEdited: null,
   commentIsDeleted: null,
   imageModalOpen: false,
-  imageModalImg: "",
+  imageModalImg: { media: [], activeIndex: 0 },
 };
 
 export const postModalCardSlice = createSlice({
@@ -70,7 +70,10 @@ export const postModalCardSlice = createSlice({
     setImageModalOpen: (state, action: PayloadAction<boolean>) => {
       state.imageModalOpen = action.payload;
     },
-    setImageModalImg: (state, action: PayloadAction<string>) => {
+    setImageModalImg: (
+      state,
+      action: PayloadAction<{ media: any; activeIndex: number }>
+    ) => {
       state.imageModalImg = action.payload;
     },
   },

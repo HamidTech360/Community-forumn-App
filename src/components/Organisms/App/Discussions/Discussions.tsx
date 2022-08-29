@@ -3,7 +3,7 @@ import axios from "axios";
 import DOMPurify from "dompurify";
 import React, { useEffect, useState } from "react";
 import { Card, Image, Modal } from "react-bootstrap";
-import truncate from "trunc-html";
+import truncate from "truncate-html";
 import { useModalWithData, ModalRow } from "@/hooks/useModalWithData";
 import { MdOutlineCancel } from "react-icons/md";
 import { BiArrowBack } from "react-icons/bi";
@@ -94,7 +94,7 @@ const Discussions = () => {
                 <small
                   className="bolden"
                   dangerouslySetInnerHTML={{
-                    __html: sanitizer(truncate(gist?.title, 50).html),
+                    __html: sanitizer(truncate(gist?.title, 50)),
                   }}
                 />
                 <small className="text-muted" style={{ fontSize: "11px" }}>

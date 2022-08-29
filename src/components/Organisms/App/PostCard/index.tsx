@@ -23,7 +23,7 @@ import {
   useModalWithShare,
 } from "@/hooks/useModalWithData";
 // import ModalCard from "@/components/Organisms/App/ModalCard";
-import truncate from "trunc-html";
+import truncate from "truncate-html";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -59,6 +59,16 @@ import {
 } from "@/reduxFeatures/app/postModalCardSlice";
 import { selectCreatePostModal } from "@/reduxFeatures/app/createPost";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
+
+import {
+  setImageModalOpen,
+  selectImageModalOpen,
+  setImageModalImg,
+  selectImageModalImg,
+} from "@/reduxFeatures/app/postModalCardSlice";
+import ImageModal from "../ModalPopUp/ImageModal";
+// import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
+
 import { useRouter } from "next/router";
 import makeSecuredRequest, {
   deleteSecuredRequest,
@@ -103,6 +113,7 @@ const PostCard = ({
   const [loading, setLoading] = useState(false);
 
   const currentlyFollowing = useSelector(selectFollowing);
+  const imageModalOpen = useSelector(selectImageModalOpen);
 
   // modal
   const { modalOpen, toggle, selected, setSelected } = useModalWithData();
@@ -275,7 +286,6 @@ const PostCard = ({
       type = "post";
     }
 
-    // try {
     if (bool) {
       try {
         // Like Post
@@ -287,8 +297,6 @@ const PostCard = ({
             },
           }
         );
-
-        // console.log("likeNew response.data:", likeNew.data);
       } catch (error) {
         // Reverse Like State Because of Axios Error
         let filterNewPostState = newPostState?.likes;
@@ -339,7 +347,7 @@ const PostCard = ({
     if (bool) {
       // Like Post
       try {
-        const unlikePost = await axios.delete(
+        await axios.delete(
           `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
           {
             headers: {
@@ -367,7 +375,6 @@ const PostCard = ({
 
     let newBookmarks = [...user?.bookmarks, post?._id];
     dispatch(userAuth({ ...user, bookmarks: newBookmarks }));
-    // }
 
     // Axios Bookmark Post
     try {
@@ -387,7 +394,6 @@ const PostCard = ({
 
       // Reverse Bookmark State
       dispatch(userAuth({ ...user, bookmarks: fitterStateUser }));
-      // console.log(error);
     }
   };
 
@@ -559,33 +565,81 @@ const PostCard = ({
         >
           <div>
             {post && Object.keys(post).length !== 0 && (
-              <div className="d-flex flex-column">
-                <div
-                  className="post-content"
-                  dangerouslySetInnerHTML={{
-                    __html: trimmed
-                      ? sanitizer(post?.postBody) || sanitizer(post?.post)
-                      : sanitizer(post?.postBody) || sanitizer(post?.post),
-                  }}
-                />
+              <>
+                <div className="d-flex flex-column">
+                  <div
+                    className="post-content"
+                    dangerouslySetInnerHTML={{
+                      __html: trimmed
+                        ? sanitizer(truncate(post?.postBody, 100)) ||
+                          sanitizer(truncate(post?.post, 100))
+                        : sanitizer(truncate(post?.postBody, 100)) ||
+                          sanitizer(truncate(post?.post, 100)),
+                    }}
+                  />
 
-                <PostIsEdited post={post} />
+                  <PostIsEdited post={post} />
+
+                  {/* {router.asPath === "/feed" ||
+                  router?.pathname.includes("profile") ||
+                  router?.pathname.includes("groups") ? (
+                    <small
+                      style={{
+                        color: "gray",
+                        fontSize: "11px",
+                        position: "relative",
+                        left: "42%",
+                      }}
+                    >
+                      {" "}
+                      See more...
+                    </small>
+                  ) : null} */}
+                </div>
+
+                {post?.media?.map((img, index) => (
+                  <span
+                    key={img}
+                    className="col-1 mx-1"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      dispatch(
+                        setImageModalImg({
+                          media: post.media,
+                          activeIndex: index,
+                        })
+                      );
+                      dispatch(setImageModalOpen(true));
+                    }}
+                  >
+                    <Image
+                      src={img}
+                      alt={"Uploaded Image"}
+                      className="img-thumbnail my-3"
+                      width={"20%"}
+                      height={"20%"}
+                    />
+                  </span>
+                ))}
 
                 {router.asPath === "/feed" ||
                 router?.pathname.includes("profile") ||
                 router?.pathname.includes("groups") ? (
-                  <small
-                    style={{
-                      color: "gray",
-                      fontSize: "11px",
-                      position: "relative",
-                      left: "42%",
-                    }}
-                  >
-                    See more...
-                  </small>
+                  <div>
+                    <small
+                      style={{
+                        color: "gray",
+                        fontSize: "11px",
+                        position: "relative",
+                        left: "42%",
+                      }}
+                    >
+                      {" "}
+                      See more...
+                    </small>
+                  </div>
                 ) : null}
-              </div>
+              </>
             )}
           </div>
         </Card.Body>
@@ -709,6 +763,7 @@ const PostCard = ({
         />
       )}
 
+      {/* Open Social Media Modal */}
       {modalOpenShare && (
         <OpenShareModal
           modalOpenShare={modalOpenShare}
@@ -716,6 +771,9 @@ const PostCard = ({
           selectedShare={selectedShare}
         />
       )}
+
+      {/* Post Image Modal */}
+      {imageModalOpen && <ImageModal />}
     </>
   );
 };
