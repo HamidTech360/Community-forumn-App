@@ -33,19 +33,18 @@ function ImageModal() {
 
   return (
     <Modal
-      className="bg-secondary"
+      className="bg-secondary align-items-center"
       show={imageModalOpen}
       aria-labelledby="contained-modal-title-vcenter"
       centered
-      size="lg"
-      scrollable={true}
+      size="xl"
     >
       <span className="ms-auto m-2">
         <MdOutlineCancel
           style={{ cursor: "pointer" }}
           size={30}
           onClick={() => dispatch(setImageModalOpen(false))}
-        />{" "}
+        />
       </span>
 
       <div className="row">

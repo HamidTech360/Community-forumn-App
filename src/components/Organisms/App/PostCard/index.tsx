@@ -129,6 +129,9 @@ const PostCard = ({
   const [modalPost, setModalPost] = useState<Record<string, any>>({});
   const [commentPost, setCommentPost] = useState("");
   const [loading, setLoading] = useState(false);
+  const [seeMore, setSeeMore] = useState(false);
+  const [postLength, setPostLength] = useState(0);
+  const [truncateLength, setTruncateLength] = useState(100);
   const currentlyFollowing = useSelector(selectFollowing);
   const imageModalOpen = useSelector(selectImageModalOpen);
 
@@ -136,6 +139,23 @@ const PostCard = ({
   const { modalOpen, toggle, selected, setSelected } = useModalWithData();
   const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
     useModalWithShare();
+
+  useEffect(() => {
+    if (post) {
+      const postType = post?.post ? post?.post : post?.postBody;
+      const postTypeLength = sanitizer(
+        truncate(postType, truncateLength, { stripTags: true })
+      ).length;
+
+      if (postTypeLength > truncateLength) {
+        setSeeMore(true);
+      } else {
+        setSeeMore(false);
+      }
+
+      setPostLength(postTypeLength);
+    }
+  }, [post]);
 
   // Update users following in AuthUser because it's a frontend resolved data
   useEffect(() => {
@@ -578,20 +598,13 @@ const PostCard = ({
 
         <Card.Body
           style={{
-            cursor: "pointer",
+            // Only Display Cursor Pointer When postLength Is Greater Than truncateLength
+            cursor: postLength > truncateLength && "pointer",
           }}
           onClick={async () => {
-            if (postReFetched) {
-              if (postReFetched?._id === post?._id) {
-                setSelected(postReFetched);
-                toggle();
-              } else {
-                setSelected(post);
-                toggle();
-              }
-            } else {
-              setSelected(post);
-              toggle();
+            // Only Toggle If Post Is Greater Than truncateLength
+            if (postLength > truncateLength) {
+              setSeeMore(!seeMore);
             }
           }}
         >
@@ -603,13 +616,20 @@ const PostCard = ({
                     className="post-content"
                     dangerouslySetInnerHTML={{
                       __html: trimmed
-                        ? sanitizer(truncate(post?.postBody, 100)) ||
-                          sanitizer(truncate(post?.post, 100))
-                        : sanitizer(truncate(post?.postBody, 100)) ||
-                          sanitizer(truncate(post?.post, 100)),
+                        ? sanitizer(
+                            truncate(post?.postBody, seeMore && truncateLength)
+                          ) ||
+                          sanitizer(
+                            truncate(post?.post, seeMore && truncateLength)
+                          )
+                        : sanitizer(
+                            truncate(post?.postBody, seeMore && truncateLength)
+                          ) ||
+                          sanitizer(
+                            truncate(post?.post, seeMore && truncateLength)
+                          ),
                     }}
                   />
-
                   <PostIsEdited post={post} />
                 </div>
 
@@ -618,22 +638,24 @@ const PostCard = ({
                   <MediaDisplay media={post.media} breakPoint={2} />
                 )}
 
-                {router.asPath === "/feed" ||
-                router?.pathname.includes("profile") ||
-                router?.pathname.includes("groups") ? (
-                  <div>
-                    <small
-                      style={{
-                        color: "gray",
-                        fontSize: "11px",
-                        position: "relative",
-                        left: "42%",
-                      }}
-                    >
-                      {" "}
-                      See more...
-                    </small>
-                  </div>
+                {seeMore && postLength > truncateLength ? (
+                  router.asPath === "/feed" ||
+                  router?.pathname.includes("profile") ||
+                  router?.pathname.includes("groups") ? (
+                    <div>
+                      <small
+                        style={{
+                          color: "gray",
+                          fontSize: "11px",
+                          position: "relative",
+                          left: "42%",
+                        }}
+                      >
+                        {" "}
+                        See more...
+                      </small>
+                    </div>
+                  ) : null
                 ) : null}
               </>
             )}
