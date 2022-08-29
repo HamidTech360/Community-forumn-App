@@ -89,6 +89,7 @@ import ChangeFollowingStatus from "../ChangeFollowingStatus";
 import { FeedPostEditorModal_Modal } from "../ModalPopUp/FeedPostEditorModal";
 import OpenShareModal from "../ModalPopUp/OpenShareModal";
 import PostCardMenu from "../PostMenu";
+import MediaDisplay from "../MediaMasonry";
 // import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
@@ -610,48 +611,12 @@ const PostCard = ({
                   />
 
                   <PostIsEdited post={post} />
-
-                  {/* {router.asPath === "/feed" ||
-                  router?.pathname.includes("profile") ||
-                  router?.pathname.includes("groups") ? (
-                    <small
-                      style={{
-                        color: "gray",
-                        fontSize: "11px",
-                        position: "relative",
-                        left: "42%",
-                      }}
-                    >
-                      {" "}
-                      See more...
-                    </small>
-                  ) : null} */}
                 </div>
 
-                {post?.media?.map((img, index) => (
-                  <span
-                    key={img}
-                    className="col-1 mx-1"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      dispatch(
-                        setImageModalImg({
-                          media: post.media,
-                          activeIndex: index,
-                        })
-                      );
-                      dispatch(setImageModalOpen(true));
-                    }}
-                  >
-                    <Image
-                      src={img}
-                      alt={"Uploaded Image"}
-                      className="img-thumbnail my-3"
-                      width={"20%"}
-                      height={"20%"}
-                    />
-                  </span>
-                ))}
+                {/* Display Media */}
+                {post?.media?.length > 0 && (
+                  <MediaDisplay media={post.media} breakPoint={2} />
+                )}
 
                 {router.asPath === "/feed" ||
                 router?.pathname.includes("profile") ||

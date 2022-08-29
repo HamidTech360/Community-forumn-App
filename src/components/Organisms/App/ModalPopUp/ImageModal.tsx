@@ -51,8 +51,8 @@ function ImageModal() {
       <div className="row">
         <div className="col-12">
           <Carousel activeIndex={index} onSelect={handleSelect}>
-            {imageModalImg?.media?.map((postImage) => (
-              <Carousel.Item>
+            {imageModalImg?.media?.map((postImage, index) => (
+              <Carousel.Item key={index}>
                 <Image
                   src={postImage}
                   alt={"image"}
