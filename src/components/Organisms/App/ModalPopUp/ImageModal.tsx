@@ -37,7 +37,7 @@ function ImageModal() {
       show={imageModalOpen}
       aria-labelledby="contained-modal-title-vcenter"
       centered
-      size="xl"
+      size="lg"
     >
       <span className="ms-auto m-2">
         <MdOutlineCancel

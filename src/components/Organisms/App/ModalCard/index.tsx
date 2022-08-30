@@ -586,7 +586,13 @@ const ModalCard = ({
       {console.log("POST:", post)}
       <Row>
         {post?.media?.length > 0 && (
-          <Col sm={12} md={12} lg={5} className={styles.column}>
+          <Col
+            sm={12}
+            md={12}
+            // If only one media is included, then return 5 cols else return 6 cols
+            lg={post.media.length === 1 ? 5 : 6}
+            className={styles.column}
+          >
             {!trimmed && (
               <div
                 className="row"
@@ -597,18 +603,24 @@ const ModalCard = ({
               >
                 {/* Display Media */}
                 {post?.media?.length > 0 && (
-                  <MediaDisplay media={post.media} breakPoint={1} />
+                  <MediaDisplay
+                    media={post.media}
+                    // If only one media is included, then return media with full width row
+                    breakPoint={post.media.length === 1 ? 1 : 2}
+                  />
                 )}
               </div>
             )}
           </Col>
         )}
 
-        {/* <Col sm={12} md={12} lg={7} className={`${styles.cardColumn} px-lg-0`}> */}
         <Col
           sm={12}
           md={12}
-          lg={post?.media?.length > 0 ? 7 : 12}
+          /*  If there is media & media length is 1 (return 7cols else return 6 cols), else
+           ** If there is no media ( return 12 cols)
+           */
+          lg={post?.media?.length > 0 ? (post.media.length === 1 ? 7 : 6) : 12}
           className={`${styles.cardColumn} px-lg-0`}
         >
           <Card
@@ -617,13 +629,9 @@ const ModalCard = ({
             style={{
               border: "none",
               width: "100%",
-              // padding: "-3rem",
             }}
           >
-            <Card.Title
-              // className={`position-relative d-flex justify-content-start gap-2 pb-2 border-bottom ${styles.title}`}
-              className={`border-bottom ${styles.title}`}
-            >
+            <Card.Title className={`border-bottom ${styles.title}`}>
               <div className="row">
                 <div className="col-1">
                   <Image
