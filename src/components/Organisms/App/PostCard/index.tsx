@@ -131,7 +131,7 @@ const PostCard = ({
   const [loading, setLoading] = useState(false);
   const [seeMore, setSeeMore] = useState(false);
   const [postLength, setPostLength] = useState(0);
-  const [truncateLength, setTruncateLength] = useState(100);
+  const [truncateLength, setTruncateLength] = useState(500);
   const currentlyFollowing = useSelector(selectFollowing);
   const imageModalOpen = useSelector(selectImageModalOpen);
 
@@ -581,6 +581,7 @@ const PostCard = ({
             </div>
 
             <div className="col-1" style={{ marginTop: "-.8rem" }}>
+              {/* Menu Dots */}
               <PostCardMenu
                 user={user}
                 post={post}

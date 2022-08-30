@@ -76,11 +76,9 @@ const Feed = () => {
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
-    // window.addEventListener("scroll", checkScroll);
 
     return () => {
       document.body.style.backgroundColor = "initial";
-      // window.removeEventListener("scroll", checkScroll);
     };
   }, []);
 
@@ -109,8 +107,6 @@ const Feed = () => {
   }, [paginatedData]);
 
   const handleDeletePost = async (item) => {
-    // const newPosts = posts.filter((el) => el._id !== item._id);
-    // console.log(posts, newPosts);
     setPosts(posts.filter((el) => el._id !== item._id));
 
     try {
@@ -122,7 +118,6 @@ const Feed = () => {
           },
         }
       );
-      // console.log(data, item._id);
     } catch (error) {
       // console.log(error.response?.data);
     }
@@ -136,10 +131,6 @@ const Feed = () => {
       // Open Feed Post Modal
       document.getElementById("createFeedPost").click();
     }
-
-    // if (router?.pathname.includes("profile")) {
-    //   dispatch(setShowPostModal(true));
-    // }
   };
 
   return (
@@ -153,13 +144,9 @@ const Feed = () => {
         <div className="row mt-lg-5">
           <div className="d-none d-lg-flex col-lg-3 col-xl-2 me-xl-4">
             <div
-              // style={{ width: 230 }}
-              // className="position-fixed d-none d-lg-flex flex-column vh-100"
               className={`${styles.userCardDiscussion} position-fixed d-flex flex-column vh-100`}
             >
               <div className="col-xs-12">
-                {/* <UserCard user={data!} /> */}
-                {/* <UserCard data={data!} /> */}
                 <UserCard />
               </div>
               <div className="col-xs-12">

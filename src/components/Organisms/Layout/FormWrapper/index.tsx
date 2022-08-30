@@ -110,7 +110,7 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
               <p>Get connected with information to study, work, live abroad</p>
             </div>
           </Col>
-          <Col md={6} className={`${styles.form} px-4 pt-5 `}>
+          <Col lg={6} className={`${styles.form} px-4 pt-5 `}>
             <div>
               <h1>
                 {pathname === "/login" ? (

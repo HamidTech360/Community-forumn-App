@@ -589,8 +589,8 @@ const ModalCard = ({
           <Col
             sm={12}
             md={12}
-            // If only one media is included, then return 5 cols else return 6 cols
-            lg={post.media.length === 1 ? 5 : 6}
+            // If only 1 or 2 medias are included, then return 5 cols else return 6 cols
+            lg={post.media.length <= 2 ? 5 : 6}
             className={styles.column}
           >
             {!trimmed && (
@@ -605,8 +605,11 @@ const ModalCard = ({
                 {post?.media?.length > 0 && (
                   <MediaDisplay
                     media={post.media}
-                    // If only one media is included, then return media with full width row
-                    breakPoint={post.media.length === 1 ? 1 : 2}
+                    /*  If 1 or 2 medias are included, then return media with full width row
+                     ** else
+                     ** Return 2 columnsCountBreakPoints
+                     */
+                    breakPoint={post.media.length <= 2 ? 1 : 2}
                   />
                 )}
               </div>
@@ -617,10 +620,11 @@ const ModalCard = ({
         <Col
           sm={12}
           md={12}
-          /*  If there is media & media length is 1 (return 7cols else return 6 cols), else
+          /*  If there is media & media length is 1 or 2 (return 7cols else return 6 cols),
+           ** else
            ** If there is no media ( return 12 cols)
            */
-          lg={post?.media?.length > 0 ? (post.media.length === 1 ? 7 : 6) : 12}
+          lg={post?.media?.length > 0 ? (post.media.length <= 2 ? 7 : 6) : 12}
           className={`${styles.cardColumn} px-lg-0`}
         >
           <Card

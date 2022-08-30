@@ -56,6 +56,7 @@ function ImageModal() {
                   src={postImage}
                   alt={"image"}
                   className="d-block w-100"
+                  style={{ objectFit: "cover" }}
                 />
               </Carousel.Item>
             ))}

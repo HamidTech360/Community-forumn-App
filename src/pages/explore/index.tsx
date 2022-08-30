@@ -226,12 +226,8 @@ const Explore = ({}) => {
       paginatedKey = "PtJobs";
     }
 
-    
     setPaginateCategory(`paginatedBlog${paginatedKey}`);
-
   };
-
- 
 
   useEffect(() => {
     // Re-render Only The Changed Category For New Post Only If Tab Is Active
@@ -265,8 +261,6 @@ const Explore = ({}) => {
   }, [newPost]);
 
   useEffect(() => {
- ;
-
     // Set Post Category To Render
     if (paginateCategory === "paginatedBlogAll") {
       // if (paginatedBlogAll) {
@@ -329,12 +323,9 @@ const Explore = ({}) => {
     paginatedBlogHousing,
   ]);
 
-  
-
   const handlePageChange = (page) => {
     console.log("Page Clicked:", page.selected);
 
-   
     if (paginateCategory === "paginatedBlogAll") {
       if (pageIndexAll !== page.selected) router.replace("#explore");
       setPageIndexAll(page.selected);
@@ -381,7 +372,6 @@ const Explore = ({}) => {
                   millions of readers and writers across the world
                 </p>
                 <div className="d-flex gap-3">
-                  {/* <Button variant="primary" onClick={() => setShowModal(true)}> */}
                   <Button
                     variant="primary"
                     onClick={() => dispatch(setShowPostModal(true))}
@@ -502,10 +492,19 @@ const Explore = ({}) => {
               page >= 1 && page <= pageCount ? `/explore/${page}` : "#"
             }
             hrefAllControls
-          
             renderOnZeroPageCount={null}
           />
         </Container>
+      </section>
+
+      <section className="row col-5 col-md-4 col-lg-3 mx-auto mt-5">
+        <Button
+          variant="primary"
+          className="fs-5"
+          onClick={() => dispatch(setShowPostModal(true))}
+        >
+          Share your thoughts
+        </Button>
       </section>
 
       <section>

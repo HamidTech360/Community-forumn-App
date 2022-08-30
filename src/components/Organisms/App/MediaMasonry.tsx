@@ -37,7 +37,7 @@ const MediaDisplay = ({ media: mediaComingIn, breakPoint }) => {
               alt="Uploaded Media"
               width={"100%"}
               height={"100%"}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", objectFit: "cover" }}
               onClick={() => {
                 dispatch(
                   setImageModalImg({

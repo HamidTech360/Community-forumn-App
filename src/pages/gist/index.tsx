@@ -71,6 +71,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     title: "",
     post: "",
   });
+  const [activeGist, setActiveGist] = useState("All");
 
   const {
     paginatedData,
@@ -120,11 +121,16 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   }, [paginatedData]);
 
   const filterCategory = (item) => {
-    // console.log(item);
+    // console.log("item.name", item.name);
+    setActiveGist(item.name);
+
+    if (item.name === "All") {
+      return setFilteredGists(allGists);
+    }
 
     const filtered = allGists.filter((gist) => gist.categories === item.name);
     if (filtered.length <= 0) {
-      alert("No Item in this category");
+      alert(`No Item in ${item.name} category`);
     }
 
     setFilteredGists(filtered);
@@ -177,6 +183,11 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                     <li
                       onClick={() => filterCategory(item)}
                       style={{ marginBottom: "15px", cursor: "pointer" }}
+                      className={
+                        item.name === activeGist
+                          ? "text-primary fs-4"
+                          : "text-dark fs-6"
+                      }
                       key={key}
                     >
                       {item.name}
@@ -186,7 +197,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
               </BCard.Body>
             </BCard>
           </Col>
-          <Col md={9}>
+          <Col lg={9}>
             <div className="d-flex justify-content-between">
               <Button
                 variant="none"
@@ -208,7 +219,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                   Create Gist
                 </span>
               </Button>
-              <select className="outline-primary">
+              <select className="outline-primary me-5">
                 <option>Canada</option>
               </select>
             </div>

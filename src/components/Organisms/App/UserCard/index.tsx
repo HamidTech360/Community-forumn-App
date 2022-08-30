@@ -3,8 +3,10 @@ import React, { useEffect } from "react";
 import { Button, Card, Image } from "react-bootstrap";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { useSelector } from "@/redux/store";
+import { useRouter } from "next/router";
 
 const UserCard = () => {
+  const router = useRouter();
   const data = useSelector(selectUser);
 
   useEffect(() => {
@@ -42,19 +44,18 @@ const UserCard = () => {
         className="row text-muted mx-auto mt-2 text-center"
         style={{ fontSize: "12px" }}
       >
-        {data?.bio || 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Suscipit perspiciatis.'}
+        {data?.bio ||
+          "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Suscipit perspiciatis."}
       </small>
       <div
         className="d-flex justify-content-between"
         style={{ fontSize: "12px" }}
       >
         <div className="d-flex flex-column align-items-center">
-          {/* <span>{user.following?.length}</span> */}
           <span>{data?.following?.length}</span>
           <small>following</small>
         </div>
         <div className="d-flex flex-column align-items-center ">
-          {/* <span>{user.followers?.length}</span> */}
           <span>{data?.followers?.length}</span>
           <small>followers</small>
         </div>
@@ -63,6 +64,7 @@ const UserCard = () => {
         variant="light"
         className="text-center my-2"
         style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
+        onClick={() => router.push("/profile")}
       >
         <Link href={`/profile`}>View Profile</Link>
       </Button>
