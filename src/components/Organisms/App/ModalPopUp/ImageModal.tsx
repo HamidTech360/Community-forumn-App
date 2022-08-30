@@ -33,26 +33,25 @@ function ImageModal() {
 
   return (
     <Modal
-      className="bg-secondary"
+      className="bg-secondary align-items-center"
       show={imageModalOpen}
       aria-labelledby="contained-modal-title-vcenter"
       centered
       size="lg"
-      scrollable={true}
     >
       <span className="ms-auto m-2">
         <MdOutlineCancel
           style={{ cursor: "pointer" }}
           size={30}
           onClick={() => dispatch(setImageModalOpen(false))}
-        />{" "}
+        />
       </span>
 
       <div className="row">
         <div className="col-12">
           <Carousel activeIndex={index} onSelect={handleSelect}>
-            {imageModalImg?.media?.map((postImage) => (
-              <Carousel.Item>
+            {imageModalImg?.media?.map((postImage, index) => (
+              <Carousel.Item key={index}>
                 <Image
                   src={postImage}
                   alt={"image"}

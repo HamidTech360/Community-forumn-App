@@ -92,6 +92,7 @@ import {
   selectImageModalImg,
 } from "@/reduxFeatures/app/postModalCardSlice";
 import ImageModal from "../ModalPopUp/ImageModal";
+import MediaDisplay from "../MediaMasonry";
 
 const ModalCard = ({
   post: postComingIn,
@@ -588,55 +589,38 @@ const ModalCard = ({
           <Col
             sm={12}
             md={12}
-            lg={5}
-            className={`${styles.column} pe-lg-0`}
-            // style={{ width: "450px", margin: "10px" }}
+            // If only one media is included, then return 5 cols else return 6 cols
+            lg={post.media.length === 1 ? 5 : 6}
+            className={styles.column}
           >
             {!trimmed && (
               <div
                 className="row"
                 style={{
-                  width: "330px",
-                  // height: "390px",
                   height: post?.media?.length === 1 ? "auto" : "390px",
                   overflowY: "auto",
                 }}
               >
-                {post?.media?.map((img, index) => (
-                  <div
-                    key={img}
-                    className="col-12"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      dispatch(
-                        setImageModalImg({
-                          media: post.media,
-                          activeIndex: index,
-                        })
-                      );
-                      dispatch(setImageModalOpen(true));
-                    }}
-                  >
-                    <Image
-                      src={img}
-                      alt={"Uploaded Image"}
-                      className={`${styles.imgModal} img-thumbnail`}
-                      width={"100%"}
-                      height={"100%"}
-                      // fluid
-                    />
-                  </div>
-                ))}
+                {/* Display Media */}
+                {post?.media?.length > 0 && (
+                  <MediaDisplay
+                    media={post.media}
+                    // If only one media is included, then return media with full width row
+                    breakPoint={post.media.length === 1 ? 1 : 2}
+                  />
+                )}
               </div>
             )}
           </Col>
         )}
 
-        {/* <Col sm={12} md={12} lg={7} className={`${styles.cardColumn} px-lg-0`}> */}
         <Col
           sm={12}
           md={12}
-          lg={post?.media?.length > 0 ? 7 : 12}
+          /*  If there is media & media length is 1 (return 7cols else return 6 cols), else
+           ** If there is no media ( return 12 cols)
+           */
+          lg={post?.media?.length > 0 ? (post.media.length === 1 ? 7 : 6) : 12}
           className={`${styles.cardColumn} px-lg-0`}
         >
           <Card
@@ -645,13 +629,9 @@ const ModalCard = ({
             style={{
               border: "none",
               width: "100%",
-              // padding: "-3rem",
             }}
           >
-            <Card.Title
-              // className={`position-relative d-flex justify-content-start gap-2 pb-2 border-bottom ${styles.title}`}
-              className={`border-bottom ${styles.title}`}
-            >
+            <Card.Title className={`border-bottom ${styles.title}`}>
               <div className="row">
                 <div className="col-1">
                   <Image
@@ -745,36 +725,11 @@ const ModalCard = ({
                 </>
               )}
 
-              <div
-                className={`${styles.trimmed} row justify-content-center`}
-                style={{
-                  height: "100%",
-                }}
-              >
-                {post?.media?.map((img, index) => (
-                  <span
-                    key={img}
-                    className="col-4 g-1"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      dispatch(
-                        setImageModalImg({
-                          media: post.media,
-                          activeIndex: index,
-                        })
-                      );
-                      dispatch(setImageModalOpen(true));
-                    }}
-                  >
-                    <Image
-                      src={img}
-                      alt={"Uploaded Image"}
-                      className={`${styles.imgModal} img-thumbnail`}
-                      width={"100%"}
-                      height={"100%"}
-                    />
-                  </span>
-                ))}
+              <div className={`${styles.trimmed} row justify-content-center`}>
+                {/* Display Media */}
+                {post?.media?.length > 0 && (
+                  <MediaDisplay media={post.media} breakPoint={2} />
+                )}
               </div>
               {post?.likes?.length > 0 && (
                 <div className="text-muted d-flex align-items-center">
