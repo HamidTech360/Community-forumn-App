@@ -141,8 +141,9 @@ const Feed = () => {
       </Head>
       <MessageButton />
       <Container>
-        <div className="row mt-lg-5">
-          <div className="d-none d-lg-flex col-lg-3 col-xl-2 me-xl-4">
+        <div className="row mt-md-5">
+          {/* <div className="d-none d-lg-flex col-lg-3 col-xl-2 me-xl-4"> */}
+          <div className="d-none d-md-flex col-md-4 col-lg-3 col-xl-2 me-md-5 me-lg-0 me-xl-4">
             <div
               className={`${styles.userCardDiscussion} position-fixed d-flex flex-column vh-100`}
             >
@@ -156,7 +157,8 @@ const Feed = () => {
           </div>
 
           <main
-            className={`${styles.posts} col-12 col-lg-7 col-xl-7 ms-xl-5 ms-xxl-4`}
+            // className={`${styles.posts} col-12 col-lg-7 col-xl-7 ms-xl-5 ms-xxl-4`}
+            className={`${styles.posts} col-12 col-md-7 col-lg-7 col-xl-7 ms-xl-5 ms-xxl-4`}
             id="posts"
           >
             <CreatePost pageAt={"/feed"} />

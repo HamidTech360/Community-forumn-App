@@ -164,7 +164,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
           </EndlessCarousel>
         </div>
         <Row className="mt-5">
-          <Col md={3} className="desktop-only">
+          <Col md={3} className="d-none d-md-inline">
             <BCard
               className={`pt-1 px-1 ${styles.wrapper}`}
               style={{
@@ -197,7 +197,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
               </BCard.Body>
             </BCard>
           </Col>
-          <Col lg={9}>
+          <Col md={9}>
             <div className="d-flex justify-content-between">
               <Button
                 variant="none"

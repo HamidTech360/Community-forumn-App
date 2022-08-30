@@ -14,13 +14,13 @@ const Contributors = ({ data }) => {
   return (
     <Card className="p-3 mt-4">
       <Card.Title className="d-flex justify-content-between align-items-center">
-        <span> Top Contributors</span>
-        <span
+        <span className="p-2"> Top Contributors</span>
+        {/* <span
           className="text-primary"
           style={{
             fontSize: "0.9rem",
           }}
-        ></span>
+        ></span> */}
       </Card.Title>
       {/* Author */}
       <div

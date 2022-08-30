@@ -100,7 +100,7 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
       <Container>
         <ToastContainer />
         <Row className={styles.formWrapper}>
-          <Col md={6} className="desktop-only">
+          <Col md={6} className="d-none d-md-inline">
             <div className={styles.imgWrapper}>
               <img
                 src="/assets/formvector.svg"
@@ -110,7 +110,7 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
               <p>Get connected with information to study, work, live abroad</p>
             </div>
           </Col>
-          <Col lg={6} className={`${styles.form} px-4 pt-5 `}>
+          <Col md={6} className={`${styles.form} px-4 pt-5 `}>
             <div>
               <h1>
                 {pathname === "/login" ? (
