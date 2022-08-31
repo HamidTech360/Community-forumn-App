@@ -141,7 +141,7 @@ const Feed = () => {
       </Head>
       <MessageButton />
       <Container>
-        <div className="row mt-md-5">
+        <div className="row mt-md-4 mt-lg-5 ">
           {/* <div className="d-none d-lg-flex col-lg-3 col-xl-2 me-xl-4"> */}
           <div className="d-none d-md-flex col-md-4 col-lg-3 col-xl-2 me-md-5 me-lg-0 me-xl-4">
             <div

@@ -260,7 +260,7 @@
   color: #fff;
   padding: 15px;
   border-radius: 100%;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   height: 1rem;
   width: 1rem;
   display: flex;
@@ -271,8 +271,9 @@
   right: -0.1rem;
 
   @media screen and (max-width: 1100px) {
-    top: -0.9rem;
-    font-size: 0.7rem;
+    top: -0.7rem;
+    right: -0.8rem;
+    font-size: 0.8rem;
     height: 0.85rem;
     width: 0.85rem;
     background-color: #4a7277;
