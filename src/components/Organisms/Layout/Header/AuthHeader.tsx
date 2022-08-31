@@ -44,7 +44,10 @@ import {
   MdNotificationsActive,
   MdOutlineNotificationsActive,
 } from "react-icons/md";
-import { getNotification, updateNumberOfNotifications } from "@/reduxFeatures/api/notifications";
+import {
+  getNotification,
+  updateNumberOfNotifications,
+} from "@/reduxFeatures/api/notifications";
 import Head from "next/head";
 import styles from "@/styles/utils.module.scss";
 import SearchTabs from "@/components/Molecules/SearchTabs";
@@ -128,30 +131,34 @@ const AuthHeader = () => {
     }
   };
 
-
-  useEffect(()=>{
-    (async ()=>{
-      try{
-        const response = await axios.get(`${config.serverUrl}/api/notifications`, {headers:{
-          authorization:`Bearer ${localStorage.getItem('accessToken')}`
-        }})
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get(
+          `${config.serverUrl}/api/notifications`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
         console.log(response.data);
-        
-        dispatch(getNotification(response.data.notifications))
-        const unRead = response.data.notifications.filter(item=>!item.read)
-        dispatch(updateNumberOfNotifications({total:unRead.length}))
-      }catch(error){
-        console.log(error.response?.data); 
-      }
-    })()
-  },[])
 
-  
+        dispatch(getNotification(response.data.notifications));
+        const unRead = response.data.notifications.filter((item) => !item.read);
+        dispatch(updateNumberOfNotifications({ total: unRead.length }));
+      } catch (error) {
+        console.log(error.response?.data);
+      }
+    })();
+  }, []);
+
   //@ts-ignore
   //const notifications = useSelector(state=>state.notification.data?.notifications)
-  const totalNotifications = useSelector(state=>state.notification.noOfNotifications)
+  const totalNotifications = useSelector(
+    (state) => state.notification.noOfNotifications
+  );
   // console.log('lenght of notifications is ', notifications?.length);
-  
 
   return (
     <>
@@ -247,8 +254,9 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
-              <Badge className={styles.badge}>{totalNotifications}</Badge> 
-
+              <Badge className={styles.badge}>
+                {totalNotifications > 99 ? `${99}+` : totalNotifications}
+              </Badge>
             </Button>
           </div>
           <NavDropdown

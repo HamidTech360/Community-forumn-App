@@ -47,7 +47,7 @@ const Gist = ({
 }) => {
   const router = useRouter();
   const { id } = router.query;
-  const user = useSelector(selectUser)
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const [data, setData] = useState<Record<string, any>>({});
   const [commentPost, setCommentPost] = useState("");
@@ -289,10 +289,10 @@ const Gist = ({
       </Head>
       <ToastContainer />
       <Row>
-        <Col md={4} className="desktop-only">
+        <Col md={3} className="d-none d-md-inline">
           <Contributors data={data} />
         </Col>
-        <Col md={8}>
+        <Col md={9}>
           <GistCard gist={data} primary />
           <section>
             <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>

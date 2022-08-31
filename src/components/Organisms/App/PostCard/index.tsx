@@ -131,7 +131,7 @@ const PostCard = ({
   const [loading, setLoading] = useState(false);
   const [seeMore, setSeeMore] = useState(false);
   const [postLength, setPostLength] = useState(0);
-  const [truncateLength, setTruncateLength] = useState(100);
+  const [truncateLength, setTruncateLength] = useState(500);
   const currentlyFollowing = useSelector(selectFollowing);
   const imageModalOpen = useSelector(selectImageModalOpen);
 
@@ -535,7 +535,7 @@ const PostCard = ({
           width: "100%",
         }}
       >
-        <Card.Title className={`border-bottom ${styles.title}`}>
+        <Card.Title className={`border-bottom px-2 px-md-0 ${styles.title}`}>
           <div className="row">
             <div className="col-1">
               <Image
@@ -551,7 +551,7 @@ const PostCard = ({
               />
             </div>
 
-            <div className="col-6 col-sm-8 ms-4 me-xl-5">
+            <div className="col-6 col-sm-8 col-md-7 ms-4 me-xl-5">
               <div className={styles.div}>
                 <span
                   style={{
@@ -581,6 +581,7 @@ const PostCard = ({
             </div>
 
             <div className="col-1" style={{ marginTop: "-.8rem" }}>
+              {/* Menu Dots */}
               <PostCardMenu
                 user={user}
                 post={post}

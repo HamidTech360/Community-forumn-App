@@ -196,7 +196,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
       >
         <Card.Title>
           <div className="row">
-            <div className="col-2 pt-2 pt-md-3 align-items-center">
+            <div className="col-1 pt-2 pt-md-3 align-items-center">
               <Image
                 src={
                   gist?.author?.images?.avatar || "/images/imagePlaceholder.jpg"
@@ -210,42 +210,47 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
                 style={{ cursor: "pointer" }}
               />
             </div>
-            <div className="col-7">
-              <div className="row">
-                <div className="col-9 col-sm-10 p-md-0">
-                  <div className={` ${styles.div}`}>
-                    <small
-                      className={`${styles.title} text-secondary text-capitalize `}
-                      onClick={redirectPage}
-                      style={{ cursor: "pointer", fontSize: "14px" }}
-                    >
-                      Started by: {gist?.author?.firstName}{" "}
-                      {gist?.author?.lastName}
-                    </small>
-                  </div>
-                </div>
 
-                <div className="row">
-                  <div className="col-12 p-md-0">
-                    <h5 className={`text-primary mt-1 ${styles.title}`}>
-                      {gist?.title?.replace("&amp;", "&")}
-                    </h5>
-                  </div>
-                  <div className="col-12 p-md-0">
-                    <div className="ms-auto mb-2 text-muted">
-                      <small
-                        className={`d-flex text-center ${styles.time}`}
-                        style={{ fontSize: "14px" }}
-                      >
-                        <Age time={gist?.createdAt} />{" "}
-                        <BsBookmarkDash className="ms-2" />
-                      </small>
-                    </div>
-                  </div>
-                </div>
+            <div className="col-6 col-sm-8 ms-4 me-xl-5">
+              <div className={styles.div}>
+                <small
+                  className={`${styles.title} text-secondary text-capitalize `}
+                  style={{ fontSize: "14px" }}
+                >
+                  Started by:{" "}
+                  <span
+                    style={{
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      color: "var(--bs-primary)",
+                    }}
+                    onClick={redirectPage}
+                  >
+                    {/* Use `` & Stringify To Prevent XSS */}
+                    {`${String(gist?.author?.firstName)} ${String(
+                      gist?.author?.lastName
+                    )}`}
+                  </span>
+                </small>
+                <h5 className={`text-primary mt-1 ${styles.title}`}>
+                  {/* Use `` & Stringify To Prevent XSS */}
+                  <span>{`${String(gist?.title?.replace("&amp;", "&"))}`}</span>
+                </h5>
+                <small
+                  style={{
+                    marginTop: "10px",
+                    fontWeight: 400,
+                    fontSize: "0.9rem",
+                    color: "gray",
+                  }}
+                >
+                  <Age time={gist?.createdAt} />
+                  <BsBookmarkDash className="ms-2" />
+                </small>
               </div>
             </div>
-            <div className="col-3 col-sm-2 ms-auto p-0">
+
+            <div className="col-1" style={{ marginTop: "-.8rem" }}>
               {/* Menu Dots */}
               <PostMenu
                 user={user}
