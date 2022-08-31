@@ -517,12 +517,10 @@ const PostCard = ({
       >
         <Card.Title className={`border-bottom ${styles.title}`}>
           <div className="d-flex align-items-center justify-content-start gap-2">
-            <div>
-              <Avatar
-                src={post?.author?.images?.avatar}
-                name={post?.author?.firstName}
-              />
-            </div>
+            <Avatar
+              src={post?.author?.images?.avatar}
+              name={post?.author?.firstName}
+            />
 
             <div className={styles.div}>
               <span

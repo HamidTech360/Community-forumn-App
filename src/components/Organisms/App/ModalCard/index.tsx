@@ -584,7 +584,6 @@ const ModalCard = ({
 
   return (
     <>
-      {console.log("POST:", post)}
       <Row>
         {post?.media?.length > 0 && (
           <Col
@@ -637,71 +636,40 @@ const ModalCard = ({
             }}
           >
             <Card.Title className={`border-bottom ${styles.title}`}>
-              <div className="row">
-                <div className="col-1">
-                  <Image
-                    src={"/images/imagePlaceholder.jpg"}
-                    width={45}
-                    height={45}
-                    alt=""
-                    roundedCircle
-                    style={{ cursor: "pointer" }}
+              <div className="d-flex align-items-center justify-content-start gap-2">
+                <Avatar
+                  src={post?.author?.images?.avatar}
+                  name={post?.author?.firstName}
+                />
+
+                <div className={styles.div}>
+                  <span
+                    style={{
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      color: "var(--bs-primary)",
+                    }}
                     onClick={redirectPage}
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizer(
+                        `${post?.author?.firstName} ${post?.author?.lastName}`
+                      ),
+                    }}
                   />
+                  <br />
+                  <small
+                    style={{
+                      marginTop: "10px",
+                      fontWeight: 400,
+                      fontSize: "0.9rem",
+                      color: "gray",
+                    }}
+                  >
+                    <Age time={post?.createdAt} />
+                  </small>
                 </div>
 
-                {/* <div className="d-flex flex-column"> */}
-                <div className="col-6 col-sm-8 ms-4 ms-lg-3 ms-xl-4 me-xl-0">
-                  <div className={styles.div}>
-                    <span
-                      style={{
-                        fontWeight: 500,
-                        cursor: "pointer",
-                        color: "var(--bs-primary)",
-                      }}
-                      onClick={redirectPage}
-                      dangerouslySetInnerHTML={{
-                        __html: sanitizer(
-                          `${post?.author?.firstName} ${post?.author?.lastName}`
-                        ),
-                      }}
-                    />
-                    <br />
-                    {post?.postTitle || post?.title ? (
-                      <>
-                        <span
-                          style={{
-                            marginTop: "5px",
-                            fontWeight: 500,
-                            fontSize: "18px",
-                            color: "black",
-                          }}
-                          dangerouslySetInnerHTML={{
-                            __html: trimmed
-                              ? sanitizer(truncate(post?.postTitle, 250)) ||
-                                sanitizer(truncate(post?.title, 250))
-                              : sanitizer(truncate(post?.postTitle, 250)) ||
-                                sanitizer(truncate(post?.title, 250)),
-                          }}
-                        />
-                        <br />
-                      </>
-                    ) : null}
-                    <small
-                      style={{
-                        marginTop: "5px",
-                        fontWeight: 400,
-                        fontSize: "13px",
-                        color: "gray",
-                      }}
-                    >
-                      <Age time={post?.createdAt} />
-                    </small>
-                  </div>
-                </div>
-
-                <div className="col-1 col-md-2" style={{ marginTop: "-.8rem" }}>
-                  {/* Menu Dots */}
+                <div className="ms-auto" style={{ marginTop: "-.8rem" }}>
                   <PostMenu
                     user={user}
                     currentlyFollowing={currentlyFollowing}
@@ -806,39 +774,44 @@ const ModalCard = ({
 
             <section>
               <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
-              <div className="row">
-                <div className="d-none d-md-flex col-md-2">
-                  <Avatar
-                    src={user?.images?.avatar || "/images/imagePlaceholder.jpg"}
-                    width={50}
-                    height={50}
-                    name={user?.firstName}
-                  />
-                </div>
-                <div className="col-12 col-md-10">
-                  <div style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}>
+              <div className="d-flex justify-content-start gap-2 align-items-center">
+                <Avatar
+                  src={user?.images?.avatar || "/images/imagePlaceholder.jpg"}
+                  name={user?.firstName}
+                />
+
+                <div
+                  style={{ width: "100%" }}
+                  className="flex-column justify-content-center"
+                >
+                  <div
+                    style={{
+                      border: "1px solid rgba(0, 0, 0, 0.125)",
+                    }}
+                  >
                     <textarea
                       id="articleTextarea"
                       className="form-control"
                       placeholder="."
                       onChange={(e) => setCommentPost(e.target.value)}
-                      style={{ height: "100px" }}
-                    ></textarea>
+                      style={{ width: "100%" }}
+                    />
                   </div>
-                </div>
-                <div className="col-5 ms-auto d-grid">
-                  <button
-                    className="btn btn-sm btn-primary mt-3 d-inline"
-                    onClick={postComment}
-                  >
-                    Send
-                    {loading && (
-                      <div
-                        className="spinner-grow spinner-grow-sm text-light"
-                        role="status"
-                      ></div>
-                    )}
-                  </button>
+
+                  <div className="ms-auto">
+                    <Button
+                      className="btn btn-sm btn-primary mt-3 d-inline"
+                      onClick={postComment}
+                    >
+                      Send
+                      {loading && (
+                        <div
+                          className="spinner-grow spinner-grow-sm text-light"
+                          role="status"
+                        ></div>
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </section>
