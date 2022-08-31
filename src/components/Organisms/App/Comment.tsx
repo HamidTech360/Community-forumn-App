@@ -17,6 +17,7 @@ import {
   selectCommentIsEdited,
 } from "@/reduxFeatures/app/postModalCardSlice";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
+import Avatar from "@/components/Atoms/Avatar";
 
 const Comment = ({
   comment: commentComingIn,
@@ -172,13 +173,9 @@ const Comment = ({
       {console.log("comment:", comment)}
       <hr className="w-75 mx-auto text-muted" />
       <div className="col-12 d-flex align-items-center justify-content-start gap-2 mt-1">
-        <Image
-          src="/images/friends3.png"
-          alt="User avatar"
-          width={50}
-          height={50}
-          fluid
-          roundedCircle
+        <Avatar
+          src={comment?.author?.images.avatar}
+          name={comment?.author?.firstName}
         />
         <div>
           <h6 style={{ fontWeight: "bold" }}>
