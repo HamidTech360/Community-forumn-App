@@ -524,6 +524,33 @@ const PostCard = ({
               />
             </div>
 
+            <div className={styles.div}>
+              <span
+                style={{
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  color: "var(--bs-primary)",
+                }}
+                onClick={redirectPage}
+                dangerouslySetInnerHTML={{
+                  __html: sanitizer(
+                    `${post?.author?.firstName} ${post?.author?.lastName}`
+                  ),
+                }}
+              />
+              <br />
+              <small
+                style={{
+                  marginTop: "10px",
+                  fontWeight: 400,
+                  fontSize: "0.9rem",
+                  color: "gray",
+                }}
+              >
+                <Age time={post?.createdAt} />
+              </small>
+            </div>
+
             <div className="ms-auto" style={{ marginTop: "-.8rem" }}>
               <PostCardMenu
                 user={user}

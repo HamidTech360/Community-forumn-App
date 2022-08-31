@@ -22,6 +22,7 @@ const Avatar = ({
       <Image
         src={src || "/images/imagePlaceholder.jpg"}
         objectFit="cover"
+        objectPosition="top"
         width={width ? width : 70}
         height={height ? height : 70}
         alt={`${name}'s avatar`}

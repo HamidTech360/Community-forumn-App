@@ -15,6 +15,7 @@ import {
   selectUser,
 } from "@/reduxFeatures/authState/authStateSlice";
 import { useRouter } from "next/router";
+import Avatar from "@/components/Atoms/Avatar";
 
 const Discussions = () => {
   const router = useRouter();
@@ -82,12 +83,11 @@ const Discussions = () => {
               }}
             >
               <div>
-                <Image
+                <Avatar
                   src={gist?.author?.images?.avatar || "/images/formbg.png"}
                   width={40}
                   height={40}
-                  alt=""
-                  roundedCircle
+                  name={gist?.author.firstName}
                 />
               </div>
               <div className="d-flex flex-column">

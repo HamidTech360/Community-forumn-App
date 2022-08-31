@@ -93,6 +93,7 @@ import {
 } from "@/reduxFeatures/app/postModalCardSlice";
 import ImageModal from "../ModalPopUp/ImageModal";
 import MediaDisplay from "../MediaMasonry";
+import Avatar from "@/components/Atoms/Avatar";
 
 const ModalCard = ({
   post: postComingIn,
@@ -807,14 +808,11 @@ const ModalCard = ({
               <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
               <div className="row">
                 <div className="d-none d-md-flex col-md-2">
-                  <Image
-                    src={
-                      modalPost.authorImage || "/images/imagePlaceholder.jpg"
-                    }
+                  <Avatar
+                    src={user?.images?.avatar || "/images/imagePlaceholder.jpg"}
                     width={50}
                     height={50}
-                    roundedCircle={true}
-                    alt="Author's Image"
+                    name={user?.firstName}
                   />
                 </div>
                 <div className="col-12 col-md-10">

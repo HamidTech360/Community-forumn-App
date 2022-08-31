@@ -17,6 +17,7 @@ import makeSecuredRequest, {
 import { useDispatch, useSelector } from "@/redux/store";
 import appSlice from "@/reduxFeatures/app/appSlice";
 import { useRouter } from "next/router";
+import Avatar from "@/components/Atoms/Avatar";
 
 const Follow = () => {
   const router = useRouter();
@@ -153,12 +154,11 @@ const Follow = () => {
               style={{ cursor: "pointer" }}
               onClick={() => router.push(`/profile/${user?._id}`)}
             >
-              <Image
+              <Avatar
                 width={35}
                 height={35}
-                src={`/images/friends${key + 1}.png`}
-                roundedCircle
-                alt={user?.firstName}
+                src={user?.images?.avatar}
+                name={user?.firstName}
               />
             </div>
 
