@@ -54,29 +54,24 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         children: editorContentValue,
       };
 
-      const serializedHtml = serialize(serializeNode);
-
+      const serializedHtml: string = serialize(serializeNode);
       // Form Data
       let formData = new FormData();
-      formData.append("post", serializedHtml);
-      mediaUpload.map((file) => {
-        console.log("+++FILE+++:", file);
+
+      mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
+      formData.append("post", serializedHtml.toString());
+      console.log(...formData);
 
       if (!slatePostToEdit) {
         // New Post
         try {
           const response = await axios.post(
             `${config.serverUrl}/api/feed`,
-            // {
-            //   post: serializedHtml,
-            //   media: formData,
-            // },
+
             {
-              post: serializedHtml,
-              // ...formData,
-              // media: { ...formData },
+              ...formData,
             },
             {
               headers: {
@@ -110,20 +105,13 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           setUploading(false);
         }
       } else {
-        // const formData = new FormData().append("data", {
-        //   path: "01.png",
-        //   preview:
-        //     "blob:http://localhost:3000/1b4aae90-df3e-4744-9a6c-8a6331bc136a",
-        // });
-
         // Edit Post
         try {
           await axios.put(
             `${config.serverUrl}/api/feed/${slatePostToEdit?._id}`,
             // { post: serializedHtml, media: [formData] },
             {
-              // post: serializedHtml,
-              ...formData,
+              post: serializedHtml,
             },
             {
               headers: {

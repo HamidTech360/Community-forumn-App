@@ -4,6 +4,7 @@ import Loader from "../Organisms/Layout/Loader/Loader";
 import axios from "axios";
 import { useDispatch, useSelector } from "@/redux/store";
 import { selectIsAuthenticated } from "@/reduxFeatures/authState/authStateSlice";
+import { Spinner } from "react-bootstrap";
 
 export default function UnAuthContent({ children }: { children: ReactNode }) {
   const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -16,5 +17,15 @@ export default function UnAuthContent({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  return <>{!isAuthenticated && <div>{children}</div>}</>;
+  return (
+    <>
+      {!isAuthenticated ? (
+        <div>{children}</div>
+      ) : (
+        <div className="loader-wrapper">
+          <Spinner animation="grow" />
+        </div>
+      )}
+    </>
+  );
 }

@@ -13,7 +13,7 @@ const UserCard = () => {
   }, [data]);
   return (
     <Card
-      className="bg-white radius-10 pt-1 pb-2 px-2 user-card position-relative"
+      className="bg-white radius-10 pt-1 pb-1 px-2 user-card position-relative"
       style={{ height: "240px" }}
     >
       <div
@@ -25,7 +25,6 @@ const UserCard = () => {
           name={data.firstName}
         />
       </div>
-
       <p className="text-center bold" style={{ marginTop: "-2rem" }}>
         {data?.firstName}&nbsp; {data?.lastName}
       </p>
@@ -56,14 +55,17 @@ const UserCard = () => {
           <span>{data?.followers?.length}</span>
           <small>followers</small>
         </div>
+      </div>{" "}
+      <div className="d-grid  position-absolute start-0 bottom-0 w-100 px-2">
+        {" "}
+        <Button
+          variant="light"
+          className="text-center "
+          style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
+        >
+          <Link href={`/profile`}>View Profile</Link>
+        </Button>
       </div>
-      <Button
-        variant="light"
-        className="text-center my-2"
-        style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
-      >
-        <Link href={`/profile`}>View Profile</Link>
-      </Button>
     </Card>
   );
 };
