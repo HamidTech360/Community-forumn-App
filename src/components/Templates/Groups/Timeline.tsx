@@ -52,7 +52,15 @@ const Timeline = ({ groupId }: any) => {
       <div>
         <h5 className={styles.head}>Posts</h5>
         {/* <CreatePost /> */}
-        <Posts Posts={timeLinePosts} />
+        <Posts
+          Posts={timeLinePosts}
+          paginatedData={null}
+          isReachedEnd={true}
+          error={null}
+          fetchNextPage={null}
+          mutate={null}
+          isValidating={null}
+        />
       </div>
     </>
   );

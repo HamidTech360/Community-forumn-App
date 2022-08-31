@@ -188,7 +188,15 @@ const Groups = () => {
                   </Button>
                 </Link>
               </div>
-              <Timeline Posts={Posts} />
+              <Timeline
+                Posts={Posts}
+                paginatedData={null}
+                isReachedEnd={true}
+                error={null}
+                fetchNextPage={null}
+                mutate={null}
+                isValidating={null}
+              />
             </main>
           </div>
         </Container>

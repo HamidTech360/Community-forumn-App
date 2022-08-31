@@ -529,7 +529,7 @@ const PostCard = ({
     <>
       <Card
         id={post?.id}
-        className="container-fluid my-3 cards"
+        className="container-fluid my-3 cards w-100"
         style={{
           border: "1px solid rgba(0, 0, 0, 0.125)",
           width: "100%",
