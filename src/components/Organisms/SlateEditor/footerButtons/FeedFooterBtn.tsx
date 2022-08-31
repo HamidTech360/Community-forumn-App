@@ -71,7 +71,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
             `${config.serverUrl}/api/feed`,
 
             {
-              ...formData,
+              post: serializedHtml,
             },
             {
               headers: {
