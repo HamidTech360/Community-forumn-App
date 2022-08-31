@@ -57,7 +57,6 @@ const Leaf = ({ attributes, children, leaf }) => {
 
 const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   const editSlatePost = useSelector(selectSlatePostToEdit);
-  // console.log("editSlatePost:", editSlatePost);
   const router = useRouter();
   const editorID = `${router.asPath}-slateRefId`;
 

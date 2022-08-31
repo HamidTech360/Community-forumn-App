@@ -14,7 +14,11 @@ const usePagination = (url: string, dotTitle: string) => {
   };
 
   const fetcher = async function (url) {
-    const response = await axios.get(`${url}`);
+    const response = await axios.get(`${url}`, {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
     return response.data;
   };
 

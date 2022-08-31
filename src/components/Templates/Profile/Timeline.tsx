@@ -96,7 +96,7 @@ const Timeline = ({
         {Posts?.map((post, index) => (
           <PostCard
             post={post}
-            key={`activity-post-${index}-${post.id}`}
+            key={`activity-post-${index}-${post?.id}`}
             trimmed
             handleDeletePost={handleDeletePost}
             handleEditPost={handleEditPost}
