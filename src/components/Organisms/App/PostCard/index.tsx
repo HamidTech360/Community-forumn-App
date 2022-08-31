@@ -80,7 +80,11 @@ import ChangeFollowingStatus from "../ChangeFollowingStatus";
 import { FeedPostEditorModal_Modal } from "../ModalPopUp/FeedPostEditorModal";
 import OpenShareModal from "../ModalPopUp/OpenShareModal";
 import PostCardMenu from "../PostMenu";
+
 import Avatar from "@/components/Atoms/Avatar";
+
+import MediaDisplay from "../MediaMasonry";
+// import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
   post,
@@ -112,6 +116,10 @@ const PostCard = ({
   const [commentPost, setCommentPost] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [seeMore, setSeeMore] = useState(false);
+  const [postLength, setPostLength] = useState(0);
+  const [truncateLength, setTruncateLength] = useState(500);
+
   const currentlyFollowing = useSelector(selectFollowing);
   const imageModalOpen = useSelector(selectImageModalOpen);
 
@@ -119,6 +127,23 @@ const PostCard = ({
   const { modalOpen, toggle, selected, setSelected } = useModalWithData();
   const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
     useModalWithShare();
+
+  useEffect(() => {
+    if (post) {
+      const postType = post?.post ? post?.post : post?.postBody;
+      const postTypeLength = sanitizer(
+        truncate(postType, truncateLength, { stripTags: true })
+      ).length;
+
+      if (postTypeLength > truncateLength) {
+        setSeeMore(true);
+      } else {
+        setSeeMore(false);
+      }
+
+      setPostLength(postTypeLength);
+    }
+  }, [post]);
 
   // Update users following in AuthUser because it's a frontend resolved data
   useEffect(() => {
@@ -499,35 +524,6 @@ const PostCard = ({
               />
             </div>
 
-            <div>
-              <div className={styles.div}>
-                <span
-                  style={{
-                    fontWeight: 500,
-                    cursor: "pointer",
-                    color: "var(--bs-primary)",
-                  }}
-                  onClick={redirectPage}
-                  dangerouslySetInnerHTML={{
-                    __html: sanitizer(
-                      `${post?.author?.firstName} ${post?.author?.lastName}`
-                    ),
-                  }}
-                />
-                <br />
-                <small
-                  style={{
-                    marginTop: "10px",
-                    fontWeight: 400,
-                    fontSize: "0.9rem",
-                    color: "gray",
-                  }}
-                >
-                  <Age time={post?.createdAt} />
-                </small>
-              </div>
-            </div>
-
             <div className="ms-auto" style={{ marginTop: "-.8rem" }}>
               <PostCardMenu
                 user={user}
@@ -546,20 +542,13 @@ const PostCard = ({
 
         <Card.Body
           style={{
-            cursor: "pointer",
+            // Only Display Cursor Pointer When postLength Is Greater Than truncateLength
+            cursor: postLength > truncateLength && "pointer",
           }}
           onClick={async () => {
-            if (postReFetched) {
-              if (postReFetched?._id === post?._id) {
-                setSelected(postReFetched);
-                toggle();
-              } else {
-                setSelected(post);
-                toggle();
-              }
-            } else {
-              setSelected(post);
-              toggle();
+            // Only Toggle If Post Is Greater Than truncateLength
+            if (postLength > truncateLength) {
+              setSeeMore(!seeMore);
             }
           }}
         >
@@ -571,73 +560,46 @@ const PostCard = ({
                     className="post-content"
                     dangerouslySetInnerHTML={{
                       __html: trimmed
-                        ? sanitizer(truncate(post?.postBody, 100)) ||
-                          sanitizer(truncate(post?.post, 100))
-                        : sanitizer(truncate(post?.postBody, 100)) ||
-                          sanitizer(truncate(post?.post, 100)),
+                        ? sanitizer(
+                            truncate(post?.postBody, seeMore && truncateLength)
+                          ) ||
+                          sanitizer(
+                            truncate(post?.post, seeMore && truncateLength)
+                          )
+                        : sanitizer(
+                            truncate(post?.postBody, seeMore && truncateLength)
+                          ) ||
+                          sanitizer(
+                            truncate(post?.post, seeMore && truncateLength)
+                          ),
                     }}
                   />
-
                   <PostIsEdited post={post} />
-
-                  {/* {router.asPath === "/feed" ||
-                  router?.pathname.includes("profile") ||
-                  router?.pathname.includes("groups") ? (
-                    <small
-                      style={{
-                        color: "gray",
-                        fontSize: "11px",
-                        position: "relative",
-                        left: "42%",
-                      }}
-                    >
-                      {" "}
-                      See more...
-                    </small>
-                  ) : null} */}
                 </div>
 
-                {post?.media?.map((img, index) => (
-                  <span
-                    key={img}
-                    className="col-1 mx-1"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      dispatch(
-                        setImageModalImg({
-                          media: post.media,
-                          activeIndex: index,
-                        })
-                      );
-                      dispatch(setImageModalOpen(true));
-                    }}
-                  >
-                    <Image
-                      src={img}
-                      alt={"Uploaded Image"}
-                      className="img-thumbnail my-3"
-                      width={"20%"}
-                      height={"20%"}
-                    />
-                  </span>
-                ))}
+                {/* Display Media */}
+                {post?.media?.length > 0 && (
+                  <MediaDisplay media={post.media} breakPoint={2} />
+                )}
 
-                {router.asPath === "/feed" ||
-                router?.pathname.includes("profile") ||
-                router?.pathname.includes("groups") ? (
-                  <div>
-                    <small
-                      style={{
-                        color: "gray",
-                        fontSize: "11px",
-                        position: "relative",
-                        left: "42%",
-                      }}
-                    >
-                      {" "}
-                      See more...
-                    </small>
-                  </div>
+                {seeMore && postLength > truncateLength ? (
+                  router.asPath === "/feed" ||
+                  router?.pathname.includes("profile") ||
+                  router?.pathname.includes("groups") ? (
+                    <div>
+                      <small
+                        style={{
+                          color: "gray",
+                          fontSize: "11px",
+                          position: "relative",
+                          left: "42%",
+                        }}
+                      >
+                        {" "}
+                        See more...
+                      </small>
+                    </div>
+                  ) : null
                 ) : null}
               </>
             )}

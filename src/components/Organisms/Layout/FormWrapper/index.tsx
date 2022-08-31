@@ -100,7 +100,7 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
       <Container>
         <ToastContainer />
         <Row className={styles.formWrapper}>
-          <Col md={6} className="desktop-only">
+          <Col md={6} className="d-none d-md-inline">
             <div className={styles.imgWrapper}>
               <img
                 src="/assets/formvector.svg"

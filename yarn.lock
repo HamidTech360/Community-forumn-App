@@ -17,6 +17,14 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@bakunya/react-masonry@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@bakunya/react-masonry/-/react-masonry-0.0.5.tgz#003ba8c18fa85ee0322335da081995c1cbfd6f8c"
+  integrity sha512-fNqiDRkQ6OS+irdYjgf9g5TwR9cPPaa8Dv4VdUknJilr+alz1eIYIAkPiYBwrGITYS4PhUBX+ltU88i7J3T2Bw==
+  dependencies:
+    react "^17.0.2"
+    react-dom "^17.0.2"
+
 "@emoji-mart/data@^1.0.2":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@emoji-mart/data/-/data-1.0.5.tgz#62c837f1384eb2f94bec4c0dcfe8d230cc67e81d"
@@ -2875,7 +2883,7 @@ react-color@^2.13.8:
     reactcss "^1.2.0"
     tinycolor2 "^1.4.1"
 
-react-dom@17.0.2:
+react-dom@17.0.2, react-dom@^17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
   integrity sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==
@@ -2986,6 +2994,11 @@ react-redux@^8.0.2:
     react-is "^18.0.0"
     use-sync-external-store "^1.0.0"
 
+react-responsive-masonry@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/react-responsive-masonry/-/react-responsive-masonry-2.1.5.tgz#58854def9ef321a87adb839b6cdec1e26b7d15c9"
+  integrity sha512-qXoE8Whrgw2smNRKAcX2z+kZDH7uiii1uyJ92cMOpe59CGdMbj7qbT9I9540GKxFLVUYr9zlU4n4lCfsfy+09A==
+
 react-s3-uploader@^4.6.0:
   version "4.9.3"
   resolved "https://registry.yarnpkg.com/react-s3-uploader/-/react-s3-uploader-4.9.3.tgz#aa30e4f3ef3194f26293ab7df6b2d9f1c727ff68"
@@ -3032,7 +3045,7 @@ react-transition-group@^4.4.2:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react@17.0.2:
+react@17.0.2, react@^17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
   integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==

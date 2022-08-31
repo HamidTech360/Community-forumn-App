@@ -98,6 +98,7 @@ const Uploader2 = () => {
       "video/3gpp2": [".3g2"],
       "video/mp4": [".mp4"],
       "video/mpeg": [".mpeg"],
+      "video/mov": [".mov"],
     },
     maxSize: 3000 * 1024, //3000KB || 3MB
   });

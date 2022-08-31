@@ -3,9 +3,13 @@ import React, { useEffect } from "react";
 import { Button, Card, Image } from "react-bootstrap";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { useSelector } from "@/redux/store";
+
 import Avatar from "@/components/Atoms/Avatar";
 
+import { useRouter } from "next/router";
+
 const UserCard = () => {
+  const router = useRouter();
   const data = useSelector(selectUser);
 
   useEffect(() => {
@@ -46,12 +50,10 @@ const UserCard = () => {
         style={{ fontSize: "12px" }}
       >
         <div className="d-flex flex-column align-items-center">
-          {/* <span>{user.following?.length}</span> */}
           <span>{data?.following?.length}</span>
           <small>following</small>
         </div>
         <div className="d-flex flex-column align-items-center ">
-          {/* <span>{user.followers?.length}</span> */}
           <span>{data?.followers?.length}</span>
           <small>followers</small>
         </div>

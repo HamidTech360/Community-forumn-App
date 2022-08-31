@@ -23,6 +23,7 @@ import {
 } from "@/utils/makeSecuredRequest";
 
 const Followers = () => {
+  const router = useRouter();
   const user = useSelector(selectUser);
   const isFetching = useSelector(selectIsFetching);
   const dispatch = useDispatch();
@@ -51,37 +52,18 @@ const Followers = () => {
     }
   }, []);
 
-  // Update users followers & following in AuthUser because it's a frontend resolved data
-  // useEffect(() => {
-  //   if (user) {
-  //     const currentlyFollowing = user.following.map((follow) => {
-  //       return follow._id;
-  //     });
-  //     const currentFollowers = user.followers.map((follow) => {
-  //       return follow._id;
-  //     });
-
-  //     dispatch(setFollowers(currentFollowers));
-  //     dispatch(setFollowing(currentlyFollowing));
-  //   }
-  // }, [user]);
-
   const topWriterToFollow = async (id: string) => {
     try {
       await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
-      console.log("NOW FOLLOWING");
+      // console.log("NOW FOLLOWING");
       // Update Auth User State
-      // console.log("TRYINg");
-
       (async function () {
-        // console.log("TRIED");
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
           });
-          // console.log("response.data:", response.data);
           dispatch(userAuth(response.data));
         } catch (error) {
           localStorage.removeItem("accessToken");
@@ -89,19 +71,11 @@ const Followers = () => {
       })();
 
       const newTopWritersToFollow = topWriters.filter((writer) => {
-        // console.log("id:", id);
         if (writer?._id !== id) {
           console.log("writer?._id:", writer?._id);
           return writer;
         }
       });
-      // setTopWriters((topWriters) => {
-      //   topWriters.filter((writer) => {
-      //     if (writer?._id !== id) {
-      //       return writer;
-      //     }
-      //   });
-      // });
       setTopWriters(newTopWritersToFollow);
     } catch (error) {
       console.error("follow Error:", error);
@@ -109,7 +83,6 @@ const Followers = () => {
   };
 
   useEffect(() => {
-    // console.log("22222222222");
     // Set Top Writers Display
     if (user && topWriters.length === 0) {
       (async function () {
@@ -117,13 +90,10 @@ const Followers = () => {
           const { data } = await axios.get(
             `${config.serverUrl}/api/users/topwriters/all`
           );
-          console.log("topwriters data:", data.users);
-
           const topWritersSlice = data.users.slice(0, 30);
-
           const followTopWriters = await topWritersSlice.filter((person) => {
-            console.log("person?._id", person?._id);
-            console.log("user?._id", user?._id);
+            // console.log("person?._id", person?._id);
+            // console.log("user?._id", user?._id);
             if (person?._id !== user?._id) {
               return person;
             }
@@ -131,12 +101,11 @@ const Followers = () => {
 
           setTopWriters(followTopWriters);
         } catch (error) {
-          console.error("topwriters ERROR:", error);
+          // console.error("topwriters ERROR:", error);
         }
       })();
     }
   }, [user]);
-  // }, []);
 
   useEffect(() => {
     console.log("topWriters:", topWriters);
@@ -145,8 +114,6 @@ const Followers = () => {
       setUsers(topWriters?.slice(0, sliceNum));
     }
   }, [topWriters]);
-
-
 
   return (
     <section className={styles.write}>
@@ -157,7 +124,6 @@ const Followers = () => {
         <Row>
           {users?.map((user, key) => (
             <Col sm={12} md={6} lg={4} key={`author-${key}`} className="mt-4">
-              {/* <div className="d-flex gap-3 align-items-center justify-content-evenly"> */}
               <div className="d-flex gap-3 align-items-center justify-content-between">
                 <Image
                   width={50}
@@ -167,7 +133,11 @@ const Followers = () => {
                   alt={user?.firstName}
                 />
 
-                <span className="mt-1">
+                <span
+                  className="mt-1"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => router.push(`/profile/${user?._id}`)}
+                >
                   {user?.firstName} {user?.lastName}
                 </span>
 

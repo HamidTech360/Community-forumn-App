@@ -220,7 +220,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
               </div>
             </div>
 
-            <div className="col-3 col-sm-2 ms-auto p-0">
+            <div className=" ms-auto p-0">
               {/* Menu Dots */}
               <PostMenu
                 user={user}

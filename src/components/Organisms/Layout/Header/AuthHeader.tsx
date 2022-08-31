@@ -255,7 +255,10 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
-              <Badge className={styles.badge}>{totalNotifications}</Badge>
+
+              <Badge className={styles.badge}>
+                {totalNotifications > 99 ? `${99}+` : totalNotifications}
+              </Badge>
             </Button>
           </div>
           <NavDropdown
