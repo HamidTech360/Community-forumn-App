@@ -9,6 +9,7 @@ import { useSelector } from "@/redux/store";
 // import { selectNewCreatePost } from "@/reduxFeatures/app/createPost";
 import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
 import { useRouter } from "next/router";
+import usePagination from "@/hooks/usePagination";
 
 const Timeline = ({ groupId }: any) => {
   const [timeLinePosts, setTimeLinePosts] = useState([]);
@@ -21,38 +22,40 @@ const Timeline = ({ groupId }: any) => {
   // Allow Rerender Bases On ID Change Even When Route Is Same Path
   if (id && id !== queryId) setQueryId(id);
 
-  // useEffect(() => {
-  //   /* Add New Post To The Top (before axios fetch in other to enable fast rerender)
-  //    ** This is a Preset as Author's name would return undefined as only author's id is returned in newlyCreatedPost
-  //    ** Author's name would be fixed upon axios fetxh
-  //    */
-  //   if (Object.entries(newlyCreatedPost).length !== 0) {
-  //     let currentTimeline = [...timeLinePosts];
-  //     currentTimeline.unshift(newlyCreatedPost); // Adding newlyCreatedPost here Is Causing Editing Error
-  //     setTimeLinePosts(currentTimeline);
-  //   }
-  // }, [newlyCreatedPost]);
+  const {
+    paginatedData,
+    isReachedEnd,
+    error,
+    fetchNextPage,
+    mutate,
+    isValidating,
+  } = usePagination(`/api/feed/groups/${groupId}`, "posts");
 
   useEffect(() => {
-    (async function () {
-      const response = await axios.get(
-        `${config.serverUrl}/api/feed/groups/${groupId}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
-      setTimeLinePosts(response.data.posts);
-    })();
+    if (paginatedData) {
+      if (JSON.stringify(timeLinePosts) !== JSON.stringify(paginatedData)) {
+        setTimeLinePosts(paginatedData);
+      }
+    }
+  }, [paginatedData]);
+
+  useEffect(() => {
+    mutate();
   }, [newlyCreatedPost, queryId]);
 
   return (
     <>
       <div>
         <h5 className={styles.head}>Posts</h5>
-        {/* <CreatePost /> */}
-        <Posts Posts={timeLinePosts} />
+        <Posts
+          Posts={timeLinePosts}
+          paginatedData={paginatedData}
+          isReachedEnd={isReachedEnd}
+          error={error}
+          fetchNextPage={fetchNextPage}
+          mutate={mutate}
+          isValidating={isValidating}
+        />
       </div>
     </>
   );

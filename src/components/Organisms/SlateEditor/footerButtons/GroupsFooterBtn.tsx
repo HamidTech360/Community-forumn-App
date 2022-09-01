@@ -31,22 +31,32 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
   const createPost = async (e) => {
     e.preventDefault();
 
-    const editorInnerHtml = (
-      document.getElementById(editorID) as HTMLInputElement
-    ).innerHTML;
+    let emptyEditorData = [
+      {
+        type: "paragraph",
+        children: [
+          {
+            text: "",
+          },
+        ],
+      },
+    ];
 
-    let emptyEditorInnerHtml =
-      '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
-
-    if (editorInnerHtml === emptyEditorInnerHtml) {
+    if (
+      JSON.stringify(editorContentValue) === JSON.stringify(emptyEditorData)
+    ) {
       toast.warn("Type your message to proceed", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
       });
+
       return;
     }
 
-    if (editorInnerHtml.trim() !== "") {
+    if (
+      editorContentValue[0].children.length === 1 &&
+      editorContentValue[0].children[0].text.trim() !== ""
+    ) {
       setUploading(true);
 
       // Serialize Html
@@ -128,6 +138,11 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
           setUploading(false);
         }
       }
+    } else {
+      toast.warn("Type your message to proceed", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1",
+      });
     }
   };
 

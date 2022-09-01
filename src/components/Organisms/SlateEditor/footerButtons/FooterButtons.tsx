@@ -32,7 +32,7 @@ function FooterButtons({
           editorID={editorID}
           editorContentValue={editorContentValue}
         />
-      ) : pageAt === "/groups" ? (
+      ) : pageAt === "/groups" || pageAt.includes("/groups") ? (
         <GroupsFooterBtn
           editorID={editorID}
           editorContentValue={editorContentValue}

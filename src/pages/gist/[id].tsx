@@ -318,7 +318,7 @@ const Gist = ({
                     onChange={(e) => setCommentPost(e.target.value)}
                     style={{ height: "100px" }}
                   ></textarea>
-                  <label htmlFor="articleTextarea">Comments</label>
+                  {/* <label htmlFor="articleTextarea">Comments</label> */}
                 </div>
               </div>
               <div className="col-3 col-md-2 ms-auto d-md-grid">

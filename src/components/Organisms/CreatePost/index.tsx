@@ -59,27 +59,6 @@ const CreatePost = ({ pageAt }) => {
 
       {/* Open Editor Modal */}
       {showModal && <FeedPostEditorModal pageAt={pageAt} />}
-
-      {/* <Modal
-        show={showModal}
-        className={styles2.GistModal}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        size="lg"
-      >
-        <span className={styles2.closeBtn}>
-          {" "}
-          <FaTimes
-            color="#207681"
-            style={{ cursor: "pointer" }}
-            size={35}
-            onClick={() => dispatch(setShowCreatePostModal(false))}
-          />{" "}
-        </span>
-        <div className="col-12 px-4 mt-2 mb-4">
-          <Editor slim={false} pageAt={pageAt} />
-        </div>
-      </Modal> */}
     </Card>
   );
 };

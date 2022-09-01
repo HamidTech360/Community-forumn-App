@@ -4,13 +4,21 @@ import config from "@/config";
 import axios from "axios";
 import { Spinner } from "react-bootstrap";
 
-const usePagination = (url: string, dotTitle: string) => {
-  const pageSize = 25;
+const usePaginationProfileTL = (
+  url: string,
+  dotTitle: string,
+  isAuthUserTimeline: boolean
+) => {
+  const pageSize = 4;
 
   const getKey = (pageIndex: number, previousPageData: any) => {
     if (previousPageData && !previousPageData[dotTitle].length) return null; // reached the end
 
-    return `${config.serverUrl}${url}?perPage=${pageSize}&page=${pageIndex}`; // SWR key
+    if (isAuthUserTimeline) {
+      return `${config.serverUrl}${url}?perPage=${pageSize}&page=${pageIndex}`; // SWR key
+    } else {
+      return `${config.serverUrl}${url}&perPage=${pageSize}&page=${pageIndex}`; // SWR key
+    }
   };
 
   const fetcher = async function (url) {
@@ -19,6 +27,7 @@ const usePagination = (url: string, dotTitle: string) => {
         authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
+
     return response.data;
   };
 
@@ -33,33 +42,27 @@ const usePagination = (url: string, dotTitle: string) => {
     persistSize: true,
   });
 
-  const fetchNextPage = () => setSize((size) => size + 1);
+  const fetchNextPageProfileTL = () => setSize((size) => size + 1);
 
-  const paginatedData: any = post?.flatMap((page) => page[dotTitle]) ?? [];
+  const paginatedDataProfileTL: any =
+    post?.flatMap((page) => page[dotTitle]) ?? [];
 
-  const isReachedEnd =
+  const isReachedEndProfileTL =
     post && post[post.length - 1][dotTitle]?.length < pageSize; // got last batch of data
 
-  const isLoadingInitialData = !post && !error;
-
-  const loadingMore =
-    isLoadingInitialData ||
-    (size > 0 && post && typeof post[size - 1] === "undefined");
+  const isLoadingInitialDataProfileTL = !post && !error;
 
   return {
-    paginatedData,
-    isReachedEnd,
-    error,
-    fetchNextPage,
-    // size,
-    // setSize,
-    mutate,
-    isValidating,
-    // loadingMore,
+    paginatedDataProfileTL,
+    isReachedEndProfileTL,
+    errorProfileTL: error,
+    fetchNextPageProfileTL,
+    mutateProfileTL: mutate,
+    isValidatingProfileTL: isValidating,
   };
 };
 
-export default usePagination;
+export default usePaginationProfileTL;
 
 export const Loader = () => {
   return (
