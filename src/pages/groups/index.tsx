@@ -11,7 +11,6 @@ import { useRouter } from "next/router";
 import config from "@/config";
 import axios from "axios";
 import { FaUser } from "react-icons/fa";
-import usePagination from "@/hooks/usePagination";
 
 const Groups = () => {
   const router = useRouter();
@@ -19,40 +18,25 @@ const Groups = () => {
   const [Posts, setPosts] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
 
-  // const {
-  //   paginatedData,
-  //   isReachedEnd,
-  //   error,
-  //   fetchNextPage,
-  //   mutate,
-  //   isValidating,
-  // } = usePagination("/api/feed/groups", "groups");
-
-  // useEffect(() => {
-  //   console.log("paginatedData:", paginatedData);
-  // }, [paginatedData]);
-
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
     (async () => {
       try {
         const response = await axios.get(
           `${config.serverUrl}/api/groups/user`,
-          // `${config.serverUrl}/api/feed/groups`,
+
           {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           }
         );
         setGroups(response.data.groups);
-        console.log("response:", response.data);
 
         const randomPosts = await axios.get(
-          // `${config.serverUrl}/api/posts/group/random`
           `${config.serverUrl}/api/feed/groups`
         );
-        console.log("randomPosts:", randomPosts.data);
+
         setPosts(randomPosts.data.posts);
       } catch (error) {
         console.error(error.response?.data);
@@ -63,18 +47,15 @@ const Groups = () => {
     };
   }, []);
 
-  const handleSearch = async (e) => {
+  const handleSearch = async e => {
     console.log(e.currentTarget.value);
-    // if(e.currentTarget.value=="") {
-    //   setSearchResult([])
-    //   return
-    // }
+
     if (e.currentTarget.value !== "") {
       try {
         const { data } = await axios.get(
           `${config.serverUrl}/api/search/?type=group&keyword=${e.currentTarget.value}`
         );
-        //console.log(data);
+
         setSearchResult(data);
       } catch (error) {
         console.error(error.response?.data);
@@ -104,12 +85,12 @@ const Groups = () => {
             <div
               style={{
                 border: "1px solid rgba(0, 0, 0, 0.125)",
-                borderRadius: "10px",
+                borderRadius: "10px"
               }}
             >
               <Form.Control
                 placeholder="search"
-                onChange={(e) => handleSearch(e)}
+                onChange={e => handleSearch(e)}
               />
             </div>
             <div className={`${styles.groupLists}`}>

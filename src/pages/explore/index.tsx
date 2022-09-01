@@ -1,31 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { GetStaticProps, InferGetStaticPropsType } from "next";
-import { RiMessage2Fill } from "react-icons/ri";
 import MessageButton from "@/components/Atoms/messageButton";
 import Head from "next/head";
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  Col,
-  Container,
-  Row,
-  Image,
-  Button,
-  Tabs,
-  Tab,
-  Modal,
-  Spinner,
-  Form,
-  Pagination,
-} from "react-bootstrap";
-import { FaTimes } from "react-icons/fa";
-import { toast, ToastContainer } from "react-toastify";
+import React, { useEffect, useState } from "react";
+import { Col, Container, Row, Image, Button, Tabs, Tab } from "react-bootstrap";
+import { ToastContainer } from "react-toastify";
 import Card from "../../components/Molecules/Card";
 import Followers from "@/components/Organisms/Followers";
 import axios from "axios";
 import styles from "../../styles/explore.module.scss";
-import formStyles from "../../styles/templates/new-group/formField.module.css";
 import "react-toastify/dist/ReactToastify.css";
-import Editor from "@/components/Organisms/SlateEditor/Editor";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "@/redux/store";
 import {
@@ -33,11 +16,9 @@ import {
   selectPost,
   setShowPostModal,
   selectShowPostModal,
-  setPostTitle,
-  selectNewPost,
+  selectNewPost
 } from "@/reduxFeatures/api/postSlice";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-// import usePagination, { Loader } from "@/hooks/usePagination";
+
 import usePaginationBlogAll, {
   usePaginationBlogStudyAbroad,
   usePaginationBlogWorkAbroad,
@@ -45,9 +26,9 @@ import usePaginationBlogAll, {
   usePaginationBlogPgStudies,
   usePaginationBlogPtJobs,
   usePaginationBlogHousing,
-  LoaderPage,
+  LoaderPage
 } from "@/hooks/usePaginationBlog";
-// import InfiniteScroll from "react-infinite-scroll-component";
+
 import config from "@/config";
 import ReactPaginate from "react-paginate";
 import ExplorePostEditorModal from "@/components/Organisms/App/ModalPopUp/ExplorePostEditorModal";
@@ -57,25 +38,18 @@ const Explore = ({}) => {
   const dispatch = useDispatch();
   const showPost = useSelector(selectPost);
   const showPostModal = useSelector(selectShowPostModal);
-  // const user = useSelector(selectUser);
-  // const isFetching = useSelector(selectIsFetching);
 
   const newPost = useSelector(selectNewPost);
   const [categories, setCategories] = useState([]);
-  // const [filteredPosts, setFilteredPosts] = useState([]);
+
   const [key, setKey] = useState<string>("all");
-  // const [users, setUsers] = useState([]);
-  // const [formData, setFormData] = useState({
-  //   postTitle: "",
-  //   postBody: "",
-  // });
 
   // React Numbered Paginator Display
   const [paginatorDisplay, setPaginatorDisplay] = useState({
     previous: "<<",
     next: ">>",
     pageMargin: 1,
-    pageRange: 2,
+    pageRange: 2
   });
 
   // Selected Category
@@ -99,7 +73,7 @@ const Explore = ({}) => {
     paginatedBlogStudyAbroad,
     mutateBlogStudyAbroad,
     isLoadingBlogStudyAbroad,
-    errorBlogStudyAbroad,
+    errorBlogStudyAbroad
   } = usePaginationBlogStudyAbroad(
     "/api/posts?category=study_abroad",
     pageIndexStudyAbroad
@@ -108,7 +82,7 @@ const Explore = ({}) => {
     paginatedBlogWorkAbroad,
     mutateBlogWorkAbroad,
     isLoadingBlogWorkAbroad,
-    errorBlogWorkAbroad,
+    errorBlogWorkAbroad
   } = usePaginationBlogWorkAbroad(
     "/api/posts?category=work_abroad",
     pageIndexWorkAbroad
@@ -117,7 +91,7 @@ const Explore = ({}) => {
     paginatedBlogLiveAbroad,
     mutateBlogLiveAbroad,
     isLoadingBlogLiveAbroad,
-    errorBlogLiveAbroad,
+    errorBlogLiveAbroad
   } = usePaginationBlogLiveAbroad(
     "/api/posts?category=live_abroad",
     pageIndexLiveAbroad
@@ -126,7 +100,7 @@ const Explore = ({}) => {
     paginatedBlogPgStudies,
     mutateBlogPgStudies,
     isLoadingBlogPgStudies,
-    errorBlogPgStudies,
+    errorBlogPgStudies
   } = usePaginationBlogPgStudies(
     "/api/posts?category=pg_studies",
     pageIndexPgStudies
@@ -135,13 +109,13 @@ const Explore = ({}) => {
     paginatedBlogHousing,
     mutateBlogHousing,
     isLoadingBlogHousing,
-    errorBlogHousing,
+    errorBlogHousing
   } = usePaginationBlogHousing("/api/posts?category=housing", pageIndexHousing);
   const {
     paginatedBlogPtJobs,
     mutateBlogPtJobs,
     isLoadingBlogPtJobs,
-    errorBlogPtJobs,
+    errorBlogPtJobs
   } = usePaginationBlogPtJobs("/api/posts?category=pt_jobs", pageIndexPtJobs);
 
   useEffect(() => {
@@ -176,36 +150,26 @@ const Explore = ({}) => {
         previous: "<<",
         next: ">>",
         pageMargin: 1,
-        pageRange: 2,
+        pageRange: 2
       });
     } else if (window.innerWidth < 1024) {
       setPaginatorDisplay({
         previous: "<< Pre",
         next: "Next >>",
         pageMargin: 2,
-        pageRange: 3,
+        pageRange: 3
       });
     } else if (window.innerWidth >= 1024) {
       setPaginatorDisplay({
         previous: "<< Pre",
         next: "Next >>",
         pageMargin: 3,
-        pageRange: 4,
+        pageRange: 4
       });
     }
   }, []);
 
-  const filterCategory = (item) => {
-    // console.log("key is", item);
-
-    // console.log("pageIndexAll:", pageIndexAll);
-    // console.log("pageIndexStudyAbroad:", pageIndexStudyAbroad);
-    // console.log("pageIndexWorkAbroad:", pageIndexWorkAbroad);
-    // console.log("pageIndexLiveAbroad:", pageIndexLiveAbroad);
-    // console.log("pageIndexPgStudies:", pageIndexPgStudies);
-    // console.log("pageIndexHousing:", pageIndexHousing);
-    // console.log("pageIndexPtJobs:", pageIndexPtJobs);
-
+  const filterCategory = (item: string) => {
     setKey(item);
 
     let paginatedKey = "All";
@@ -263,55 +227,40 @@ const Explore = ({}) => {
   useEffect(() => {
     // Set Post Category To Render
     if (paginateCategory === "paginatedBlogAll") {
-      // if (paginatedBlogAll) {
       if (JSON.stringify(showPost) !== JSON.stringify(paginatedBlogAll)) {
         dispatch(setPosts(paginatedBlogAll));
       }
-      // }
     } else if (paginateCategory === "paginatedBlogStudyAbroad") {
-      // if (paginatedBlogStudyAbroad) {
-      // console.log("paginatedBlogStudyAbroad:");
       if (
         JSON.stringify(showPost) !== JSON.stringify(paginatedBlogStudyAbroad)
       ) {
         dispatch(setPosts(paginatedBlogStudyAbroad));
       }
-      // }
     } else if (paginateCategory === "paginatedBlogWorkAbroad") {
-      // if (paginatedBlogWorkAbroad) {
       if (
         JSON.stringify(showPost) !== JSON.stringify(paginatedBlogWorkAbroad)
       ) {
         dispatch(setPosts(paginatedBlogWorkAbroad));
       }
-      // }
     } else if (paginateCategory === "paginatedBlogLiveAbroad") {
-      // if (paginatedBlogLiveAbroad) {
       if (
         JSON.stringify(showPost) !== JSON.stringify(paginatedBlogLiveAbroad)
       ) {
         dispatch(setPosts(paginatedBlogLiveAbroad));
       }
-      // }
     } else if (paginateCategory === "paginatedBlogPgStudies") {
-      // if (paginatedBlogPgStudies) {
       if (JSON.stringify(showPost) !== JSON.stringify(paginatedBlogPgStudies)) {
         dispatch(setPosts(paginatedBlogPgStudies));
       }
-      // }
     } else if (paginateCategory === "paginatedBlogHousing") {
-      // if (paginatedBlogHousing) {
       if (JSON.stringify(showPost) !== JSON.stringify(paginatedBlogHousing)) {
         dispatch(setPosts(paginatedBlogHousing));
       }
-      // }
     } else if (paginateCategory === "paginatedBlogPtJobs") {
-      // if (paginatedBlogPtJobs) {
       if (JSON.stringify(showPost) !== JSON.stringify(paginatedBlogPtJobs)) {
         dispatch(setPosts(paginatedBlogPtJobs));
       }
     }
-    // }
   }, [
     paginateCategory,
     paginatedBlogAll,
@@ -320,10 +269,10 @@ const Explore = ({}) => {
     paginatedBlogLiveAbroad,
     paginatedBlogPgStudies,
     paginatedBlogPtJobs,
-    paginatedBlogHousing,
+    paginatedBlogHousing
   ]);
 
-  const handlePageChange = (page) => {
+  const handlePageChange = page => {
     console.log("Page Clicked:", page.selected);
 
     if (paginateCategory === "paginatedBlogAll") {
@@ -403,14 +352,14 @@ const Explore = ({}) => {
           </h1>
           <div className={styles.topics}>
             <Tabs
-              onSelect={(k) => filterCategory(k!)}
+              onSelect={k => filterCategory(k)}
               activeKey={key}
               id="uncontrolled-tab-example"
               className="justify-content-center d-flex gap-2"
               defaultActiveKey={"all"}
             >
               <Tab title="All" eventKey="all" key="all" />
-              {categories.map((category) => (
+              {categories.map(category => (
                 <Tab
                   key={category.name}
                   eventKey={category.name}
@@ -420,7 +369,8 @@ const Explore = ({}) => {
             </Tabs>
 
             <Row className="d-flex justify-content-start">
-              {showPost?.posts.map((post, key) => (
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any*/}
+              {showPost?.posts.map((post: Record<string, any>, key: number) => (
                 <Col
                   key={`posts_${key}`}
                   md={4}
@@ -438,7 +388,6 @@ const Explore = ({}) => {
               ))}
             </Row>
 
-            {/* {isLoadingBlogAll && <LoaderPage />} */}
             {isLoadingBlogAll ||
             isLoadingBlogStudyAbroad ||
             isLoadingBlogWorkAbroad ||
@@ -460,7 +409,7 @@ const Explore = ({}) => {
                 style={{
                   textAlign: "center",
                   color: "gray",
-                  marginTop: "1.2rem",
+                  marginTop: "1.2rem"
                 }}
               >
                 <b>Oops! Something went wrong</b>
@@ -487,8 +436,7 @@ const Explore = ({}) => {
             breakLinkClassName="page-link"
             activeClassName="bg-primary text-light"
             activeLinkClassName="bg-primary text-light"
-            // eslint-disable-next-line no-unused-vars
-            hrefBuilder={(page, pageCount, selected) =>
+            hrefBuilder={(page, pageCount) =>
               page >= 1 && page <= pageCount ? `/explore/${page}` : "#"
             }
             hrefAllControls

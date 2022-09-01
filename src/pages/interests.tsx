@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Container, Card, Button, Image } from "react-bootstrap";
 
@@ -13,7 +13,7 @@ const Interests = () => {
     "Find people around you",
     "Find information",
     "Give information",
-    "Consultation",
+    "Consultation"
   ];
 
   const [selectedInterests, setSelectedInterests] = useState([]);
@@ -23,7 +23,7 @@ const Interests = () => {
     if (selectedInterests.length >= 1) {
       console.log("selectedInterests:", selectedInterests);
 
-      selectedInterests.forEach((selectedInt) => {
+      selectedInterests.forEach(selectedInt => {
         document.getElementById(selectedInt.id).classList.add("bg-primary");
         document.getElementById(selectedInt.id).classList.add("text-white");
       });
@@ -33,7 +33,7 @@ const Interests = () => {
 
   // Select Interest BTN Function
 
-  //@ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const interestSelected = (e: any) => {
     e.preventDefault();
 
@@ -45,7 +45,7 @@ const Interests = () => {
       document.getElementById(id).classList.remove("bg-primary");
       document.getElementById(id).classList.remove("text-white");
       setSelectedInterests(() => {
-        return selectedInterests.filter((value) => {
+        return selectedInterests.filter(value => {
           return value.interestedIn !== interestedIn;
         });
       });
@@ -66,7 +66,6 @@ const Interests = () => {
       return alert("You Have To Select 3 or More Interest");
     } else {
       // Send with axios
-
       // console.log("interest selected", interestSelected);
     }
   };
@@ -90,7 +89,7 @@ const Interests = () => {
                   position: "fixed",
                   top: "-5%",
                   left: "-10%",
-                  zIndex: "-1",
+                  zIndex: "-1"
                 }}
                 alt="ellipse-intro-top.png"
               />
@@ -104,9 +103,9 @@ const Interests = () => {
             <Card.Body style={{ marginTop: "-2rem" }}>
               <div className="row justify-content-center align-items-center">
                 {initInterests.map((interest, index) => {
-                  let idIndex = `initInterests-${index}`;
-                  let initInterestsLength = initInterests.length;
-                  let btnWidth =
+                  const idIndex = `initInterests-${index}`;
+                  const initInterestsLength = initInterests.length;
+                  const btnWidth =
                     index < initInterestsLength / 3
                       ? "col-sm-5 col-md-4 col-lg-3 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3"
                       : index > initInterestsLength / 3 &&
@@ -136,7 +135,7 @@ const Interests = () => {
                   position: "fixed",
                   bottom: "-82%",
                   right: "-5%",
-                  zIndex: "-1",
+                  zIndex: "-1"
                 }}
                 alt="ellipse-intro-right.png"
               />

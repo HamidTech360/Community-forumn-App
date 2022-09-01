@@ -1,12 +1,10 @@
 import React, { useEffect, useState, ReactNode } from "react";
-import { Card, CardImg, Container, Nav, Spinner } from "react-bootstrap";
-import PostCard from "@/components/Organisms/App/PostCard";
-import CreatePost from "@/components/Organisms/CreatePost";
+import { Container } from "react-bootstrap";
 import axios from "axios";
 import config from "@/config";
 import styles from "@/styles/feed.module.scss";
 import Head from "next/head";
-// import UserCard from "@/components/Organisms/App/UserCard";
+
 import Discussions from "@/components/Organisms/App/Discussions/Discussions";
 
 import About from "@/components/Templates/Profile/About";
@@ -41,8 +39,8 @@ const Profile = () => {
           `${config.serverUrl}/api/posts/user/all`,
           {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           }
         );
         // console.log(response.data);
@@ -64,7 +62,7 @@ const Profile = () => {
     media: <Media />,
     connections: <Friends user={user} />,
     articles: <Articles />,
-    bookmarks: <Bookmarks />,
+    bookmarks: <Bookmarks />
   };
   return (
     <AuthContent>
