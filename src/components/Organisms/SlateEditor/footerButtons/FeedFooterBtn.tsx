@@ -122,8 +122,8 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
             `${config.serverUrl}/api/feed/${slatePostToEdit?._id}`,
             // { post: serializedHtml, media: [formData] },
             {
-              // post: serializedHtml,
-              ...formData,
+              post: serializedHtml,
+              // ...formData,
             },
             {
               headers: {

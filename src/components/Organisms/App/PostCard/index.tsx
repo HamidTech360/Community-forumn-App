@@ -100,29 +100,19 @@ const PostCard = ({
   handleEditPost,
   mutate,
 }) => {
-  // console.log("PastCard Loaded+++++");
-  // console.log("postComingIn:", postComingIn);
-  // console.log("post:", post);
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  // const posts = useSelector(selectPost);
-  // const likeChanged = useSelector(selectLikeChanged);
-  // const bookmarkChanged = useSelector(selectBookMarkChanged);
   const likeChangedModal = useSelector(selectLikeChangedModal);
   const unLikeChangedModal = useSelector(selectUnLikeChangedModal);
   const createPostModal = useSelector(selectCreatePostModal);
   const newFeed = useSelector(selectNewFeed);
-  // const bookmarkChangedModal = useSelector(selectBookMarkChangedModal);
   const router = useRouter();
   const [followed, setFollowed] = useState(false);
 
-  // const [post, setPostComingIn] = useState(postComingIn);
   const [postReFetched, setPostComingIn] = useState(undefined);
 
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookMarked] = useState(false);
-  // const [likedOrBookmarkedChanged, setLikedOrBookmarkedChanged] =
-  //   useState(false);
   const sanitizer = DOMPurify.sanitize;
 
   // - comment section
@@ -178,7 +168,6 @@ const PostCard = ({
 
   // Monitor Likes In ModalCard & Let It Reflect In PastCard
   useEffect(() => {
-    // console.log("modalOpen OPEN");
     if (!modalOpen && likeChangedModal.length > 0) {
       if (likeChangedModal.includes(post?._id)) {
         // Refetch Specific Post So as to get updated like count The false argument is for iit not to sent an axios argument.
@@ -461,7 +450,6 @@ const PostCard = ({
   };
 
   const changeFollowingStatus = (post) => {
-    console.log("post:", post);
     if (
       document.getElementById(`followStr-${post?.author?._id}`).innerText ===
       "Follow"

@@ -63,7 +63,7 @@ const Group = () => {
         );
         setGroupData(response.data);
       } catch (error) {
-        console.log(error.response?.data);
+        // console.log(error.response?.data);
       }
     })();
   }, [router.isReady, newCreatePost, queryId]);
