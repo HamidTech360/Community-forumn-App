@@ -12,12 +12,16 @@ import config from "@/config";
 import axios from "axios";
 import { FaUser } from "react-icons/fa";
 import usePagination from "@/hooks/usePagination";
+import FeedPostEditorModal from "@/components/Organisms/App/ModalPopUp/FeedPostEditorModal";
+import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
+import { useSelector } from "@/redux/store";
 
 const Groups = () => {
   const router = useRouter();
   const [groups, setGroups] = useState([]);
   const [posts, setPosts] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
+  const newlyCreatedPost = useSelector(selectNewGroupFeed);
 
   const {
     paginatedData,
@@ -29,13 +33,17 @@ const Groups = () => {
   } = usePagination("/api/feed/groups", "posts");
 
   useEffect(() => {
-    console.log("paginatedData:", paginatedData);
+    // console.log("paginatedData:", paginatedData);
     if (paginatedData) {
       if (JSON.stringify(posts) !== JSON.stringify(paginatedData)) {
         setPosts(paginatedData);
       }
     }
   }, [paginatedData]);
+
+  useEffect(() => {
+    mutate();
+  }, [newlyCreatedPost]);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";

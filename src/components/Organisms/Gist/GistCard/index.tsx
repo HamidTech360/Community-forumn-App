@@ -31,6 +31,7 @@ import makeSecuredRequest, {
 import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
 import { PostMenu } from "../../App/PostMenu";
+import FeedPostEditorModal from "../../App/ModalPopUp/FeedPostEditorModal";
 // interface IGist {
 //   gist: {
 //     author: {
@@ -187,113 +188,111 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
   };
 
   return (
-    <div className="container-fluid">
-      <Card
-        className="row mt-4 p-3 w-100"
-        style={{
-          borderRadius: "10px",
-        }}
-      >
-        <Card.Title>
-          <div className="row">
-            <div className="col-1 pt-2 pt-md-3 align-items-center">
-              <Image
-                src={
-                  gist?.author?.images?.avatar || "/images/imagePlaceholder.jpg"
-                }
-                width={50}
-                height={50}
-                alt="Avatar"
-                roundedCircle
-                className={styles.img}
-                onClick={redirectPage}
-                style={{ cursor: "pointer" }}
-              />
-            </div>
+    <Card
+      className="row mt-4 p-3 w-100 mx-0"
+      style={{
+        borderRadius: "10px",
+      }}
+    >
+      <Card.Title>
+        <div className="row">
+          <div className="col-1 pt-2 pt-md-3 align-items-center">
+            <Image
+              src={
+                gist?.author?.images?.avatar || "/images/imagePlaceholder.jpg"
+              }
+              width={50}
+              height={50}
+              alt="Avatar"
+              roundedCircle
+              className={styles.img}
+              onClick={redirectPage}
+              style={{ cursor: "pointer" }}
+            />
+          </div>
 
-            <div className="col-6 col-sm-8 ms-4 me-xl-5">
-              <div className={styles.div}>
-                <small
-                  className={`${styles.title} text-secondary text-capitalize `}
-                  style={{ fontSize: "14px" }}
-                >
-                  Started by:{" "}
-                  <span
-                    style={{
-                      fontWeight: 500,
-                      cursor: "pointer",
-                      color: "var(--bs-primary)",
-                    }}
-                    onClick={redirectPage}
-                  >
-                    {/* Use `` & Stringify To Prevent XSS */}
-                    {`${String(gist?.author?.firstName)} ${String(
-                      gist?.author?.lastName
-                    )}`}
-                  </span>
-                </small>
-                <h5 className={`text-primary mt-1 ${styles.title}`}>
-                  {/* Use `` & Stringify To Prevent XSS */}
-                  <span>{`${String(gist?.title?.replace("&amp;", "&"))}`}</span>
-                </h5>
-                <small
+          <div className="col-7 col-sm-8 ms-4 me-xl-5">
+            <div className={styles.div}>
+              <small
+                className={`${styles.title} text-secondary text-capitalize `}
+                style={{ fontSize: "14px" }}
+              >
+                Started by:{" "}
+                <span
                   style={{
-                    marginTop: "10px",
-                    fontWeight: 400,
-                    fontSize: "0.9rem",
-                    color: "gray",
+                    fontWeight: 500,
+                    cursor: "pointer",
+                    color: "var(--bs-primary)",
                   }}
+                  onClick={redirectPage}
                 >
-                  <Age time={gist?.createdAt} />
-                  <BsBookmarkDash className="ms-2" />
-                </small>
-              </div>
-            </div>
-
-            <div className="col-1" style={{ marginTop: "-.8rem" }}>
-              {/* Menu Dots */}
-              <PostMenu
-                user={user}
-                currentlyFollowing={currentlyFollowing}
-                post={gist}
-                handleEditPost={handleEditPost}
-                handleDeletePost={handleDeletePost}
-                changeFollowingStatus={changeFollowingStatus}
-              />
+                  {/* Use `` & Stringify To Prevent XSS */}
+                  {`${String(gist?.author?.firstName)} ${String(
+                    gist?.author?.lastName
+                  )}`}
+                </span>
+              </small>
+              <h5 className={`text-primary mt-1 ${styles.title}`}>
+                {/* Use `` & Stringify To Prevent XSS */}
+                <span>{`${String(gist?.title?.replace("&amp;", "&"))}`}</span>
+              </h5>
+              <small
+                style={{
+                  marginTop: "10px",
+                  fontWeight: 400,
+                  fontSize: "0.9rem",
+                  color: "gray",
+                }}
+              >
+                <Age time={gist?.createdAt} />
+                <BsBookmarkDash className="ms-2" />
+              </small>
             </div>
           </div>
-        </Card.Title>
-        <Card.Body
-          className="px-3 py-0 mt-3"
-          // align="justify"
-        >
-          {gist?.post && (
-            <Card.Body
-              dangerouslySetInnerHTML={{
-                __html: sanitizer(
-                  trimmed ? truncate(gist.post, 100) : truncate(gist.post)
-                ),
-              }}
-              style={{
-                marginTop: "-1rem",
-                lineHeight: "1.3rem",
-                whiteSpace: "pre-line",
-              }}
+
+          <div className="col-1" style={{ marginTop: "-.8rem" }}>
+            {/* Menu Dots */}
+            <PostMenu
+              user={user}
+              currentlyFollowing={currentlyFollowing}
+              post={gist}
+              handleEditPost={handleEditPost}
+              handleDeletePost={handleDeletePost}
+              changeFollowingStatus={changeFollowingStatus}
             />
-          )}
+          </div>
+        </div>
+      </Card.Title>
+      <Card.Body
+        className="px-3 py-0 mt-3"
+        // align="justify"
+      >
+        {gist?.post && (
+          <Card.Body
+            dangerouslySetInnerHTML={{
+              __html: sanitizer(
+                trimmed ? truncate(gist.post, 100) : truncate(gist.post)
+              ),
+            }}
+            style={{
+              marginTop: "-1rem",
+              lineHeight: "1.3rem",
+              whiteSpace: "pre-line",
+            }}
+          />
+        )}
 
-          <PostIsEdited post={gist} />
+        <PostIsEdited post={gist} />
 
-          {!primary && (
-            <div className="d-flex justify-content-end mt-2">
-              <Link href={`/gist/${gist?._id}`} passHref>
-                <Button variant="primary">Join conversation</Button>
-              </Link>
-            </div>
-          )}
-        </Card.Body>
-      </Card>
-    </div>
+        {!primary && (
+          <div className="d-flex justify-content-end mt-2">
+            <Link href={`/gist/${gist?._id}`} passHref>
+              <Button variant="primary">Join conversation</Button>
+            </Link>
+          </div>
+        )}
+      </Card.Body>
+    </Card>
   );
 };
 

@@ -1,7 +1,11 @@
+import React from "react";
 import { useSelector } from "@/redux/store";
 import { selectShowCommentModal } from "@/reduxFeatures/app/postModalCardSlice";
 // import { selectShowCommentModal } from "@/reduxFeatures/app/postModalCardSlice";
-import React from "react";
+import {
+  selectCreatePostModal,
+  setShowCreatePostModal,
+} from "@/reduxFeatures/app/createPost";
 import { Button, NavDropdown } from "react-bootstrap";
 import { BsFolderFill, BsXCircleFill } from "react-icons/bs";
 import { FiEdit } from "react-icons/fi";
@@ -11,6 +15,8 @@ import { RiDeleteBin5Line, RiFlagFill, RiUserFollowFill } from "react-icons/ri";
 import CommentModal from "../ModalPopUp/CommentModal";
 
 import styles from "@/styles/profile.module.scss";
+import FeedPostEditorModal from "../ModalPopUp/FeedPostEditorModal";
+import { useRouter } from "next/router";
 
 const PostCardMenu = ({
   user,
@@ -124,6 +130,9 @@ export const PostMenu = ({
   handleDeletePost,
   changeFollowingStatus,
 }) => {
+  const showModal = useSelector(selectCreatePostModal);
+  const router = useRouter();
+  console.log("router.asPath", router.asPath);
   // const showCommentModal = useSelector(selectShowCommentModal);
   return (
     <NavDropdown
@@ -176,7 +185,11 @@ export const PostMenu = ({
             style={{
               borderBottom: "1px solid gray",
             }}
-            onClick={() => handleEditPost(post)}
+            onClick={() => {
+              // Open & Populate Editor
+              setShowCreatePostModal(true);
+              handleEditPost(post);
+            }}
           >
             <FiEdit /> Edit Post
           </NavDropdown.Item>
