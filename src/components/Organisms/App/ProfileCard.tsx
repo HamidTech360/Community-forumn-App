@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
-import { useRouter } from "next/router";
-import React, { ReactNode, useEffect, useState, useRef } from "react";
+import React, { ReactNode, useState, useRef } from "react";
 import { AiFillEdit } from "react-icons/ai";
-import { Card, CardImg, Button, Image, Nav } from "react-bootstrap";
+import { Card, Button, Image, Nav } from "react-bootstrap";
 import About from "../../Templates/Profile/About";
 import Bookmarks from "../../Templates/Profile/Bookmarks";
 import Articles from "../../Templates/Profile/Articles";
@@ -14,12 +13,10 @@ import { selectUser, user } from "@/reduxFeatures/authState/authStateSlice";
 import config from "@/config";
 import Friends from "../../Templates/Profile/Friends";
 import styles from "@/styles/templates/profile/profilecard.module.scss";
-import { unstable_renderSubtreeIntoContainer } from "react-dom";
 import { toast, ToastContainer } from "react-toastify";
 import Spinner from "react-spinner-material";
 
 import "react-toastify/dist/ReactToastify.css";
-import Avatar from "@/components/Atoms/Avatar";
 interface IComponents {
   about: ReactNode;
   timeline: ReactNode;
@@ -65,8 +62,8 @@ const ProfileCard = ({
 
   const handleImgSelection = e => {
     e.preventDefault();
-    let reader = new FileReader();
-    let file = e.target.files[0];
+    const reader = new FileReader();
+    const file = e.target.files[0];
     console.log(e.target.name);
 
     reader.onloadend = () => {
@@ -99,7 +96,7 @@ const ProfileCard = ({
     );
 
     try {
-      const response = await axios.put(
+      await axios.put(
         `${config.serverUrl}/api/users/${data._id}?imageType=${item}`,
         formData,
         {

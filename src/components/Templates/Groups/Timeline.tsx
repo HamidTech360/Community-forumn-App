@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import styles from "@/styles/timeline.module.scss";
 import Posts from "@/components/Templates/Profile/Timeline";
 // import CreatePost from "@/components/Organisms/CreatePost";
-import axios from "axios";
-import config from "@/config";
 
 import { useSelector } from "@/redux/store";
 // import { selectNewCreatePost } from "@/reduxFeatures/app/createPost";
@@ -37,11 +35,11 @@ const Timeline = ({ groupId }: { groupId?: string }) => {
         setTimeLinePosts(paginatedData);
       }
     }
-  }, [paginatedData]);
+  }, [paginatedData, timeLinePosts]);
 
   useEffect(() => {
     mutate();
-  }, [newlyCreatedPost, queryId]);
+  }, [mutate, newlyCreatedPost, queryId]);
 
   return (
     <>

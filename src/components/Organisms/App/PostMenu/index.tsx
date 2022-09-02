@@ -2,10 +2,7 @@ import React from "react";
 import { useSelector } from "@/redux/store";
 import { selectShowCommentModal } from "@/reduxFeatures/app/postModalCardSlice";
 // import { selectShowCommentModal } from "@/reduxFeatures/app/postModalCardSlice";
-import {
-  selectCreatePostModal,
-  setShowCreatePostModal,
-} from "@/reduxFeatures/app/createPost";
+import { setShowCreatePostModal } from "@/reduxFeatures/app/createPost";
 import { Button, NavDropdown } from "react-bootstrap";
 import { BsFolderFill, BsXCircleFill } from "react-icons/bs";
 import { FiEdit } from "react-icons/fi";
@@ -15,7 +12,6 @@ import { RiDeleteBin5Line, RiFlagFill, RiUserFollowFill } from "react-icons/ri";
 import CommentModal from "../ModalPopUp/CommentModal";
 
 import styles from "@/styles/profile.module.scss";
-import FeedPostEditorModal from "../ModalPopUp/FeedPostEditorModal";
 import { useRouter } from "next/router";
 
 const PostCardMenu = ({
@@ -27,7 +23,7 @@ const PostCardMenu = ({
   setSelected,
   toggle,
   handleEditPost,
-  handleDeletePost,
+  handleDeletePost
 }) => {
   // const showCommentModal = useSelector(selectShowCommentModal);
   return (
@@ -95,7 +91,7 @@ const PostCardMenu = ({
           <NavDropdown.Item
             className={styles.item}
             style={{
-              borderBottom: "1px solid gray",
+              borderBottom: "1px solid gray"
             }}
             onClick={() => handleEditPost(post)}
           >
@@ -108,7 +104,7 @@ const PostCardMenu = ({
           >
             <span
               style={{
-                color: "red",
+                color: "red"
               }}
             >
               <RiDeleteBin5Line /> Delete Post
@@ -128,9 +124,8 @@ export const PostMenu = ({
   post,
   handleEditPost,
   handleDeletePost,
-  changeFollowingStatus,
+  changeFollowingStatus
 }) => {
-  const showModal = useSelector(selectCreatePostModal);
   const router = useRouter();
   console.log("router.asPath", router.asPath);
   // const showCommentModal = useSelector(selectShowCommentModal);
@@ -183,7 +178,7 @@ export const PostMenu = ({
           <NavDropdown.Item
             // className={styles.item}
             style={{
-              borderBottom: "1px solid gray",
+              borderBottom: "1px solid gray"
             }}
             onClick={() => {
               // Open & Populate Editor
@@ -200,7 +195,7 @@ export const PostMenu = ({
           >
             <span
               style={{
-                color: "red",
+                color: "red"
               }}
             >
               <RiDeleteBin5Line /> Delete Post
@@ -218,7 +213,7 @@ export const PostMenuModal = ({
   comment,
   handleEditComment,
   handleDeleteComment,
-  changeFollowingStatus,
+  changeFollowingStatus
 }) => {
   const showCommentModal = useSelector(selectShowCommentModal);
   return (
@@ -270,7 +265,7 @@ export const PostMenuModal = ({
           <NavDropdown.Item
             // className={styles.item}
             style={{
-              borderBottom: "1px solid gray",
+              borderBottom: "1px solid gray"
             }}
             onClick={() => handleEditComment(comment)}
           >
@@ -283,7 +278,7 @@ export const PostMenuModal = ({
           >
             <span
               style={{
-                color: "red",
+                color: "red"
               }}
             >
               <RiDeleteBin5Line /> Delete Comment

@@ -12,7 +12,6 @@ import config from "@/config";
 import axios from "axios";
 import { FaUser } from "react-icons/fa";
 import usePagination from "@/hooks/usePagination";
-import FeedPostEditorModal from "@/components/Organisms/App/ModalPopUp/FeedPostEditorModal";
 import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
 import { useSelector } from "@/redux/store";
 
@@ -39,11 +38,11 @@ const Groups = () => {
         setPosts(paginatedData);
       }
     }
-  }, [paginatedData]);
+  }, [paginatedData, posts]);
 
   useEffect(() => {
     mutate();
-  }, [newlyCreatedPost]);
+  }, [mutate, newlyCreatedPost]);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";

@@ -1,9 +1,5 @@
 import React, { useEffect, useState, ReactNode } from "react";
-import { Card, CardImg, Container, Nav, Spinner } from "react-bootstrap";
-import PostCard from "@/components/Organisms/App/PostCard";
-import CreatePost from "@/components/Organisms/CreatePost";
-import axios from "axios";
-import config from "@/config";
+import { Container } from "react-bootstrap";
 import styles from "@/styles/feed.module.scss";
 import Head from "next/head";
 // import UserCard from "@/components/Organisms/App/UserCard";
@@ -53,7 +49,7 @@ const Profile = () => {
         setData(paginatedDataProfileTL);
       }
     }
-  }, [paginatedDataProfileTL]);
+  }, [data, paginatedDataProfileTL]);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";

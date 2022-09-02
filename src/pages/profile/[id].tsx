@@ -36,6 +36,7 @@ const Profile = () => {
   const [path, setPath] = useState("timeline");
 
   const [data, setData] = useState([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [user, setUser] = useState<Record<string, any>>({});
 
   const isAuthUserTimeline = false;
@@ -58,7 +59,7 @@ const Profile = () => {
         setData(paginatedDataProfileTL);
       }
     }
-  }, [paginatedDataProfileTL]);
+  }, [data, paginatedDataProfileTL]);
 
   useEffect(() => {
     (async () => {
