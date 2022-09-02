@@ -201,9 +201,7 @@ const Notifications = () => {
 
                 {allNotifications?.map((notification, index) => (
                   <div
-                    style={{
-                      backgroundColor: !notification.read ? "#4a7277" : ""
-                    }}
+                    className={notification.read ? "text-muted" : ""}
                     key={index}
                     onClick={() => navigateToItem(notification)}
                   >
