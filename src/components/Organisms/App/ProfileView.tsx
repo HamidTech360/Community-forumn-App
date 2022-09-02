@@ -42,7 +42,17 @@ interface IComponents {
   connections: ReactNode;
 }
 const Components: IComponents = {
-  timeline: <Timeline Posts={[]} />,
+  timeline: (
+    <Timeline
+      Posts={[]}
+      paginatedData={null}
+      isReachedEnd={true}
+      error={null}
+      fetchNextPage={null}
+      mutate={null}
+      isValidating={null}
+    />
+  ),
   about: <About />,
   media: <Media />,
 

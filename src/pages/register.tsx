@@ -27,14 +27,15 @@ const Register = () => {
     if (termsAndConditionsChecked) {
       try {
         setSubmitting(true);
-        await axios.post(`${config.serverUrl}/api/auth/register`, formData);
-
+        const response = await axios.post(`${config.serverUrl}/api/auth/register`, formData);
+        console.log(response.data)
         setMessage({
           message:
             "Success! Check your email- an account confirmation link has been sent to you.",
           variant: "success"
         });
-        router.push("/login");
+        localStorage.setItem('accessToken',response.data.accessToken )
+        router.push("/interests");
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const serverError = error as AxiosError;

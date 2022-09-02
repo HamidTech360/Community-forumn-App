@@ -192,7 +192,7 @@ const Gist = () => {
                   Create Gist
                 </span>
               </Button>
-              <select className="outline-primary me-5">
+              <select className="outline-primary me-3">
                 <option>Canada</option>
               </select>
             </div>

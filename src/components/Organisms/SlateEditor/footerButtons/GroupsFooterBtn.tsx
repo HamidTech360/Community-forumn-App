@@ -42,10 +42,14 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1"
       });
+
       return;
     }
 
-    if (editorInnerHtml.trim() !== "") {
+    if (
+      editorContentValue[0].children.length === 1 &&
+      editorContentValue[0].children[0].text.trim() !== ""
+    ) {
       setUploading(true);
 
       // Serialize Html
@@ -127,6 +131,11 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
           setUploading(false);
         }
       }
+    } else {
+      toast.warn("Type your message to proceed", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1"
+      });
     }
   };
 

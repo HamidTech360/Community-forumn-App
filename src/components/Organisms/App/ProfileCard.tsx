@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
-import React, { ReactNode, useState, useRef } from "react";
+import { useRouter } from "next/router";
+import React, { ReactNode, useEffect, useState, useRef } from "react";
 import { AiFillEdit } from "react-icons/ai";
-import { Card, Button, Image, Nav } from "react-bootstrap";
+import { Card, CardImg, Button, Image, Nav } from "react-bootstrap";
 import About from "../../Templates/Profile/About";
 import Bookmarks from "../../Templates/Profile/Bookmarks";
 import Articles from "../../Templates/Profile/Articles";
@@ -13,6 +14,7 @@ import { selectUser, user } from "@/reduxFeatures/authState/authStateSlice";
 import config from "@/config";
 import Friends from "../../Templates/Profile/Friends";
 import styles from "@/styles/templates/profile/profilecard.module.scss";
+import { unstable_renderSubtreeIntoContainer } from "react-dom";
 import { toast, ToastContainer } from "react-toastify";
 import Spinner from "react-spinner-material";
 
@@ -36,10 +38,10 @@ const ProfileCard = ({
 }) => {
   const data = useSelector(selectUser);
   const [profileImg, setProfileImg] = useState(
-    data?.images?.avatar || "/images/imagePlaceholder.jpg"
+    data?.images?.avatar || "/images/formbg.png"
   );
   const [coverImg, setCoverImg] = useState(
-    data?.images?.cover || "/images/imagePlaceholder.jpg"
+    data?.images?.cover || "/images/formbg.png"
   );
   const [progress1, setProgress1] = useState(false);
   const [progress2, setProgress2] = useState(false);
@@ -63,8 +65,8 @@ const ProfileCard = ({
 
   const handleImgSelection = e => {
     e.preventDefault();
-    const reader = new FileReader();
-    const file = e.target.files[0];
+    let reader = new FileReader();
+    let file = e.target.files[0];
     console.log(e.target.name);
 
     reader.onloadend = () => {
@@ -108,7 +110,7 @@ const ProfileCard = ({
         }
       );
 
-      console.log(response.data);
+      // console.log(response.data);
       toast.success("Image uploaded", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 5000
@@ -119,7 +121,7 @@ const ProfileCard = ({
         ? setShowUpdateImgBtn(false)
         : setShowUpdateCoverBtn(false);
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data)
       toast.error("Image uploade failed", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 5000
@@ -130,7 +132,17 @@ const ProfileCard = ({
   };
 
   const Components: IComponents = {
-    timeline: <Timeline Posts={[]} />,
+    timeline: (
+      <Timeline
+        Posts={[]}
+        paginatedData={null}
+        isReachedEnd={true}
+        error={null}
+        fetchNextPage={null}
+        mutate={null}
+        isValidating={null}
+      />
+    ),
     about: <About />,
     media: <Media />,
     articles: <Articles />,
@@ -140,7 +152,7 @@ const ProfileCard = ({
   return (
     <Card className="mt-2 mb-3">
       <ToastContainer />
-      <Image src={coverImg} className="image3" alt="cover image" />
+      <Image src={coverImg} className="image3" alt="Cover Image" />
 
       <div className={styles.editCoverTab}>
         <div onClick={() => triggerClick(coverFileInpt)}>
@@ -168,14 +180,18 @@ const ProfileCard = ({
       </div>
 
       <Card.Body className="d-flex position-relative justify-content-center align-items-center flex-column ">
-        <div className="position-absolute top-0">
-          <Avatar
-            src={profileImg}
-            name={data.firstName}
-            width={130}
-            height={130}
-          />
-        </div>
+        <Image
+          width={130}
+          height={130}
+          src={profileImg}
+          alt="avatar"
+          className="top-0 position-absolute"
+          style={{
+            // transform: "translateY(-70%)",
+            border: "2px solid black"
+          }}
+          roundedCircle
+        />
 
         <div onClick={() => triggerClick(fileInput)} className={styles.editTab}>
           <span style={{ color: "32324D" }}>Edit</span>{" "}

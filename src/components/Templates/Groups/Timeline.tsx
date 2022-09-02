@@ -9,6 +9,7 @@ import { useSelector } from "@/redux/store";
 // import { selectNewCreatePost } from "@/reduxFeatures/app/createPost";
 import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
 import { useRouter } from "next/router";
+import usePagination from "@/hooks/usePagination";
 
 const Timeline = ({ groupId }: { groupId?: string }) => {
   const [timeLinePosts, setTimeLinePosts] = useState([]);
@@ -21,26 +22,40 @@ const Timeline = ({ groupId }: { groupId?: string }) => {
   // Allow Rerender Bases On ID Change Even When Route Is Same Path
   if (id && id !== queryId) setQueryId(id);
 
+  const {
+    paginatedData,
+    isReachedEnd,
+    error,
+    fetchNextPage,
+    mutate,
+    isValidating
+  } = usePagination(`/api/feed/groups/${groupId}`, "posts");
+
   useEffect(() => {
-    (async function () {
-      const response = await axios.get(
-        `${config.serverUrl}/api/feed/groups/${queryId}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`
-          }
-        }
-      );
-      setTimeLinePosts(response.data.posts);
-    })();
-  }, [groupId, newlyCreatedPost, queryId]);
+    if (paginatedData) {
+      if (JSON.stringify(timeLinePosts) !== JSON.stringify(paginatedData)) {
+        setTimeLinePosts(paginatedData);
+      }
+    }
+  }, [paginatedData]);
+
+  useEffect(() => {
+    mutate();
+  }, [newlyCreatedPost, queryId]);
 
   return (
     <>
       <div>
         <h5 className={styles.head}>Posts</h5>
-
-        <Posts Posts={timeLinePosts} />
+        <Posts
+          Posts={timeLinePosts}
+          paginatedData={paginatedData}
+          isReachedEnd={isReachedEnd}
+          error={error}
+          fetchNextPage={fetchNextPage}
+          mutate={mutate}
+          isValidating={isValidating}
+        />
       </div>
     </>
   );

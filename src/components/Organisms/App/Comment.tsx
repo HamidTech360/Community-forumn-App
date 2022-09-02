@@ -307,7 +307,7 @@ const Comment = ({
                   onChange={e => setCommentPost(e.target.value)}
                   style={{ height: "80px" }}
                 ></textarea>
-                <label htmlFor="articleTextarea">Reply here</label>
+                {/* <label htmlFor="articleTextarea">Reply here</label> */}
               </div>
             </div>
             <div className="col-3 col-md-2 ms-auto d-md-grid">

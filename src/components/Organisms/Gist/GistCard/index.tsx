@@ -26,6 +26,7 @@ import { PostMenu } from "../../App/PostMenu";
 
 import Avatar from "@/components/Atoms/Avatar";
 
+import FeedPostEditorModal from "../../App/ModalPopUp/FeedPostEditorModal";
 // interface IGist {
 //   gist: {
 //     author: {
@@ -232,18 +233,17 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
             />
           )}
 
-          <PostIsEdited post={gist} />
+        <PostIsEdited post={gist} />
 
-          {!primary && (
-            <div className="d-flex justify-content-end mt-2">
-              <Link href={`/gist/${gist?._id}`} passHref>
-                <Button variant="primary">Join conversation</Button>
-              </Link>
-            </div>
-          )}
-        </Card.Body>
-      </Card>
-    </div>
+        {!primary && (
+          <div className="d-flex justify-content-end mt-2">
+            <Link href={`/gist/${gist?._id}`} passHref>
+              <Button variant="primary">Join conversation</Button>
+            </Link>
+          </div>
+        )}
+      </Card.Body>
+    </Card>
   );
 };
 

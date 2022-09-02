@@ -92,7 +92,6 @@ const Group = () => {
 
           <main className={styles.profile}>
             <GroupInfoCard data={groupData} />
-            {/* <CreatePost DisplayModal="DisplayModal" /> */}
             <CreatePost pageAt="/groups" />
 
             {Components[path as unknown as string]}

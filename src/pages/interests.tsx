@@ -1,72 +1,94 @@
 import Head from "next/head";
-import React, { useEffect, useState } from "react";
-
+import React, { useState } from "react";
+import { useRouter } from "next/router";
+import styles from "@/styles/interests.module.scss";
+import Spinner from "react-spinner-material";
+import config from "@/config";
+import axios from "axios";
 import { Container, Card, Button, Image } from "react-bootstrap";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Interests = () => {
-  const initInterests = [
-    "Travel abroad",
-    "Postgraduate degree",
-    "Undergraduate degree",
-    "Housing",
-    "Work abroad",
-    "Find people around you",
-    "Find information",
-    "Give information",
-    "Consultation"
-  ];
-
-  const [selectedInterests, setSelectedInterests] = useState([]);
-
-  useEffect(() => {
-    // Display User Selected Interest In Btn On Component Load
-    if (selectedInterests.length >= 1) {
-      console.log("selectedInterests:", selectedInterests);
-
-      selectedInterests.forEach(selectedInt => {
-        document.getElementById(selectedInt.id).classList.add("bg-primary");
-        document.getElementById(selectedInt.id).classList.add("text-white");
-      });
+  const router = useRouter();
+  const [initInterests, setInterests] = useState([
+    {
+      selected: false,
+      label: "Travel abroad"
+    },
+    {
+      selected: false,
+      label: "Postgraduate degree"
+    },
+    {
+      selected: false,
+      label: "Undergraduate degree"
+    },
+    {
+      selected: false,
+      label: "Housing"
+    },
+    {
+      selected: false,
+      label: "Work abroad"
+    },
+    {
+      selected: false,
+      label: "Find people around you"
+    },
+    {
+      selected: false,
+      label: "Find information"
+    },
+    {
+      selected: false,
+      label: "Give information"
+    },
+    {
+      selected: false,
+      label: "Consultation"
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  ]);
+  const [showProgress, setShowProgress] = useState(false);
 
-  // Select Interest BTN Function
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const interestSelected = (e: any) => {
-    e.preventDefault();
-
-    const id = e.target.id;
-    const interestedIn = e.target.textContent;
-
-    if (document.getElementById(id).classList.contains("bg-primary")) {
-      //  Interest Already Selected. De-select Interest
-      document.getElementById(id).classList.remove("bg-primary");
-      document.getElementById(id).classList.remove("text-white");
-      setSelectedInterests(() => {
-        return selectedInterests.filter(value => {
-          return value.interestedIn !== interestedIn;
-        });
-      });
-    } else {
-      //  Interest Not Selected. Select Interest
-      document.getElementById(id).classList.add("bg-primary");
-      document.getElementById(id).classList.add("text-white");
-      setSelectedInterests(() => [...selectedInterests, { id, interestedIn }]);
-    }
+  const interestSelected = (item: { selected: boolean; label: string }) => {
+    const index = initInterests.indexOf(item);
+    const interests__c = [...initInterests];
+    interests__c[index].selected = !interests__c[index].selected;
+    setInterests(interests__c);
   };
 
-  // Send Selected Interest To Required Component/Server
+  const handleSubmit = async () => {
+    const selectedItems = [];
+    const filtered = initInterests.filter(item => item.selected);
+    if (filtered.length <= 0) {
+      return toast.error("Select an Item", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 5000
+      });
+    }
 
-  const axiosInterestSelected = () => {
-    const interestSelected = selectedInterests;
-
-    if (interestSelected.length < 3) {
-      return alert("You Have To Select 3 or More Interest");
-    } else {
-      // Send with axios
-      // console.log("interest selected", interestSelected);
+    setShowProgress(true);
+    filtered.map(item => {
+      return selectedItems.push(item.label);
+    });
+    console.log(selectedItems.join(","));
+    try {
+      const { data } = await axios.put(
+        `${config.serverUrl}/api/users`,
+        { interests: selectedItems.join(",") },
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
+        }
+      );
+      console.log(data);
+      setShowProgress(false);
+      router.push("/feed");
+    } catch (error) {
+      console.log(error.response?.data);
+      setShowProgress(false);
     }
   };
 
@@ -75,6 +97,7 @@ const Interests = () => {
       <Head>
         <title>Interests</title>
       </Head>
+      <ToastContainer />
       <section>
         <Container fluid className="row mt-3 text-center h1 mx-3">
           <Card border="0 bg-transparent">
@@ -103,25 +126,16 @@ const Interests = () => {
             <Card.Body style={{ marginTop: "-2rem" }}>
               <div className="row justify-content-center align-items-center">
                 {initInterests.map((interest, index) => {
-                  const idIndex = `initInterests-${index}`;
-                  const initInterestsLength = initInterests.length;
-                  const btnWidth =
-                    index < initInterestsLength / 3
-                      ? "col-sm-5 col-md-4 col-lg-3 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3"
-                      : index > initInterestsLength / 3 &&
-                        index <= initInterestsLength / Number(1.5)
-                      ? "col-sm-4 col-md-4 col-lg-3 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3"
-                      : index >= initInterestsLength / Number(1.5)
-                      ? "col-sm-4 col-md-3 col-lg-2 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3"
-                      : "col-sm-4 col-md-2 col-lg-4 btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3";
                   return (
                     <div
-                      id={idIndex}
-                      className={btnWidth}
+                      className={`btn btn-outline-primary list-group-item me-3 border-1 border-primary rounded-3 mb-3 ${
+                        styles.itemBox
+                      } ${interest.selected ? "bg-primary" : ""}`}
                       key={index}
-                      onClick={interestSelected}
+                      style={{ color: interest.selected ? "white" : "" }}
+                      onClick={() => interestSelected(interest)}
                     >
-                      {interest}
+                      {interest.label}
                     </div>
                   );
                 })}
@@ -141,11 +155,18 @@ const Interests = () => {
               />
               <div className="row justify-content-center">
                 <div className="col-5 mt-5 d-grid">
-                  <Button
-                    className="btn btn-lg"
-                    onClick={axiosInterestSelected}
-                  >
-                    Continue
+                  <Button className="btn btn-lg" onClick={() => handleSubmit()}>
+                    {showProgress ? (
+                      <Spinner
+                        style={{ margin: "auto" }}
+                        radius={22}
+                        color={"lightgray"}
+                        stroke={2}
+                        visible={true}
+                      />
+                    ) : (
+                      "Continue"
+                    )}
                   </Button>
                 </div>
               </div>

@@ -11,12 +11,39 @@ import { useRouter } from "next/router";
 import config from "@/config";
 import axios from "axios";
 import { FaUser } from "react-icons/fa";
+import usePagination from "@/hooks/usePagination";
+import FeedPostEditorModal from "@/components/Organisms/App/ModalPopUp/FeedPostEditorModal";
+import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
+import { useSelector } from "@/redux/store";
 
 const Groups = () => {
   const router = useRouter();
   const [groups, setGroups] = useState([]);
-  const [Posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
+  const newlyCreatedPost = useSelector(selectNewGroupFeed);
+
+  const {
+    paginatedData,
+    isReachedEnd,
+    error,
+    fetchNextPage,
+    mutate,
+    isValidating
+  } = usePagination("/api/feed/groups", "posts");
+
+  useEffect(() => {
+    // console.log("paginatedData:", paginatedData);
+    if (paginatedData) {
+      if (JSON.stringify(posts) !== JSON.stringify(paginatedData)) {
+        setPosts(paginatedData);
+      }
+    }
+  }, [paginatedData]);
+
+  useEffect(() => {
+    mutate();
+  }, [newlyCreatedPost]);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -24,7 +51,6 @@ const Groups = () => {
       try {
         const response = await axios.get(
           `${config.serverUrl}/api/groups/user`,
-
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`
@@ -39,7 +65,7 @@ const Groups = () => {
 
         setPosts(randomPosts.data.posts);
       } catch (error) {
-        console.error(error.response?.data);
+        // console.error(error.response?.data);
       }
     })();
     return () => {
@@ -99,7 +125,6 @@ const Groups = () => {
                   <Link href={`/groups/${item._id}/timeline`} key={i} passHref>
                     <div className={styles.groupCard}>
                       <div>
-                        {/* <img */}
                         <Image
                           src="/images/groups2.png"
                           className={styles.groupProfileImg}
@@ -121,7 +146,7 @@ const Groups = () => {
 
           <div className={styles.posts}>
             <div className={`d-none d-md-flex gap-3 mb-3 px-4`}>
-              {Posts.slice(0, 4).map((post, index) => (
+              {posts.slice(0, 4).map((post, index) => (
                 <Link
                   key={`card-${index}`}
                   href={`/groups/${post.group._id}/timeline`}
@@ -139,12 +164,6 @@ const Groups = () => {
                       <small className="text-muted">
                         <FaUser color="black" /> {post.author?.firstName}
                       </small>
-                      {/* <Image
-                        width={20}
-                        height={20}
-                        alt="members"
-                        src="/assets/icons/users.svg"
-                      /> */}
                     </Card.Body>
                   </Card>
                 </Link>
@@ -169,7 +188,15 @@ const Groups = () => {
                   </Button>
                 </Link>
               </div>
-              <Timeline Posts={Posts} />
+              <Timeline
+                Posts={posts}
+                paginatedData={paginatedData}
+                isReachedEnd={isReachedEnd}
+                error={error}
+                fetchNextPage={fetchNextPage}
+                mutate={mutate}
+                isValidating={isValidating}
+              />
             </main>
           </div>
         </Container>
