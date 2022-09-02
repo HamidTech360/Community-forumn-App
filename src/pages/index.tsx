@@ -1,17 +1,12 @@
 import UnAuthContent from "@/components/Auth/UnAuthContent";
 import config from "@/config";
 import axios from "axios";
-import { InferGetStaticPropsType } from "next";
 import Head from "next/head";
-import Image from "next/image";
-import { Container } from "react-bootstrap";
-import Logo from "../components/Atoms/Logo";
 import Articles from "../components/Organisms/Landing/Articles";
 import Intro from "../components/Organisms/Landing/Intro";
 import Services from "../components/Organisms/Landing/Service";
-import Footer from "../components/Organisms/Layout/Footer";
-import styles from "../styles/Landing.module.scss";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Home = ({ articles }: { articles: Record<string, any>[] }) => {
   return (
     <UnAuthContent>
@@ -37,13 +32,13 @@ const Home = ({ articles }: { articles: Record<string, any>[] }) => {
 
 export const getStaticProps = async () => {
   const {
-    data: { posts },
+    data: { posts }
   } = await axios.get(`${config.serverUrl}/api/posts`);
 
   return {
     props: {
-      articles: posts,
-    },
+      articles: posts
+    }
   };
 };
 export default Home;

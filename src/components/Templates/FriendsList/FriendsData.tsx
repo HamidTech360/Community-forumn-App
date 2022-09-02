@@ -1,20 +1,25 @@
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
-import { Badge, Card, Col, Image, ListGroup, Row } from "react-bootstrap";
+import React from "react";
+import { Card, Col, Image, ListGroup, Row } from "react-bootstrap";
 import { FiMoreVertical } from "react-icons/fi";
 import styles from "../../../styles/friends.module.scss";
 
-const FriendsData = ({ friendsList }: any) => {
+const FriendsData = ({
+  friendsList
+}: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  friendsList: Record<string, any>[];
+}) => {
   // const { friends } = props.friendsList;
   console.log("friend lists are ", friendsList);
   const user = useSelector(selectUser);
   return (
     <>
       <Row xs={1} md={2}>
-        {friendsList?.map((friend: Record<string, any>) => (
-          <Col md={6} sm={12} lg={6}>
+        {friendsList?.map(friend => (
+          <Col md={6} sm={12} lg={6} key={friend._id}>
             <Link href={`/profile/${friend._id}`} passHref>
               <Card
                 key={friend.id}
@@ -29,7 +34,10 @@ const FriendsData = ({ friendsList }: any) => {
                     >
                       <div>
                         <Image
-                          src={friend?.images?.avatar || "/images/imagePlaceholder.jpg"}
+                          src={
+                            friend?.images?.avatar ||
+                            "/images/imagePlaceholder.jpg"
+                          }
                           alt="user"
                           width={50}
                           height={50}

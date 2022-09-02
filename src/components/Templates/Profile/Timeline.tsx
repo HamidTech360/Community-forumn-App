@@ -1,26 +1,18 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Button, Spinner } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
 // import { usePagination } from "../../../hooks/usePagination-old";
 import PostCard from "../../Organisms/App/PostCard";
-import CreatePost from "../../Organisms/CreatePost";
 import styles from "@/styles/profile.module.scss";
-import Link from "next/link";
 import axios from "axios";
 import config from "@/config";
 
-import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 import { useDispatch, useSelector } from "@/redux/store";
-import {
-  selectShowPostModal,
-  setShowPostModal,
-} from "@/reduxFeatures/api/postSlice";
+import { setShowPostModal } from "@/reduxFeatures/api/postSlice";
 // import ExplorePostEditorModal from "@/components/Organisms/App/ModalPopUp/ExplorePostEditorModal";
-import ExplorePostEditorModal from "../../../components/Organisms/App/ModalPopUp/ExplorePostEditorModal";
 import {
   setShowCreatePostModal,
-  selectCreatePostModal,
+  selectCreatePostModal
 } from "@/reduxFeatures/app/createPost";
 import FeedPostEditorModal from "@/components/Organisms/App/ModalPopUp/FeedPostEditorModal";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -33,11 +25,11 @@ const Timeline = ({
   error,
   fetchNextPage,
   mutate,
-  isValidating,
+  isValidating
 }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const showPostModal = useSelector(selectShowPostModal);
+
   const [Posts, setPostComingIn] = useState(postComingIn);
   const showModal = useSelector(selectCreatePostModal);
   // const intersection = useRef();
@@ -48,17 +40,14 @@ const Timeline = ({
     }
   }, [postComingIn]);
 
-  const handleDeletePost = async (item) => {
-    const newPosts = Posts.filter((el) => el._id !== item._id);
+  const handleDeletePost = async item => {
+    const newPosts = Posts.filter(el => el._id !== item._id);
     try {
-      const { data } = await axios.delete(
-        `${config.serverUrl}/api/feed?id=${item._id}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+      await axios.delete(`${config.serverUrl}/api/feed?id=${item._id}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
-      );
+      });
       setPostComingIn(newPosts);
     } catch (error) {
       setPostComingIn(Posts);
@@ -66,7 +55,7 @@ const Timeline = ({
     }
   };
 
-  const handleEditPost = async (item) => {
+  const handleEditPost = async item => {
     // Notify Slate Editor Of Post Editing
     dispatch(setSlatePostToEdit(item));
 
@@ -122,7 +111,7 @@ const Timeline = ({
             style={{
               textAlign: "center",
               color: "gray",
-              marginTop: "1.2rem",
+              marginTop: "1.2rem"
             }}
           >
             <b>Oops! Something went wrong</b>

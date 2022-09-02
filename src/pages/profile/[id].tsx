@@ -1,7 +1,5 @@
 import React, { useEffect, useState, ReactNode } from "react";
-import { Card, CardImg, Container, Nav, Spinner } from "react-bootstrap";
-import PostCard from "../../components/Organisms/App/PostCard";
-import CreatePost from "../../components/Organisms/CreatePost";
+import { Container } from "react-bootstrap";
 import axios from "axios";
 import config from "@/config";
 import styles from "../../styles/feed.module.scss";
@@ -14,7 +12,6 @@ import Timeline from "../../components/Templates/Profile/Timeline";
 import Friends from "../../components/Templates/Profile/Friends";
 import Media from "../../components/Templates/Profile/Media";
 import Bookmarks from "../../components/Templates/Profile/Bookmarks";
-import Link from "next/link";
 import ProfileCard from "../../components/Organisms/App/ProfileCard";
 import ProfileView from "../../components/Organisms/App/ProfileView";
 import AuthContent from "@/components/Auth/AuthContent";
@@ -39,6 +36,7 @@ const Profile = () => {
   const [path, setPath] = useState("timeline");
 
   const [data, setData] = useState([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [user, setUser] = useState<Record<string, any>>({});
 
   const isAuthUserTimeline = false;
@@ -48,7 +46,7 @@ const Profile = () => {
     errorProfileTL,
     fetchNextPageProfileTL,
     mutateProfileTL,
-    isValidatingProfileTL,
+    isValidatingProfileTL
   } = usePaginationProfileTL(
     `/api/feed/user?userId=${id}`,
     "feed",
@@ -61,7 +59,7 @@ const Profile = () => {
         setData(paginatedDataProfileTL);
       }
     }
-  }, [paginatedDataProfileTL]);
+  }, [data, paginatedDataProfileTL]);
 
   useEffect(() => {
     (async () => {
@@ -97,7 +95,7 @@ const Profile = () => {
     media: <Media />,
     connections: <Friends user={user} />,
     articles: <Articles />,
-    bookmarks: <Bookmarks />,
+    bookmarks: <Bookmarks />
   };
   return (
     <AuthContent>

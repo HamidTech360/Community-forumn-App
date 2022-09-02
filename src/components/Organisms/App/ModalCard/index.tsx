@@ -1,34 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Link from "next/link";
-import strip from "striptags";
 import React, { useEffect, useState } from "react";
 import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
-import {
-  Button,
-  Card,
-  Col,
-  Dropdown,
-  Image,
-  Modal,
-  NavDropdown,
-  Row,
-} from "react-bootstrap";
-import { HiDotsVertical } from "react-icons/hi";
-import { RiClipboardFill, RiDeleteBin5Line, RiFlagFill } from "react-icons/ri";
-import {
-  BsFolderFill,
-  BsXCircleFill,
-  BsFillBookmarkFill,
-  BsBookmark,
-} from "react-icons/bs";
-import { RiUserFollowFill } from "react-icons/ri";
+import { Button, Card, Col, Row } from "react-bootstrap";
+import { BsFillBookmarkFill, BsBookmark } from "react-icons/bs";
 import { AiOutlineLike, AiFillLike, AiOutlineShareAlt } from "react-icons/ai";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import {
   user as userAuth,
-  selectFollowing,
+  selectFollowing
 } from "@/reduxFeatures/authState/authStateSlice";
 
 import { FaRegCommentDots } from "react-icons/fa";
@@ -39,13 +20,7 @@ import styles from "@/styles/profile.module.scss";
 import axios from "axios";
 import config from "@/config";
 import { useDispatch } from "react-redux";
-import truncate from "truncate-html";
 
-import {
-  selectPost,
-  setIsFetching,
-  setPosts,
-} from "@/reduxFeatures/api/postSlice";
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import {
@@ -59,51 +34,43 @@ import {
   selectUnLikeChangedModal,
   selectModalCardPostEdited,
   setModalCardPostEdited,
-  selectShowCommentModal,
   setShowCommentModal,
   setEditableComment,
-  setCommentIsDeleted,
+  setCommentIsDeleted
   // setBookMarkChangedModal,
   // selectBookMarkChangedModal,
 } from "@/reduxFeatures/app/postModalCardSlice";
 import { useRouter } from "next/router";
 import Comment from "@/components/Organisms/App/Comment";
 import makeSecuredRequest, {
-  deleteSecuredRequest,
+  deleteSecuredRequest
 } from "@/utils/makeSecuredRequest";
-import { ModalRowShare, useModalWithShare } from "@/hooks/useModalWithData";
-import { MdOutlineCancel } from "react-icons/md";
-import { BiArrowBack } from "react-icons/bi";
-import { FiEdit } from "react-icons/fi";
+import { useModalWithShare } from "@/hooks/useModalWithData";
 import likes from "@/utils/like";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
 import {
   selectCreatePostModal,
-  setShowCreatePostModal,
+  setShowCreatePostModal
 } from "@/reduxFeatures/app/createPost";
 import OpenShareModal from "../ModalPopUp/OpenShareModal";
 import FeedPostEditorModal from "../ModalPopUp/FeedPostEditorModal";
-import CommentModal from "../ModalPopUp/CommentModal";
 import { PostMenu } from "../PostMenu";
-import {
-  setImageModalOpen,
-  selectImageModalOpen,
-  setImageModalImg,
-  selectImageModalImg,
-} from "@/reduxFeatures/app/postModalCardSlice";
+import { selectImageModalOpen } from "@/reduxFeatures/app/postModalCardSlice";
 import ImageModal from "../ModalPopUp/ImageModal";
 import MediaDisplay from "../MediaMasonry";
+import Avatar from "@/components/Atoms/Avatar";
 
 const ModalCard = ({
   post: postComingIn,
   modalToggle,
   mutate,
-  trimmed,
+  trimmed
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   post: Record<string, any>;
-  modalToggle?: Function;
-  mutate?: Function;
-  trimmed?: Boolean;
+  modalToggle?: () => void;
+  mutate?: () => void;
+  trimmed?: boolean;
 }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
@@ -123,9 +90,9 @@ const ModalCard = ({
   const sanitizer = DOMPurify.sanitize;
 
   // - comment section
-  const [modalPost, setModalPost] = useState<Record<string, any>>({});
+
   const [commentPost, setCommentPost] = useState("");
-  const [showComment, setShowComment] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const currentlyFollowing = useSelector(selectFollowing);
   const showModal = useSelector(selectCreatePostModal);
@@ -135,7 +102,6 @@ const ModalCard = ({
     useModalWithShare();
 
   const imageModalOpen = useSelector(selectImageModalOpen);
-  const imageModalImg = useSelector(selectImageModalImg);
 
   // const [imageModalOpen, setImageModalOpen] = useState(false);
   // const [imageModalImg, setImageModalImg] = useState(null);
@@ -181,17 +147,17 @@ const ModalCard = ({
         <AiFillLike color="#086a6d " size={25} onClick={() => handleUnLike()} />
       ) : (
         <AiOutlineLike size={25} onClick={() => handleLike()} />
-      ),
+      )
     },
     {
       name: "Share",
       reaction: true,
-      icon: <AiOutlineShareAlt size={25} />,
+      icon: <AiOutlineShareAlt size={25} />
     },
     {
       name: "Comment",
       reaction: true,
-      icon: <FaRegCommentDots size={24} />,
+      icon: <FaRegCommentDots size={24} />
     },
     {
       name: "Bookmark",
@@ -204,16 +170,16 @@ const ModalCard = ({
         />
       ) : (
         <BsBookmark onClick={() => handleBookMark()} size={22} />
-      ),
-    },
+      )
+    }
   ];
 
   const redirectPage = () => {
     router.push({
       pathname: `/profile/[id]`,
       query: {
-        id: post?.author?._id,
-      },
+        id: post?.author?._id
+      }
     });
   };
 
@@ -225,11 +191,11 @@ const ModalCard = ({
     await unLikeIt(true);
   };
 
-  const likeIt = async (bool) => {
+  const likeIt = async bool => {
     // Pre-Set Like State B4 Axios
-    let currentPostState = JSON.parse(JSON.stringify(post));
+    const currentPostState = JSON.parse(JSON.stringify(post));
 
-    let newPostState = { ...currentPostState };
+    const newPostState = { ...currentPostState };
     if (!newPostState?.likes.includes(user?._id)) {
       newPostState.likes.push(user?._id);
     }
@@ -238,7 +204,7 @@ const ModalCard = ({
     // Notify the PostCard of Changes in the ModalCard
     dispatch(setLikeChangedModal(post?._id));
 
-    let type;
+    let type: string;
     const currentRoute = router.pathname;
     // console.log("currentRoute:", currentRoute);
     if (currentRoute == "/feed") {
@@ -263,15 +229,15 @@ const ModalCard = ({
           `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
           {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           }
         );
       } catch (error) {
         // Reverse Like State Because of Axios Error
         let filterNewPostState = newPostState?.likes;
         if (newPostState?.likes.includes(user?._id)) {
-          filterNewPostState = newPostState?.likes.filter((person) => {
+          filterNewPostState = newPostState?.likes.filter(person => {
             return person !== user?._id;
           });
         }
@@ -290,16 +256,16 @@ const ModalCard = ({
     }
   };
 
-  const unLikeIt = async (bool) => {
+  const unLikeIt = async bool => {
     // Pre-Set Unlike State B4 Axios
-    let currentPostState = JSON.parse(JSON.stringify(post));
+    const currentPostState = JSON.parse(JSON.stringify(post));
 
-    let newPostState = { ...currentPostState };
+    const newPostState = { ...currentPostState };
     let filterNewPostState = newPostState?.likes;
     if (newPostState?.likes.includes(user?._id)) {
       // newPostState.likes.push(user?._id);
 
-      filterNewPostState = newPostState?.likes.filter((person) => {
+      filterNewPostState = newPostState?.likes.filter(person => {
         return person !== user?._id;
       });
     }
@@ -330,18 +296,18 @@ const ModalCard = ({
     if (bool) {
       // Axios Like Post
       try {
-        const unlikePost = await axios.delete(
+        await axios.delete(
           `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
           // `${config.serverUrl}/api/${type}/${post?._id}`,
           {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           }
         );
       } catch (error) {
         // Reverse Like Because of Axios Error
-        let newPostState = { ...currentPostState };
+        const newPostState = { ...currentPostState };
         if (!newPostState?.likes.includes(user?._id)) {
           newPostState.likes.push(user?._id);
         }
@@ -363,13 +329,13 @@ const ModalCard = ({
 
   const postComment = async () => {
     const body = {
-      content: commentPost,
+      content: commentPost
     };
 
     if (body.content == "") {
       return toast.error("Comment cannot be empty", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
+        toastId: "1"
       });
     }
 
@@ -380,18 +346,18 @@ const ModalCard = ({
         body,
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
       // console.log(res);
-      let comments = post?.comments;
+      const comments = post?.comments;
       comments?.unshift(res.data);
       // console.log("{ ...post, comments }:", { ...post, comments });
-      setModalPost({ ...post, comments });
+
       setPostComingIn({ ...post, comments });
       setLoading(false);
-      setShowComment(false);
+
       setCommentPost("");
       (document.getElementById("articleTextarea") as HTMLInputElement).value =
         "";
@@ -406,7 +372,7 @@ const ModalCard = ({
      */
 
     // if (!user?.bookmarks?.includes(post?._id)) {
-    let newBookmarks = [...user?.bookmarks, post?._id];
+    const newBookmarks = [...user?.bookmarks, post?._id];
     dispatch(userAuth({ ...user, bookmarks: newBookmarks }));
     // }
 
@@ -417,13 +383,13 @@ const ModalCard = ({
         {},
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
     } catch (error) {
       // if (user?.bookmarks?.includes(post?._id)) {
-      let fitterStateUser = user?.bookmarks.filter((filterUser) => {
+      const fitterStateUser = user?.bookmarks.filter(filterUser => {
         return filterUser !== post?._id;
       });
       // }
@@ -439,7 +405,7 @@ const ModalCard = ({
      ** This would Auto-Sync Bookmark on both PastCard & ModalCard
      */
 
-    let fitterStateUser = user?.bookmarks.filter((filterUser) => {
+    const fitterStateUser = user?.bookmarks.filter(filterUser => {
       return filterUser !== post?._id;
     });
     dispatch(userAuth({ ...user, bookmarks: fitterStateUser }));
@@ -448,18 +414,18 @@ const ModalCard = ({
     try {
       await axios.delete(`${config.serverUrl}/api/bookmarks/?id=${post?._id}`, {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
       });
     } catch (error) {
       // Reverse Bookmark Auth User State.
-      let reverseBookmarks = [...user?.bookmarks, post?._id];
+      const reverseBookmarks = [...user?.bookmarks, post?._id];
       dispatch(userAuth({ ...user, bookmarks: reverseBookmarks }));
       // console.log(error.response?.data);
     }
   };
 
-  const changeFollowingStatus = (post) => {
+  const changeFollowingStatus = post => {
     if (
       document.getElementById(`followStr-modal-${post?.author?._id}`)
         .innerText === "Follow"
@@ -478,7 +444,7 @@ const ModalCard = ({
     }
   };
 
-  const handleFollow = async (id) => {
+  const handleFollow = async id => {
     try {
       await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
@@ -487,8 +453,8 @@ const ModalCard = ({
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(userAuth(response.data));
         } catch (error) {
@@ -500,7 +466,7 @@ const ModalCard = ({
     }
   };
 
-  const handleUnFollow = async (id) => {
+  const handleUnFollow = async id => {
     try {
       await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
@@ -509,8 +475,8 @@ const ModalCard = ({
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(userAuth(response.data));
         } catch (error) {
@@ -522,7 +488,7 @@ const ModalCard = ({
     }
   };
 
-  const handleDeletePost = async (post) => {
+  const handleDeletePost = async post => {
     // const newPosts = post.filter((el) => el._id !== post._id);
     // console.log(post);
     // setPosts(posts.filter((el) => el._id !== post._id));
@@ -531,8 +497,8 @@ const ModalCard = ({
         `${config.serverUrl}/api/feed?id=${post._id}`,
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
       console.log(data, post._id);
@@ -546,20 +512,20 @@ const ModalCard = ({
     }
   };
 
-  const handleEditPost = async (post) => {
+  const handleEditPost = async post => {
     // Notify Slate Editor Of Post Editing
     dispatch(setSlatePostToEdit(post));
     dispatch(setShowCreatePostModal(true));
   };
 
-  const handleEditComment = async (comment) => {
+  const handleEditComment = async comment => {
     // Send Comment To Be Edited To CommentModal
     dispatch(setEditableComment(comment));
     // Show CommentModal Editor
     dispatch(setShowCommentModal(true));
   };
 
-  const handleDeleteComment = async (comment) => {
+  const handleDeleteComment = async comment => {
     console.log("DelETE NOW");
     // const newPosts = comment.filter((el) => el._id !== comment._id);
     console.log("comment:", comment);
@@ -569,8 +535,8 @@ const ModalCard = ({
         `${config.serverUrl}/api/comments/${comment?._id}`,
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
 
@@ -583,7 +549,6 @@ const ModalCard = ({
 
   return (
     <>
-      {console.log("POST:", post)}
       <Row>
         {post?.media?.length > 0 && (
           <Col
@@ -598,7 +563,7 @@ const ModalCard = ({
                 className="row"
                 style={{
                   height: post?.media?.length === 1 ? "auto" : "390px",
-                  overflowY: "auto",
+                  overflowY: "auto"
                 }}
               >
                 {/* Display Media */}
@@ -632,75 +597,44 @@ const ModalCard = ({
             className="my-3 cards"
             style={{
               border: "none",
-              width: "100%",
+              width: "100%"
             }}
           >
             <Card.Title className={`border-bottom ${styles.title}`}>
-              <div className="row">
-                <div className="col-1">
-                  <Image
-                    src={"/images/imagePlaceholder.jpg"}
-                    width={45}
-                    height={45}
-                    alt=""
-                    roundedCircle
-                    style={{ cursor: "pointer" }}
+              <div className="d-flex align-items-center justify-content-start gap-2">
+                <Avatar
+                  src={post?.author?.images?.avatar}
+                  name={post?.author?.firstName}
+                />
+
+                <div className={styles.div}>
+                  <span
+                    style={{
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      color: "var(--bs-primary)"
+                    }}
                     onClick={redirectPage}
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizer(
+                        `${post?.author?.firstName} ${post?.author?.lastName}`
+                      )
+                    }}
                   />
+                  <br />
+                  <small
+                    style={{
+                      marginTop: "10px",
+                      fontWeight: 400,
+                      fontSize: "0.9rem",
+                      color: "gray"
+                    }}
+                  >
+                    <Age time={post?.createdAt} />
+                  </small>
                 </div>
 
-                {/* <div className="d-flex flex-column"> */}
-                <div className="col-6 col-sm-8 ms-4 ms-lg-3 ms-xl-4 me-xl-0">
-                  <div className={styles.div}>
-                    <span
-                      style={{
-                        fontWeight: 500,
-                        cursor: "pointer",
-                        color: "var(--bs-primary)",
-                      }}
-                      onClick={redirectPage}
-                      dangerouslySetInnerHTML={{
-                        __html: sanitizer(
-                          `${post?.author?.firstName} ${post?.author?.lastName}`
-                        ),
-                      }}
-                    />
-                    <br />
-                    {post?.postTitle || post?.title ? (
-                      <>
-                        <span
-                          style={{
-                            marginTop: "5px",
-                            fontWeight: 500,
-                            fontSize: "18px",
-                            color: "black",
-                          }}
-                          dangerouslySetInnerHTML={{
-                            __html: trimmed
-                              ? sanitizer(truncate(post?.postTitle, 250)) ||
-                                sanitizer(truncate(post?.title, 250))
-                              : sanitizer(truncate(post?.postTitle, 250)) ||
-                                sanitizer(truncate(post?.title, 250)),
-                          }}
-                        />
-                        <br />
-                      </>
-                    ) : null}
-                    <small
-                      style={{
-                        marginTop: "5px",
-                        fontWeight: 400,
-                        fontSize: "13px",
-                        color: "gray",
-                      }}
-                    >
-                      <Age time={post?.createdAt} />
-                    </small>
-                  </div>
-                </div>
-
-                <div className="col-1 col-md-2" style={{ marginTop: "-.8rem" }}>
-                  {/* Menu Dots */}
+                <div className="ms-auto" style={{ marginTop: "-.8rem" }}>
                   <PostMenu
                     user={user}
                     currentlyFollowing={currentlyFollowing}
@@ -721,7 +655,7 @@ const ModalCard = ({
                     dangerouslySetInnerHTML={{
                       __html: trimmed
                         ? sanitizer(post?.postBody) || sanitizer(post?.post)
-                        : sanitizer(post?.postBody) || sanitizer(post?.post),
+                        : sanitizer(post?.postBody) || sanitizer(post?.post)
                     }}
                   />
 
@@ -805,42 +739,44 @@ const ModalCard = ({
 
             <section>
               <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
-              <div className="row">
-                <div className="d-none d-md-flex col-md-2">
-                  <Image
-                    src={
-                      modalPost.authorImage || "/images/imagePlaceholder.jpg"
-                    }
-                    width={50}
-                    height={50}
-                    roundedCircle={true}
-                    alt="Author's Image"
-                  />
-                </div>
-                <div className="col-12 col-md-10">
-                  <div style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}>
+              <div className="d-flex justify-content-start gap-2 align-items-center">
+                <Avatar
+                  src={user?.images?.avatar || "/images/imagePlaceholder.jpg"}
+                  name={user?.firstName}
+                />
+
+                <div
+                  style={{ width: "100%" }}
+                  className="flex-column justify-content-center"
+                >
+                  <div
+                    style={{
+                      border: "1px solid rgba(0, 0, 0, 0.125)"
+                    }}
+                  >
                     <textarea
                       id="articleTextarea"
                       className="form-control"
                       placeholder="."
-                      onChange={(e) => setCommentPost(e.target.value)}
-                      style={{ height: "100px" }}
-                    ></textarea>
+                      onChange={e => setCommentPost(e.target.value)}
+                      style={{ width: "100%" }}
+                    />
                   </div>
-                </div>
-                <div className="col-5 ms-auto d-grid">
-                  <button
-                    className="btn btn-sm btn-primary mt-3 d-inline"
-                    onClick={postComment}
-                  >
-                    Send
-                    {loading && (
-                      <div
-                        className="spinner-grow spinner-grow-sm text-light"
-                        role="status"
-                      ></div>
-                    )}
-                  </button>
+
+                  <div className="ms-auto">
+                    <Button
+                      className="btn btn-sm btn-primary mt-3 d-inline"
+                      onClick={postComment}
+                    >
+                      Send
+                      {loading && (
+                        <div
+                          className="spinner-grow spinner-grow-sm text-light"
+                          role="status"
+                        ></div>
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </section>

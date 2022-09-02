@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import FileHeader from "./FileHeader";
 
@@ -14,7 +14,7 @@ function SingleFileUploadWithProgress({
   file,
   onDelete,
   onUpload,
-  preview,
+  preview
 }: SingleFileUploadWithProgressProps) {
   const [progress, setProgress] = useState(0);
 
@@ -27,7 +27,7 @@ function SingleFileUploadWithProgress({
     }
 
     upload();
-  }, []);
+  }, [file, onUpload]);
   return (
     <Row className="my-2">
       <Col>
@@ -59,8 +59,8 @@ function uploadFile(file: File, onProgress: (percentage: number) => void) {
       res(resp.secure_url);
       //   res(resp);
     };
-    xhr.onerror = (evt) => rej(evt);
-    xhr.upload.onprogress = (event) => {
+    xhr.onerror = evt => rej(evt);
+    xhr.upload.onprogress = event => {
       if (event.lengthComputable) {
         const percentage = (event.loaded / event.total) * 100;
         onProgress(Math.round(percentage));

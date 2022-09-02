@@ -1,37 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { FaTimes } from "react-icons/fa";
-import Icon from "../SlateEditor/common/Icon";
 import styles from "@/styles/Uploader/uploader.module.scss";
 
 import { focusedStyle, acceptStyle, rejectStyle } from "./Drag&DropStyles";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import Image from "next/image";
-import { useDispatch, useSelector } from "@/redux/store";
+import { useDispatch } from "@/redux/store";
 import {
-  setMediaUpload,
+  setMediaUpload
   // setAcceptingFiles,
   // selectAcceptingFiles,
 } from "@/reduxFeatures/app/mediaUpload";
-import ThumbImage from "./ThumbImage";
-
-const maxLength = 200;
-
-function nameLengthValidator(file) {
-  console.log("FILE:", file);
-  if (file?.name?.length > maxLength) {
-    return {
-      code: "name-too-large",
-      message: (
-        <span className="text-danger">
-          Name is larger than {maxLength} characters
-        </span>
-      ),
-    };
-  }
-
-  return null;
-}
 
 const Uploader2 = () => {
   const dispatch = useDispatch();
@@ -43,7 +23,7 @@ const Uploader2 = () => {
   useEffect(() => {
     // Set Upload Media
     dispatch(setMediaUpload(acceptingFiles));
-  }, [acceptingFiles]);
+  }, [acceptingFiles, dispatch]);
 
   // useEffect(() => {
   //   // Set Upload Media
@@ -54,60 +34,53 @@ const Uploader2 = () => {
   const onDrop = useCallback((acceptedFiles, fileRejections) => {
     // Normal File
     // dispatch(
-    setAcceptingFiles((pre) => [
+    setAcceptingFiles(pre => [
       ...pre,
-      ...acceptedFiles.map((file) =>
+      ...acceptedFiles.map(file =>
         Object.assign(file, {
-          preview: URL.createObjectURL(file),
+          preview: URL.createObjectURL(file)
         })
-      ),
+      )
     ]);
     // );
 
     // Base64 File
-    acceptedFiles.forEach((file) => {
+    acceptedFiles.forEach(file => {
       const reader = new FileReader();
       // reader.readAsDataURL
       reader.onload = () => {
-        setAcceptingFilesBase64((pre) => [...pre, reader.result]);
+        setAcceptingFilesBase64(pre => [...pre, reader.result]);
         // dispatch(setFilesAcceptedBase64((pre) => [...pre, reader.result]));
       };
       reader.readAsDataURL(file);
     });
 
-    setRejectingFiles((pre) => [...pre, ...fileRejections]);
+    setRejectingFiles(pre => [...pre, ...fileRejections]);
   }, []);
 
-  const {
-    acceptedFiles,
-    getRootProps,
-    getInputProps,
-    isFocused,
-    isDragAccept,
-    isDragReject,
-    fileRejections,
-  } = useDropzone({
-    onDrop,
-    // validator: nameLengthValidator,
-    maxFiles: 10,
-    accept: {
-      "image/jpeg": [".jpeg", ".jpg"],
-      "image/png": [".png"],
-      "image/gif": [".gif"],
-      "video/3gpp": [".3gp"],
-      "video/3gpp2": [".3g2"],
-      "video/mp4": [".mp4"],
-      "video/mpeg": [".mpeg"],
-      "video/mov": [".mov"],
-    },
-    maxSize: 3000 * 1024, //3000KB || 3MB
-  });
+  const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
+    useDropzone({
+      onDrop,
+      // validator: nameLengthValidator,
+      maxFiles: 10,
+      accept: {
+        "image/jpeg": [".jpeg", ".jpg"],
+        "image/png": [".png"],
+        "image/gif": [".gif"],
+        "video/3gpp": [".3gp"],
+        "video/3gpp2": [".3g2"],
+        "video/mp4": [".mp4"],
+        "video/mpeg": [".mpeg"],
+        "video/mov": [".mov"]
+      },
+      maxSize: 3000 * 1024 //3000KB || 3MB
+    });
 
   const style = useMemo(
     () => ({
       ...(isFocused ? focusedStyle : {}),
       ...(isDragAccept ? acceptStyle : {}),
-      ...(isDragReject ? rejectStyle : {}),
+      ...(isDragReject ? rejectStyle : {})
     }),
     [isFocused, isDragAccept, isDragReject]
   );
@@ -131,29 +104,26 @@ const Uploader2 = () => {
           cursor: "pointer",
           position: "absolute",
           marginLeft: "1.4rem",
-          zIndex: 1,
+          zIndex: 1
         }}
-        onClick={(e) => {
+        onClick={() => {
           // console.log("CLICKED");
-          let removedIndex;
-          let newlyAccepted = acceptingFiles.filter((pre, idx) => {
-            if (pre.preview !== file.preview) {
-              return pre;
-            } else {
-              // Save index & use it to filter acceptingFilesBase64
-              removedIndex = idx;
-            }
+          let removedIndex: number;
+          const newlyAccepted = acceptingFiles.filter(pre => {
+            return pre;
           });
           console.log("newlyAccepted:", newlyAccepted);
           setAcceptingFiles(newlyAccepted);
           // dispatch(setAcceptingFiles(newlyAccepted));
 
-          let newlyAcceptedBase64 = acceptingFilesBase64.filter((pre, idx) => {
-            // console.log("Base64-PRE:", pre);
-            if (removedIndex !== idx) {
-              return pre;
+          const newlyAcceptedBase64 = acceptingFilesBase64.filter(
+            (pre, idx) => {
+              // console.log("Base64-PRE:", pre);
+              if (removedIndex !== idx) {
+                return pre;
+              }
             }
-          });
+          );
           console.log("newlyAcceptedBase64:", newlyAcceptedBase64);
           setAcceptingFilesBase64(newlyAcceptedBase64);
         }}
@@ -173,15 +143,15 @@ const Uploader2 = () => {
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks. Will run on unmount
     return () =>
-      acceptingFiles.forEach((file) => URL.revokeObjectURL(file.preview));
-  }, []);
+      acceptingFiles.forEach(file => URL.revokeObjectURL(file.preview));
+  }, [acceptingFiles]);
 
   const fileRejectionItems = rejectingFiles.map(({ file, errors }, index) => (
-    <small>
-      <li key={`${file.path}-${index}`}>
+    <small key={`${file.path}-${index}`}>
+      <li>
         {file.path} - {file.size} bytes
         <ul>
-          {errors.map((e) => (
+          {errors.map(e => (
             <li className="text-danger" key={e.code}>
               {e.message}
             </li>

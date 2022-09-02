@@ -1,10 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Card as BCard } from "react-bootstrap";
 import Link from "next/link";
 
 import { BsChevronDoubleRight } from "react-icons/bs";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Card = ({ image, title, author, id }: Record<string, any>) => {
   // console.log(author);
 
@@ -14,7 +14,7 @@ const Card = ({ image, title, author, id }: Record<string, any>) => {
         style={{
           width: "271px",
           height: "250px",
-          border: "1px solid rgba(0, 0, 0, 0.125)",
+          border: "1px solid rgba(0, 0, 0, 0.125)"
         }}
       >
         <BCard.Img
@@ -22,7 +22,7 @@ const Card = ({ image, title, author, id }: Record<string, any>) => {
           alt={title?.raw}
           style={{
             height: "130px",
-            objectFit: "cover",
+            objectFit: "cover"
           }}
         />
 

@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import { useDispatch, useSelector } from "@/redux/store";
+import { useDispatch } from "@/redux/store";
 import {
   setImageModalOpen,
-  selectImageModalOpen,
-  setImageModalImg,
-  selectImageModalImg,
+  setImageModalImg
 } from "@/reduxFeatures/app/postModalCardSlice";
 // import Image from "next/image";
 import { Image } from "react-bootstrap";
-import ImageModal from "./ModalPopUp/ImageModal";
 
 const MediaDisplay = ({ media: mediaComingIn, breakPoint }) => {
   const dispatch = useDispatch();
@@ -25,7 +22,7 @@ const MediaDisplay = ({ media: mediaComingIn, breakPoint }) => {
         columnsCountBreakPoints={{
           350: breakPoint,
           750: breakPoint,
-          900: breakPoint,
+          900: breakPoint
         }}
       >
         <Masonry>
@@ -42,7 +39,7 @@ const MediaDisplay = ({ media: mediaComingIn, breakPoint }) => {
                 dispatch(
                   setImageModalImg({
                     media: images,
-                    activeIndex: index,
+                    activeIndex: index
                   })
                 );
                 dispatch(setImageModalOpen(true));

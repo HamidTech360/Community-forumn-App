@@ -1,8 +1,7 @@
 //import useUser from "@/hooks/useUser";
 import React from "react";
-import { Col, Container, Image, Nav, Row, Accordion } from "react-bootstrap";
+import { Col, Container, Nav, Row, Accordion } from "react-bootstrap";
 import Logo from "../../../Atoms/Logo";
-import useUser from "@/hooks/useUser";
 import { BsInstagram } from "react-icons/bs";
 import { FaFacebookF, FaLinkedinIn, FaTwitter } from "react-icons/fa";
 import { useRouter } from "next/router";
@@ -81,7 +80,7 @@ const Footer = () => {
                     style={{
                       marginBottom: "20px",
                       border: "0px",
-                      borderBottom: "1px solid lightgrey",
+                      borderBottom: "1px solid lightgrey"
                     }}
                     eventKey="0"
                   >
@@ -102,7 +101,7 @@ const Footer = () => {
                     style={{
                       marginBottom: "20px",
                       border: "0px",
-                      borderBottom: "1px solid lightgrey",
+                      borderBottom: "1px solid lightgrey"
                     }}
                     eventKey="1"
                   >
@@ -126,7 +125,7 @@ const Footer = () => {
                     style={{
                       marginBottom: "20px",
                       border: "0px",
-                      borderBottom: "1px solid lightgrey",
+                      borderBottom: "1px solid lightgrey"
                     }}
                     eventKey="2"
                   >
@@ -162,7 +161,7 @@ const Footer = () => {
               style={{
                 backgroundColor: "#ffffff",
                 zIndex: "9",
-                borderTop: "1px solid rgba(0, 0, 0, 0.125)",
+                borderTop: "1px solid rgba(0, 0, 0, 0.125)"
               }}
             >
               <Container>

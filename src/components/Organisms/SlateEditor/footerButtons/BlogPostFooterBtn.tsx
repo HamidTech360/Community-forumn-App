@@ -1,27 +1,23 @@
-//@ts-nocheck
 import React, { useState, useEffect } from "react";
 import config from "../../../../config";
 import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import { useRouter } from "next/router";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch, useSelector } from "@/redux/store";
 import {
-  setPosts,
   setShowPostModal,
   selectPostTitle,
-  setIsFetching,
-  selectShowPostModal,
-  selectPost,
-  setPostTitle,
+  setPostTitle
 } from "@/reduxFeatures/api/postSlice";
 import { setNewPost } from "@/reduxFeatures/api/postSlice";
 import {
   selectSlatePostToEdit,
-  setSlatePostToEdit,
+  setSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
 import { serialize } from "../utils/serializer";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
   const router = useRouter();
 
@@ -29,7 +25,7 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
   const [groupId, setGroupId] = useState(null);
   const dispatch = useDispatch();
   const showPostTitle = useSelector(selectPostTitle);
-  const showPostModal = useSelector(selectShowPostModal);
+
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -42,11 +38,11 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
       // Reset Post Title State when component unmount
       dispatch(setPostTitle(""));
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     // Get Post Category Name
-    const getCategories = categories.map((category) => {
+    const getCategories = categories.map(category => {
       let categoryName;
       if (category?.tag === slatePostToEdit?.category) {
         // console.log("category.name:", category.name);
@@ -58,22 +54,24 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
     // Set category for post editing
     if (slatePostToEdit) {
       setSelectedCategory({
-        name: getCategories,
+        name: getCategories
       });
     }
-  }, [categories]);
+  }, [categories, slatePostToEdit]);
 
   useEffect(() => {
     if (router.query.path == "timeline") {
       setGroupId(router.query.id);
     }
-  }, []);
+  }, [router.query.id, router.query.path]);
 
   useEffect(() => {
     // Set Post Title On Load If slatePostToEdit
     if (slatePostToEdit) {
       // Set Post Title
-      document.getElementById("createPostID").value = slatePostToEdit.postTitle;
+      (
+        document.getElementById("createPostID") as unknown as HTMLInputElement
+      ).value = slatePostToEdit.postTitle;
 
       dispatch(setPostTitle(slatePostToEdit.postTitle));
     }
@@ -87,9 +85,9 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
         // console.log(error.response?.data);
       }
     })();
-  }, []);
+  }, [dispatch, slatePostToEdit]);
 
-  const createPost = async (e) => {
+  const createPost = async e => {
     e.preventDefault();
     //console.log(selectedCategory);
 
@@ -97,7 +95,7 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
 
-    let emptyEditorInnerHtml =
+    const emptyEditorInnerHtml =
       '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
 
     if (
@@ -106,7 +104,7 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
     ) {
       toast.warn("Type your Message Title and Message to proceed", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
+        toastId: "1"
       });
       return;
     }
@@ -114,7 +112,7 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
     if (!selectedCategory) {
       toast.warn("Select A Post Category To Proceed", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
+        toastId: "1"
       });
       return;
     }
@@ -123,8 +121,8 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
       setUploading(true);
 
       // Serialize Html
-      let serializeNode = {
-        children: editorContentValue,
+      const serializeNode = {
+        children: editorContentValue
       };
       // let edited =
       //   '<span><small style="color: gray; font-size: 12px">(edited)</small><span>';
@@ -144,19 +142,19 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
               postTitle: showPostTitle,
               postBody: serializedHtml,
               groupId,
-              category: selectedCategory.tag,
+              category: selectedCategory.tag
             },
             {
               headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`
+              }
             }
           );
           // console.log(response.data.post);
 
           toast.success("Post uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,
-            toastId: "1",
+            toastId: "1"
           });
 
           // Auto update Blog Post in /explore
@@ -168,12 +166,12 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a post", {
               position: toast.POSITION.TOP_RIGHT,
-              toastId: "1",
+              toastId: "1"
             });
           } else {
             toast.error("Failed to upload post: Try Again", {
               position: toast.POSITION.TOP_RIGHT,
-              toastId: "1",
+              toastId: "1"
             });
           }
           setUploading(false);
@@ -181,25 +179,25 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
       } else {
         // Edit Post
         try {
-          const response = await axios.put(
+          await axios.put(
             `${config.serverUrl}/api/posts/${slatePostToEdit?._id}`,
             {
               postTitle: showPostTitle,
               postBody: serializedHtml,
               groupId,
-              category: selectedCategory.tag,
+              category: selectedCategory.tag
             },
             {
               headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`
+              }
             }
           );
           // console.log(response.data.post);
 
           toast.success("Post edited successfully", {
             position: toast.POSITION.TOP_RIGHT,
-            toastId: "1",
+            toastId: "1"
           });
 
           // Auto update Blog Post in /explore
@@ -211,12 +209,12 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a post", {
               position: toast.POSITION.TOP_RIGHT,
-              toastId: "1",
+              toastId: "1"
             });
           } else {
             toast.error("Failed to upload post: Try Again", {
               position: toast.POSITION.TOP_RIGHT,
-              toastId: "1",
+              toastId: "1"
             });
           }
           setUploading(false);

@@ -1,9 +1,9 @@
 import escapeHtml from "escape-html";
-import { Node, Text } from "slate";
+import { Text } from "slate";
 import { jsx } from "slate-hyperscript";
 
 // Serialize Html
-export const serialize = (node) => {
+export const serialize = node => {
   // console.log("node:", node);
   if (Text.isText(node)) {
     let string = escapeHtml(node.text);
@@ -26,7 +26,7 @@ export const serialize = (node) => {
   //   )}" target="_blank" rel="noreferrer">${node.text}</a>`);
   // }
 
-  const children = node?.children?.map((n) => serialize(n))?.join("");
+  const children = node?.children?.map(n => serialize(n))?.join("");
 
   switch (node.type) {
     case "blockquote":
@@ -65,32 +65,32 @@ export const serialize = (node) => {
 
 const ELEMENT_TAGS = {
   P: () => ({ type: "paragraph" }),
-  A: (el) => ({
+  A: el => ({
     type: "link",
     url: el.getAttribute("href"),
     target: "_blank",
-    rel: "noreferrer",
+    rel: "noreferrer"
   }),
   BLOCKQUOTE: () => ({ type: "blockquote" }),
   EMOJI: () => ({ type: "emoji" }),
-  IMG: (el) => ({
+  IMG: el => ({
     type: "image",
     url: el.getAttribute("src"),
     height: "150",
     width: "150",
-    alt: "",
+    alt: ""
   }),
-  IFRAME: (el) => ({
+  IFRAME: el => ({
     type: "video",
     url: el.getAttribute("src"),
     height: "200",
     width: "300",
     title: "",
-    frameBorder: "0",
+    frameBorder: "0"
   }),
   LI: () => ({ type: "list-item" }),
   OL: () => ({ type: "orderedList" }),
-  UL: () => ({ type: "unorderedList" }),
+  UL: () => ({ type: "unorderedList" })
 };
 
 // COMPAT: `B` is omitted here because Google Docs uses `<b>` in weird ways.
@@ -98,10 +98,10 @@ const TEXT_TAGS = {
   EM: () => ({ italic: true }),
   I: () => ({ italic: true }),
   STRONG: () => ({ bold: true }),
-  U: () => ({ underline: true }),
+  U: () => ({ underline: true })
 };
 
-export const deserialize = (el) => {
+export const deserialize = el => {
   if (el.nodeType === 3) {
     return el.textContent;
   } else if (el.nodeType !== 1) {
@@ -137,14 +137,14 @@ export const deserialize = (el) => {
 
   if (TEXT_TAGS[nodeName]) {
     const attrs = TEXT_TAGS[nodeName](el);
-    return children.map((child) => jsx("text", attrs, child));
+    return children.map(child => jsx("text", attrs, child));
   }
 
   return children;
 };
 
 // Deserialize Html
-const deserializeFromHtml = (html) => {
+const deserializeFromHtml = html => {
   const document = new window.DOMParser().parseFromString(html, "text/html");
   return deserialize(document.body);
 };

@@ -12,7 +12,6 @@ import config from "@/config";
 import axios from "axios";
 import { FaUser } from "react-icons/fa";
 import usePagination from "@/hooks/usePagination";
-import FeedPostEditorModal from "@/components/Organisms/App/ModalPopUp/FeedPostEditorModal";
 import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
 import { useSelector } from "@/redux/store";
 
@@ -29,7 +28,7 @@ const Groups = () => {
     error,
     fetchNextPage,
     mutate,
-    isValidating,
+    isValidating
   } = usePagination("/api/feed/groups", "posts");
 
   useEffect(() => {
@@ -39,11 +38,11 @@ const Groups = () => {
         setPosts(paginatedData);
       }
     }
-  }, [paginatedData]);
+  }, [paginatedData, posts]);
 
   useEffect(() => {
     mutate();
-  }, [newlyCreatedPost]);
+  }, [mutate, newlyCreatedPost]);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -53,11 +52,17 @@ const Groups = () => {
           `${config.serverUrl}/api/groups/user`,
           {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           }
         );
         setGroups(response.data.groups);
+
+        const randomPosts = await axios.get(
+          `${config.serverUrl}/api/feed/groups`
+        );
+
+        setPosts(randomPosts.data.posts);
       } catch (error) {
         // console.error(error.response?.data);
       }
@@ -67,13 +72,15 @@ const Groups = () => {
     };
   }, []);
 
-  const handleSearch = async (e) => {
+  const handleSearch = async e => {
     console.log(e.currentTarget.value);
+
     if (e.currentTarget.value !== "") {
       try {
         const { data } = await axios.get(
           `${config.serverUrl}/api/search/?type=group&keyword=${e.currentTarget.value}`
         );
+
         setSearchResult(data);
       } catch (error) {
         console.error(error.response?.data);
@@ -103,12 +110,12 @@ const Groups = () => {
             <div
               style={{
                 border: "1px solid rgba(0, 0, 0, 0.125)",
-                borderRadius: "10px",
+                borderRadius: "10px"
               }}
             >
               <Form.Control
                 placeholder="search"
-                onChange={(e) => handleSearch(e)}
+                onChange={e => handleSearch(e)}
               />
             </div>
             <div className={`${styles.groupLists}`}>
