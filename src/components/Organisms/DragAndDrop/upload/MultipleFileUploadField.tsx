@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { FileError, FileRejection, useDropzone } from "react-dropzone";
 import SingleFileUploadWithProgress from "./SingleFileUploadWithProgress";
-import { Col, Form, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { useField } from "formik";
 import UploadError from "./UploadError";
 import styles from "@/styles/Uploader/uploader.module.scss";
 import { AiOutlineCloudUpload } from "react-icons/ai";
-import Image from "next/image";
 
 let currentId = 0;
 
@@ -23,34 +22,35 @@ export interface UploadableFile {
 }
 
 function MultipleFileUploadField({ name }: { name: string }) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, __, helpers] = useField(name);
 
   const [files, setFiles] = useState<UploadableFile[]>([]);
 
   const onDrop = useCallback((accFiles: File[], rejFiles: FileRejection[]) => {
     console.log("accFiles+++", accFiles);
-    const mappedAcc = accFiles.map((file) => {
+    const mappedAcc = accFiles.map(file => {
       return {
         file,
         errors: [],
         id: getNewId(),
-        preview: Object.assign({ img: URL.createObjectURL(file) }),
+        preview: Object.assign({ img: URL.createObjectURL(file) })
       };
     });
 
-    const mappedRej = rejFiles.map((r) => ({ ...r, id: getNewId() }));
+    const mappedRej = rejFiles.map(r => ({ ...r, id: getNewId() }));
 
-    setFiles((curr) => [...curr, ...mappedAcc, ...mappedRej]);
+    setFiles(curr => [...curr, ...mappedAcc, ...mappedRej]);
   }, []);
 
   useEffect(() => {
     helpers.setValue(files);
     helpers.setTouched(true);
-  }, [files]);
+  }, [files, helpers]);
 
   function onUpload(file: File, url: string) {
-    setFiles((curr) =>
-      curr.map((fw) => {
+    setFiles(curr =>
+      curr.map(fw => {
         if (fw.file === file) {
           return { ...fw, url };
         }
@@ -60,22 +60,7 @@ function MultipleFileUploadField({ name }: { name: string }) {
   }
 
   function onDelete(file: File) {
-    setFiles((curr) => curr.filter((fw) => fw.file !== file));
-  }
-
-  const maxLength = 20;
-  function nameLengthValidator(file) {
-    if (file.name.length > maxLength) {
-      return {
-        code: "name-too-long",
-        message: (
-          <span className="text-danger">
-            Name is larger than {maxLength} characters
-          </span>
-        ),
-      };
-    }
-    return null;
+    setFiles(curr => curr.filter(fw => fw.file !== file));
   }
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -89,9 +74,9 @@ function MultipleFileUploadField({ name }: { name: string }) {
       "video/3gpp": [".3gp"],
       "video/3gpp2": [".3g2"],
       "video/mp4": [".mp4"],
-      "video/mpeg": [".mpeg"],
+      "video/mpeg": [".mpeg"]
     },
-    maxSize: 3000 * 1024, //3000KB || 3MB
+    maxSize: 3000 * 1024 //3000KB || 3MB
   });
 
   // const thumbs = files.map((file, index) => {
@@ -140,7 +125,7 @@ function MultipleFileUploadField({ name }: { name: string }) {
       {/* Display Thumbnails at the top */}
       {/* {files.length > 0 && <div className="row d-flex">{thumbs}</div>} */}
 
-      {files.map((fileWrapper) => (
+      {files.map(fileWrapper => (
         <Row key={fileWrapper.id} className="my-2">
           <Col>
             {fileWrapper.errors.length ? (

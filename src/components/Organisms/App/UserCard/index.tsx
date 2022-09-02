@@ -1,15 +1,12 @@
 import Link from "next/link";
 import React, { useEffect } from "react";
-import { Button, Card, Image } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { useSelector } from "@/redux/store";
 
 import Avatar from "@/components/Atoms/Avatar";
 
-import { useRouter } from "next/router";
-
 const UserCard = () => {
-  const router = useRouter();
   const data = useSelector(selectUser);
 
   useEffect(() => {

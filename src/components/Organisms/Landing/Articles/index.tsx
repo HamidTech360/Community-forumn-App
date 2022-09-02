@@ -4,32 +4,7 @@ import styles from "../../../../styles/Landing.module.scss";
 import Card from "../../../Molecules/Card";
 import EndlessCarousel from "../../../Molecules/Carousel";
 
-const posts = [
-  {
-    image: "/images/article.png",
-    title: "5 ways to work Abroad",
-    author: "by Mike Dike",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum varius aliquam habitasse gravida. Tincidunt sollicitudin leo quis id in amet, auctor.",
-  },
-  {
-    image: "/images/article.png",
-    title: "5 ways to work Abroad",
-    author: "by Mike Dike",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum varius aliquam habitasse gravida. Tincidunt sollicitudin leo quis id in amet, auctor.",
-  },
-  {
-    image: "/images/article.png",
-    title: "5 ways to work Abroad",
-    author: "by Mike Dike",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum varius aliquam habitasse gravida. Tincidunt sollicitudin leo quis id in amet, auctor.",
-  },
-  {
-    image: "/images/article.png",
-    title: "5 ways to work Abroad",
-    author: "by Mike Dike",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum varius aliquam habitasse gravida. Tincidunt sollicitudin leo quis id in amet, auctor.",
-  },
-];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Articles = ({ articles }: { articles?: Record<string, any> }) => {
   return (
     <section className={styles.articles}>

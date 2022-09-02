@@ -1,6 +1,5 @@
-//@ts-nocheck
 import React, { useCallback, useMemo, useState } from "react";
-import { BaseEditor, createEditor, Descendant } from "slate";
+import { BaseEditor, BaseText, createEditor, Descendant } from "slate";
 import { HistoryEditor, withHistory } from "slate-history";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
 import Toolbar from "./Toolbar/Toolbar";
@@ -43,11 +42,11 @@ declare module "slate" {
   interface CustomTypes {
     Editor: CustomEditor;
     Element: CustomElement;
-    Text: CustomText;
+    Text: BaseText & { placeholder?: string };
   }
 }
 
-const Element = (props) => {
+const Element = props => {
   return getBlock(props);
 };
 const Leaf = ({ attributes, children, leaf }) => {
@@ -61,14 +60,16 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   const router = useRouter();
   const editorID = `${router.asPath}-slateRefId`;
 
-  const renderElement = useCallback((props) => <Element {...props} />, []);
+  const renderElement = useCallback(props => <Element {...props} />, []);
 
-  const renderLeaf = useCallback((props) => {
+  const renderLeaf = useCallback(props => {
     return <Leaf {...props} />;
   }, []);
 
   // Create Editor Instance
   const editor = useMemo(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
     () => withHistory(withEmbeds(withLinks(withReact(createEditor())))),
     []
   );
@@ -77,7 +78,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   if (editor.children.length === 0) {
     editor.children.push({
       type: "paragraph",
-      children: [{ text: "" }],
+      children: [{ text: "" }]
     });
   }
   // console.log(
@@ -92,13 +93,13 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
     : [
         {
           type: "paragraph",
-          children: [{ text: "" }],
-        },
+          children: [{ text: "" }]
+        }
       ];
   // console.log("initialState:", initialState);
   const [value, setValue] = useState(initialState);
 
-  const handleEditorChange = (newValue) => {
+  const handleEditorChange = newValue => {
     setValue(newValue);
   };
 
@@ -142,7 +143,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
                     renderLeaf={renderLeaf}
                     spellCheck
                     autoFocus
-                    onKeyDown={(event) => CtrlShiftCombo(event, editor)}
+                    onKeyDown={event => CtrlShiftCombo(event, editor)}
                   />
                 </div>
                 {!slim && (
@@ -169,7 +170,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
             className="col-2 col-md-1 d-grid"
             style={{
               alignSelf: "flex-end",
-              marginBottom: "1rem",
+              marginBottom: "1rem"
             }}
           >
             <FooterButtons

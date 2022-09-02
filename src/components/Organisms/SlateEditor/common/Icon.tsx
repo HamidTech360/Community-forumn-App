@@ -1,4 +1,3 @@
-//@ts-nocheck
 import {
   MdFormatBold,
   MdFormatItalic,
@@ -10,7 +9,7 @@ import {
   MdFormatAlignRight,
   MdFormatListNumbered,
   MdFormatListBulleted,
-  MdAdd,
+  MdAdd
 } from "react-icons/md";
 import { BsCameraVideoFill } from "react-icons/bs";
 import { FaSuperscript, FaSubscript, FaVideo } from "react-icons/fa";
@@ -44,10 +43,10 @@ const iconList = {
   upload: <AiOutlineUpload size={20} />,
   resize: <AiOutlineArrowsAlt size={20} />,
   videoPlayer: <BsCameraVideoFill size={20} />,
-  emoji: <BsEmojiSmile size={20} />,
+  emoji: <BsEmojiSmile size={20} />
 };
 
-const Icon = (props) => {
+const Icon = props => {
   const { icon } = props;
   return iconList[icon];
 };

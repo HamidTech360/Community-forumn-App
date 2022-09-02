@@ -1,34 +1,26 @@
 import React, { useEffect, useState } from "react";
-import timeAge from "time-age";
 import { useRouter } from "next/router";
-import { Button, Card, Col, Row, Image, NavDropdown } from "react-bootstrap";
-import { BsBookmarkDash, BsFolderFill, BsXCircleFill } from "react-icons/bs";
+import { Button, Card } from "react-bootstrap";
 import Link from "next/link";
-import Age from "../../../Atoms/Age";
 import config from "@/config";
-import striptags from "striptags";
 import DOMPurify from "dompurify";
 import truncate from "truncate-html";
 import {
   selectFollowing,
   user as userAuth,
   selectUser,
-  setFollowers,
-  setFollowing,
+  setFollowing
 } from "@/reduxFeatures/authState/authStateSlice";
 //import { DirectiveLocation } from "graphql";
 import styles from "@/styles/gist.module.scss";
-import { HiDotsVertical } from "react-icons/hi";
-import { RiDeleteBin5Line, RiFlagFill, RiUserFollowFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "@/redux/store";
 import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 import { setShowGistModal, uploadSuccess } from "@/reduxFeatures/api/gistSlice";
 import axios from "axios";
 // import ChangeFollowingStatus from "../../../Organisms/App/ChangeFollowingStatus";
 import makeSecuredRequest, {
-  deleteSecuredRequest,
+  deleteSecuredRequest
 } from "@/utils/makeSecuredRequest";
-import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
 import { PostMenu } from "../../App/PostMenu";
 
@@ -52,36 +44,25 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   // const followed = useSelector(selectFollowed);
-  const [followed, setFollowed] = useState(false);
+
   const currentlyFollowing = useSelector(selectFollowing);
 
   // Update users following in AuthUser because it's a frontend resolved data
   useEffect(() => {
     if (user) {
-      const currentlyFollowing = user.following.map((follow) => {
+      const currentlyFollowing = user.following.map(follow => {
         return follow._id;
       });
       dispatch(setFollowing(currentlyFollowing));
     }
-  }, [user]);
-
-  // Set Following Status
-  useEffect(() => {
-    if (currentlyFollowing.includes(gist?.author?._id)) {
-      setFollowed(true);
-      // dispatch(setFollowed(true));
-    } else {
-      setFollowed(false);
-      // dispatch(setFollowed(false));
-    }
-  }, [gist, currentlyFollowing]);
+  }, [dispatch, user]);
 
   const redirectPage = () => {
     router.push({
       pathname: `/profile/[id]`,
       query: {
-        id: gist?.author?._id,
-      },
+        id: gist?.author?._id
+      }
     });
   };
 
@@ -96,8 +77,8 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
         }`,
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
 
@@ -112,7 +93,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
     }
   };
 
-  const handleEditPost = async (post) => {
+  const handleEditPost = async post => {
     // Notify Slate Editor Of Post Editing
     dispatch(setSlatePostToEdit(post));
 
@@ -123,7 +104,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
     }
   };
 
-  const changeFollowingStatus = (post) => {
+  const changeFollowingStatus = post => {
     if (
       document.getElementById(`followStr-${post?.author?._id}`).innerText ===
       "Follow"
@@ -137,9 +118,9 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
     }
   };
 
-  const handleFollow = async (id) => {
+  const handleFollow = async id => {
     // Preset following
-    setFollowed(true);
+
     try {
       await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
@@ -148,8 +129,8 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(userAuth(response.data));
         } catch (error) {
@@ -158,14 +139,13 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
       })();
     } catch (error) {
       // Revert on axios  failure
-      setFollowed(false);
       // console.error("follow Error:", error);
     }
   };
 
-  const handleUnFollow = async (id) => {
+  const handleUnFollow = async id => {
     // Preset following
-    setFollowed(false);
+
     try {
       await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
@@ -174,8 +154,8 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(userAuth(response.data));
         } catch (error) {
@@ -184,7 +164,6 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
       })();
     } catch (error) {
       // Revert on axios  failure
-      setFollowed(true);
     }
   };
 
@@ -193,7 +172,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
       <Card
         className="row mt-4 p-3 w-100"
         style={{
-          borderRadius: "10px",
+          borderRadius: "10px"
         }}
       >
         <Card.Title>
@@ -242,12 +221,12 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
               dangerouslySetInnerHTML={{
                 __html: sanitizer(
                   trimmed ? truncate(gist.post, 100) : truncate(gist.post)
-                ),
+                )
               }}
               style={{
                 marginTop: "-1rem",
                 lineHeight: "1.3rem",
-                whiteSpace: "pre-line",
+                whiteSpace: "pre-line"
               }}
             />
           )}

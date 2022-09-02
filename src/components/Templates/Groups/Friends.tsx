@@ -2,11 +2,10 @@ import React from "react";
 import { Container } from "react-bootstrap";
 //import { FriendsDataType } from '../FriendsList/FriendsData';
 import FriendsData from "../FriendsList/FriendsData";
-import styles from '../../../styles/friends.module.scss';
+import styles from "../../../styles/friends.module.scss";
 
-
-const Friends = ({data}:any) => {
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Friends = ({ data }: { data: Record<string, any> }) => {
   // const Data: FriendsDataType = {
   //   friends: [
   //     {
@@ -126,11 +125,11 @@ const Friends = ({data}:any) => {
 
   return (
     <>
-      <Container className = {styles.friendBody}>
-          <FriendsData friendsList={data.groupMembers} />
+      <Container className={styles.friendBody}>
+        <FriendsData friendsList={data.groupMembers} />
       </Container>
     </>
-    );
+  );
 };
 
 export default Friends;

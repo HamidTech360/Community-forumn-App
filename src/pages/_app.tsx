@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-script-component-in-head */
 import "../styles/bootstrap.css";
 import "../styles/globals.scss";
 import type { AppProps } from "next/app";
@@ -8,19 +9,20 @@ import Footer from "../components/Organisms/Layout/Footer";
 import AuthStatus from "@/components/Auth/AuthStatus";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Script from "next/script";
+import Head from "next/head";
 // import SlimChat from "@/components/Chat/SlimChat";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <GoogleOAuthProvider clientId="491147804580-d58i9u8jsblukvmvg9jan7ve2cvn0qqa.apps.googleusercontent.com">
-      <head>
+      <Head>
         <Script
           src="https://accounts.google.com/gsi/client"
           async
           defer
           strategy="beforeInteractive"
         />
-      </head>
+      </Head>
       <Provider store={store}>
         {/* Update State With Auth User If Any */}
         <AuthStatus />

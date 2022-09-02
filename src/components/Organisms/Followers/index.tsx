@@ -7,31 +7,20 @@ import { useDispatch, useSelector } from "@/redux/store";
 import { Button, Container, Col, Image, Row } from "react-bootstrap";
 import styles from "@/styles/explore.module.scss";
 
-import { setIsFetching, selectIsFetching } from "@/reduxFeatures/api/postSlice";
-
 import {
   user as userAuth,
-  selectUser,
-  selectFollowing,
-  setFollowers,
-  setFollowing,
+  selectUser
 } from "@/reduxFeatures/authState/authStateSlice";
 import config from "@/config";
-import {
-  makeSecuredRequest,
-  deleteSecuredRequest,
-} from "@/utils/makeSecuredRequest";
+import { makeSecuredRequest } from "@/utils/makeSecuredRequest";
 
 const Followers = () => {
   const router = useRouter();
   const user = useSelector(selectUser);
-  const isFetching = useSelector(selectIsFetching);
   const dispatch = useDispatch();
-  const currentlyFollowing = useSelector(selectFollowing);
   const [topWriters, setTopWriters] = useState([]);
 
   const [users, setUsers] = useState([]);
-  const [follow, setFollow] = useState(false);
 
   useEffect(() => {
     try {
@@ -39,8 +28,8 @@ const Followers = () => {
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(userAuth(response.data));
         } catch (error) {
@@ -61,8 +50,8 @@ const Followers = () => {
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(userAuth(response.data));
         } catch (error) {
@@ -70,7 +59,7 @@ const Followers = () => {
         }
       })();
 
-      const newTopWritersToFollow = topWriters.filter((writer) => {
+      const newTopWritersToFollow = topWriters.filter(writer => {
         if (writer?._id !== id) {
           console.log("writer?._id:", writer?._id);
           return writer;
@@ -91,7 +80,7 @@ const Followers = () => {
             `${config.serverUrl}/api/users/topwriters/all`
           );
           const topWritersSlice = data.users.slice(0, 30);
-          const followTopWriters = await topWritersSlice.filter((person) => {
+          const followTopWriters = await topWritersSlice.filter(person => {
             // console.log("person?._id", person?._id);
             // console.log("user?._id", user?._id);
             if (person?._id !== user?._id) {
@@ -110,7 +99,7 @@ const Followers = () => {
   useEffect(() => {
     console.log("topWriters:", topWriters);
     if (topWriters.length > 0) {
-      let sliceNum = 9;
+      const sliceNum = 9;
       setUsers(topWriters?.slice(0, sliceNum));
     }
   }, [topWriters]);

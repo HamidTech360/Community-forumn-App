@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import styles from "@/styles/Uploader/uploader.module.scss";
 import Image from "next/image";
 

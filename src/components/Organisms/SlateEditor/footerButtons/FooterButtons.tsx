@@ -1,19 +1,19 @@
-//@ts-nocheck
-import { useRouter } from "next/router";
 import React from "react";
 import BlogPostFooterBtn from "./BlogPostFooterBtn";
 import GistFooterBtn from "./GistFooterBtn";
-import ChatFooterBtn from "./ChatFooterBtn";
+
 import FeedFooterBtn from "./FeedFooterBtn";
 import GroupsFooterBtn from "./GroupsFooterBtn";
+import { Descendant } from "slate";
 
 function FooterButtons({
   editorID,
   pageAt,
-  editorContentValue,
+  editorContentValue
 }: {
-  editorID: any;
+  editorID: string;
   pageAt: string;
+  editorContentValue: Descendant[];
 }) {
   return (
     <>

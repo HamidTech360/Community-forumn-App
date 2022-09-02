@@ -2,23 +2,21 @@ import config from "@/config";
 import axios from "axios";
 import DOMPurify from "dompurify";
 import React, { useEffect, useState } from "react";
-import { Card, Image, Modal } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import truncate from "truncate-html";
-import { useModalWithData, ModalRow } from "@/hooks/useModalWithData";
-import { MdOutlineCancel } from "react-icons/md";
-import { BiArrowBack } from "react-icons/bi";
 import styles from "@/styles/feed.module.scss";
 
-import { useDispatch, useSelector } from "@/redux/store";
+import { useSelector } from "@/redux/store";
 import {
   // user as userAuth,
-  selectUser,
+  selectUser
 } from "@/reduxFeatures/authState/authStateSlice";
 import { useRouter } from "next/router";
 import Avatar from "@/components/Atoms/Avatar";
 
 const Discussions = () => {
   const router = useRouter();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [gists, setGists] = useState<Record<string, any>[]>();
   // const [users, setUsers] = useState([]);
   const user = useSelector(selectUser);
@@ -35,7 +33,7 @@ const Discussions = () => {
 
         setGists(
           data.gists
-            .filter((person) => {
+            .filter(person => {
               return person?.author?._id.toString() !== user._id.toString();
             })
             .slice(0, 50)
@@ -44,7 +42,7 @@ const Discussions = () => {
         // console.log(error.response?.data);
       }
     })();
-  }, []);
+  }, [user._id]);
 
   return (
     <Card
@@ -52,7 +50,7 @@ const Discussions = () => {
       style={{
         overflowY: "scroll",
         height: "450px",
-        border: "1px solid rgba(0, 0, 0, 0.125)",
+        border: "1px solid rgba(0, 0, 0, 0.125)"
       }}
       // className={`pb-5 mb-4 mt-4 shadow ${styles.activeDiscussion}`}
       className={`pb-5 mb-4 mt-4 ${styles.activeDiscussion}`}
@@ -94,7 +92,7 @@ const Discussions = () => {
                 <small
                   className="bolden"
                   dangerouslySetInnerHTML={{
-                    __html: sanitizer(truncate(gist?.title, 50)),
+                    __html: sanitizer(truncate(gist?.title, 50))
                   }}
                 />
                 <small className="text-muted" style={{ fontSize: "11px" }}>

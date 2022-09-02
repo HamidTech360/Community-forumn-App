@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { toast } from "react-toastify";
 
 import { useDispatch, useSelector } from "@/redux/store";
@@ -7,8 +6,7 @@ import {
   selectedUserInChatTimeline,
   setInitMessages,
   selectInitMessages,
-  setMessages,
-  selectMessages,
+  setMessages
 } from "@/reduxFeatures/app/chatSlice";
 
 import { setReFocusChatEditor } from "@/reduxFeatures/app/chatSlice";
@@ -18,22 +16,22 @@ import Age from "@/components/Atoms/Age";
 
 function ChatFooterBtn({ editorID }) {
   const dispatch = useDispatch();
-  const messages = useSelector(selectMessages);
+
   const initMessages = useSelector(selectInitMessages);
   const selectUserToChatTimeline = useSelector(selectedUserInChatTimeline);
 
-  const sendMessageToRecipient = (e) => {
+  const sendMessageToRecipient = () => {
     const editorInnerHtml = (
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
 
-    let emptyEditorInnerHtml =
+    const emptyEditorInnerHtml =
       '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
 
     if (editorInnerHtml === emptyEditorInnerHtml) {
       toast.warn("Type your message to proceed", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
+        toastId: "1"
       });
       return;
     }
@@ -44,25 +42,26 @@ function ChatFooterBtn({ editorID }) {
          ** No Previous Chat Is Selected On Sidebar
          ** Compose Chat By Manually Typing in recipient Name
          */
-        let sendTo = (document.getElementById("sendTo") as HTMLInputElement)
+        const sendTo = (document.getElementById("sendTo") as HTMLInputElement)
           .value;
         if (sendTo.trim() !== "") {
-          let sendToRecipients = sendTo.split(",");
-          let chatValue = {
+          const sendToRecipients = sendTo.split(",");
+          const chatValue = {
             message: editorInnerHtml,
             sender: "self",
             read: true,
-            dateTime: <Age time={new Date().toLocaleString()} />,
+            dateTime: <Age time={new Date().toLocaleString()} />
           };
-          let previousChatWithUser = [];
-          let noPreviousChatWithUser = [];
-          let trimmedSendToRecipients = sendToRecipients.map((recipient) => {
+          const previousChatWithUser = [];
+          const noPreviousChatWithUser = [];
+          const trimmedSendToRecipients = sendToRecipients.map(recipient => {
             return recipient.trim();
           });
-          let allUsers = [];
+          const allUsers = [];
           // Check if recipient had previous chat
-          initMessages.forEach((user) => {
-            let trimmedUser = user.name.trim();
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          initMessages.forEach((user: Record<string, any>) => {
+            const trimmedUser = user.name.trim();
             allUsers.push(trimmedUser);
             if (trimmedSendToRecipients.includes(trimmedUser)) {
               // User Had Previous Chat
@@ -71,17 +70,18 @@ function ChatFooterBtn({ editorID }) {
           });
           // console.log("previousChatWithUser:", previousChatWithUser);
           // New User Chat
-          trimmedSendToRecipients.forEach((user) => {
+          trimmedSendToRecipients.forEach(user => {
             if (!allUsers.includes(user)) {
               noPreviousChatWithUser.push(user);
             }
           });
           // .... Recurring User Chat ....
-          let tempInitMessages = [];
+          const tempInitMessages: Record<string, string>[] = [];
           if (previousChatWithUser.length > 0) {
-            let tempInitName = [];
-            let displayCurrentUserInTimeline = {};
-            previousChatWithUser.forEach((recurringUserChat, index) => {
+            const tempInitName = [];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            let displayCurrentUserInTimeline: Record<string, any> = {};
+            previousChatWithUser.forEach(recurringUserChat => {
               console.log("previousChatWithUser-0:", previousChatWithUser);
               let updateRecurringUserChat;
               // Update UnreadMessage Count By 1 If Any So As Not To Be Diminished By New Chat
@@ -89,12 +89,12 @@ function ChatFooterBtn({ editorID }) {
                 updateRecurringUserChat = {
                   ...recurringUserChat,
                   message: [...recurringUserChat.message, chatValue],
-                  unreadMessage: recurringUserChat.unreadMessage + 1,
+                  unreadMessage: recurringUserChat.unreadMessage + 1
                 };
               } else {
                 updateRecurringUserChat = {
                   ...recurringUserChat,
-                  message: [...recurringUserChat.message, chatValue],
+                  message: [...recurringUserChat.message, chatValue]
                 };
               }
               // Store Updated User
@@ -105,7 +105,7 @@ function ChatFooterBtn({ editorID }) {
             });
             // Last name in the list should come first
             tempInitMessages.reverse();
-            initMessages.forEach((init) => {
+            initMessages.forEach((init: Record<string, string>) => {
               if (!tempInitName.includes(init.name)) {
                 tempInitMessages.push(init);
               }
@@ -116,7 +116,7 @@ function ChatFooterBtn({ editorID }) {
             dispatch(
               setUserToChatTimeline([
                 displayCurrentUserInTimeline,
-                displayCurrentUserInTimeline.unreadMessage,
+                displayCurrentUserInTimeline?.unreadMessage
               ])
             );
           }
@@ -135,11 +135,11 @@ function ChatFooterBtn({ editorID }) {
                     message: editorInnerHtml,
                     sender: "self",
                     read: true,
-                    dateTime: <Age time={new Date().toLocaleString()} />,
-                  },
+                    dateTime: <Age time={new Date().toLocaleString()} />
+                  }
                 ],
                 unreadMessage: 0,
-                online: true,
+                online: true
               };
               // Update Temp Message with the updated current Recipient Message
               tempNewUserInitMessages.push(newUser);
@@ -147,11 +147,11 @@ function ChatFooterBtn({ editorID }) {
             // Last name in the list should come first
             tempNewUserInitMessages.reverse();
             // Enable previousChatWithUser message to also move to top when available
-            let sudoTempInitMessages =
+            const sudoTempInitMessages =
               tempInitMessages.length > 0 ? tempInitMessages : initMessages;
             tempNewUserInitMessages = [
               ...tempNewUserInitMessages,
-              ...sudoTempInitMessages,
+              ...sudoTempInitMessages
             ];
             // Set State
             dispatch(setInitMessages(tempNewUserInitMessages));
@@ -169,7 +169,7 @@ function ChatFooterBtn({ editorID }) {
             "Enter a new user OR select an existing user to proceed!!!",
             {
               position: toast.POSITION.TOP_RIGHT,
-              toastId: "1",
+              toastId: "1"
             }
           );
         }
@@ -182,21 +182,30 @@ function ChatFooterBtn({ editorID }) {
           message: editorInnerHtml,
           sender: "self",
           read: true,
-          dateTime: <Age time={new Date().toLocaleString()} />,
+          dateTime: <Age time={new Date().toLocaleString()} />
         };
         // Update Current Recipient with new Chat
-        let currentRecipient = {
+        const currentRecipient = {
           ...selectUserToChatTimeline[0],
-          message: [...selectUserToChatTimeline[0].message, chatValue],
-          unreadMessage: 0,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          message: [
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ...(selectUserToChatTimeline[0] as unknown as Record<string, any>)
+              .message,
+            chatValue
+          ],
+          unreadMessage: 0
         };
         // Update initMessages with the updated current Recipient
-        let tempInitMessages = [];
+        const tempInitMessages = [];
         // Add new chat to top
         tempInitMessages.push(currentRecipient);
         // Other chat to follow
-        initMessages.forEach((user) => {
-          if (user.name !== currentRecipient.name) {
+        initMessages.forEach(user => {
+          if (
+            user.name !==
+            (currentRecipient as unknown as Record<string, string>).name
+          ) {
             tempInitMessages.push(user);
           }
         });
@@ -206,7 +215,7 @@ function ChatFooterBtn({ editorID }) {
         dispatch(
           setUserToChatTimeline([
             currentRecipient,
-            currentRecipient.unreadMessage,
+            currentRecipient.unreadMessage
           ])
         );
         (document.getElementById("searchMessages") as HTMLInputElement).value =
@@ -217,7 +226,7 @@ function ChatFooterBtn({ editorID }) {
     } else {
       toast.warn("Type your message to proceed", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
+        toastId: "1"
       });
     }
   };

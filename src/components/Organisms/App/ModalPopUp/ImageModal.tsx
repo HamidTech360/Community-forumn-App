@@ -4,7 +4,7 @@ import {
   setImageModalOpen,
   selectImageModalOpen,
   setImageModalImg,
-  selectImageModalImg,
+  selectImageModalImg
 } from "@/reduxFeatures/app/postModalCardSlice";
 
 import { Image, Modal } from "react-bootstrap";
@@ -25,11 +25,7 @@ function ImageModal() {
       // Reset Carousel Data
       dispatch(setImageModalImg({ media: [], activeIndex: 0 }));
     };
-  }, []);
-
-  const handleSelect = (selectedIndex, e) => {
-    setIndex(selectedIndex);
-  };
+  }, [dispatch, imageModalImg?.activeIndex]);
 
   return (
     <Modal
@@ -49,7 +45,7 @@ function ImageModal() {
 
       <div className="row">
         <div className="col-12">
-          <Carousel activeIndex={index} onSelect={handleSelect}>
+          <Carousel activeIndex={index}>
             {imageModalImg?.media?.map((postImage, index) => (
               <Carousel.Item key={index}>
                 <Image

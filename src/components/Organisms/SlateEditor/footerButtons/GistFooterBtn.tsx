@@ -1,32 +1,27 @@
-//@ts-nocheck
-import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch, useSelector } from "@/redux/store";
 import {
   uploadFailed,
   uploadSuccess,
-  selectGistError,
-  selectGistIsSuccess,
   selectGistIsLoading,
   setShowGistModal,
-  selectShowGistModal,
   setGistTitle,
-  selectGistTitle,
-  setIsFetching,
+  selectGistTitle
 } from "@/reduxFeatures/api/gistSlice";
 import config from "../../../../config";
 import {
   selectSlatePostToEdit,
-  setSlatePostToEdit,
+  setSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
 import { serialize } from "../utils/serializer";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function GistFooterBtn({ editorID, editorContentValue }: any) {
   const gistIsLoading = useSelector(selectGistIsLoading);
-  const [uploading, setUploading] = useState(false);
+
   const dispatch = useDispatch();
   const showGistTitle = useSelector(selectGistTitle);
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
@@ -41,11 +36,11 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
       // Reset Post Title State when component unmount
       dispatch(setGistTitle(""));
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     // Get Post Category name
-    const getCategories = categories.filter((category) => {
+    const getCategories = categories.filter(category => {
       if (category?.name === slatePostToEdit?.categories) {
         return category?.name;
       }
@@ -54,13 +49,14 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
     if (slatePostToEdit) {
       setSelectedCategory(getCategories[0]?.name);
     }
-  }, [categories]);
+  }, [categories, slatePostToEdit]);
 
   useEffect(() => {
     // Set Post Title On Load If slatePostToEdit
     if (slatePostToEdit) {
       // Set Gist Title
-      document.getElementById("createGistID")?.value = slatePostToEdit?.title;
+      (document.getElementById("createGistID") as HTMLInputElement).value =
+        slatePostToEdit?.title;
 
       dispatch(setGistTitle(slatePostToEdit.title));
     }
@@ -73,16 +69,16 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
         // console.log(error.response?.data);
       }
     })();
-  }, []);
+  }, [dispatch, slatePostToEdit]);
 
-  const createGist = async (e) => {
+  const createGist = async e => {
     e.preventDefault();
 
     const editorInnerHtml = (
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
 
-    let emptyEditorInnerHtml =
+    const emptyEditorInnerHtml =
       '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
 
     // console.log("showGistTitle:", showGistTitle);
@@ -92,7 +88,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
     ) {
       toast.warn("Type your Message Title and Message to proceed", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
+        toastId: "1"
       });
       return;
     }
@@ -100,17 +96,15 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
     if (!selectedCategory) {
       toast.warn("Select A Post Category To Proceed", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
+        toastId: "1"
       });
       return;
     }
 
     if (editorInnerHtml.trim() !== "") {
-      setUploading(true);
-
       // Serialize Html
-      let serializeNode = {
-        children: editorContentValue,
+      const serializeNode = {
+        children: editorContentValue
       };
 
       const serializedHtml = serialize(serializeNode);
@@ -124,76 +118,72 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
               title: showGistTitle,
               post: serializedHtml,
               categories: selectedCategory,
-              country: "Ghana",
+              country: "Ghana"
             },
             {
               headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`
+              }
             }
           );
           toast.success("Gist uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,
-            toastId: "1",
+            toastId: "1"
           });
           dispatch(uploadSuccess(response.data.gist));
-          setUploading(false);
           dispatch(setShowGistModal(false));
         } catch (error) {
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Gist", {
               position: toast.POSITION.TOP_RIGHT,
-              toastId: "1",
+              toastId: "1"
             });
           } else {
             toast.error("Failed to upload Gist: Try Again", {
               position: toast.POSITION.TOP_RIGHT,
-              toastId: "1",
+              toastId: "1"
             });
           }
           dispatch(uploadFailed(error.response?.data));
-          setUploading(false);
         }
       } else {
         // Edit Post
         try {
-          const response = await axios.put(
+          await axios.put(
             `${config.serverUrl}/api/gists/${slatePostToEdit?._id}`,
             {
               title: showGistTitle,
               post: serializedHtml,
               categories: selectedCategory,
-              country: "Ghana",
+              country: "Ghana"
             },
             {
               headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`
+              }
             }
           );
           toast.success("Gist uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,
-            toastId: "1",
+            toastId: "1"
           });
 
           // Auto update & Rerender Groups Post
           dispatch(uploadSuccess({ postEdited: Math.random() * 50 }));
-          setUploading(false);
           dispatch(setShowGistModal(false));
         } catch (error) {
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Gist", {
               position: toast.POSITION.TOP_RIGHT,
-              toastId: "1",
+              toastId: "1"
             });
           } else {
             toast.error("Failed to upload Gist: Try Again", {
               position: toast.POSITION.TOP_RIGHT,
-              toastId: "1",
+              toastId: "1"
             });
           }
           dispatch(uploadFailed(error.response?.data));
-          setUploading(false);
         }
       }
     }

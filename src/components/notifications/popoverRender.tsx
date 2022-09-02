@@ -11,7 +11,7 @@ import { GiCheckMark } from "react-icons/gi";
 import { TiDeviceDesktop } from "react-icons/ti";
 
 function PopoverRender() {
-  let router = useRouter();
+  const router = useRouter();
 
   const dispatch = useDispatch();
 
