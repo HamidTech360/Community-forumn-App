@@ -3,7 +3,7 @@ import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import styles from "../styles/notifications.module.css";
 
-import NotificationRender from "@/components/notifications/NotificationRender";
+import NotificationRenderer from "@/components/notifications/NotificationRenderer";
 import config from "@/config";
 import axios from "axios";
 import { useDispatch, useSelector } from "@/redux/store";
@@ -207,7 +207,7 @@ const Notifications = () => {
                     key={index}
                     onClick={() => navigateToItem(notification)}
                   >
-                    <NotificationRender notification={notification} />
+                    <NotificationRenderer notification={notification} />
                   </div>
                 ))}
               </div>

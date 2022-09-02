@@ -2,7 +2,7 @@ import { Card } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { GoPrimitiveDot } from "react-icons/go";
 import styles from "../../styles/notifications.module.css";
-const NotificationRender = ({
+const NotificationRenderer = ({
   notification,
   style
 }: {
@@ -51,4 +51,4 @@ const NotificationRender = ({
   );
 };
 
-export default NotificationRender;
+export default NotificationRenderer;
