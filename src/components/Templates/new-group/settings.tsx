@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../../styles/templates/new-group/settings.module.css";
-import { Form, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 
-const Settings = ({handleSelectOption, data, moveToNewTab}) => {
-
-  const setValues = (state,  setState, dataKey)=>{
-    const clone = [...state]
-    const activeItem = clone.find(item=>item.value===data[dataKey])
-    const index = state.indexOf(activeItem)
-    console.log(`Index of current item is (${data[dataKey]})  `,index);
-    clone[index].active = true
-    setState(clone)
-  }
-  useEffect(()=>{
-    window.scrollTo(0,0)
-     if(data.privacy) setValues(privacy, setPrivacy, 'privacy')
-     if(data.invite)  setValues(inviteOptions, setInviteOptions, 'invite')
-     if(data.allowedToPost)  setValues(postOptions, setPostOptions, 'allowedToPost')
-  },[])
+const Settings = ({ handleSelectOption, data, moveToNewTab }) => {
+  const setValues = (state, setState, dataKey) => {
+    const clone = [...state];
+    const activeItem = clone.find(item => item.value === data[dataKey]);
+    const index = state.indexOf(activeItem);
+    console.log(`Index of current item is (${data[dataKey]})  `, index);
+    clone[index].active = true;
+    setState(clone);
+  };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (data.privacy) setValues(privacy, setPrivacy, "privacy");
+    if (data.invite) setValues(inviteOptions, setInviteOptions, "invite");
+    if (data.allowedToPost)
+      setValues(postOptions, setPostOptions, "allowedToPost");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [privacy, setPrivacy] = useState([
     {
@@ -26,9 +27,9 @@ const Settings = ({handleSelectOption, data, moveToNewTab}) => {
       lists: [
         "Any site member can join this group.",
         "This group will be listed in the groups directory and in search results.",
-        " Group content and activity will be visible to any site member.",
+        " Group content and activity will be visible to any site member."
       ],
-      value:'public'
+      value: "public"
     },
     {
       title: "Private group",
@@ -36,9 +37,9 @@ const Settings = ({handleSelectOption, data, moveToNewTab}) => {
       lists: [
         "Only people who request membership and are accepted can join the group.",
         "This group will be listed in the groups directory and in search results.",
-        "Group content and activity will only be visible to members of the group.",
+        "Group content and activity will only be visible to members of the group."
       ],
-      value:'private'
+      value: "private"
     },
     {
       title: "Public group",
@@ -46,60 +47,59 @@ const Settings = ({handleSelectOption, data, moveToNewTab}) => {
       lists: [
         "Only people who are invited can join the group.",
         " This group will not be listed in the groups directory or search results.",
-        "Group content and activity will only be visible to members of the group.",
+        "Group content and activity will only be visible to members of the group."
       ],
-      value:'semiPublic'
-    },
+      value: "semiPublic"
+    }
   ]);
 
   const [inviteOptions, setInviteOptions] = useState([
     {
       label: "Admin Only",
       active: false,
-      value:'admin'
+      value: "admin"
     },
     {
       label: "Admin and moderators",
       active: false,
-      value:'moderators'
+      value: "moderators"
     },
     {
       label: "Everyone",
       active: false,
-      value:'everyone'
-    },
+      value: "everyone"
+    }
   ]);
 
   const [postOptions, setPostOptions] = useState([
     {
       label: "Admin Only",
       active: false,
-      value:'admin'
+      value: "admin"
     },
     {
       label: "Admin and moderators",
       active: false,
-      value:'moderators',
+      value: "moderators"
     },
     {
       label: "Everyone",
       active: false,
-      value:'everyone'
-    },
+      value: "everyone"
+    }
   ]);
 
   const selectItem = (array, setArray, item, i, name) => {
     const clone = [...array];
-    clone.map((item) => (item.active = false));
+    clone.map(item => (item.active = false));
     clone[i].active = true;
     setArray(clone);
-    handleSelectOption(name, item.value)   
-    
+    handleSelectOption(name, item.value);
   };
 
-  const handleContinue = ()=>{
-    moveToNewTab(2)
-  }
+  const handleContinue = () => {
+    moveToNewTab(2);
+  };
   return (
     <div className={styles.settings}>
       <div className={styles.settingsHeader}>Privacy Settings</div>
@@ -109,7 +109,7 @@ const Settings = ({handleSelectOption, data, moveToNewTab}) => {
         <div key={i} className={styles.groupType}>
           <div className={styles.groupTypeHeader}>{item.title}</div>
           <div
-            onClick={() => selectItem(privacy, setPrivacy, item, i, 'privacy')}
+            onClick={() => selectItem(privacy, setPrivacy, item, i, "privacy")}
             className={`${styles.radio} ${
               item.active ? styles.radioActive : ""
             }`}
@@ -134,7 +134,7 @@ const Settings = ({handleSelectOption, data, moveToNewTab}) => {
         </div>
         <div className={styles.inviteOptions}>
           {inviteOptions.map((item, i) => (
-            <div className={styles.inviteOption}>
+            <div key={i} className={styles.inviteOption}>
               <span className={styles.inviteOptionText}>{item.label}</span>
               <div
                 className={`${styles.radio} ${
@@ -142,7 +142,7 @@ const Settings = ({handleSelectOption, data, moveToNewTab}) => {
                 }`}
                 style={{ marginTop: "0px" }}
                 onClick={() =>
-                  selectItem(inviteOptions, setInviteOptions, item, i, 'invite')
+                  selectItem(inviteOptions, setInviteOptions, item, i, "invite")
                 }
               />
             </div>
@@ -161,19 +161,32 @@ const Settings = ({handleSelectOption, data, moveToNewTab}) => {
         </div>
         <div className={styles.inviteOptions}>
           {postOptions.map((item, i) => (
-            <div className={styles.inviteOption}>
+            <div key={i} className={styles.inviteOption}>
               <span className={styles.inviteOptionText}>{item.label}</span>
               <div
                 className={`${styles.radio} ${
                   item.active ? styles.radioActive : ""
                 }`}
                 style={{ marginTop: "0px" }}
-                onClick={() => selectItem(postOptions, setPostOptions, item, i, 'allowedToPost')}
+                onClick={() =>
+                  selectItem(
+                    postOptions,
+                    setPostOptions,
+                    item,
+                    i,
+                    "allowedToPost"
+                  )
+                }
               />
             </div>
           ))}
         </div>
-        <Button onClick={()=>handleContinue()} variant="primary" className="d-flex mx-auto" type="submit">
+        <Button
+          onClick={() => handleContinue()}
+          variant="primary"
+          className="d-flex mx-auto"
+          type="submit"
+        >
           Continue
         </Button>
       </div>

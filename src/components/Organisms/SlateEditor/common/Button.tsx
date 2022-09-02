@@ -1,7 +1,6 @@
-//@ts-nocheck
 import styles from "../../../../styles/SlateEditor/button_Slate.module.scss";
 
-const Button = (props) => {
+const Button = props => {
   const { children, format, active, ...rest } = props;
   return (
     <button

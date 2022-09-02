@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { useRef, useState } from "react";
 import { insertLink } from "../../utils/link.js";
 import Button from "../../common/Button";
@@ -11,19 +10,19 @@ import styles2 from "../../../../../styles/SlateEditor/button_Slate.module.scss"
 import { Modal, Button as BsBtn, Form } from "react-bootstrap";
 import { ReactEditor } from "slate-react";
 
-const LinkButton = (props) => {
-  let urlTitle = useRef();
-  let urlAddress = useRef();
+const LinkButton = props => {
+  const urlTitle = useRef(null);
+  const urlAddress = useRef(null);
 
   const [editorSelection, setEditorSelection] = useState({
     anchor: {
       path: [0, 0],
-      offset: 0,
+      offset: 0
     },
     focus: {
       path: [0, 0],
-      offset: 0,
-    },
+      offset: 0
+    }
   });
 
   const { editor } = props;
@@ -34,6 +33,8 @@ const LinkButton = (props) => {
   const handleShow = () => {
     // If editor.selection === null, then replace null with editorSelection
     if (editor.selection) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       setEditorSelection(Transforms.select(editor, editor.selection));
     } else {
       Transforms.select(editor, editorSelection);
@@ -44,18 +45,18 @@ const LinkButton = (props) => {
     setShow(true);
   };
 
-  const submitUrl = (e) => {
+  const submitUrl = e => {
     e.preventDefault();
 
-    let urlTitleValue = urlTitle.current.value;
-    let urlAddressValue = urlAddress.current.value;
+    const urlTitleValue = urlTitle.current.value;
+    const urlAddressValue = urlAddress.current.value;
 
     editor.selection && Transforms.select(editor, editor.selection);
     editor.selection && ReactEditor.focus(editor);
 
     insertLink(editor, {
       urlTitleValue,
-      urlAddressValue,
+      urlAddressValue
     });
 
     // Only close after  form validation
@@ -81,7 +82,7 @@ const LinkButton = (props) => {
           style={{
             border: "none",
             backgroundColor: "transparent",
-            marginBottom: "-1rem",
+            marginBottom: "-1rem"
           }}
           closeButton
         >
@@ -116,7 +117,7 @@ const LinkButton = (props) => {
             style={{
               border: "none",
               backgroundColor: "transparent",
-              marginTop: "-1rem",
+              marginTop: "-1rem"
             }}
           >
             <BsBtn variant="secondary" onClick={handleClose}>

@@ -1,18 +1,18 @@
-//@ts-nocheck
 import React, {
   useCallback,
   useEffect,
   useMemo,
   useRef,
-  useState,
+  useState
 } from "react";
 import {
   Editor as slateEditor,
   BaseEditor,
+  BaseText,
   createEditor,
   Descendant,
   Range,
-  Transforms,
+  Transforms
 } from "slate";
 import { HistoryEditor, withHistory } from "slate-history";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
@@ -27,9 +27,9 @@ import {
   setSearch,
   selectSearch,
   setTarget,
-  selectTarget,
-  setFollowedUserDetails,
-  selectFollowedUserDetails,
+  selectTarget
+  // setFollowedUserDetails,
+  // selectFollowedUserDetails
 } from "@/reduxFeatures/app/mentionsSlice";
 
 import styles from "../../../styles/SlateEditor/Editor_Slate.module.scss";
@@ -42,8 +42,8 @@ import deserializeFromHtml from "./utils/serializer";
 import { selectSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 import { useSelector } from "@/redux/store";
 import Portal from "./Elements/Mentions/Portals";
-import useMentionUsers from "@/hooks/useMentionUsers";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+// import useMentionUsers from "@/hooks/useMentionUsers";
+// import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { useDispatch } from "react-redux";
 
 // Best Practice Is To Declear & Export Custom Types
@@ -83,11 +83,13 @@ declare module "slate" {
   interface CustomTypes {
     Editor: CustomEditor;
     Element: CustomElement;
-    Text: CustomText | EmptyText;
+    // Text: CustomText | EmptyText;
+    Text: BaseText & { placeholder?: string };
+    // Text: (BaseText & { placeholder?: string }) | EmptyText;
   }
 }
 
-const Element = (props) => {
+const Element = props => {
   return getBlock(props);
 };
 const Leaf = ({ attributes, children, leaf }) => {
@@ -106,12 +108,12 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   const search = useSelector(selectSearch);
   const target = useSelector(selectTarget);
   // const chars = useSelector(selectFollowedUserDetails);
-  const chars = CHARACTERS?.filter((c) =>
+  const chars = CHARACTERS?.filter(c =>
     c.toLowerCase().startsWith(search.toLowerCase())
   ).slice(0, 10);
 
-  const user = useSelector(selectUser);
-  const followedUsers = user.following;
+  // const user = useSelector(selectUser);
+  // const followedUsers = user.following;
   // Populate Users Been Followed For @Mentions
   // useMentionUsers();
 
@@ -141,28 +143,26 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   //   }
   // }, [chars]);
 
-  const renderElement = useCallback((props) => <Element {...props} />, []);
+  const renderElement = useCallback(props => <Element {...props} />, []);
 
-  const renderLeaf = useCallback((props) => {
+  const renderLeaf = useCallback(props => {
     return <Leaf {...props} />;
   }, []);
 
   // Create Editor Instance
-  // const editor = useMemo(
-  //   () => withHistory(withEmbeds(withLinks(withReact(createEditor())))),
-  //   []
-  // );
   const editor = useMemo(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
     () =>
-      withMentions(
-        withHistory(withEmbeds(withLinks(withReact(createEditor()))))
+      withHistory(
+        withEmbeds(withLinks(withReact(withMentions(createEditor()))))
       ),
     []
   );
 
   // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   const onKeyDown = useCallback(
-    (event) => {
+    event => {
       console.log("EVENT:", event);
       console.log("TARGET:", target);
       console.log("INDEX:", index);
@@ -199,14 +199,15 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
         }
       }
     },
-    [index, search, target]
+    // [index, search, target]
+    [index, search, target, chars, dispatch, editor]
   );
 
   // Below ifelse would prevent "cannot find a descendant path [0] error"
   if (editor.children.length === 0) {
     editor.children.push({
       type: "paragraph",
-      children: [{ text: "" }],
+      children: [{ text: "" }]
     });
   }
   // console.log(
@@ -221,13 +222,13 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
     : [
         {
           type: "paragraph",
-          children: [{ text: "" }],
-        },
+          children: [{ text: "" }]
+        }
       ];
   // console.log("initialState:", initialState);
   const [value, setValue] = useState(initialState);
 
-  const handleEditorChange = (newValue) => {
+  const handleEditorChange = newValue => {
     // ++++++++++++++++++++++++++++++++++++
     const { selection } = editor;
 
@@ -308,7 +309,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
                     spellCheck
                     autoFocus
                     // onKeyDown={(event) => CtrlShiftCombo(event, editor)}
-                    onKeyDown={(event) => {
+                    onKeyDown={event => {
                       if (!event.ctrlKey) {
                         // +++++++++++++====================================
                         onKeyDown(event);
@@ -332,7 +333,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
                           padding: "3px",
                           background: "white",
                           borderRadius: "4px",
-                          boxShadow: "0 1px 5px rgba(0,0,0,.2)",
+                          boxShadow: "0 1px 5px rgba(0,0,0,.2)"
                         }}
                         data-cy="mentions-portal"
                       >
@@ -344,7 +345,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
                               borderRadius: "3px",
                               background:
                                 i === index ? "#B4D5FF" : "transparent",
-                              borderBottom: "1px solid black",
+                              borderBottom: "1px solid black"
                             }}
                           >
                             {char}
@@ -379,7 +380,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
             className="col-2 col-md-1 d-grid"
             style={{
               alignSelf: "flex-end",
-              marginBottom: "1rem",
+              marginBottom: "1rem"
             }}
           >
             <FooterButtons
@@ -396,14 +397,14 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-const withMentions = (editor) => {
+const withMentions = editor => {
   const { isInline, isVoid } = editor;
 
-  editor.isInline = (element) => {
+  editor.isInline = element => {
     return element.type === "mention" ? true : isInline(element);
   };
 
-  editor.isVoid = (element) => {
+  editor.isVoid = element => {
     return element.type === "mention" ? true : isVoid(element);
   };
 
@@ -414,7 +415,7 @@ const insertMention = (editor, character) => {
   const mention: MentionElement = {
     type: "mention",
     character,
-    children: [{ text: "" }],
+    children: [{ text: "" }]
   };
   Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
@@ -430,7 +431,7 @@ const CHARACTERS = [
   "Admiral Raddus",
   "Admiral Terrinald Screed",
   "Admiral Trench",
-  "Admiral U.O. Statura",
+  "Admiral U.O. Statura"
 ];
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

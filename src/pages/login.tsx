@@ -1,9 +1,6 @@
-//@ts-nocheck
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Container, Form } from "react-bootstrap";
-import Typography from "../components/Atoms/Typography";
+import { Alert, Button, Form } from "react-bootstrap";
 import FormWrapper from "../components/Organisms/Layout/FormWrapper";
-import styles from "../styles/form.module.scss";
 import Head from "next/head";
 import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/router";
@@ -15,20 +12,16 @@ import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import config from "../config";
 
 import "react-toastify/dist/ReactToastify.css";
-// import { useDispatch } from "@/redux/store";
-// import { userAuthenticated } from "@/reduxFeatures/authState/authStateSlice";
 
 const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
+    password: ""
   });
 
   const [loading, setLoading] = useState(false);
   const [displayPassword, setDisplayPassword] = useState(false);
-
-  // const dispatch = useDispatch();
 
   const [message, setMessage] = useState({ message: "", variant: "" });
 
@@ -45,11 +38,11 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { email, password } = formData;
+
     try {
       setLoading(true);
       const { data } = await axios.post(`${config.serverUrl}/api/auth`, {
-        ...formData,
+        ...formData
       });
 
       localStorage.setItem("accessToken", data.accessToken);
@@ -57,10 +50,10 @@ const Login = () => {
       setAccessToken(data.accessToken);
       toast.success("Authentication successful", {
         position: toast.POSITION.TOP_RIGHT,
-        autoClose: 7000,
+        autoClose: 7000
       });
 
-      let push2Page = JSON.parse(sessionStorage.getItem("pageB4Login"))
+      const push2Page = JSON.parse(sessionStorage.getItem("pageB4Login"))
         ? JSON.parse(sessionStorage.getItem("pageB4Login"))
         : "/feed";
       sessionStorage.removeItem("pageB4Login");
@@ -75,13 +68,18 @@ const Login = () => {
           if (serverError.response?.data === "Something went wrong") {
             toast.error("Authentication Failed", {
               position: toast.POSITION.TOP_RIGHT,
-              autoClose: 7000,
+              autoClose: 7000
             });
           } else {
-            toast.error(serverError.response.data?.message, {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 7000,
-            });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            toast.error(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (serverError.response.data as Record<string, any>)?.message,
+              {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 7000
+              }
+            );
           }
         }
       }
@@ -91,9 +89,9 @@ const Login = () => {
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
+    setFormData(prevState => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
@@ -143,7 +141,7 @@ const Login = () => {
                     style={{
                       marginLeft: "-3.5rem",
                       fontSize: "1.5rem",
-                      marginTop: "-.3rem",
+                      marginTop: "-.3rem"
                     }}
                     onClick={() => setDisplayPassword(!displayPassword)}
                   >

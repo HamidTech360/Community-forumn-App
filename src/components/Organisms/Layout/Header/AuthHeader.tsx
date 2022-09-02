@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import config from "@/config";
 import axios from "axios";
 import Link from "next/link";
@@ -9,16 +9,14 @@ import {
   Nav,
   Navbar,
   NavDropdown,
-  Image,
   Button,
   Badge,
-  Offcanvas,
+  Offcanvas
 } from "react-bootstrap";
 import Notifications from "@/pages/notifications";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 
 import Logo from "@/components/Atoms/Logo";
-import Loader from "@/components/Organisms/Layout/Loader/Loader";
 import { useRouter } from "next/router";
 
 import { useDispatch, useSelector } from "@/redux/store";
@@ -26,36 +24,34 @@ import {
   notificationsOffcanvas,
   setSearchModal,
   selectNotificationOffcanvas,
-  selectSearchModal,
+  selectSearchModal
 } from "@/reduxFeatures/app/appSlice";
 import { selectUser, logout } from "@/reduxFeatures/authState/authStateSlice";
-import { selectNotifications } from "@/reduxFeatures/api/notifications";
 import {
   AiFillHome,
   AiOutlineHome,
   AiFillCompass,
-  AiOutlineCompass,
+  AiOutlineCompass
 } from "react-icons/ai";
-import { FaTimes } from "react-icons/fa";
 import { RiMessage2Fill, RiMessage2Line } from "react-icons/ri";
 import { HiUserGroup, HiOutlineUserGroup } from "react-icons/hi";
 import { BsEnvelopeFill, BsEnvelope, BsSearch } from "react-icons/bs";
 import {
   MdNotificationsActive,
-  MdOutlineNotificationsActive,
+  MdOutlineNotificationsActive
 } from "react-icons/md";
 import {
   getNotification,
-  updateNumberOfNotifications,
+  updateNumberOfNotifications
 } from "@/reduxFeatures/api/notifications";
 import Head from "next/head";
 import styles from "@/styles/utils.module.scss";
 import SearchTabs from "@/components/Molecules/SearchTabs";
+import Avatar from "@/components/Atoms/Avatar";
 
 const AuthHeader = () => {
   const dispatch = useDispatch();
   const showing = useSelector(selectSearchModal);
-  const stateNotifications = useSelector(selectNotifications);
 
   const handleClosing = () => dispatch(setSearchModal(false));
   const handleShowing = () => dispatch(setSearchModal(true));
@@ -64,7 +60,7 @@ const AuthHeader = () => {
     { icon: "feed", name: "Home" },
     { icon: "explore", name: "Explore" },
     { icon: "gist", name: "Gist" },
-    { icon: "groups", name: "Groups" },
+    { icon: "groups", name: "Groups" }
   ];
 
   // const [showModal, setShowModal] = useState(false);
@@ -91,7 +87,7 @@ const AuthHeader = () => {
     router.push("/");
   };
 
-  const activeTab = (link) => {
+  const activeTab = link => {
     if (link.icon === "feed") {
       if (link.icon === "feed" && router.asPath.substring(1) === "feed") {
         return <AiFillHome />;
@@ -138,25 +134,24 @@ const AuthHeader = () => {
           `${config.serverUrl}/api/notifications`,
           {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           }
         );
         console.log(response.data);
 
         dispatch(getNotification(response.data.notifications));
-        const unRead = response.data.notifications.filter((item) => !item.read);
+        const unRead = response.data.notifications.filter(item => !item.read);
         dispatch(updateNumberOfNotifications({ total: unRead.length }));
       } catch (error) {
         console.log(error.response?.data);
       }
     })();
-  }, []);
+  }, [dispatch]);
 
-  //@ts-ignore
   //const notifications = useSelector(state=>state.notification.data?.notifications)
   const totalNotifications = useSelector(
-    (state) => state.notification.noOfNotifications
+    state => state.notification.noOfNotifications
   );
   // console.log('lenght of notifications is ', notifications?.length);
 
@@ -216,7 +211,7 @@ const AuthHeader = () => {
                 style={{
                   borderRadius: "100%",
                   backgroundColor: "#EAFEFD",
-                  border: "none",
+                  border: "none"
                 }}
               >
                 {router.asPath === "/chat" ? (
@@ -234,7 +229,7 @@ const AuthHeader = () => {
               placement={"end"}
               style={{
                 position: "fixed",
-                top: "4.8rem",
+                top: "4.8rem"
               }}
               scroll={true}
             >
@@ -254,6 +249,7 @@ const AuthHeader = () => {
               ) : (
                 <MdOutlineNotificationsActive />
               )}
+
               <Badge className={styles.badge}>
                 {totalNotifications > 99 ? `${99}+` : totalNotifications}
               </Badge>
@@ -263,39 +259,34 @@ const AuthHeader = () => {
             className={`d-md-block ${styles.header}`}
             style={{ color: "black" }}
             title={
-              <>
-                <Image
-                  src={data?.images?.avatar || "/images/formbg.png"}
-                  alt=""
-                  className={styles.img}
-                  roundedCircle
+              <div className="d-flex align-items-center g-2">
+                <Avatar
+                  src={data?.images?.avatar}
+                  name={data.firstName}
+                  width={40}
+                  height={40}
                 />
                 <span className={`mx-2 ${styles.span}`}>
                   {data?.firstName?.split(" ")[0]}
                 </span>
-              </>
+              </div>
             }
           >
             <div className={styles.navDrop}>
               <NavDropdown.Header className={styles.navHead}>
-                {/* <div  
-                style={{
-                  cursor: "pointer",	
-                }}
-                onClick = {directProfile}> */}
-                <Image
-                  src={data?.images?.avatar || "/images/formbg.png"}
-                  alt=""
-                  width={20}
-                  height={20}
-                  roundedCircle
-                />
-                <Link href="/profile" passHref>
-                  <span className="mx-2" style={{ cursor: "pointer" }}>
-                    {data?.firstName}&nbsp; {data?.lastName}
-                  </span>
-                </Link>{" "}
-                {/* </div> */}
+                <div className="d-flex g-2 align-items-center">
+                  <Avatar
+                    src={data?.images?.avatar}
+                    name={data.firstName}
+                    width={40}
+                    height={40}
+                  />
+                  <Link href="/profile" passHref>
+                    <span className="mx-2" style={{ cursor: "pointer" }}>
+                      {data?.firstName}&nbsp; {data?.lastName}
+                    </span>
+                  </Link>
+                </div>
               </NavDropdown.Header>
               <NavDropdown.Divider />
               <NavDropdown.Item className={styles.navMenu}>
@@ -314,7 +305,7 @@ const AuthHeader = () => {
                 style={{
                   fontWeight: "700",
                   color: "#207681",
-                  marginTop: "10px",
+                  marginTop: "10px"
                 }}
                 onClick={() => LogOut()}
               >

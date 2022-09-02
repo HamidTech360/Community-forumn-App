@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { useSelected, useFocused } from "slate-react";
 import Icon from "../../common/Icon";
 import useResize from "../../utils/customHooks/useResize.js";
@@ -16,7 +15,7 @@ const Video = ({ attributes, element, children }) => {
       className={styles.embed}
       style={{
         display: "flex",
-        boxShadow: selected && focused && "0 0 3px 3px lightgray",
+        boxShadow: selected && focused && "0 0 3px 3px lightgray"
       }}
       {...element.attr}
     >
@@ -37,7 +36,7 @@ const Video = ({ attributes, element, children }) => {
                 border: "2px dashed black",
                 display: "flex",
                 justifyContent: "center",
-                alignItems: "center",
+                alignItems: "center"
               }}
             >
               <Icon icon="videoPlayer" />
@@ -55,7 +54,7 @@ const Video = ({ attributes, element, children }) => {
               width: "15px",
               height: "15px",
               opacity: 1,
-              background: "transparent",
+              background: "transparent"
             }}
           >
             <Icon icon="resize" />

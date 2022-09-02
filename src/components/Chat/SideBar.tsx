@@ -1,7 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-//@ts-nocheck
-import React, { useState, useEffect } from "react";
-import { Card, Fade, Image, Dropdown } from "react-bootstrap";
+import React, { useState } from "react";
+import { Card, Fade } from "react-bootstrap";
 import "react-toastify/dist/ReactToastify.css";
 import { FiEdit } from "react-icons/fi";
 import { BsChevronDoubleDown, BsChevronDoubleUp } from "react-icons/bs";
@@ -13,6 +11,7 @@ import Age from "../Atoms/Age";
 import styles from "@/styles/chat.module.scss";
 import axios from "axios";
 import config from "@/config";
+import Avatar from "../Atoms/Avatar";
 
 const SideBar = ({ conversations, selectChat }) => {
   const [open, setOpen] = useState(true);
@@ -21,7 +20,7 @@ const SideBar = ({ conversations, selectChat }) => {
   const [openSearch, setOpenSearch] = useState(false);
   const sanitizer = DOMPurify.sanitize;
 
-  const handleSearch = async (e) => {
+  const handleSearch = async e => {
     // console.log(e.currentTarget.value)
     if (e.currentTarget.value !== "") {
       setOpen(false);
@@ -53,7 +52,7 @@ const SideBar = ({ conversations, selectChat }) => {
           <div
             className="col-2 mt-2 ms-auto"
             style={{
-              cursor: "pointer",
+              cursor: "pointer"
             }}
           >
             <FiEdit size="20" className="me-2" />{" "}
@@ -85,7 +84,7 @@ const SideBar = ({ conversations, selectChat }) => {
             className="form-control my-2 mb-3 border"
             placeholder="&#128269; Search"
             aria-label="Search Message"
-            onChange={(e) => handleSearch(e)}
+            onChange={e => handleSearch(e)}
           />
         </div>
 
@@ -96,11 +95,13 @@ const SideBar = ({ conversations, selectChat }) => {
               className={`pt-2 ${styles.sideBarCard}`}
               style={{
                 overflowY: "auto",
-                overflowX: "hidden",
+                overflowX: "hidden"
               }}
             >
               <Card className="border-0 navbar-nav">
-                {conversations.map((message, index) => {
+                {/* replace with message type */}
+                {/*eslint-disable-next-line @typescript-eslint/no-explicit-any*/}
+                {conversations.map((message: Record<string, any>) => {
                   return (
                     <>
                       <div
@@ -115,31 +116,24 @@ const SideBar = ({ conversations, selectChat }) => {
                         style={{ paddingLeft: "20px" }}
                       >
                         <div className={styles.imageBox}>
-                          <Image
-                            src={`/images/friends${index + 1}.png`}
-                            alt="image"
+                          <Avatar
+                            src={message.sender?.images?.avatar}
+                            name={message.sender.firstName}
                             width={60}
                             height={60}
-                            roundedCircle={true}
-                          ></Image>
+                          />
                         </div>
                         <div className={styles.messageTexts}>
-                          <div className="">
-                            <div className="">
-                              {" "}
-                              {message.sender._id == user._id
-                                ? message.receiver.firstName
-                                : message.sender.firstName}{" "}
-                            </div>
-                            {/* <div className="col-4 pull-right text-muted text-center" style={{ fontSize: "11px", justifySelf:'flex-end' }}> today </div> */}
+                          <div>
+                            {message.sender._id == user._id
+                              ? message.receiver.firstName
+                              : message.sender.firstName}{" "}
                           </div>
-                          <div className="">
+                          <div>
                             <p
                               className={styles.lastmessage}
                               dangerouslySetInnerHTML={{
-                                __html: sanitizer(
-                                  truncate(message.message, 26)
-                                ),
+                                __html: sanitizer(truncate(message.message, 26))
                               }}
                             ></p>
                             {/* <small className="col-2 text-center">
@@ -178,20 +172,19 @@ const SideBar = ({ conversations, selectChat }) => {
                 style={{ paddingLeft: "20px" }}
               >
                 <div className={styles.imageBox}>
-                  <Image
-                    src={`/images/friends${i + 1}.png`}
-                    alt="image"
+                  <Avatar
+                    src={item?.images?.avatar}
+                    name={item.firstName}
                     width={60}
                     height={60}
-                    roundedCircle={true}
-                  ></Image>
+                  />
                 </div>
                 <div className={styles.messageTexts}>
                   <div
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      paddingTop: "13px",
+                      paddingTop: "13px"
                     }}
                   >
                     {`${item.firstName} ${item.lastName}`}
@@ -207,12 +200,3 @@ const SideBar = ({ conversations, selectChat }) => {
 };
 
 export default SideBar;
-
-// const searchMessages = (e) => {
-//   let currentMessages = [...initMessages];
-
-//   currentMessages = currentMessages.filter((item) => {
-//     return item.name.toLowerCase().includes(e.target.value.toLowerCase());
-//   });
-//   dispatch(setMessages(currentMessages));
-// };

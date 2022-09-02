@@ -1,6 +1,3 @@
-//@ts-nocheck
-import { setAccessToken } from "@/misc/token";
-import AuthContent from "@/components/Auth/AuthContent";
 import UnAuthContent from "@/components/Auth/UnAuthContent";
 import axios, { AxiosError } from "axios";
 import Head from "next/head";
@@ -16,7 +13,7 @@ const Register = () => {
     firstName: "",
     lastName: "",
     email: "",
-    password: "",
+    password: ""
   });
   const [displayPassword, setDisplayPassword] = useState(false);
   const [message, setMessage] = useState({ message: "", variant: "" });
@@ -30,25 +27,28 @@ const Register = () => {
     if (termsAndConditionsChecked) {
       try {
         setSubmitting(true);
-        await axios.post(`${config.serverUrl}/api/auth/register`, formData);
-
+        const response = await axios.post(`${config.serverUrl}/api/auth/register`, formData);
+        console.log(response.data)
         setMessage({
           message:
             "Success! Check your email- an account confirmation link has been sent to you.",
-          variant: "success",
+          variant: "success"
         });
-        router.push("/login");
+        localStorage.setItem('accessToken',response.data.accessToken )
+        router.push("/interests");
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const serverError = error as AxiosError;
           if (serverError.response) {
-            let returnedErrorMessage = serverError?.response?.data?.error;
+            const returnedErrorMessage =
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (serverError?.response?.data as Record<string, any>)?.error;
             if (typeof returnedErrorMessage === "string") {
               setMessage({ message: returnedErrorMessage, variant: "danger" });
             } else {
               setMessage({
                 message: "Check Your Network Connection",
-                variant: "danger",
+                variant: "danger"
               });
             }
           }
@@ -59,15 +59,15 @@ const Register = () => {
     } else {
       setMessage({
         message: "Read & Accept The Terms & Conditions To Proceed",
-        variant: "danger",
+        variant: "danger"
       });
     }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
+    setFormData(prevState => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
@@ -156,7 +156,7 @@ const Register = () => {
                     style={{
                       marginLeft: "-3.5rem",
                       fontSize: "1.5rem",
-                      marginTop: "-.3rem",
+                      marginTop: "-.3rem"
                     }}
                     onClick={() => setDisplayPassword(!displayPassword)}
                   >

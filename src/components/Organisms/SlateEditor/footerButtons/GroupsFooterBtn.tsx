@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useEffect, useState } from "react";
 import config from "../../../../config";
 import { Button } from "react-bootstrap";
@@ -11,7 +10,7 @@ import { useRouter } from "next/router";
 import { serialize } from "../utils/serializer";
 import {
   selectSlatePostToEdit,
-  setSlatePostToEdit,
+  setSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
 import { setModalCardPostEdited } from "@/reduxFeatures/app/postModalCardSlice";
 
@@ -26,28 +25,22 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
       // Reset Content in SlatePostToEdit State when component unmount
       dispatch(setSlatePostToEdit(null));
     };
-  }, []);
+  }, [dispatch]);
 
-  const createPost = async (e) => {
+  const createPost = async e => {
     e.preventDefault();
 
-    let emptyEditorData = [
-      {
-        type: "paragraph",
-        children: [
-          {
-            text: "",
-          },
-        ],
-      },
-    ];
+    const editorInnerHtml = (
+      document.getElementById(editorID) as HTMLInputElement
+    ).innerHTML;
 
-    if (
-      JSON.stringify(editorContentValue) === JSON.stringify(emptyEditorData)
-    ) {
+    const emptyEditorInnerHtml =
+      '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
+
+    if (editorInnerHtml === emptyEditorInnerHtml) {
       toast.warn("Type your message to proceed", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
+        toastId: "1"
       });
 
       return;
@@ -60,8 +53,8 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
       setUploading(true);
 
       // Serialize Html
-      let serializeNode = {
-        children: editorContentValue,
+      const serializeNode = {
+        children: editorContentValue
       };
       const serializedHtml = serialize(serializeNode);
 
@@ -73,13 +66,13 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
             { post: serializedHtml, group: router?.query?.id },
             {
               headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`
+              }
             }
           );
           toast.success("Post uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,
-            toastId: "1",
+            toastId: "1"
           });
 
           // Auto update feeds in /feed
@@ -90,12 +83,12 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Post", {
               position: toast.POSITION.TOP_RIGHT,
-              toastId: "1",
+              toastId: "1"
             });
           } else {
             toast.error("Failed to upload Post: Try Again", {
               position: toast.POSITION.TOP_RIGHT,
-              toastId: "1",
+              toastId: "1"
             });
           }
           setUploading(false);
@@ -103,18 +96,18 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
       } else {
         // Edit Post
         try {
-          const response = await axios.put(
+          await axios.put(
             `${config.serverUrl}/api/feed/${slatePostToEdit?._id}`,
             { post: serializedHtml, group: router?.query?.id },
             {
               headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-              },
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`
+              }
             }
           );
           toast.success("Post uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,
-            toastId: "1",
+            toastId: "1"
           });
 
           // Auto update & Rerender Groups Post
@@ -127,12 +120,12 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Post", {
               position: toast.POSITION.TOP_RIGHT,
-              toastId: "1",
+              toastId: "1"
             });
           } else {
             toast.error("Failed to upload Post: Try Again", {
               position: toast.POSITION.TOP_RIGHT,
-              toastId: "1",
+              toastId: "1"
             });
           }
           setUploading(false);
@@ -141,7 +134,7 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
     } else {
       toast.warn("Type your message to proceed", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
+        toastId: "1"
       });
     }
   };

@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useRouter } from "next/router";
+
 import React, { useState, useEffect } from "react";
-import { Card, Col, Image, Row } from "react-bootstrap";
+import { Card, Image } from "react-bootstrap";
 import Age from "../../Atoms/Age";
 import DOMPurify from "dompurify";
 import Replies from "./Replies";
@@ -11,26 +12,26 @@ import config from "@/config";
 import axios from "axios";
 import { toast } from "react-toastify";
 import styles from "@/styles/utils.module.scss";
-import PostMenu, { PostMenuModal } from "./PostMenu";
+import { PostMenuModal } from "./PostMenu";
 import {
   selectCommentIsDeleted,
-  selectCommentIsEdited,
+  selectCommentIsEdited
 } from "@/reduxFeatures/app/postModalCardSlice";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
+import Avatar from "@/components/Atoms/Avatar";
 
 const Comment = ({
   comment: commentComingIn,
   currentlyFollowing,
   handleEditComment,
   handleDeleteComment,
-  changeFollowingStatus,
+  changeFollowingStatus
 }: Record<string, any>) => {
   const [liked, setLiked] = useState(false);
   const [comment, setCommentComingIn] = useState(commentComingIn);
   const user = useSelector(selectUser);
   const commentIsEdited = useSelector(selectCommentIsEdited);
   const commentIsDeleted = useSelector(selectCommentIsDeleted);
-  const router = useRouter();
   const sanitizer = DOMPurify.sanitize;
 
   const [modalPost, setModalPost] = useState<Record<string, any>>({});
@@ -72,18 +73,18 @@ const Comment = ({
 
   const handleLike = async () => {
     try {
-      const { data } = await axios.get(
+      await axios.get(
         `${config.serverUrl}/api/likes/?type=comment&id=${comment?._id}`,
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
 
       if (!comment?.likes.includes(user?._id)) {
         // console.log("Not Included");
-        let newComment = { ...comment };
+        const newComment = { ...comment };
         newComment?.likes.push(user?._id);
 
         setLiked(true);
@@ -96,20 +97,20 @@ const Comment = ({
 
   const handleUnLike = async () => {
     try {
-      const { data } = await axios.delete(
+      await axios.delete(
         `${config.serverUrl}/api/likes/?type=comment&id=${comment?._id}`,
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
 
       if (comment?.likes.includes(user?._id)) {
         // console.log("Included");
-        let newComment = { ...comment };
+        const newComment = { ...comment };
         // newComment?.likes.push(user?._id);
-        let newLikesArr = newComment?.likes.filter((newC) => {
+        const newLikesArr = newComment?.likes.filter(newC => {
           // console.log("newC:", newC);
           return newC !== user?._id;
         });
@@ -127,13 +128,13 @@ const Comment = ({
 
   const postComment = async () => {
     const body = {
-      content: commentPost,
+      content: commentPost
     };
 
     if (body.content == "") {
       return toast.error("Comment cannot be empty", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
+        toastId: "1"
       });
     }
 
@@ -144,12 +145,12 @@ const Comment = ({
         body,
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
       // console.log("res:", res);
-      let replies = comment?.replies;
+      const replies = comment?.replies;
       replies?.unshift(res.data);
       // console.log("{ ...comment, replies }:", { ...comment, replies });
       setModalPost({ ...comment, replies });
@@ -172,13 +173,9 @@ const Comment = ({
       {console.log("comment:", comment)}
       <hr className="w-75 mx-auto text-muted" />
       <div className="col-12 d-flex align-items-center justify-content-start gap-2 mt-1">
-        <Image
-          src="/images/friends3.png"
-          alt="User avatar"
-          width={50}
-          height={50}
-          fluid
-          roundedCircle
+        <Avatar
+          src={comment?.author?.images?.avatar}
+          name={comment?.author?.firstName}
         />
         <div>
           <h6 style={{ fontWeight: "bold" }}>
@@ -208,7 +205,7 @@ const Comment = ({
       <Card.Body
         className="container px-md-5"
         dangerouslySetInnerHTML={{
-          __html: sanitizer(comment?.content),
+          __html: sanitizer(comment?.content)
         }}
       />
 
@@ -307,7 +304,7 @@ const Comment = ({
                   id="articleTextarea"
                   className="form-control"
                   placeholder="."
-                  onChange={(e) => setCommentPost(e.target.value)}
+                  onChange={e => setCommentPost(e.target.value)}
                   style={{ height: "80px" }}
                 ></textarea>
                 {/* <label htmlFor="articleTextarea">Reply here</label> */}

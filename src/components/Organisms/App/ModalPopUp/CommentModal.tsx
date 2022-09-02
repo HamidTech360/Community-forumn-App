@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Editor from "../../SlateEditor/Editor";
 import { useDispatch, useSelector } from "@/redux/store";
 // import {
 //   setShowPostModal,
@@ -11,13 +10,11 @@ import {
   selectShowCommentModal,
   selectEditableComment,
   setEditableComment,
-  setCommentIsEdited,
+  setCommentIsEdited
 } from "@/reduxFeatures/app/postModalCardSlice";
 
-import { Form, Image, Modal } from "react-bootstrap";
+import { Image, Modal } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
-import styles from "../../../../styles/explore.module.scss";
-import formStyles from "../../../../styles/templates/new-group/formField.module.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -54,13 +51,13 @@ const CommentModal = () => {
     // console.log("commentPost?.content:", commentPosting);
 
     const body = {
-      content: commentPosting,
+      content: commentPosting
     };
 
     if (body.content.trim() == "") {
       return toast.error("Comment cannot be empty", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: "1",
+        toastId: "1"
       });
     }
 
@@ -71,8 +68,8 @@ const CommentModal = () => {
         body,
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
 
@@ -125,7 +122,7 @@ const CommentModal = () => {
                   id="articleTextareaComment"
                   className="form-control"
                   placeholder="."
-                  onChange={(e) => setCommentPost(e.target.value)}
+                  onChange={e => setCommentPost(e.target.value)}
                   //   onChange={(e) => console.log(e.target.value)}
                   style={{ height: "100px" }}
                   defaultValue={commentPost?.content}

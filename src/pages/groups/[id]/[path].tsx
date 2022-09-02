@@ -1,6 +1,5 @@
 import React, { useEffect, useState, ReactNode } from "react";
-import { Card, CardImg, Container, Nav, Spinner } from "react-bootstrap";
-import PostCard from "@/components/Organisms/App/PostCard";
+import { Container } from "react-bootstrap";
 import CreatePost from "@/components/Organisms/CreatePost";
 import styles from "@/styles/feed.module.scss";
 import Head from "next/head";
@@ -12,8 +11,6 @@ import About from "@/components/Templates/Groups/About";
 import Timeline from "@/components/Templates/Groups/Timeline";
 import Friends from "@/components/Templates/Groups/Friends";
 import Media from "@/components/Templates/Groups/Media";
-import Bookmarks from "@/components/Templates/Profile/Bookmarks";
-import Link from "next/link";
 import GroupInfoCard from "@/components/Organisms/App/GroupInfoCard";
 import AuthContent from "@/components/Auth/AuthContent";
 import axios from "axios";
@@ -26,7 +23,7 @@ import // selectCreatePostModal,
 import {
   // selectCreatePostModal,
   // setShowCreatePostModal,
-  selectNewGroupFeed,
+  selectNewGroupFeed
 } from "@/reduxFeatures/api/groupSlice";
 
 interface IComponents {
@@ -66,15 +63,15 @@ const Group = () => {
         // console.log(error.response?.data);
       }
     })();
-  }, [router.isReady, newCreatePost, queryId]);
+  }, [router.isReady, newCreatePost, queryId, id]);
   // console.log(router.query);
 
   const Components: IComponents = {
-    timeline: <Timeline groupId={id} />,
-    about: <About type={"group"} data={groupData} />,
+    timeline: <Timeline groupId={id?.toString()} />,
+    about: <About data={groupData} />,
     photos: <Media />,
     members: <Friends data={groupData} />,
-    videos: <Media />,
+    videos: <Media />
   };
 
   return (

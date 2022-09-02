@@ -1,24 +1,19 @@
 import React, { useEffect, useState } from "react";
-import config from "../../../config";
-import axios from "axios";
 import joi from "joi-browser";
 import Head from "next/head";
 import { BsArrowLeft } from "react-icons/bs";
 import styles from "@/styles/new-group.module.css";
-import { Card, Badge } from "react-bootstrap";
+import { Badge } from "react-bootstrap";
 import FormField from "@/components/Templates/new-group/form";
 import Settings from "@/components/Templates/new-group/settings";
 import AddConnections from "@/components/Templates/new-group/connections";
 import AuthContent from "@/components/Auth/AuthContent";
-import Link from "next/link";
 import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/router";
-import { useSelector } from "@/redux/store";
 import "react-toastify/dist/ReactToastify.css";
 
 const CreateNewGroup = () => {
   const router = useRouter();
-  const user = useSelector((s) => s.authState.user);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({
     name: "",
@@ -26,7 +21,7 @@ const CreateNewGroup = () => {
     privacy: "",
     invite: "",
     allowedToPost: "",
-    groupMembers: [],
+    groupMembers: []
   });
 
   const [activeTab, setActiveTab] = useState(0);
@@ -39,11 +34,11 @@ const CreateNewGroup = () => {
     };
   }, []);
 
-  const moveToNewTab = (tabIndex) => {
+  const moveToNewTab = tabIndex => {
     setActiveTab(tabIndex);
   };
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const clone = { ...data };
     clone[e.currentTarget.name] = e.currentTarget.value;
     setData(clone);
@@ -63,20 +58,20 @@ const CreateNewGroup = () => {
     }
   };
 
-  const chooseConnections = (connectionIds) => {
+  const chooseConnections = connectionIds => {
     const clone = { ...data };
     clone["groupMembers"] = connectionIds;
     setData(clone);
   };
 
-  const validateGroupData = (data) => {
+  const validateGroupData = data => {
     const schema = {
       name: joi.string().required(),
       description: joi.string().required(),
       privacy: joi.string().required(),
       invite: joi.string().required(),
       allowedToPost: joi.string().required(),
-      groupMembers: joi.array(),
+      groupMembers: joi.array()
     };
     return joi.validate(data, schema);
   };
@@ -86,7 +81,7 @@ const CreateNewGroup = () => {
     if (error) {
       toast.error(error.details[0].message, {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: "2",
+        toastId: "2"
       });
       return console.log(error.details[0].message);
     }
@@ -96,21 +91,12 @@ const CreateNewGroup = () => {
     // console.log("Final group data is ", data);
 
     try {
-      const response = await axios.post(
-        `${config.serverUrl}/api/groups`,
-        { ...data },
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      );
       // console.log(response.data);
       setIsLoading(false);
       toast.success("Group created successfully", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1",
-        autoClose: 7000,
+        autoClose: 7000
       });
       setTimeout(() => {
         router.push("/groups");
@@ -120,17 +106,16 @@ const CreateNewGroup = () => {
       setIsLoading(false);
       toast.error("Failed to create group", {
         position: toast.POSITION.TOP_RIGHT,
-        toastId: "2",
+        toastId: "2"
       });
     }
   };
 
   const goBack = () => {
-  
-    if(activeTab==0) {
-      return router.push('/groups')
+    if (activeTab == 0) {
+      return router.push("/groups");
     }
-    setActiveTab(activeTab-1)
+    setActiveTab(activeTab - 1);
   };
 
   const tabs = [
@@ -144,15 +129,19 @@ const CreateNewGroup = () => {
           moveToNewTab={moveToNewTab}
         />
       ),
-      active: true,
+      active: true
     },
     {
       index: 1,
       label: "Settings",
       component: (
-        <Settings data={data} moveToNewTab={moveToNewTab} handleSelectOption={handleSelectOption} />
+        <Settings
+          data={data}
+          moveToNewTab={moveToNewTab}
+          handleSelectOption={handleSelectOption}
+        />
       ),
-      active: false,
+      active: false
     },
     {
       index: 2,
@@ -165,17 +154,9 @@ const CreateNewGroup = () => {
           data={data}
         />
       ),
-      active: false,
-    },
+      active: false
+    }
   ];
-
-  const handleSelectTabs = (tab, i) => {
-    tabs.map((item) => (item.active = false));
-    tabs[i].active = true;
-    // console.log(tabs);
-    setActiveTab(tabs[i].index);
-    // console.log(tabs[i]);
-  };
 
   return (
     <AuthContent>

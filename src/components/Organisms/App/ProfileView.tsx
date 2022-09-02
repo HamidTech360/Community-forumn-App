@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, ReactNode } from "react";
 import axios from "axios";
@@ -8,34 +9,29 @@ import {
   selectUser,
   user as authUser,
   setFollowing,
-  selectFollowing,
+  selectFollowing
 } from "@/reduxFeatures/authState/authStateSlice";
 import About from "@/components/Templates/Profile/About";
 import Timeline from "@/components/Templates/Profile/Timeline";
 import Friends from "@/components/Templates/Profile/Articles";
 import Media from "@/components/Templates/Profile/Media";
-import Bookmarks from "@/components/Templates/Profile/Bookmarks";
 import {
   Card,
   CardImg,
   Dropdown,
   DropdownButton,
   Image,
-  Nav,
+  Nav
 } from "react-bootstrap";
 import Link from "next/link";
 import { BsXCircleFill } from "react-icons/bs";
-import {
-  RiUserFollowFill,
-  RiMessage2Fill,
-  RiMessage2Line,
-} from "react-icons/ri";
+import { RiUserFollowFill, RiMessage2Fill } from "react-icons/ri";
 import makeSecuredRequest, {
-  deleteSecuredRequest,
+  deleteSecuredRequest
 } from "@/utils/makeSecuredRequest";
 
 import styles from "@/styles/profile.module.scss";
-import { datacatalog } from "googleapis/build/src/apis/datacatalog";
+import Avatar from "@/components/Atoms/Avatar";
 
 interface IComponents {
   about: ReactNode;
@@ -60,12 +56,12 @@ const Components: IComponents = {
   about: <About />,
   media: <Media />,
 
-  connections: <Friends />,
+  connections: <Friends />
 };
 
 const ProfileView = ({
   handlePath,
-  active,
+  active
 }: {
   active: string;
   handlePath: (path: string) => void;
@@ -82,7 +78,7 @@ const ProfileView = ({
   useEffect(() => {
     // Compile following Array
     if (user) {
-      const currentlyFollowing = user.following.map((follow) => {
+      const currentlyFollowing = user.following.map(follow => {
         return follow._id;
       });
       // const currentFollowers = user.followers.map((follow) => {
@@ -112,8 +108,8 @@ const ProfileView = ({
     try {
       const response = await axios.get(`${config.serverUrl}/api/users/${id}`, {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
       });
       setProfile(response.data);
       console.log("setProfile:", response.data);
@@ -123,7 +119,7 @@ const ProfileView = ({
     }
   };
 
-  const handleFollow = async (id) => {
+  const handleFollow = async id => {
     // Preset Following
     setFollowStatus(true);
     try {
@@ -134,8 +130,8 @@ const ProfileView = ({
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(authUser(response.data));
         } catch (error) {
@@ -149,7 +145,7 @@ const ProfileView = ({
     }
   };
 
-  const handleUnFollow = async (id) => {
+  const handleUnFollow = async id => {
     // Preset Un-Following
     setFollowStatus(false);
     try {
@@ -160,8 +156,8 @@ const ProfileView = ({
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(authUser(response.data));
         } catch (error) {
@@ -193,18 +189,14 @@ const ProfileView = ({
           className="image3"
         />
         <Card.Body className="d-flex position-relative justify-content-center align-items-center flex-column ">
-          <Image
-            width={130}
-            height={130}
-            src={profile?.images?.avatar || "/images/formbg.png"}
-            alt="avatar"
-            className="top-0 position-absolute"
-            style={{
-              transform: "translateY(-70%)",
-              border: "2px solid black",
-            }}
-            roundedCircle
-          />
+          <div className="position-absolute top-0">
+            <Avatar
+              src={profile?.images?.avatar}
+              name={profile.firstName}
+              width={130}
+              height={130}
+            />
+          </div>
           <div className=" mt-4 bold text-center fs-7">
             {profile?.firstName} {profile?.lastName}
           </div>
@@ -233,7 +225,7 @@ const ProfileView = ({
                     </>
                   )}
                 </div>
-                <Link href={`/chat?active=${profile?._id}`}>
+                <Link href={`/chat?active=${profile?._id}`} passHref>
                   <div className="col-5 col-sm-3 col-lg-2 btn btn-sm btn-outline-primary mx-1 p-0">
                     <RiMessage2Fill className={styles.mouseOverBtn} />{" "}
                     <span> message</span>
@@ -316,7 +308,7 @@ const ProfileView = ({
         <Card.Footer>
           {" "}
           <Nav className="d-flex justify-content-around  text-capitalize">
-            {Object.keys(Components).map((item, index) => (
+            {Object.keys(Components).map(item => (
               <Nav.Item
                 key={item}
                 onClick={() => handlePath(item.toLowerCase())}

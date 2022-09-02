@@ -6,8 +6,7 @@ import { Button, Container, Form, Image } from "react-bootstrap";
 
 const ForgotPassword = () => {
   //to review
-  const [isSent, setIsSent] = useState(false);
-  const wasEmailSent = false;
+  const [isSent] = useState(false);
 
   const [email, setEmail] = useState("");
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -74,7 +73,7 @@ const ForgotPassword = () => {
             style={{
               background: "#F5FEFF",
               borderRadius: 10,
-              border: "1px solid rgba(0, 0, 0, 0.125)",
+              border: "1px solid rgba(0, 0, 0, 0.125)"
             }}
           >
             <Form.Group>
@@ -82,7 +81,7 @@ const ForgotPassword = () => {
               <Form.Control
                 name="email"
                 placeholder="Enter email address"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
               />
             </Form.Group>
 

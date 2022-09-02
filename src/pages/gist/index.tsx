@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Head from "next/head";
 import MessageButton from "@/components/Atoms/messageButton";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -12,65 +12,42 @@ import {
   Card as BCard,
   Row,
   Spinner,
-  Modal,
-  Form,
-  Button,
-  Alert,
+  Button
 } from "react-bootstrap";
 import Card from "../../components/Organisms/Gist";
 import EndlessCarousel from "../../components/Molecules/Carousel";
 import GistCard from "../../components/Organisms/Gist/GistCard";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { toast, ToastContainer } from "react-toastify";
-import { FaTimes } from "react-icons/fa";
+import { ToastContainer } from "react-toastify";
 import config from "../../config";
 import usePagination, { Loader } from "@/hooks/usePagination";
 
 //STYLES
 import styles from "../../styles/gist.module.scss";
-import formStyles from "../../styles/templates/new-group/formField.module.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import {
   uploadCleanUp,
-  selectGistData,
-  selectGistIsLoading,
-  selectGistError,
   selectGistIsSuccess,
   setShowGistModal,
   selectShowGistModal,
-  setGistTitle,
-  setIsFetching,
-  selectIsFetching,
+  selectIsFetching
 } from "@/reduxFeatures/api/gistSlice";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 // import Editor from "@/components/Organisms/SlateEditor/Editor";
-import { useRouter } from "next/router";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 import GistPostEditorModal from "@/components/Organisms/App/ModalPopUp/GistPostEditorModal";
 
-const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
-  const router = useRouter();
-  const customId = "toastId";
+const Gist = () => {
   const dispatch = useDispatch();
-  const gistData = useSelector(selectGistData);
-  const gistIsLoading = useSelector(selectGistIsLoading);
-  const gistError = useSelector(selectGistError);
   const gistIsSuccess = useSelector(selectGistIsSuccess);
 
   const showGistModal = useSelector(selectShowGistModal);
-  const user = useSelector(selectUser);
   const isFetching = useSelector(selectIsFetching);
 
   const [allGists, setAllGists] = useState([]);
   const [filteredGists, setFilteredGists] = useState([]);
   const [gistCategories, setGistCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [formData, setFormData] = useState({
-    title: "",
-    post: "",
-  });
+
   const [activeGist, setActiveGist] = useState("All");
 
   const {
@@ -79,7 +56,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     error,
     fetchNextPage,
     mutate,
-    isValidating,
+    isValidating
   } = usePagination("/api/gists", "gists");
 
   useEffect(() => {
@@ -90,7 +67,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         const { data } = await axios.get(`${config.serverUrl}/api/category`);
         setGistCategories([
           { name: "All", type: "gist" },
-          ...data.allCategories,
+          ...data.allCategories
         ]);
       } catch (error) {
         console.log(error.response?.data);
@@ -120,7 +97,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     }
   }, [paginatedData]);
 
-  const filterCategory = (item) => {
+  const filterCategory = item => {
     // console.log("item.name", item.name);
     setActiveGist(item.name);
 
@@ -128,7 +105,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
       return setFilteredGists(allGists);
     }
 
-    const filtered = allGists.filter((gist) => gist.categories === item.name);
+    const filtered = allGists.filter(gist => gist.categories === item.name);
     if (filtered.length <= 0) {
       alert(`No Item in ${item.name} category`);
     }
@@ -147,16 +124,12 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
       <Container>
         <h2>Popular Gists</h2>
         <div>
-          <EndlessCarousel gap="mx-auto">
+          <EndlessCarousel>
             {allGists?.map((item, key) => (
               <Card
                 key={`article-${key}`}
                 id={item?._id}
-                image={
-                  item?.bbp_media
-                    ? item?.bbp_media[0]!.attachment_data?.thumb
-                    : "/images/formbg.png"
-                }
+                image={item?.media[0] ? item?.media[0] : "/images/formbg.png"}
                 title={item?.title}
                 author={`${item?.author?.firstName} ${item?.author?.lastName}`}
               />
@@ -170,7 +143,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
               style={{
                 position: "sticky",
                 top: "5rem",
-                border: "1px solid rgba(0, 0, 0, 0.125)",
+                border: "1px solid rgba(0, 0, 0, 0.125)"
               }}
             >
               <BCard.Header className="shadow-sm border-0">
@@ -213,7 +186,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                   style={{
                     marginLeft: "10px",
                     fontSize: "14px",
-                    fontWeight: "700",
+                    fontWeight: "700"
                   }}
                 >
                   Create Gist
@@ -260,7 +233,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                   style={{
                     textAlign: "center",
                     color: "gray",
-                    marginTop: "1.2rem",
+                    marginTop: "1.2rem"
                   }}
                 >
                   <b>Oops! Something went wrong</b>

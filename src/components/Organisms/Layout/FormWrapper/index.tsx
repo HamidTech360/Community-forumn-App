@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useCallback, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import Image from "next/image";
@@ -15,62 +15,67 @@ import { setAccessToken } from "@/misc/token";
 import config from "@/config";
 
 import jwt from "jsonwebtoken";
-import { TiSocialFacebookCircular } from "react-icons/ti";
 
 const FormWrapper = ({ form }: { form: ReactNode }) => {
+  const { pathname, push } = useRouter();
+  const responseGoogle = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async (response: Record<string, any>) => {
+      console.log(response);
+      // console.log(jwt.decode(response.credential));
+      if (response.credential) {
+        const profileObj = jwt.decode(response.credential);
+        console.log(profileObj);
+        try {
+          const { data } = await axios.post(
+            `${config.serverUrl}/api/auth/oauth?provider=google`,
+            profileObj
+          );
+          if (data.refreshToken) {
+            localStorage.setItem("accessToken", data.accessToken);
+          }
+
+          setAccessToken(data.accessToken);
+          // toast.success("Authenticated", {
+          //   position: toast.POSITION.TOP_RIGHT,
+          //   autoClose: 7000,
+          // });
+          push("/feed");
+        } catch (error) {
+          if (axios.isAxiosError(error) && error.response) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            toast.error((error.response.data as Record<string, any>).message, {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 7000
+            });
+          }
+        }
+      }
+    },
+    [push]
+  );
   useEffect(() => {
-    //@ts-ignore
-    // console.log(window.google?.accounts);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     window.google?.accounts.id.initialize({
       client_id:
         "491147804580-d58i9u8jsblukvmvg9jan7ve2cvn0qqa.apps.googleusercontent.com",
-      callback: (response: Record<string, any>) => responseGoogle(response),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      callback: (response: Record<string, any>) => responseGoogle(response)
     });
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
-    window.google!.accounts.id.renderButton(
+    window.google?.accounts.id.renderButton(
       document.getElementById("google-button"),
       {
         theme: "outline",
         size: "large",
-        shape: "square",
+        shape: "square"
       }
     );
-  }, []);
-  const { pathname, push } = useRouter();
+  }, [responseGoogle]);
 
-  const responseGoogle = async (response: Record<string, any>) => {
-    console.log(response);
-    // console.log(jwt.decode(response.credential));
-    if (response.credential) {
-      const profileObj = jwt.decode(response.credential);
-      console.log(profileObj);
-      try {
-        const { data } = await axios.post(
-          `${config.serverUrl}/api/auth/oauth?provider=google`,
-          profileObj
-        );
-        if (data.refreshToken) {
-          localStorage.setItem("accessToken", data.accessToken);
-        }
-
-        setAccessToken(data.accessToken);
-        // toast.success("Authenticated", {
-        //   position: toast.POSITION.TOP_RIGHT,
-        //   autoClose: 7000,
-        // });
-        push("/feed");
-      } catch (error) {
-        if (axios.isAxiosError(error) && error.response) {
-          toast.error((error.response.data as Record<string, any>).message, {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 7000,
-          });
-        }
-      }
-    }
-  };
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const responseFacebook = async (response: Record<string, any>) => {
     console.log(response);
     if (response.accessToken) {
@@ -87,9 +92,10 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
         setAccessToken(data.accessToken);
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           toast.error((error.response.data as Record<string, any>).message, {
             position: toast.POSITION.TOP_RIGHT,
-            autoClose: 7000,
+            autoClose: 7000
           });
         }
       }
@@ -137,6 +143,7 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
                   appId="620307832639763"
                   callback={responseFacebook}
                   scope="email public_profile"
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   render={(renderProps: Record<string, any>) => (
                     <Button
                       onClick={renderProps.onClick}

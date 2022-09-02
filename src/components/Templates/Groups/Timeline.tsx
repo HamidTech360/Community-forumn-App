@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import styles from "@/styles/timeline.module.scss";
 import Posts from "@/components/Templates/Profile/Timeline";
 // import CreatePost from "@/components/Organisms/CreatePost";
-import axios from "axios";
-import config from "@/config";
 
 import { useSelector } from "@/redux/store";
 // import { selectNewCreatePost } from "@/reduxFeatures/app/createPost";
@@ -11,7 +9,7 @@ import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
 import { useRouter } from "next/router";
 import usePagination from "@/hooks/usePagination";
 
-const Timeline = ({ groupId }: any) => {
+const Timeline = ({ groupId }: { groupId?: string }) => {
   const [timeLinePosts, setTimeLinePosts] = useState([]);
 
   const newlyCreatedPost = useSelector(selectNewGroupFeed);
@@ -28,7 +26,7 @@ const Timeline = ({ groupId }: any) => {
     error,
     fetchNextPage,
     mutate,
-    isValidating,
+    isValidating
   } = usePagination(`/api/feed/groups/${groupId}`, "posts");
 
   useEffect(() => {
@@ -37,11 +35,11 @@ const Timeline = ({ groupId }: any) => {
         setTimeLinePosts(paginatedData);
       }
     }
-  }, [paginatedData]);
+  }, [paginatedData, timeLinePosts]);
 
   useEffect(() => {
     mutate();
-  }, [newlyCreatedPost, queryId]);
+  }, [mutate, newlyCreatedPost, queryId]);
 
   return (
     <>

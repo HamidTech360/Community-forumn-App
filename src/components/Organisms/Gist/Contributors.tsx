@@ -1,10 +1,9 @@
 import { useSelector } from "@/redux/store";
 import { selectTopContributors } from "@/reduxFeatures/api/gistSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
-import { Card, Col, Image, Row } from "react-bootstrap";
+import React from "react";
+import { Card, Image } from "react-bootstrap";
 
 const Contributors = ({ data }) => {
   const router = useRouter();
