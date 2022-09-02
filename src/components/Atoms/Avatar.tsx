@@ -23,9 +23,7 @@ const Avatar = ({
         src={src || "/images/imagePlaceholder.jpg"}
         objectFit="cover"
         objectPosition="top"
-        placeholder="blur"
         priority
-        blurDataURL="/images/imagePlaceholder.jpg"
         width={width ? width : 70}
         height={height ? height : 70}
         alt={`${name}'s avatar`}
