@@ -53,7 +53,10 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         children: editorContentValue
       };
 
+      console.log("serializeNode:", serializeNode);
+      // console.log("editorInnerHtml:", editorInnerHtml);
       const serializedHtml: string = serialize(serializeNode);
+      console.log("serializedHtml:", serializedHtml);
       // Form Data
       const formData = new FormData();
 

@@ -5,6 +5,7 @@ import { jsx } from "slate-hyperscript";
 // Serialize Html
 export const serialize = node => {
   // console.log("node:", node);
+  // console.log("node:", node);
   if (Text.isText(node)) {
     let string = escapeHtml(node.text);
 
@@ -17,6 +18,11 @@ export const serialize = node => {
     if (node.underline) {
       string = `<u>${string}</u>`;
     }
+    // if (node.underline) {
+    //   string = `<u>${string}</u>`;
+    // }
+    // case "mention":
+    //   `<p>${children}</p>`;
     return string;
   }
 
@@ -56,6 +62,10 @@ export const serialize = node => {
       }" height="200" width="300" title="${node.alt}" alt="${
         node.alt
       }" frameBorder="0">${children}</iframe>`;
+    case "mention":
+      console.log("node:", node);
+      `<p>${children}</p>`;
+      `<p>${node.character}</p>`;
     default:
       return children;
   }
@@ -65,6 +75,7 @@ export const serialize = node => {
 
 const ELEMENT_TAGS = {
   P: () => ({ type: "paragraph" }),
+  M: () => ({ type: "mention" }),
   A: el => ({
     type: "link",
     url: el.getAttribute("href"),

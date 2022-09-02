@@ -12,7 +12,7 @@ export const toggleBlock = (editor, format) => {
   const isActive = isBlockActive(editor, format);
   const isList = list_types.includes(format);
   const isIndent = alignment.includes(format);
-  const isAligned = alignment.some((alignmentType) =>
+  const isAligned = alignment.some(alignmentType =>
     isBlockActive(editor, alignmentType)
   );
 
@@ -20,11 +20,11 @@ export const toggleBlock = (editor, format) => {
     messy, nested DOM structure and bugs due to that.*/
   if (isAligned && isIndent) {
     Transforms.unwrapNodes(editor, {
-      match: (n) =>
+      match: n =>
         alignment.includes(
           !Editor.isEditor(n) && SlateElement.isElement(n) && n.type
         ),
-      split: true,
+      split: true
     });
   }
 
@@ -32,26 +32,26 @@ export const toggleBlock = (editor, format) => {
   if (isIndent) {
     Transforms.wrapNodes(editor, {
       type: format,
-      children: [],
+      children: []
     });
     return;
   }
   Transforms.unwrapNodes(editor, {
-    match: (n) =>
+    match: n =>
       list_types.includes(
         !Editor.isEditor(n) && SlateElement.isElement(n) && n.type
       ),
-    split: true,
+    split: true
   });
 
   Transforms.setNodes(editor, {
-    type: isActive ? "paragraph" : isList ? "list-item" : format,
+    type: isActive ? "paragraph" : isList ? "list-item" : format
   });
 
   if (isList && !isActive) {
     Transforms.wrapNodes(editor, {
       type: format,
-      children: [],
+      children: []
     });
   }
 };
@@ -69,16 +69,14 @@ export const toggleMark = (editor, format) => {
 };
 export const isMarkActive = (editor, format) => {
   const marks = Editor.marks(editor);
-  // console.log("marks:", marks);
-  // console.log("format:", format);
 
   return marks ? marks[format] === true : false;
 };
 
 export const isBlockActive = (editor, format) => {
   const [match] = Editor.nodes(editor, {
-    match: (n) =>
-      !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format,
+    match: n =>
+      !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format
   });
 
   return !!match;
@@ -111,7 +109,7 @@ export const getMarked = (leaf, children) => {
         style={{
           backgroundColor: "rgb(233, 231, 231)",
           borderRadius: "5px",
-          display: "inline",
+          display: "inline"
         }}
       >
         {children}
@@ -127,10 +125,9 @@ export const getMarked = (leaf, children) => {
   return children;
 };
 
-export const getBlock = (props) => {
+export const getBlock = props => {
   const { element, children, attributes } = props;
 
-  console.log("Element TYPE IS:", element.type);
   switch (element.type) {
     case "blockquote":
       return (
@@ -151,7 +148,7 @@ export const getBlock = (props) => {
             display: "flex",
             alignItems: "center",
             listStylePosition: "inside",
-            flexDirection: "column",
+            flexDirection: "column"
           }}
           {...attributes}
         >
@@ -165,7 +162,7 @@ export const getBlock = (props) => {
             display: "flex",
             alignItems: "flex-end",
             listStylePosition: "inside",
-            flexDirection: "column",
+            flexDirection: "column"
           }}
           {...attributes}
         >
@@ -197,8 +194,6 @@ export const getBlock = (props) => {
 };
 
 const Mention = ({ attributes, children, element }) => {
-  console.log("MENTIONED");
-  console.log("@@@", children, "@", element?.character);
   const selected = useSelected();
   const focused = useFocused();
   return (
@@ -215,7 +210,7 @@ const Mention = ({ attributes, children, element }) => {
         // backgroundColor: "#eee",
         backgroundColor: "#e8f5fa",
         fontSize: "0.9em",
-        boxShadow: selected && focused ? "0 0 0 2px #B4D5FF" : "none",
+        boxShadow: selected && focused ? "0 0 0 2px #B4D5FF" : "none"
       }}
     >
       {children}@{element?.character}
