@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { Form, Button, Card } from "react-bootstrap";
 import { FiSend } from "react-icons/fi";
 import { BsArrowLeft, BsDot } from "react-icons/bs";
-
 import axios from "axios";
 import { useRouter } from "next/router";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,7 +18,8 @@ import styles from "@/styles/templates/chatEditor.module.scss";
 
 const Chat = () => {
   const user = useSelector(selectUser);
-
+  // const mainDisplay = useRef();
+  // const mainSidebar = useRef();
   const router = useRouter();
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -46,24 +46,30 @@ const Chat = () => {
 
   useEffect(() => {
     socket.current.on("getMessage", data => {
+      //console.log('get message emission received');
       setReceivedMessage({
         sender: data.senderId,
         message: data.message,
         createdAt: "Just now"
       });
+      // console.log('new data', data);
     });
   }, []);
 
   useEffect(() => {
+    console.log(receivedMessage);
+
     const currentConversation = conversations.find(
       item =>
         item.sender._id === currentChat?._id ||
         item.receiver._id === currentChat?._id
     );
-
+    console.log(`current conversation is`, currentConversation);
     receivedMessage &&
       currentConversation?.members.includes(receivedMessage.sender) &&
       setMessages(prev => [...prev, receivedMessage]);
+
+    //receivedMessage
   }, [conversations, currentChat?._id, receivedMessage, user]);
 
   useEffect(() => {
@@ -210,7 +216,7 @@ const Chat = () => {
 
           {showMsgArea && (
             <div
-              className={`${chatStyles.messageAreaCol}`}
+              className={`${chatStyles.messageAreaCol} col-lg-8 col-md-8 col-sm-12 col-xs-12 `}
               style={{ overflowX: "hidden" }}
             >
               {currentChat ? (
@@ -282,6 +288,7 @@ const Chat = () => {
                     onClick={e => sendMessage(e)}
                     style={{ minWidth: "70px" }}
                   >
+                    {" "}
                     <FiSend size={22} />{" "}
                   </Button>
                 </div>
