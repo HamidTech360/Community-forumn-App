@@ -14,6 +14,7 @@ import axios from "axios";
 
 import styles from "@/styles/utils.module.scss";
 import { PostMenuModal } from "./PostMenu";
+import Avatar from "@/components/Atoms/Avatar";
 
 const Replies = ({
   reply: replyComingIn,
@@ -127,13 +128,11 @@ Record<string, any>) => {
       />
 
       <div className="d-flex align-items-center justify-content-start gap-2 mt-1">
-        <Image
-          src="/images/friends3.png"
-          alt="User avatar"
+        <Avatar
+          src={reply?.author?.images?.avatar}
+          name="User avatar"
           width={50}
           height={50}
-          fluid
-          roundedCircle
         />
         <div>
           <h6 style={{ fontWeight: "bold" }}>

@@ -174,7 +174,7 @@ const Comment = ({
       <hr className="w-75 mx-auto text-muted" />
       <div className="col-12 d-flex align-items-center justify-content-start gap-2 mt-1">
         <Avatar
-          src={comment?.author?.images.avatar}
+          src={comment?.author?.images?.avatar}
           name={comment?.author?.firstName}
         />
         <div>
