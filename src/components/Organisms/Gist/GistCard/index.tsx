@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Button, Card } from "react-bootstrap";
 import Link from "next/link";
@@ -37,6 +37,7 @@ import Avatar from "@/components/Atoms/Avatar";
 //     body: string;
 //   };
 // }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const GistCard = ({ gist, primary, trimmed }: any) => {
   console.log(gist);
   const sanitizer = DOMPurify.sanitize;
@@ -71,7 +72,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
     // console.log("gist_id:", gist._id);
     try {
       // Delete while on /gist or /gist/:id
-      const { data } = await axios.delete(
+      await axios.delete(
         `${config.serverUrl}/api/gists/${
           router.query.id ? router.query.id : gist._id
         }`,

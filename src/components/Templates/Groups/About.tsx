@@ -4,7 +4,7 @@ import React from "react";
 import { Container, Card } from "react-bootstrap";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const About = ({ data }: { data: Record<string, any> }) => {
+const About = ({ data }: { data?: Record<string, any> }) => {
   console.log("data:", data);
 
   return (

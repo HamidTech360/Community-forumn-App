@@ -106,7 +106,7 @@ const Gist = ({
           // Comments
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           await arr.forEach(async (element: Record<string, any>) => {
-            const authorsName = `${element.author.firstName} ${element.author.lastName}`;
+            const authorsName = `${element.author?.firstName} ${element.author?.lastName}`;
             const postReplies = element.replies;
 
             if (counts[authorsName]) {
@@ -119,8 +119,9 @@ const Gist = ({
             }
 
             // Replies
-            await postReplies.forEach(async reply => {
-              const commentReply = `${reply.author.firstName} ${reply.author.lastName}`;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            await postReplies.forEach(async (reply: Record<string, any>) => {
+              const commentReply = `${reply?.author?.firstName} ${reply?.author.lastName}`;
               const secondLevelReply = reply.replies;
 
               if (counts[commentReply]) {
@@ -133,18 +134,24 @@ const Gist = ({
               }
 
               // 2nd level replies
-              await secondLevelReply.forEach(async element => {
-                const replyAuthorsName = `${element.author.firstName} ${element.author.lastName}`;
+              await secondLevelReply.forEach(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                async (element: Record<string, any>) => {
+                  const replyAuthorsName = `${element?.author?.firstName} ${element?.author?.lastName}`;
 
-                if (counts[replyAuthorsName]) {
-                  counts[replyAuthorsName] = {
-                    num: counts[replyAuthorsName]["num"] + 1,
-                    id: element.author._id
-                  };
-                } else {
-                  counts[replyAuthorsName] = { num: 1, id: element.author._id };
+                  if (counts[replyAuthorsName]) {
+                    counts[replyAuthorsName] = {
+                      num: counts[replyAuthorsName]["num"] + 1,
+                      id: element.author._id
+                    };
+                  } else {
+                    counts[replyAuthorsName] = {
+                      num: 1,
+                      id: element.author._id
+                    };
+                  }
                 }
-              });
+              );
             });
           });
         })();
@@ -289,7 +296,7 @@ const Gist = ({
             <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
             <div className="row">
               <div className="col-2 col-md-2">
-                <Avatar src={user?.images?.avatar} name={user.firstName} />
+                <Avatar src={user?.images?.avatar} name={user?.firstName} />
               </div>
               <div className="col-7 col-md-10">
                 {/* <div className="form-floating shadow"> */}

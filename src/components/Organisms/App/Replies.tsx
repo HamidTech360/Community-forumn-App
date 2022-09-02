@@ -85,7 +85,7 @@ Record<string, any>) => {
 
   const handleUnLike = async () => {
     try {
-      const { data } = await axios.delete(
+      await axios.delete(
         `${config.serverUrl}/api/likes/?type=comment&id=${reply?._id}`,
         {
           headers: {

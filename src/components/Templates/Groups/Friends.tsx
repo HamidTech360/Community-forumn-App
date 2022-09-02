@@ -5,7 +5,7 @@ import FriendsData from "../FriendsList/FriendsData";
 import styles from "../../../styles/friends.module.scss";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Friends = ({ data }: { data: Record<string, any> }) => {
+const Friends = ({ data }: { data?: Record<string, any> }) => {
   // const Data: FriendsDataType = {
   //   friends: [
   //     {

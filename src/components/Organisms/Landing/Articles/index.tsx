@@ -20,6 +20,7 @@ const Articles = ({ articles }: { articles?: Record<string, any> }) => {
         </div>
         <div className={`gap-5 ${styles.cards}`}>
           <EndlessCarousel>
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any*/}
             {articles?.map((post: any, key: number) => (
               <Card
                 _id={post._id}

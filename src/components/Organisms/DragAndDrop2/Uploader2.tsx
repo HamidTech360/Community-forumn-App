@@ -144,7 +144,7 @@ const Uploader2 = () => {
     // Make sure to revoke the data uris to avoid memory leaks. Will run on unmount
     return () =>
       acceptingFiles.forEach(file => URL.revokeObjectURL(file.preview));
-  }, []);
+  }, [acceptingFiles]);
 
   const fileRejectionItems = rejectingFiles.map(({ file, errors }, index) => (
     <small key={`${file.path}-${index}`}>

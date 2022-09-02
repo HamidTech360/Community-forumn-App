@@ -67,8 +67,8 @@ const Group = () => {
   // console.log(router.query);
 
   const Components: IComponents = {
-    timeline: <Timeline groupId={id.toString()} />,
-    about: <About type={"group"} data={groupData} />,
+    timeline: <Timeline groupId={id?.toString()} />,
+    about: <About data={groupData} />,
     photos: <Media />,
     members: <Friends data={groupData} />,
     videos: <Media />

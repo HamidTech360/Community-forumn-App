@@ -1,9 +1,8 @@
-import Link from "next/link";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
-import { useRouter } from "next/router";
-import React, { ReactNode, useEffect, useState, useRef } from "react";
+import React, { ReactNode, useState, useRef } from "react";
 import { AiFillEdit } from "react-icons/ai";
-import { Card, CardImg, Button, Image, Nav } from "react-bootstrap";
+import { Card, Button, Image, Nav } from "react-bootstrap";
 import About from "../../Templates/Profile/About";
 import Bookmarks from "../../Templates/Profile/Bookmarks";
 import Articles from "../../Templates/Profile/Articles";
@@ -14,7 +13,6 @@ import { selectUser, user } from "@/reduxFeatures/authState/authStateSlice";
 import config from "@/config";
 import Friends from "../../Templates/Profile/Friends";
 import styles from "@/styles/templates/profile/profilecard.module.scss";
-import { unstable_renderSubtreeIntoContainer } from "react-dom";
 import { toast, ToastContainer } from "react-toastify";
 import Spinner from "react-spinner-material";
 
@@ -31,7 +29,7 @@ interface IComponents {
 
 const ProfileCard = ({
   handlePath,
-  active,
+  active
 }: {
   active: string;
   handlePath: (path: string) => void;
@@ -48,25 +46,25 @@ const ProfileCard = ({
 
   const [selectedImg, setSelectedImg] = useState({
     file: "",
-    fileURL: null,
+    fileURL: null
   });
   const [selectedCoverImage, setSelectedCoverImage] = useState({
     file: "",
-    fileURL: null,
+    fileURL: null
   });
   const [showUpdateImgBtn, setShowUpdateImgBtn] = useState(false);
   const [showUpdateCoverBtn, setShowUpdateCoverBtn] = useState(false);
   const fileInput = useRef<any>();
   const coverFileInpt = useRef<any>();
 
-  const triggerClick = (item) => {
+  const triggerClick = item => {
     item?.current?.click();
   };
 
-  const handleImgSelection = (e) => {
+  const handleImgSelection = e => {
     e.preventDefault();
-    let reader = new FileReader();
-    let file = e.target.files[0];
+    const reader = new FileReader();
+    const file = e.target.files[0];
     console.log(e.target.name);
 
     reader.onloadend = () => {
@@ -90,7 +88,7 @@ const ProfileCard = ({
     reader.readAsDataURL(file);
   };
 
-  const handleImageUpload = async (item) => {
+  const handleImageUpload = async item => {
     item == "avatar" ? setProgress1(true) : setProgress2(true);
     const formData = new FormData();
     formData.append(
@@ -105,15 +103,15 @@ const ProfileCard = ({
         {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            "Content-Type": "multipart/form-data",
-          },
+            "Content-Type": "multipart/form-data"
+          }
         }
       );
 
       console.log(response.data);
       toast.success("Image uploaded", {
         position: toast.POSITION.TOP_RIGHT,
-        autoClose: 5000,
+        autoClose: 5000
       });
       setProgress1(false);
       setProgress2(false);
@@ -124,7 +122,7 @@ const ProfileCard = ({
       console.log(error.response?.data);
       toast.error("Image uploade failed", {
         position: toast.POSITION.TOP_RIGHT,
-        autoClose: 5000,
+        autoClose: 5000
       });
       setProgress1(false);
       setProgress2(false);
@@ -137,7 +135,7 @@ const ProfileCard = ({
     media: <Media />,
     articles: <Articles />,
     bookmarks: <Bookmarks />,
-    connections: <Friends user={user} />,
+    connections: <Friends user={user} />
   };
   return (
     <Card className="mt-2 mb-3">
@@ -202,14 +200,14 @@ const ProfileCard = ({
         )}
 
         <input
-          onChange={(e) => handleImgSelection(e)}
+          onChange={e => handleImgSelection(e)}
           name="image"
           type="file"
           ref={fileInput}
           style={{ display: "none" }}
         />
         <input
-          onChange={(e) => handleImgSelection(e)}
+          onChange={e => handleImgSelection(e)}
           name="cover"
           type="file"
           ref={coverFileInpt}
@@ -246,7 +244,7 @@ const ProfileCard = ({
       <Card.Footer>
         {" "}
         <Nav className="d-flex justify-content-around  text-capitalize">
-          {Object.keys(Components).map((item, index) => (
+          {Object.keys(Components).map(item => (
             <Nav.Item
               key={item}
               style={{ cursor: "pointer" }}

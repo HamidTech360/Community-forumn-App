@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import PropTypes from "prop-types";
 import { Card as BCard } from "react-bootstrap";
 import DOMPurify from "dompurify";
 
@@ -9,12 +8,12 @@ interface ICard {
   _id: string;
   title: string;
   image: string;
-  author?: string;
+  author?: { _id: string; firstName: string; lastName: string };
   body: string;
   size?: string;
 }
 
-const Card = ({ _id, image, title, author, body, size }) => {
+const Card = ({ _id, image, title, author, body, size }: ICard) => {
   const sanitizer = DOMPurify.sanitize;
   const router = useRouter();
 
@@ -22,8 +21,8 @@ const Card = ({ _id, image, title, author, body, size }) => {
     router.push({
       pathname: `/profile/[id]`,
       query: {
-        id: author?._id,
-      },
+        id: author?._id
+      }
     });
   };
 
@@ -40,7 +39,7 @@ const Card = ({ _id, image, title, author, body, size }) => {
           border: size === "small" ? "none" : "1px solid rgba(0, 0, 0, 0.125)",
 
           width: "100%",
-          minHeight: "380px",
+          minHeight: "380px"
         }}
       >
         <BCard.Img
@@ -49,7 +48,7 @@ const Card = ({ _id, image, title, author, body, size }) => {
           style={{
             height: size === "small" ? "110px" : "150px",
 
-            objectFit: "cover",
+            objectFit: "cover"
           }}
           onClick={redirectPage}
         />
@@ -66,7 +65,7 @@ const Card = ({ _id, image, title, author, body, size }) => {
                 style={{
                   marginTop: "-2rem",
                   fontSize: "0.8rem",
-                  cursor: "pointer",
+                  cursor: "pointer"
                 }}
                 onClick={redirectPage}
               >
@@ -81,7 +80,7 @@ const Card = ({ _id, image, title, author, body, size }) => {
                 lineHeight: "1.5rem",
                 overflow: "hidden",
                 color: "#8E8E8E",
-                fontSize: "0.9rem",
+                fontSize: "0.9rem"
               }}
             />
           </div>

@@ -30,7 +30,6 @@ import {
   setUnLikeChangedModal,
   selectUnLikeChangedModal
 } from "@/reduxFeatures/app/postModalCardSlice";
-import { selectCreatePostModal } from "@/reduxFeatures/app/createPost";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 
 import { selectImageModalOpen } from "@/reduxFeatures/app/postModalCardSlice";
@@ -303,20 +302,6 @@ const PostCard = ({
 
     setPostComingIn(newPostState);
     setLiked(false);
-
-    // Axios Unlike Post
-    let type: string;
-    const currentRoute = router.pathname;
-    if (currentRoute == "/feed") {
-      type = "feed";
-    } else if (
-      currentRoute == "/groups" ||
-      currentRoute == "/groups/[id]/[path]"
-    ) {
-      type = "feed";
-    } else if (currentRoute.includes("profile")) {
-      type = "post";
-    }
 
     if (bool) {
       // Like Post

@@ -55,10 +55,7 @@ import {
 import OpenShareModal from "../ModalPopUp/OpenShareModal";
 import FeedPostEditorModal from "../ModalPopUp/FeedPostEditorModal";
 import { PostMenu } from "../PostMenu";
-import {
-  selectImageModalOpen,
-  selectImageModalImg
-} from "@/reduxFeatures/app/postModalCardSlice";
+import { selectImageModalOpen } from "@/reduxFeatures/app/postModalCardSlice";
 import ImageModal from "../ModalPopUp/ImageModal";
 import MediaDisplay from "../MediaMasonry";
 import Avatar from "@/components/Atoms/Avatar";
@@ -69,6 +66,7 @@ const ModalCard = ({
   mutate,
   trimmed
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   post: Record<string, any>;
   modalToggle?: () => void;
   mutate?: () => void;
@@ -92,9 +90,9 @@ const ModalCard = ({
   const sanitizer = DOMPurify.sanitize;
 
   // - comment section
-  const [modalPost, setModalPost] = useState<Record<string, any>>({});
+
   const [commentPost, setCommentPost] = useState("");
-  const [showComment, setShowComment] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const currentlyFollowing = useSelector(selectFollowing);
   const showModal = useSelector(selectCreatePostModal);
@@ -104,7 +102,6 @@ const ModalCard = ({
     useModalWithShare();
 
   const imageModalOpen = useSelector(selectImageModalOpen);
-  const imageModalImg = useSelector(selectImageModalImg);
 
   // const [imageModalOpen, setImageModalOpen] = useState(false);
   // const [imageModalImg, setImageModalImg] = useState(null);
@@ -357,10 +354,10 @@ const ModalCard = ({
       const comments = post?.comments;
       comments?.unshift(res.data);
       // console.log("{ ...post, comments }:", { ...post, comments });
-      setModalPost({ ...post, comments });
+
       setPostComingIn({ ...post, comments });
       setLoading(false);
-      setShowComment(false);
+
       setCommentPost("");
       (document.getElementById("articleTextarea") as HTMLInputElement).value =
         "";

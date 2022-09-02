@@ -10,7 +10,7 @@ import { useSelector } from "@/redux/store";
 import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
 import { useRouter } from "next/router";
 
-const Timeline = ({ groupId }: { groupId: string }) => {
+const Timeline = ({ groupId }: { groupId?: string }) => {
   const [timeLinePosts, setTimeLinePosts] = useState([]);
 
   const newlyCreatedPost = useSelector(selectNewGroupFeed);
@@ -24,7 +24,7 @@ const Timeline = ({ groupId }: { groupId: string }) => {
   useEffect(() => {
     (async function () {
       const response = await axios.get(
-        `${config.serverUrl}/api/feed/groups/${groupId}`,
+        `${config.serverUrl}/api/feed/groups/${queryId}`,
         {
           headers: {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`

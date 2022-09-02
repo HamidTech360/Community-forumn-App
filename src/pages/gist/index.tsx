@@ -124,7 +124,7 @@ const Gist = () => {
       <Container>
         <h2>Popular Gists</h2>
         <div>
-          <EndlessCarousel gap="mx-auto">
+          <EndlessCarousel>
             {allGists?.map((item, key) => (
               <Card
                 key={`article-${key}`}
