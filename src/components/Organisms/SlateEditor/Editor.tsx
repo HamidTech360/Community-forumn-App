@@ -321,13 +321,14 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
                   {/* ++++++++++++++++++++++++++++++ */}
                   {target && chars?.length > 0 && (
                     <Portal>
+                      {console.log("GREATER...")}
                       <div
                         ref={ref}
                         style={{
                           top: "-9999px",
                           left: "-9999px",
                           position: "absolute",
-                          zIndex: 1,
+                          zIndex: 9999,
                           padding: "3px",
                           background: "white",
                           borderRadius: "4px",
@@ -343,6 +344,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
                               borderRadius: "3px",
                               background:
                                 i === index ? "#B4D5FF" : "transparent",
+                              borderBottom: "1px solid black",
                             }}
                           >
                             {char}

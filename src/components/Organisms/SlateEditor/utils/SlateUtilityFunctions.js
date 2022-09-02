@@ -212,7 +212,8 @@ const Mention = ({ attributes, children, element }) => {
         verticalAlign: "baseline",
         display: "inline-block",
         borderRadius: "4px",
-        backgroundColor: "#eee",
+        // backgroundColor: "#eee",
+        backgroundColor: "#e8f5fa",
         fontSize: "0.9em",
         boxShadow: selected && focused ? "0 0 0 2px #B4D5FF" : "none",
       }}

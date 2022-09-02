@@ -11,7 +11,7 @@ export const Portal = ({ children }) => {
     : null;
 };
 
-export type MentionElement = {
+export type MentionElement = { 
   type: "mention";
   character: string;
   children: CustomText[];
