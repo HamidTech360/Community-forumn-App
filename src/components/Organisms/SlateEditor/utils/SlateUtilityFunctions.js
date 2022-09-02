@@ -3,6 +3,7 @@ import Link from "../Elements/Link/Link";
 import Image from "../Elements/Embed/Image";
 import Video from "../Elements/Embed/Video";
 import styles from "../../../../styles/SlateEditor/SlateUtilityFunctions_Slate.module.scss";
+import { useFocused, useSelected } from "slate-react";
 
 const alignment = ["alignLeft", "alignRight", "alignCenter"];
 const list_types = ["orderedList", "unorderedList"];
@@ -129,6 +130,7 @@ export const getMarked = (leaf, children) => {
 export const getBlock = (props) => {
   const { element, children, attributes } = props;
 
+  console.log("Element TYPE IS:", element.type);
   switch (element.type) {
     case "blockquote":
       return (
@@ -187,7 +189,35 @@ export const getBlock = (props) => {
       return <Image {...props} alt="image" />;
     case "video":
       return <Video {...props} />;
+    case "mention":
+      return <Mention {...props} />;
     default:
       return <div {...attributes}>{children}</div>;
   }
+};
+
+const Mention = ({ attributes, children, element }) => {
+  console.log("MENTIONED");
+  console.log("@@@", children, "@", element?.character);
+  const selected = useSelected();
+  const focused = useFocused();
+  return (
+    <span
+      {...attributes}
+      contentEditable={false}
+      data-cy={`mention-${element?.character?.replace(" ", "-")}`}
+      style={{
+        padding: "3px 3px 2px",
+        margin: "0 1px",
+        verticalAlign: "baseline",
+        display: "inline-block",
+        borderRadius: "4px",
+        backgroundColor: "#eee",
+        fontSize: "0.9em",
+        boxShadow: selected && focused ? "0 0 0 2px #B4D5FF" : "none",
+      }}
+    >
+      {children}@{element?.character}
+    </span>
+  );
 };
