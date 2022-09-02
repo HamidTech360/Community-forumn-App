@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
-import { Card, Image } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import Age from "../../Atoms/Age";
 import DOMPurify from "dompurify";
 import { useSelector } from "@/redux/store";
