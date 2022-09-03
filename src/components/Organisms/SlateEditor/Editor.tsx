@@ -7,20 +7,19 @@ import React, {
 } from "react";
 import {
   Editor as slateEditor,
-  BaseEditor,
   BaseText,
   createEditor,
   Descendant,
   Range,
   Transforms
 } from "slate";
-import { HistoryEditor, withHistory } from "slate-history";
+import { withHistory } from "slate-history";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
 import Toolbar from "./Toolbar/Toolbar";
 import { getMarked, getBlock } from "./utils/SlateUtilityFunctions.js";
 import withLinks from "./plugins/withLinks.js";
 import withEmbeds from "./plugins/withEmbeds.js";
-// import withMentions from "./plugins/withMentions";
+import withMentions from "./plugins/withMentions";
 import {
   setIndex,
   selectIndex,
@@ -28,8 +27,6 @@ import {
   selectSearch,
   setTarget,
   selectTarget
-  // setFollowedUserDetails,
-  // selectFollowedUserDetails
 } from "@/reduxFeatures/app/mentionsSlice";
 
 import styles from "../../../styles/SlateEditor/Editor_Slate.module.scss";
@@ -41,43 +38,10 @@ import deserializeFromHtml from "./utils/serializer";
 
 import { selectSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 import { useSelector } from "@/redux/store";
-import Portal from "./Elements/Mentions/Portals";
-// import useMentionUsers from "@/hooks/useMentionUsers";
-// import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import Portal, { insertMention, PortalDiv } from "./Elements/Mentions/Portals";
 import { useDispatch } from "react-redux";
-
-// Best Practice Is To Declear & Export Custom Types
-export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor;
-
-export type ParagraphElement = {
-  type: "paragraph";
-  children: CustomText[];
-};
-
-export type HeadingElement = {
-  type: "heading";
-  level: number;
-  children: CustomText[];
-};
-
-// export type CustomElement = ParagraphElement | HeadingElement;
-export type CustomElement = ParagraphElement | HeadingElement | MentionElement;
-
-export type MentionElement = {
-  type: "mention";
-  character: string;
-  children: CustomText[];
-};
-
-// export type FormattedText = { text: string; bold?: true };
-export type FormattedText = { text: string; bold?: true; italic?: true };
-
-// In this example, CustomText is equal to FormattedText but in a real editor, there can be more types of text like text in a code block which may not allow formatting for example
-export type CustomText = FormattedText;
-
-export type EmptyText = {
-  text: string;
-};
+import { MentionUserApiSearch } from "../App/ApiSearch/globalApiSearch";
+import { CustomEditor, CustomElement } from "./utils/slateTypes";
 
 declare module "slate" {
   interface CustomTypes {
@@ -85,13 +49,13 @@ declare module "slate" {
     Element: CustomElement;
     // Text: CustomText | EmptyText;
     Text: BaseText & { placeholder?: string };
-    // Text: (BaseText & { placeholder?: string }) | EmptyText;
   }
 }
 
 const Element = props => {
   return getBlock(props);
 };
+
 const Leaf = ({ attributes, children, leaf }) => {
   children = getMarked(leaf, children);
   return <span {...attributes}>{children}</span>;
@@ -107,52 +71,51 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   const index = useSelector(selectIndex);
   const search = useSelector(selectSearch);
   const target = useSelector(selectTarget);
-  // const chars = useSelector(selectFollowedUserDetails);
-  const chars = CHARACTERS?.filter(c =>
-    c.toLowerCase().startsWith(search.toLowerCase())
-  ).slice(0, 10);
+  const [listMention, setListMention] = useState([]);
+  const [mentionedUsersList, setMentionedUsersList] = useState([]);
 
-  // const user = useSelector(selectUser);
-  // const followedUsers = user.following;
-  // Populate Users Been Followed For @Mentions
-  // useMentionUsers();
+  useEffect(() => {
+    // Axios fetch users by search
+    if (search.length > 0) {
+      const fetchMentionUser = async () => {
+        const mentionUser = await MentionUserApiSearch(search);
+        setListMention(mentionUser);
+      };
+      fetchMentionUser();
+    }
 
-  // console.log("followedUserDetails+++:", followedUserDetails);
-  // console.log("chars+++:", chars);
+    return () => {
+      dispatch(setSearch(""));
+    };
+  }, [search, dispatch]);
 
-  // useEffect(() => {
-  //   // Populate Users Been Followed For @Mentions
-  //   if (!chars) {
-  //     (async function () {
-  //       const chars = [];
-  //       await followedUsers.filter((user) => {
-  //         const firstLastName = `${user?.firstName} ${user?.lastName}`;
-  //         let followedUserName = user?.username
-  //           ? user?.username
-  //           : firstLastName;
-  //         followedUserName.toLowerCase().startsWith(search.toLowerCase());
-  //         // .slice(0, 10);
-  //         chars.push({
-  //           userName: followedUserName,
-  //           userId: user?._id,
-  //         });
-  //       });
-  //       dispatch(setFollowedUserDetails(chars));
-  //       console.log("chars", chars);
-  //     })();
-  //   }
-  // }, [chars]);
+  useEffect(() => {
+    if (listMention?.length > 0) {
+      // Populate Users Been Followed For @Mentions
+      const usersList = [];
+      listMention?.filter(user => {
+        const firstLastName = `${user?.firstName} ${user?.lastName}`;
+        firstLastName.toLowerCase().startsWith(search.toLowerCase());
+
+        usersList.push({
+          userName: firstLastName,
+          userId: user?._id
+        });
+      });
+      // Users to display
+      setMentionedUsersList(usersList);
+    } else {
+      setMentionedUsersList([]);
+    }
+  }, [listMention, search]);
 
   const renderElement = useCallback(props => <Element {...props} />, []);
-
   const renderLeaf = useCallback(props => {
     return <Leaf {...props} />;
   }, []);
 
   // Create Editor Instance
   const editor = useMemo(
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
     () =>
       withHistory(
         withEmbeds(withLinks(withReact(withMentions(createEditor()))))
@@ -160,26 +123,27 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
     []
   );
 
-  // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   const onKeyDown = useCallback(
     event => {
       if (target || search) {
         switch (event.key) {
           case "ArrowDown":
             event.preventDefault();
-            const prevIndex = index >= chars?.length - 1 ? 0 : index + 1;
+            const prevIndex =
+              index >= mentionedUsersList?.length - 1 ? 0 : index + 1;
             dispatch(setIndex(prevIndex));
             break;
           case "ArrowUp":
             event.preventDefault();
-            const nextIndex = index <= 0 ? chars?.length - 1 : index - 1;
+            const nextIndex =
+              index <= 0 ? mentionedUsersList?.length - 1 : index - 1;
             dispatch(setIndex(nextIndex));
             break;
           case "Tab":
           case "Enter":
             event.preventDefault();
             Transforms.select(editor, target);
-            insertMention(editor, chars[index]);
+            insertMention(editor, mentionedUsersList[index]);
             dispatch(setTarget(null));
             break;
           case "Escape":
@@ -189,8 +153,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
         }
       }
     },
-    // [index, search, target]
-    [index, search, target, chars, dispatch, editor]
+    [index, search, target, mentionedUsersList, dispatch, editor]
   );
 
   // Below ifelse would prevent "cannot find a descendant path [0] error"
@@ -200,18 +163,6 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
       children: [{ text: "" }]
     });
   }
-
-  // console.log(
-  //   "deserializeFromHtml:",
-  //   deserializeFromHtml(
-  //     '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><strong><span data-slate-string="true">BOLD</span></strong></span></span></div><div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><em><span data-slate-string="true">ITALICS</span></em></span></span></div><div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><u><span data-slate-string="true">UNDERLINE</span></u></span></span></div><blockquote class="SlateUtilityFunctions_Slate_blockquote__Px635" data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true">QUOTES</span></span></span></blockquote><ol type="1" data-slate-node="element"><li data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true">ORDERED LIST</span></span></span></li></ol><ul data-slate-node="element"><li data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true">UN-ORDERED LIST</span></span></span></li></ul><div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-zero-width="z" data-slate-length="0">﻿</span></span></span><div class="Link_Slate_link__EXLXL" style="display: inline-flex;"><span><a data-slate-node="element" data-slate-inline="true" target="_blank" style="cursor: pointer;"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true">Encyclopedia</span></span></span></a></span></div><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-zero-width="z" data-slate-length="0">﻿</span></span></span></div><div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-string="true">😱😱😱</span></span></span></div><div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-zero-width="z" data-slate-length="0">﻿</span></span></span><span data-slate-node="element" data-slate-inline="true" data-slate-void="true" contenteditable="false" data-cy="mention-Aayla-Secura" style="padding: 3px 3px 2px; margin: 0px 1px; vertical-align: baseline; display: inline-block; border-radius: 4px; background-color: rgb(232, 245, 250); font-size: 0.9em; box-shadow: none;"><span data-slate-spacer="true" style="height: 0px; color: transparent; outline: none; position: absolute;"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-zero-width="z" data-slate-length="0">﻿</span></span></span></span>@Aayla Secura</span><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>'
-  //   )
-  // );
-
-  // console.log(
-  //   "deserializeFromHtml(editSlatePost.post):",
-  //   deserializeFromHtml(editSlatePost?.post)
-  // );
 
   const initialState: Descendant[] = editSlatePost?.post
     ? deserializeFromHtml(editSlatePost?.post)
@@ -226,10 +177,10 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   const [value, setValue] = useState(initialState);
 
   const handleEditorChange = newValue => {
-    // ++++++++++++++++++++++++++++++++++++
     const { selection } = editor;
 
     if (selection && Range.isCollapsed(selection)) {
+      // If Mentions
       const [start] = Range.edges(selection);
       const wordBefore = slateEditor.before(editor, start, { unit: "word" });
       const before = wordBefore && slateEditor.before(editor, wordBefore);
@@ -249,20 +200,22 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
       }
     }
 
+    // NO-Mentions. Normal text
     dispatch(setTarget(null));
-    // ++++++++++++++++++++++++++++++++++++
+
     setValue(newValue);
   };
 
   useEffect(() => {
-    if (target && chars?.length > 0) {
+    // Mentions List Dropdown Is Active
+    if (target && mentionedUsersList?.length > 0) {
       const el = ref.current;
       const domRange = ReactEditor.toDOMRange(editor, target);
       const rect = domRange.getBoundingClientRect();
       el.style.top = `${rect.top + window.pageYOffset + 24}px`;
       el.style.left = `${rect.left + window.pageXOffset}px`;
     }
-  }, [chars?.length, editor, index, search, target]);
+  }, [mentionedUsersList?.length, editor, index, search, target]);
 
   return (
     <div className={slim ? "container-fluid px-0 mx-0" : "container"}>
@@ -304,52 +257,25 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
                     renderLeaf={renderLeaf}
                     spellCheck
                     autoFocus
-                    // onKeyDown={(event) => CtrlShiftCombo(event, editor)}
                     onKeyDown={event => {
                       if (!event.ctrlKey) {
-                        // +++++++++++++====================================
                         onKeyDown(event);
-                        // +++++++++++++====================================
                         return;
                       }
                       CtrlShiftCombo(event, editor);
                     }}
                   />
-                  {/* ++++++++++++++++++++++++++++++ */}
-                  {target && chars?.length > 0 && (
+                  {target && mentionedUsersList?.length > 0 && (
                     <Portal>
-                      <div
-                        ref={ref}
-                        style={{
-                          top: "-9999px",
-                          left: "-9999px",
-                          position: "absolute",
-                          zIndex: 9999,
-                          padding: "3px",
-                          background: "white",
-                          borderRadius: "4px",
-                          boxShadow: "0 1px 5px rgba(0,0,0,.2)"
-                        }}
-                        data-cy="mentions-portal"
-                      >
-                        {chars?.map((char, i) => (
-                          <div
-                            key={char}
-                            style={{
-                              padding: "1px 3px",
-                              borderRadius: "3px",
-                              background:
-                                i === index ? "#B4D5FF" : "transparent",
-                              borderBottom: "1px solid black"
-                            }}
-                          >
-                            {char}
-                          </div>
-                        ))}
-                      </div>
+                      <PortalDiv
+                        domRef={ref}
+                        mentionedUsersList={mentionedUsersList}
+                        index={index}
+                        editor={editor}
+                        target={target}
+                      />
                     </Portal>
                   )}
-                  {/* ++++++++++++++++++++++++++++++ */}
                 </div>
                 {!slim && (
                   <div className="row mb-2 mx-1">
@@ -389,45 +315,5 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
     </div>
   );
 };
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-const withMentions = editor => {
-  const { isInline, isVoid } = editor;
-
-  editor.isInline = element => {
-    return element.type === "mention" ? true : isInline(element);
-  };
-
-  editor.isVoid = element => {
-    return element.type === "mention" ? true : isVoid(element);
-  };
-
-  return editor;
-};
-
-const insertMention = (editor, character) => {
-  const mention: MentionElement = {
-    type: "mention",
-    character,
-    children: [{ text: "" }]
-  };
-  Transforms.insertNodes(editor, mention);
-  Transforms.move(editor);
-};
-
-const CHARACTERS = [
-  "Aayla Secura",
-  "Adi Gallia",
-  "Admiral Dodd Rancit",
-  "Admiral Firmus Piett",
-  "Admiral Gial Ackbar",
-  "Admiral Ozzel",
-  "Admiral Raddus",
-  "Admiral Terrinald Screed",
-  "Admiral Trench",
-  "Admiral U.O. Statura"
-];
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 export default Editor;

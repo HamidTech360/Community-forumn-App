@@ -7,14 +7,14 @@ export type MentionsState = {
   search: string;
   index: number;
   target: any;
-  followedUserDetails: any;
+  mentionedUsers: any;
 };
 
 const initialState: MentionsState = {
   search: "",
   index: 0,
   target: undefined,
-  followedUserDetails: undefined,
+  mentionedUsers: []
 };
 
 export const mentionsSlice = createSlice({
@@ -30,21 +30,21 @@ export const mentionsSlice = createSlice({
     setTarget: (state, action: PayloadAction<any>) => {
       state.target = action.payload;
     },
-    setFollowedUserDetails: (state, action: PayloadAction<any>) => {
-      state.followedUserDetails = action.payload;
-    },
-  },
+    setMentionedUsers: (state, action: PayloadAction<any>) => {
+      state.mentionedUsers = action.payload;
+    }
+  }
 });
 // Here we are just exporting the actions from this slice, so that we can call them anywhere in our app.
-export const { setSearch, setIndex, setTarget, setFollowedUserDetails } =
+export const { setSearch, setIndex, setTarget, setMentionedUsers } =
   mentionsSlice.actions;
 
 // calling the above actions would be useless if we could not access the data in the state. So, we use something called a selector which allows us to select a value from the state.
 export const selectSearch = (state: RootState) => state.mentions.search;
 export const selectIndex = (state: RootState) => state.mentions.index;
 export const selectTarget = (state: RootState) => state.mentions.target;
-export const selectFollowedUserDetails = (state: RootState) =>
-  state.mentions.followedUserDetails;
+export const selectMentionedUsers = (state: RootState) =>
+  state.mentions.mentionedUsers;
 
 // exporting the reducer here, as we need to add this to the store
 export default mentionsSlice.reducer;

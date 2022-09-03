@@ -4,6 +4,12 @@ import Image from "../Elements/Embed/Image";
 import Video from "../Elements/Embed/Video";
 import styles from "../../../../styles/SlateEditor/SlateUtilityFunctions_Slate.module.scss";
 import { useFocused, useSelected } from "slate-react";
+import { useDispatch, useSelector } from "@/redux/store";
+import { useEffect } from "react";
+import {
+  selectMentionedUsers,
+  setMentionedUsers
+} from "@/reduxFeatures/app/mentionsSlice";
 
 const alignment = ["alignLeft", "alignRight", "alignCenter"];
 const list_types = ["orderedList", "unorderedList"];
@@ -196,11 +202,26 @@ export const getBlock = props => {
 const Mention = ({ attributes, children, element }) => {
   const selected = useSelected();
   const focused = useFocused();
+  const dispatch = useDispatch();
+  const mentionedUsers = useSelector(selectMentionedUsers);
+
+  useEffect(() => {
+    // Only add user  to state if not  already among the list
+    let checker = false;
+    mentionedUsers.forEach(user => {
+      user.userName === element?.character?.userName && (checker = true);
+    });
+
+    !checker &&
+      dispatch(setMentionedUsers([...mentionedUsers, element?.character]));
+  });
+
   return (
     <span
       {...attributes}
       contentEditable={false}
-      data-cy={`mention-${element?.character?.replace(" ", "-")}`}
+      // data-cy={`mention-${element?.character?.replace(" ", "-")}`}
+      data-cy={`mention-${element?.character?.userName?.replace(" ", "-")}`}
       style={{
         padding: "3px 3px 2px",
         margin: "0 1px",
@@ -213,7 +234,8 @@ const Mention = ({ attributes, children, element }) => {
         boxShadow: selected && focused ? "0 0 0 2px #B4D5FF" : "none"
       }}
     >
-      {children}@{element?.character}
+      {/* {children}@{element?.character} */}
+      {children}@{element?.character?.userName}
     </span>
   );
 };
