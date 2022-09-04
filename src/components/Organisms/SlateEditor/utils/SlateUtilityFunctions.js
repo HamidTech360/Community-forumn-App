@@ -205,14 +205,19 @@ const Mention = ({ attributes, children, element }) => {
   const dispatch = useDispatch();
   const mentionedUsers = useSelector(selectMentionedUsers);
 
+  // console.log("attributes:", attributes);
+  // console.log("children:", children);
+  // console.log("element:", element);
+
   useEffect(() => {
     // Only add user  to state if not  already among the list
-    let checker = false;
+    let userAlreadyMentioned = false;
     mentionedUsers.forEach(user => {
-      user.userName === element?.character?.userName && (checker = true);
+      user?.userName === element?.character?.userName &&
+        (userAlreadyMentioned = true);
     });
 
-    !checker &&
+    !userAlreadyMentioned &&
       dispatch(setMentionedUsers([...mentionedUsers, element?.character]));
   });
 
@@ -221,7 +226,7 @@ const Mention = ({ attributes, children, element }) => {
       {...attributes}
       contentEditable={false}
       // data-cy={`mention-${element?.character?.replace(" ", "-")}`}
-      data-cy={`mention-${element?.character?.userName?.replace(" ", "-")}`}
+      data-cy={`mention-${element?.character?.userName?.replaceAll(" ", "-")}`}
       style={{
         padding: "3px 3px 2px",
         margin: "0 1px",

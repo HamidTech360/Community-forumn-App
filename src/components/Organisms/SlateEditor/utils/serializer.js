@@ -4,8 +4,6 @@ import { jsx } from "slate-hyperscript";
 
 // Serialize Html
 export const serialize = node => {
-  // console.log("node:", node);
-  // console.log("node:", node);
   if (Text.isText(node)) {
     let string = escapeHtml(node.text);
 
@@ -18,19 +16,8 @@ export const serialize = node => {
     if (node.underline) {
       string = `<u>${string}</u>`;
     }
-    // if (node.underline) {
-    //   string = `<u>${string}</u>`;
-    // }
-    // case "mention":
-    //   `<p>${children}</p>`;
     return string;
   }
-
-  // if (node.type === "link") {
-  //   return (string = `<a href="${escapeHtml(
-  //     node?.href ? node?.href : node?.url
-  //   )}" target="_blank" rel="noreferrer">${node.text}</a>`);
-  // }
 
   const children = node?.children?.map(n => serialize(n))?.join("");
 
@@ -40,7 +27,6 @@ export const serialize = node => {
     case "paragraph":
       return `<p>${children}</p>`;
     case "link":
-      // console.log("node:", node);
       return `<p><a href="${escapeHtml(
         node?.href ? node?.href : node?.url
       )}" target="_blank" rel="noreferrer">${children}</a></p>`;
@@ -63,9 +49,16 @@ export const serialize = node => {
         node.alt
       }" frameBorder="0">${children}</iframe>`;
     case "mention":
-      console.log("node:", node);
-      `<p>${children}</p>`;
-      `<p>${node.character}</p>`;
+      return `<span
+      contentEditable={${false}}
+      data-slate-inline={${true}}
+      data-slate-node="element"
+      data-slate-void={${true}}
+      data-cy={mention-${children?.replaceAll(" ", "-")}}
+      style="padding: 3px 3px 2px; margin: 0 1px; vertical-align: baseline; display: inline-block; border-radius: 4px; backgroundColor: #e8f5fa; fontSize: 0.9em;"
+    >
+      @${children}
+    </span>`;
     default:
       return children;
   }
@@ -123,6 +116,7 @@ export const deserialize = el => {
 
   const { nodeName } = el;
   let parent = el;
+  // console.log("EL.childNodes[0]+++", el.childNodes[0]);
 
   if (
     nodeName === "PRE" &&

@@ -42,6 +42,7 @@ import Portal, { insertMention, PortalDiv } from "./Elements/Mentions/Portals";
 import { useDispatch } from "react-redux";
 import { MentionUserApiSearch } from "../App/ApiSearch/globalApiSearch";
 import { CustomEditor, CustomElement } from "./utils/slateTypes";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 
 declare module "slate" {
   interface CustomTypes {
@@ -64,6 +65,7 @@ const Leaf = ({ attributes, children, leaf }) => {
 const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   const ref = useRef<HTMLDivElement | null>();
   const dispatch = useDispatch();
+  const authUser = useSelector(selectUser);
   const editSlatePost = useSelector(selectSlatePostToEdit);
   const router = useRouter();
   const editorID = `${router.asPath}-slateRefId`;
@@ -91,23 +93,26 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
 
   useEffect(() => {
     if (listMention?.length > 0) {
-      // Populate Users Been Followed For @Mentions
+      // Populate Users For @Mentions
       const usersList = [];
       listMention?.filter(user => {
-        const firstLastName = `${user?.firstName} ${user?.lastName}`;
+        const firstLastName = `${user?.firstName.trim()} ${user?.lastName.trim()}`;
         firstLastName.toLowerCase().startsWith(search.toLowerCase());
 
-        usersList.push({
-          userName: firstLastName,
-          userId: user?._id
-        });
+        // Auth User Can not mention His/Her self
+        if (user?._id !== authUser?._id) {
+          usersList.push({
+            userName: firstLastName,
+            userId: user?._id
+          });
+        }
       });
       // Users to display
       setMentionedUsersList(usersList);
     } else {
       setMentionedUsersList([]);
     }
-  }, [listMention, search]);
+  }, [listMention, search, authUser?._id]);
 
   const renderElement = useCallback(props => <Element {...props} />, []);
   const renderLeaf = useCallback(props => {
@@ -145,6 +150,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
             Transforms.select(editor, target);
             insertMention(editor, mentionedUsersList[index]);
             dispatch(setTarget(null));
+            dispatch(setSearch(""));
             break;
           case "Escape":
             event.preventDefault();
@@ -164,16 +170,27 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
     });
   }
 
+  // const initialState: Descendant[] = editSlatePost?.post
+  //   ? deserializeFromHtml(editSlatePost?.post)
+  //   : editSlatePost?.postBody
+  //   ? deserializeFromHtml(editSlatePost?.postBody)
+  //   : [
+  //       {
+  //         type: "paragraph",
+  //         children: [{ text: "" }]
+  //       }
+  //     ];
   const initialState: Descendant[] = editSlatePost?.post
-    ? deserializeFromHtml(editSlatePost?.post)
+    ? deserializeFromHtml(`<p>${editSlatePost?.post}</p>`)
     : editSlatePost?.postBody
-    ? deserializeFromHtml(editSlatePost?.postBody)
+    ? deserializeFromHtml(`<p>${editSlatePost?.postBody}</p>`)
     : [
         {
           type: "paragraph",
           children: [{ text: "" }]
         }
       ];
+
   const [value, setValue] = useState(initialState);
 
   const handleEditorChange = newValue => {
@@ -200,9 +217,9 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
       }
     }
 
-    // NO-Mentions. Normal text
     dispatch(setTarget(null));
 
+    // NO-Mentions. Normal text
     setValue(newValue);
   };
 

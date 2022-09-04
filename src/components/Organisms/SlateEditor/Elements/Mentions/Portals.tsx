@@ -1,9 +1,8 @@
 import { useDispatch } from "@/redux/store";
-import { setTarget } from "@/reduxFeatures/app/mentionsSlice";
+import { setSearch, setTarget } from "@/reduxFeatures/app/mentionsSlice";
 import ReactDOM from "react-dom";
 import { Transforms } from "slate";
 import { MentionElement } from "../../utils/slateTypes";
-// import { MentionElement } from "../../Editor";
 
 const Portal = ({ children }) => {
   return typeof document === "object"
@@ -51,9 +50,9 @@ export const PortalDiv = ({
             Transforms.select(editor, target);
             insertMention(editor, mentionedUsersList[i]);
             dispatch(setTarget(null));
+            dispatch(setSearch(""));
           }}
         >
-          {/* {char} */}
           {char?.userName}
         </div>
       ))}
@@ -65,7 +64,7 @@ export const insertMention = (editor, character) => {
   const mention: MentionElement = {
     type: "mention",
     character,
-    children: [{ text: "" }]
+    children: [{ text: `${character.userName} ` }]
   };
   Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
