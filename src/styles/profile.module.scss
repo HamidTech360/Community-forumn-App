@@ -47,6 +47,7 @@
   @media screen and (max-width: 991px) {
     display: block;
     margin-top: 1rem;
+    display: flex;
   }
 }
 
@@ -112,23 +113,23 @@
     }
 
     .item {
-      @media screen and(max-width: 900px) {
+      @media screen and (max-width: 900px) {
         font-size: medium;
       }
 
-      @media screen and(max-width: 800px) {
+      @media screen and (max-width: 800px) {
         font-size: small;
       }
 
-      @media screen and(max-width: 700px) {
+      @media screen and (max-width: 700px) {
         font-size: smaller;
       }
 
-      @media screen and(max-width: 500px) {
+      @media screen and (max-width: 500px) {
         font-size: x-small;
       }
 
-      @media screen and(max-width: 300px) {
+      @media screen and (max-width: 300px) {
         font-size: xx-small;
       }
     }
@@ -136,7 +137,7 @@
 }
 .imgModal {
   margin-bottom: 2rem;
-  height: 90%;
+  height: 95%;
 }
 
 .cardFooter {

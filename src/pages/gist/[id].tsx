@@ -2,12 +2,11 @@
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Col, Container, Image, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import Comment from "../../components/Organisms/App/Comment";
 import Contributors from "../../components/Organisms/Gist/Contributors";
 import GistCard from "../../components/Organisms/Gist/GistCard";
 import axios from "axios";
-import styles from "@/styles/gist.module.scss";
 import config from "@/config";
 
 import { useDispatch, useSelector } from "@/redux/store";
@@ -15,49 +14,45 @@ import GistPostEditorModal from "@/components/Organisms/App/ModalPopUp/GistPostE
 import {
   selectGistData,
   selectShowGistModal,
-  setTopContributors,
+  setTopContributors
 } from "@/reduxFeatures/api/gistSlice";
 
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   user as userAuth,
-  selectFollowing,
+  selectFollowing
 } from "@/reduxFeatures/authState/authStateSlice";
 import {
-  selectShowCommentModal,
   setCommentIsDeleted,
   setEditableComment,
-  setShowCommentModal,
+  setShowCommentModal
 } from "@/reduxFeatures/app/postModalCardSlice";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import makeSecuredRequest, {
-  deleteSecuredRequest,
+  deleteSecuredRequest
 } from "@/utils/makeSecuredRequest";
-import CommentModal from "@/components/Organisms/App/ModalPopUp/CommentModal";
+import Avatar from "@/components/Atoms/Avatar";
 
 const Gist = ({
-  gist,
-  replies,
-  contributors,
+  gist
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   gist: Record<string, any>;
-  replies: Record<string, any>[];
-  contributors: { name: string; avatar: string }[];
 }) => {
   const router = useRouter();
   const { id } = router.query;
-  const user = useSelector(selectUser)
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [data, setData] = useState<Record<string, any>>({});
   const [commentPost, setCommentPost] = useState("");
-  const [showComment, setShowComment] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const showGistModal = useSelector(selectShowGistModal);
   const gistEdited = useSelector(selectGistData);
   const currentlyFollowing = useSelector(selectFollowing);
   const [queryId, setQueryId] = useState(id);
-  const showCommentModal = useSelector(selectShowCommentModal);
 
   // Allow Rerender Bases On ID Change Even When Route Is Same Path
   if (id && id !== queryId) setQueryId(id);
@@ -87,8 +82,8 @@ const Gist = ({
         `${config.serverUrl}/api/gists/${router.query.id}`,
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
 
@@ -109,52 +104,61 @@ const Gist = ({
         const counts = {};
         (async () => {
           // Comments
-          await arr.forEach(async (element) => {
-            let authorsName = `${element.author.firstName} ${element.author.lastName}`;
-            let postReplies = element.replies;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          await arr.forEach(async (element: Record<string, any>) => {
+            const authorsName = `${element.author?.firstName} ${element.author?.lastName}`;
+            const postReplies = element.replies;
 
             if (counts[authorsName]) {
               counts[authorsName] = {
                 num: counts[authorsName]["num"] + 1,
-                id: element.author._id,
+                id: element.author._id
               };
             } else {
               counts[authorsName] = { num: 1, id: element.author._id };
             }
 
             // Replies
-            await postReplies.forEach(async (reply) => {
-              let commentReply = `${reply.author.firstName} ${reply.author.lastName}`;
-              let secondLevelReply = reply.replies;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            await postReplies.forEach(async (reply: Record<string, any>) => {
+              const commentReply = `${reply?.author?.firstName} ${reply?.author.lastName}`;
+              const secondLevelReply = reply.replies;
 
               if (counts[commentReply]) {
                 counts[commentReply] = {
                   num: counts[commentReply]["num"] + 1,
-                  id: element.author._id,
+                  id: element.author._id
                 };
               } else {
                 counts[commentReply] = { num: 1, id: element.author._id };
               }
 
               // 2nd level replies
-              await secondLevelReply.forEach(async (element) => {
-                let replyAuthorsName = `${element.author.firstName} ${element.author.lastName}`;
+              await secondLevelReply.forEach(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                async (element: Record<string, any>) => {
+                  const replyAuthorsName = `${element?.author?.firstName} ${element?.author?.lastName}`;
 
-                if (counts[replyAuthorsName]) {
-                  counts[replyAuthorsName] = {
-                    num: counts[replyAuthorsName]["num"] + 1,
-                    id: element.author._id,
-                  };
-                } else {
-                  counts[replyAuthorsName] = { num: 1, id: element.author._id };
+                  if (counts[replyAuthorsName]) {
+                    counts[replyAuthorsName] = {
+                      num: counts[replyAuthorsName]["num"] + 1,
+                      id: element.author._id
+                    };
+                  } else {
+                    counts[replyAuthorsName] = {
+                      num: 1,
+                      id: element.author._id
+                    };
+                  }
                 }
-              });
+              );
             });
           });
         })();
 
         // Split & Sort The Object Values Into An Array
         const sortedContributors = Object.entries(counts).sort(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ([, v1]: any, [, v2]: any) => v2.num - v1.num
         );
         dispatch(setTopContributors(sortedContributors));
@@ -165,7 +169,7 @@ const Gist = ({
   const postComment = async () => {
     try {
       const body = {
-        content: commentPost,
+        content: commentPost
       };
 
       setLoading(true);
@@ -174,25 +178,24 @@ const Gist = ({
         body,
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
       // console.log(res);
-      let comments = data?.comments;
+      const comments = data?.comments;
       comments?.unshift(res.data);
       setData({ ...data, comments });
       (document.getElementById("articleTextarea") as HTMLInputElement).value =
         "";
 
       setLoading(false);
-      setShowComment(false);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const changeFollowingStatus = (post) => {
+  const changeFollowingStatus = post => {
     if (
       document.getElementById(`followStr-modal-${post?.author?._id}`)
         .innerText === "Follow"
@@ -211,7 +214,7 @@ const Gist = ({
     }
   };
 
-  const handleFollow = async (id) => {
+  const handleFollow = async id => {
     try {
       await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
@@ -220,8 +223,8 @@ const Gist = ({
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(userAuth(response.data));
         } catch (error) {
@@ -233,7 +236,7 @@ const Gist = ({
     }
   };
 
-  const handleUnFollow = async (id) => {
+  const handleUnFollow = async id => {
     try {
       await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
@@ -242,8 +245,8 @@ const Gist = ({
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(userAuth(response.data));
         } catch (error) {
@@ -255,26 +258,21 @@ const Gist = ({
     }
   };
 
-  const handleEditComment = async (comment) => {
+  const handleEditComment = async comment => {
     // Send Comment To Be Edited To CommentModal
     dispatch(setEditableComment(comment));
     // Show Edit Comment Modal
     dispatch(setShowCommentModal(true));
   };
 
-  const handleDeleteComment = async (comment) => {
-    console.log("DelETE NOW");
-    // const newPosts = comment.filter((el) => el._id !== comment._id);
-    // console.log("comment:", comment);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleDeleteComment = async (comment: Record<string, any>) => {
     try {
-      const { data } = await axios.delete(
-        `${config.serverUrl}/api/comments/${comment._id}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+      await axios.delete(`${config.serverUrl}/api/comments/${comment._id}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
-      );
+      });
 
       dispatch(setCommentIsDeleted(comment._id));
     } catch (error) {
@@ -289,21 +287,16 @@ const Gist = ({
       </Head>
       <ToastContainer />
       <Row>
-        <Col md={4} className="desktop-only">
+        <Col md={3} className="d-none d-md-inline">
           <Contributors data={data} />
         </Col>
-        <Col md={8}>
+        <Col md={9}>
           <GistCard gist={data} primary />
           <section>
             <h5 style={{ fontWeight: "bolder" }}>Add a Comment</h5>
             <div className="row">
               <div className="col-2 col-md-2">
-                <Image
-                  src={user?.images?.avatar || "/images/imagePlaceholder.jpg"}
-                  className="img-fluid"
-                  roundedCircle={true}
-                  alt="Author's Image"
-                />
+                <Avatar src={user?.images?.avatar} name={user?.firstName} />
               </div>
               <div className="col-7 col-md-10">
                 {/* <div className="form-floating shadow"> */}
@@ -315,10 +308,10 @@ const Gist = ({
                     id="articleTextarea"
                     className="form-control"
                     placeholder="."
-                    onChange={(e) => setCommentPost(e.target.value)}
+                    onChange={e => setCommentPost(e.target.value)}
                     style={{ height: "100px" }}
                   ></textarea>
-                  <label htmlFor="articleTextarea">Comments</label>
+                  {/* <label htmlFor="articleTextarea">Comments</label> */}
                 </div>
               </div>
               <div className="col-3 col-md-2 ms-auto d-md-grid">
@@ -345,7 +338,6 @@ const Gist = ({
               <div className="col-12 mt-4">
                 {data?.comments?.length > 0 &&
                   [...data?.comments].reverse().map((comment, index) => {
-                    // return <Comment key={`data_${index}`} comment={comment} />;
                     return (
                       <Comment
                         key={`data_${index}`}
@@ -360,86 +352,14 @@ const Gist = ({
               </div>
             </div>
           </section>
-          {/* <h5 className={`px-2 m-2 ${styles.comment}`}>Comments({data?.comments?.length})</h5>
-          <div className="mt-2">
-            {replies?.map((reply, key) => (
-              <Comment comment={reply} key={`comment-${key}`} />
-            ))}
-          </div> */}
         </Col>
       </Row>
 
       {/* Open Editor Modal */}
       {showGistModal && <GistPostEditorModal pageAt="/gist" />}
       {/* Open Comment Modal */}
-      {/* {showCommentModal && <CommentModal />} */}
     </Container>
   );
 };
 
-// export async function getStaticPaths() {
-//   const ids = await fetch(`${process.env.REST}/buddyboss/v1/topics?_fields=id`);
-
-//   let paths = await ids.json();
-//   paths = paths.map((id: Record<string, any>) => {
-//     return {
-//       params: {
-//         id: id.id.toString(),
-//       },
-//     };
-//   });
-
-//   return {
-//     paths,
-//     fallback: true,
-//   };
-// }
-
-// export const getStaticProps = async ({
-//   params,
-// }: {
-//   params: Partial<Record<string, string>>;
-// }) => {
-//   const gist = await (
-//     await fetch(
-//       `${process.env.REST}/buddyboss/v1/topics/${params.id}?_embed=user`,
-//       {
-//         method: "GET",
-//       }
-//     )
-//   ).json();
-
-//   let replies: Record<string, any>[] = await (
-//     await fetch(
-//       `${process.env.REST}/buddyboss/v1/reply?parent=${params.id}&per_page=10&_embed=user&_fields=_links,_embedded,link,id,date,content`
-//     )
-//   ).json();
-
-//   let [] = [
-//     {
-//       name: gist._embedded.user[0].name,
-//       avatar: gist?._embedded?.user[0]?.avatar_urls.full,
-//     },
-//   ];
-
-//   replies.forEach((reply) => {
-//     const newReply = JSON.stringify({
-//       name: reply?._embedded?.user[0].name,
-//       avatar:
-//         reply?._embedded?.user[0]?.avatar_urls?.full || "/images/formbg.png",
-//     });
-
-//     if (!contributors.find(({ name }) => name === JSON.parse(newReply).name)) {
-//       contributors.push(JSON.parse(newReply));
-//     }
-//   });
-
-//   return {
-//     props: {
-//       gist,
-//       replies,
-//       contributors,
-//     },
-//   };
-// };
 export default Gist;

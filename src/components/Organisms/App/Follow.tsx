@@ -2,27 +2,23 @@
 import config from "@/config";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Image, ListGroup } from "react-bootstrap";
+import { Button, Card, ListGroup } from "react-bootstrap";
 import {
   user as userAuth,
   selectUser,
-  selectFollowers,
-  setFollowing,
-  selectFollowing,
+  selectFollowing
 } from "@/reduxFeatures/authState/authStateSlice";
 // import { useSelector } from "react-redux";
-import makeSecuredRequest, {
-  deleteSecuredRequest,
-} from "@/utils/makeSecuredRequest";
+import makeSecuredRequest from "@/utils/makeSecuredRequest";
 import { useDispatch, useSelector } from "@/redux/store";
-import appSlice from "@/reduxFeatures/app/appSlice";
 import { useRouter } from "next/router";
+import Avatar from "@/components/Atoms/Avatar";
 
 const Follow = () => {
   const router = useRouter();
   const [users, setUsers] = useState([]);
   const user = useSelector(selectUser);
-  const userMapper = useSelector(selectUser);
+
   const currentlyFollowing = useSelector(selectFollowing);
   const dispatch = useDispatch();
 
@@ -34,8 +30,8 @@ const Follow = () => {
           `${config.serverUrl}/api/users/connections/all`,
           {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           }
         );
         console.log("All connections+++++:", response.data);
@@ -54,8 +50,8 @@ const Follow = () => {
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(userAuth(response.data));
         } catch (error) {
@@ -91,7 +87,7 @@ const Follow = () => {
           sliceNum = 5;
         }
 
-        await data.users.sort(function (newUser) {
+        await data.users.sort(function () {
           return 0.5 - Math.random();
         });
 
@@ -107,7 +103,7 @@ const Follow = () => {
         //     .slice(0, sliceNum)
         // );
 
-        const notFollowing = data.users.filter((person) => {
+        const notFollowing = data.users.filter(person => {
           if (
             person?._id.toString() !== user?._id.toString() &&
             !currentlyFollowing.includes(person?._id)
@@ -135,7 +131,7 @@ const Follow = () => {
       variant="flush"
       style={{
         width: "100%",
-        height: "max-content",
+        height: "max-content"
       }}
     >
       <h6 className="text-center">Suggested connections</h6>
@@ -153,12 +149,11 @@ const Follow = () => {
               style={{ cursor: "pointer" }}
               onClick={() => router.push(`/profile/${user?._id}`)}
             >
-              <Image
+              <Avatar
                 width={35}
                 height={35}
-                src={`/images/friends${key + 1}.png`}
-                roundedCircle
-                alt={user?.firstName}
+                src={user?.images?.avatar}
+                name={user?.firstName}
               />
             </div>
 

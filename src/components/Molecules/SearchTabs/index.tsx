@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
@@ -10,7 +11,7 @@ import {
   setUserSearch,
   selectUserSearch,
   setGroupSearch,
-  selectGroupSearch,
+  selectGroupSearch
 } from "@/reduxFeatures/api/searchSlice";
 
 import { Form, InputGroup, Spinner } from "react-bootstrap";
@@ -20,7 +21,7 @@ import {
   PostApiSearch,
   GistApiSearch,
   UserApiSearch,
-  GroupApiSearch,
+  GroupApiSearch
 } from "@/components/Organisms/App/ApiSearch/globalApiSearch";
 import { FcSearch } from "react-icons/fc";
 import { MdOutlineSearchOff } from "react-icons/md";
@@ -31,6 +32,7 @@ import UserRender from "./UserRender";
 import GroupRender from "./GroupRender";
 
 function SearchTabs() {
+  const dispatch = useDispatch();
   useEffect(() => {
     // Remove Focus From Search input
     document.getElementById("navSearch").blur();
@@ -42,9 +44,8 @@ function SearchTabs() {
       dispatch(setUserSearch([]));
       dispatch(setGroupSearch([]));
     };
-  }, []);
+  }, [dispatch]);
 
-  const dispatch = useDispatch();
   const postSearch = useSelector(selectPostSearch);
   const gistSearch = useSelector(selectGistSearch);
   const userSearch = useSelector(selectUserSearch);
@@ -66,7 +67,7 @@ function SearchTabs() {
       : null;
   }, [postSearch, gistSearch, userSearch, groupSearch]);
 
-  const apiSearch = async (e) => {
+  const apiSearch = async e => {
     setIsFetching(true);
     const postSearchResult = await PostApiSearch(e);
     const gistSearchResult = await GistApiSearch(e);
@@ -104,11 +105,7 @@ function SearchTabs() {
           autoFocus
         />
       </InputGroup>
-      <Tabs
-        activeKey={key}
-        onSelect={(k) => setKey(k)}
-        className="mb-0 border-0"
-      >
+      <Tabs activeKey={key} onSelect={k => setKey(k)} className="mb-0 border-0">
         {postSearch?.length > 0 && (
           <Tab eventKey="post" title="Post">
             {postSearch.map((search: any, keyIndex) => (

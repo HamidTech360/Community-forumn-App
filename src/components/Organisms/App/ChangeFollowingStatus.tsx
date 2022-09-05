@@ -1,17 +1,10 @@
-import React, { useEffect } from "react";
 import config from "@/config";
-import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
+import { setFollowed } from "@/reduxFeatures/app/appSlice";
 import makeSecuredRequest, {
-  deleteSecuredRequest,
+  deleteSecuredRequest
 } from "@/utils/makeSecuredRequest";
 import { useDispatch } from "react-redux";
-import {
-  selectFollowing,
-  user as userAuth,
-  selectUser,
-  setFollowers,
-  setFollowing,
-} from "@/reduxFeatures/authState/authStateSlice";
+import { user as userAuth } from "@/reduxFeatures/authState/authStateSlice";
 import axios from "axios";
 
 function ChangeFollowingStatus(post) {
@@ -42,7 +35,7 @@ function ChangeFollowingStatus(post) {
 
 export default ChangeFollowingStatus;
 
-export const HandleFollow = async (id) => {
+export const HandleFollow = async id => {
   const dispatch = useDispatch();
 
   // Preset following
@@ -56,8 +49,8 @@ export const HandleFollow = async (id) => {
       try {
         const response = await axios.get(`${config.serverUrl}/api/auth`, {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         });
         dispatch(userAuth(response.data));
       } catch (error) {
@@ -74,7 +67,7 @@ export const HandleFollow = async (id) => {
   // return <></>;
 };
 
-export const HandleUnFollow = async (id) => {
+export const HandleUnFollow = async id => {
   const dispatch = useDispatch();
 
   // Preset following
@@ -88,8 +81,8 @@ export const HandleUnFollow = async (id) => {
       try {
         const response = await axios.get(`${config.serverUrl}/api/auth`, {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         });
         dispatch(userAuth(response.data));
       } catch (error) {

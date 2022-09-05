@@ -1,24 +1,17 @@
 //import useUser from "@/hooks/useUser";
-import React, { useState } from "react";
-import { Card, Form, Image } from "react-bootstrap";
-import { Modal } from "react-bootstrap";
-import { FaTimes } from "react-icons/fa";
+import React from "react";
+import { Card, Form } from "react-bootstrap";
 import { useSelector, useDispatch } from "@/redux/store";
-import { useRouter } from "next/router";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import styles from "@/styles/utils.module.scss";
-import styles2 from "@/styles/feed.module.scss";
 // import formStyles from "../../../styles/templates/new-group/formField.module.css";
-import Editor from "@/components/Organisms/SlateEditor/Editor";
-
-import { selectSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 
 import {
   selectCreatePostModal,
-  setShowCreatePostModal,
+  setShowCreatePostModal
 } from "@/reduxFeatures/app/createPost";
-import { selectNewGroupFeed } from "@/reduxFeatures/api/groupSlice";
 import FeedPostEditorModal from "../App/ModalPopUp/FeedPostEditorModal";
+import Avatar from "@/components/Atoms/Avatar";
 
 const CreatePost = ({ pageAt }) => {
   const data = useSelector(selectUser);
@@ -30,13 +23,7 @@ const CreatePost = ({ pageAt }) => {
     <Card className="p-4">
       <div className="mx-2 d-flex gap-2 align-items-center bg-white radius-10">
         <>
-          <Image
-            src={data?.images?.avatar || "/images/formbg.png"}
-            width={50}
-            height={50}
-            alt="image"
-            roundedCircle
-          />
+          <Avatar src={data?.images?.avatar} name={data.firstName} />
         </>
         <>
           <Form
@@ -59,27 +46,6 @@ const CreatePost = ({ pageAt }) => {
 
       {/* Open Editor Modal */}
       {showModal && <FeedPostEditorModal pageAt={pageAt} />}
-
-      {/* <Modal
-        show={showModal}
-        className={styles2.GistModal}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        size="lg"
-      >
-        <span className={styles2.closeBtn}>
-          {" "}
-          <FaTimes
-            color="#207681"
-            style={{ cursor: "pointer" }}
-            size={35}
-            onClick={() => dispatch(setShowCreatePostModal(false))}
-          />{" "}
-        </span>
-        <div className="col-12 px-4 mt-2 mb-4">
-          <Editor slim={false} pageAt={pageAt} />
-        </div>
-      </Modal> */}
     </Card>
   );
 };

@@ -1,53 +1,47 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Dropdown, Image, NavDropdown } from "react-bootstrap";
-import { HiDotsVertical, HiOutlineArrowLeft } from "react-icons/hi";
-import { BsDot, BsFolderFill, BsXCircleFill } from "react-icons/bs";
+import { Image } from "react-bootstrap";
+import { HiOutlineArrowLeft } from "react-icons/hi";
+import { BsDot } from "react-icons/bs";
 import Comment from "@/components/Organisms/App/Comment";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Age from "@/components/Atoms/Age";
 import config from "@/config";
-import DOMPurify from "dompurify";
 import { useDispatch, useSelector } from "@/redux/store";
 import {
   selectFollowing,
   user as userAuth,
   selectUser,
-  setFollowers,
-  setFollowing,
+  setFollowing
 } from "@/reduxFeatures/authState/authStateSlice";
 import {
-  setPosts,
-  selectPost,
   setShowPostModal,
   selectShowPostModal,
-  setPostTitle,
-  selectNewPost,
+  selectNewPost
 } from "@/reduxFeatures/api/postSlice";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import styles from "@/styles/profile.module.scss";
-import { RiDeleteBin5Line, RiFlagFill, RiUserFollowFill } from "react-icons/ri";
 import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 import ExplorePostEditorModal from "@/components/Organisms/App/ModalPopUp/ExplorePostEditorModal";
 import makeSecuredRequest, {
-  deleteSecuredRequest,
+  deleteSecuredRequest
 } from "@/utils/makeSecuredRequest";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
 import { PostMenu } from "@/components/Organisms/App/PostMenu";
 import {
   setCommentIsDeleted,
   setEditableComment,
-  setShowCommentModal,
+  setShowCommentModal
 } from "@/reduxFeatures/app/postModalCardSlice";
 
 const BlogPost = () => {
   const user = useSelector(selectUser);
   const [blogPost, setBlogPost] = useState<Record<string, any>>({});
-  const [followed, setFollowed] = useState(false);
+
   const [commentPost, setCommentPost] = useState("");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -70,21 +64,12 @@ const BlogPost = () => {
   // Update users following in AuthUser because it's a frontend resolved data
   useEffect(() => {
     if (user) {
-      const currentlyFollowing = user.following.map((follow) => {
+      const currentlyFollowing = user.following.map(follow => {
         return follow._id;
       });
       dispatch(setFollowing(currentlyFollowing));
     }
   }, [user]);
-
-  // Set Following Status
-  useEffect(() => {
-    if (currentlyFollowing.includes(blogPost?.author?._id)) {
-      setFollowed(true);
-    } else {
-      setFollowed(false);
-    }
-  }, [blogPost, currentlyFollowing]);
 
   // Allow Rerender Bases On ID Change Even When Route Is Same Path
   if (id && id !== queryId) setQueryId(id);
@@ -93,8 +78,8 @@ const BlogPost = () => {
     router.push({
       pathname: `/profile/[id]`,
       query: {
-        id: blogPost?.author?._id,
-      },
+        id: blogPost?.author?._id
+      }
     });
   };
 
@@ -112,7 +97,7 @@ const BlogPost = () => {
 
   const postComment = async () => {
     const body = {
-      content: commentPost,
+      content: commentPost
     };
 
     setLoading(true);
@@ -121,12 +106,12 @@ const BlogPost = () => {
       body,
       {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
       }
     );
     console.log(res);
-    let comments = blogPost?.comments;
+    const comments = blogPost?.comments;
     comments.unshift(res.data);
     setBlogPost({ ...blogPost, comments });
     setLoading(false);
@@ -136,27 +121,21 @@ const BlogPost = () => {
   useEffect(() => {
     FetchData();
   }, [queryId]);
-  const likeComment = () => {};
-  const replyComment = () => {};
 
   const handleDeletePost = async () => {
     try {
-      const { data } = await axios.delete(
-        `${config.serverUrl}/api/posts/${router.query.id}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+      await axios.delete(`${config.serverUrl}/api/posts/${router.query.id}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
-      );
-      // console.log(data);
+      });
       router.push("/explore");
     } catch (error) {
       // console.log(error.response?.data);
     }
   };
 
-  const handleEditPost = async (post) => {
+  const handleEditPost = async post => {
     // Notify Slate Editor Of Post Editing
     dispatch(setSlatePostToEdit(post));
 
@@ -166,16 +145,16 @@ const BlogPost = () => {
     }
   };
 
-  const handleEditComment = async (comment) => {
+  const handleEditComment = async comment => {
     // Send Comment To Be Edited To CommentModal
     dispatch(setEditableComment(comment));
     // Show CommentModal Editor
     dispatch(setShowCommentModal(true));
   };
 
-  const handleDeleteComment = async (comment) => {
+  const handleDeleteComment = async comment => {
     console.log("DelETE NOW");
-    // const newPosts = comment.filter((el) => el._id !== comment._id);
+
     console.log("comment:", comment);
     console.log("comment._id:", comment?._id);
     try {
@@ -183,8 +162,8 @@ const BlogPost = () => {
         `${config.serverUrl}/api/comments/${comment?._id}`,
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
 
@@ -195,7 +174,7 @@ const BlogPost = () => {
     }
   };
 
-  const changeFollowingStatus = (post) => {
+  const changeFollowingStatus = post => {
     if (
       document.getElementById(`followStr-${post?.author?._id}`).innerText ===
       "Follow"
@@ -205,18 +184,13 @@ const BlogPost = () => {
       document.getElementById(`followStr-${post?.author?._id}`).innerText ===
       "Unfollow"
     ) {
-      // let confirmUnFollow = window.confirm(
-      //   `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
-      // );
-      // if (confirmUnFollow) {
       handleUnFollow(post?.author?._id);
-      // }
     }
   };
 
-  const handleFollow = async (id) => {
+  const handleFollow = async id => {
     // Preset following
-    setFollowed(true);
+
     try {
       await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
@@ -225,8 +199,8 @@ const BlogPost = () => {
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(userAuth(response.data));
         } catch (error) {
@@ -235,14 +209,12 @@ const BlogPost = () => {
       })();
     } catch (error) {
       // Revert on axios  failure
-      setFollowed(false);
-      // console.error("follow Error:", error);
     }
   };
 
-  const handleUnFollow = async (id) => {
+  const handleUnFollow = async id => {
     // Preset following
-    setFollowed(false);
+
     try {
       await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
@@ -251,8 +223,8 @@ const BlogPost = () => {
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(userAuth(response.data));
         } catch (error) {
@@ -261,7 +233,6 @@ const BlogPost = () => {
       })();
     } catch (error) {
       // Revert on axios  failure
-      setFollowed(true);
       // console.error("follow Error:", error);
     }
   };
@@ -300,7 +271,6 @@ const BlogPost = () => {
                       handleDeletePost={handleDeletePost}
                       changeFollowingStatus={changeFollowingStatus}
                     />
-                    
                   </div>
                 </div>
                 <div className="row">
@@ -356,10 +326,10 @@ const BlogPost = () => {
                         id="articleTextarea"
                         className="form-control"
                         placeholder="."
-                        onChange={(e) => setCommentPost(e.target.value)}
+                        onChange={e => setCommentPost(e.target.value)}
                         style={{ height: "100px" }}
                       ></textarea>
-                      <label htmlFor="articleTextarea">Comments</label>
+                      {/* <label htmlFor="articleTextarea">Comments</label> */}
                     </div>
                   </div>
                   <div className="col-3 col-md-2 ms-auto d-md-grid">

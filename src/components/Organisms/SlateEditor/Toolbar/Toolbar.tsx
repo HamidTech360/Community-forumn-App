@@ -1,6 +1,5 @@
-//@ts-nocheck
 import React, { useEffect, useState } from "react";
-import { Transforms, Editor } from "slate";
+import { Transforms } from "slate";
 import { ReactEditor, useSlate } from "slate-react";
 import Button from "../common/Button";
 import Icon from "../common/Icon";
@@ -8,7 +7,7 @@ import {
   toggleBlock,
   toggleMark,
   isMarkActive,
-  isBlockActive,
+  isBlockActive
 } from "../utils/SlateUtilityFunctions.js";
 import defaultToolbarGroups from "./toolbarGroups.js";
 import defaultToolbarGroupsBottom from "./toolbarGroupsBottom";
@@ -25,7 +24,7 @@ const Toolbar = ({ position }) => {
   const reFocusChatEditor = useSelector(selectReFocusChatEditor);
 
   const editor = useSlate();
-  const [toolbarGroups, setToolbarGroups] = useState(
+  const [toolbarGroups] = useState(
     position === "top"
       ? defaultToolbarGroups
       : position === "bottom"
@@ -48,6 +47,8 @@ const Toolbar = ({ position }) => {
       Transforms.select(editor, editor.selection);
     }
     // Set Focus on Editor. This is to prevent editor.selection Error when Editor isn't in focus
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
     ReactEditor.focus(editor);
 
     // // For good measure, you can reset the history as well
@@ -67,7 +68,7 @@ const Toolbar = ({ position }) => {
       <Button
         active={isBlockActive(editor, format)}
         format={format}
-        onMouseDown={(e) => {
+        onMouseDown={e => {
           e.preventDefault();
           toggleBlock(editor, format);
         }}
@@ -86,7 +87,7 @@ const Toolbar = ({ position }) => {
       <Button
         active={isMarkActive(editor, format)}
         format={format}
-        onMouseDown={(e) => {
+        onMouseDown={e => {
           e.preventDefault();
           toggleMark(editor, format);
         }}
@@ -105,7 +106,7 @@ const Toolbar = ({ position }) => {
     <div className={styles.toolbar}>
       {toolbarGroups.map((group, index) => (
         <span key={index} className={styles.toolbarGrp}>
-          {group.map((element) => {
+          {group.map(element => {
             switch (element.type) {
               case "block":
                 return <BlockButton key={element.id} {...element} />;

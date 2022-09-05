@@ -16,10 +16,10 @@ const Delete = () => {
     if (!confirm) return;
     setProgress(true);
     try {
-      const response = await axios.delete(`${config.serverUrl}/api/user`, {
+      await axios.delete(`${config.serverUrl}/api/user`, {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
       });
       setProgress(false);
       // console.log(response.data);
@@ -28,7 +28,7 @@ const Delete = () => {
         toast.success("Account deleted successfully", {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 7000,
-          toastId: "toast1",
+          toastId: "toast1"
         });
         router.push("/login");
         localStorage.removeItem("accessToken");
@@ -39,7 +39,7 @@ const Delete = () => {
       toast.error("Failed to delete account", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 7000,
-        toastId: "toast1",
+        toastId: "toast1"
       });
     }
   };

@@ -1,28 +1,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
-import { Card, Col, Container, Image, Row } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import Age from "../../Atoms/Age";
 import DOMPurify from "dompurify";
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import {
   selectCommentIsDeleted,
-  selectCommentIsEdited,
+  selectCommentIsEdited
 } from "@/reduxFeatures/app/postModalCardSlice";
 import config from "@/config";
 import axios from "axios";
 
 import styles from "@/styles/utils.module.scss";
 import { PostMenuModal } from "./PostMenu";
+import Avatar from "@/components/Atoms/Avatar";
 
 const Replies = ({
   reply: replyComingIn,
   currentlyFollowing,
   handleEditComment,
   handleDeleteComment,
-  changeFollowingStatus,
-}: Record<string, any>) => {
+  changeFollowingStatus
+}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+Record<string, any>) => {
   const [liked, setLiked] = useState(false);
   // const [comment, setCommentComingIn] = useState(commentComingIn);
   const [reply, setReplyComingIn] = useState(replyComingIn);
@@ -62,17 +63,17 @@ const Replies = ({
 
   const handleLike = async () => {
     try {
-      const { data } = await axios.get(
+      await axios.get(
         `${config.serverUrl}/api/likes/?type=comment&id=${reply?._id}`,
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
 
       if (!reply?.likes.includes(user?._id)) {
-        let newReply = { ...reply };
+        const newReply = { ...reply };
         newReply?.likes.push(user?._id);
 
         setLiked(true);
@@ -85,18 +86,18 @@ const Replies = ({
 
   const handleUnLike = async () => {
     try {
-      const { data } = await axios.delete(
+      await axios.delete(
         `${config.serverUrl}/api/likes/?type=comment&id=${reply?._id}`,
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
 
       if (reply?.likes.includes(user?._id)) {
-        let newReply = { ...reply };
-        let newLikesArr = newReply?.likes.filter((newC) => {
+        const newReply = { ...reply };
+        const newLikesArr = newReply?.likes.filter(newC => {
           return newC !== user?._id;
         });
 
@@ -117,7 +118,7 @@ const Replies = ({
         border: "none",
         width: "90%",
         background: "none",
-        lineHeight: "1.2",
+        lineHeight: "1.2"
       }}
     >
       {console.log("reply:", reply)}
@@ -127,13 +128,11 @@ const Replies = ({
       />
 
       <div className="d-flex align-items-center justify-content-start gap-2 mt-1">
-        <Image
-          src="/images/friends3.png"
-          alt="User avatar"
+        <Avatar
+          src={reply?.author?.images?.avatar}
+          name="User avatar"
           width={50}
           height={50}
-          fluid
-          roundedCircle
         />
         <div>
           <h6 style={{ fontWeight: "bold" }}>
@@ -162,7 +161,7 @@ const Replies = ({
       <Card.Body
         className="container px-md-5"
         dangerouslySetInnerHTML={{
-          __html: sanitizer(reply?.content),
+          __html: sanitizer(reply?.content)
         }}
       />
 

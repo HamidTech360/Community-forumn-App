@@ -1,42 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Link from "next/link";
-import strip from "striptags";
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Card,
-  Col,
-  Dropdown,
-  Image,
-  Modal,
-  NavDropdown,
-  Row,
-} from "react-bootstrap";
-import { HiDotsVertical } from "react-icons/hi";
+import { Button, Card } from "react-bootstrap";
 
-import { MdOutlineCancel } from "react-icons/md";
-import { BiArrowBack } from "react-icons/bi";
-import {
-  ModalRow,
-  ModalRowShare,
-  useModalWithData,
-  useModalWithShare,
-} from "@/hooks/useModalWithData";
+import { useModalWithData, useModalWithShare } from "@/hooks/useModalWithData";
 // import ModalCard from "@/components/Organisms/App/ModalCard";
-import truncate from "trunc-html";
-import { toast } from "react-toastify";
+import truncate from "truncate-html";
 import "react-toastify/dist/ReactToastify.css";
 
-import { RiClipboardFill, RiDeleteBin5Line, RiFlagFill } from "react-icons/ri";
-import {
-  BsFolderFill,
-  BsXCircleFill,
-  BsFillBookmarkFill,
-  BsBookmark,
-} from "react-icons/bs";
-import { RiUserFollowFill } from "react-icons/ri";
+import { BsFillBookmarkFill, BsBookmark } from "react-icons/bs";
 import { AiOutlineLike, AiFillLike, AiOutlineShareAlt } from "react-icons/ai";
-import { FaRegCommentDots, FaThumbsUp } from "react-icons/fa";
+import { FaRegCommentDots } from "react-icons/fa";
 import Age from "../../../Atoms/Age";
 import DOMPurify from "dompurify";
 import styles from "@/styles/profile.module.scss";
@@ -44,100 +17,99 @@ import axios from "axios";
 import config from "@/config";
 
 import { useDispatch, useSelector } from "@/redux/store";
-import {
-  selectPost,
-  setIsFetching,
-  setPosts,
-} from "@/reduxFeatures/api/postSlice";
+
 import {
   user as userAuth,
   selectUser,
   setFollowing,
-  selectFollowing,
+  selectFollowing
 } from "@/reduxFeatures/authState/authStateSlice";
 import {
-  // setLikeChanged,
-  // selectLikeChanged,
-  // setBookMarkChanged,
-  // selectBookMarkChanged,
   setLikeChangedModal,
   selectLikeChangedModal,
   setUnLikeChangedModal,
-  selectUnLikeChangedModal,
-  // setBookMarkChangedModal,
-  // selectBookMarkChangedModal,
+  selectUnLikeChangedModal
 } from "@/reduxFeatures/app/postModalCardSlice";
-import { selectCreatePostModal } from "@/reduxFeatures/app/createPost";
 import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
+
+import { selectImageModalOpen } from "@/reduxFeatures/app/postModalCardSlice";
+import ImageModal from "../ModalPopUp/ImageModal";
 // import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
+
 import { useRouter } from "next/router";
-// import Comment from "@/components/Organisms/App/Comment";
 import makeSecuredRequest, {
-  deleteSecuredRequest,
+  deleteSecuredRequest
 } from "@/utils/makeSecuredRequest";
-import { FiEdit } from "react-icons/fi";
 import likes from "@/utils/like";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
-import ChangeFollowingStatus from "../ChangeFollowingStatus";
 import { FeedPostEditorModal_Modal } from "../ModalPopUp/FeedPostEditorModal";
 import OpenShareModal from "../ModalPopUp/OpenShareModal";
 import PostCardMenu from "../PostMenu";
+
+import Avatar from "@/components/Atoms/Avatar";
+
+import MediaDisplay from "../MediaMasonry";
 // import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
-  // post: postComingIn,
   post,
   trimmed,
   handleDeletePost,
   handleEditPost,
-  mutate,
+  mutate
 }) => {
-  // console.log("PastCard Loaded+++++");
-  // console.log("postComingIn:", postComingIn);
-  // console.log("post:", post);
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  // const posts = useSelector(selectPost);
-  // const likeChanged = useSelector(selectLikeChanged);
-  // const bookmarkChanged = useSelector(selectBookMarkChanged);
+
   const likeChangedModal = useSelector(selectLikeChangedModal);
   const unLikeChangedModal = useSelector(selectUnLikeChangedModal);
-  const createPostModal = useSelector(selectCreatePostModal);
   const newFeed = useSelector(selectNewFeed);
-  // const bookmarkChangedModal = useSelector(selectBookMarkChangedModal);
+
   const router = useRouter();
   const [followed, setFollowed] = useState(false);
 
-  // const [post, setPostComingIn] = useState(postComingIn);
   const [postReFetched, setPostComingIn] = useState(undefined);
 
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookMarked] = useState(false);
-  // const [likedOrBookmarkedChanged, setLikedOrBookmarkedChanged] =
-  //   useState(false);
+
   const sanitizer = DOMPurify.sanitize;
 
   // - comment section
-  const [modalPost, setModalPost] = useState<Record<string, any>>({});
-  const [commentPost, setCommentPost] = useState("");
-  // const [showComment, setShowComment] = useState(false);
-  const [loading, setLoading] = useState(false);
-  // const [noOfLikes, setNoOfLikes] = useState(0)
 
-  // useEffect(()=>{
-  //   setNoOfLikes(post?.likes?.length)
-  // },[])
+  const [seeMore, setSeeMore] = useState(false);
+  const [postLength, setPostLength] = useState(0);
+  const [truncateLength] = useState(500);
+
   const currentlyFollowing = useSelector(selectFollowing);
+  const imageModalOpen = useSelector(selectImageModalOpen);
 
   // modal
   const { modalOpen, toggle, selected, setSelected } = useModalWithData();
   const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
     useModalWithShare();
 
+  useEffect(() => {
+    if (post) {
+      const postType = post?.post ? post?.post : post?.postBody;
+      const postTypeLength = sanitizer(
+        truncate(postType, truncateLength, { stripTags: true })
+      ).length;
+
+      if (postTypeLength > truncateLength) {
+        setSeeMore(true);
+      } else {
+        setSeeMore(false);
+      }
+
+      setPostLength(postTypeLength);
+    }
+  }, [post]);
+
   // Update users following in AuthUser because it's a frontend resolved data
   useEffect(() => {
     if (user) {
-      const currentlyFollowing = user.following.map((follow) => {
+      const currentlyFollowing = user.following.map(follow => {
         return follow._id;
       });
       dispatch(setFollowing(currentlyFollowing));
@@ -148,18 +120,14 @@ const PostCard = ({
   useEffect(() => {
     if (currentlyFollowing.includes(post?.author?._id)) {
       setFollowed(true);
-      // dispatch(setFollowed(true));
     } else {
       setFollowed(false);
-      // dispatch(setFollowed(false));
     }
   }, [post, currentlyFollowing]);
 
   // Monitor Likes In ModalCard & Let It Reflect In PastCard
   useEffect(() => {
-    // console.log("modalOpen OPEN");
     if (!modalOpen && likeChangedModal.length > 0) {
-      // if (likeChangedModal.includes(postComingIn?._id)) {
       if (likeChangedModal.includes(post?._id)) {
         // Refetch Specific Post So as to get updated like count The false argument is for iit not to sent an axios argument.
         (async () => await likeIt(false))();
@@ -167,7 +135,6 @@ const PostCard = ({
     }
 
     if (!modalOpen && unLikeChangedModal.length > 0) {
-      // if (unLikeChangedModal.includes(postComingIn?._id)) {
       if (unLikeChangedModal.includes(post?._id)) {
         // Refetch Specific Post So as to get updated like count. The false argument is for iit not to sent an axios argument.
         (async () => await unLikeIt(false))();
@@ -212,8 +179,8 @@ const PostCard = ({
     router.push({
       pathname: `/profile/[id]`,
       query: {
-        id: post?.author?._id,
-      },
+        id: post?.author?._id
+      }
     });
   };
 
@@ -225,12 +192,12 @@ const PostCard = ({
         <AiFillLike color="#086a6d " size={25} onClick={() => handleUnLike()} />
       ) : (
         <AiOutlineLike size={25} onClick={() => handleLike()} />
-      ),
+      )
     },
     {
       name: "Share",
       reaction: true,
-      icon: <AiOutlineShareAlt size={25} />,
+      icon: <AiOutlineShareAlt size={25} />
     },
     {
       name: "Comment",
@@ -253,7 +220,7 @@ const PostCard = ({
             }
           }}
         />
-      ),
+      )
     },
     {
       name: "Bookmark",
@@ -266,33 +233,9 @@ const PostCard = ({
         />
       ) : (
         <BsBookmark onClick={() => handleBookMark()} size={22} />
-      ),
-    },
+      )
+    }
   ];
-
-  // const postComment = async () => {
-  //   const body = {
-  //     content: commentPost,
-  //   };
-
-  //   setLoading(true);
-  //   const res = await axios.post(
-  //     `${config.serverUrl}/api/comments?type=feed&id=${post?._id}`,
-  //     body,
-  //     {
-  //       headers: {
-  //         authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  //       },
-  //     }
-  //   );
-  //   // console.log(res);
-  //   let comments = post?.comments;
-  //   comments?.unshift(res.data);
-  //   setModalPost({ ...post, comments });
-
-  //   setLoading(false);
-  //   // setShowComment(false);
-  // };
 
   const handleLike = async () => {
     await likeIt(true);
@@ -302,13 +245,13 @@ const PostCard = ({
     await unLikeIt(true);
   };
 
-  const likeIt = async (bool) => {
+  const likeIt = async bool => {
     // Pre-Set Like State B4 Axios
-    let currentPostState = postReFetched
+    const currentPostState = postReFetched
       ? JSON.parse(JSON.stringify(postReFetched))
       : JSON.parse(JSON.stringify(post));
 
-    let newPostState = { ...currentPostState };
+    const newPostState = { ...currentPostState };
     if (!newPostState?.likes.includes(user?._id)) {
       newPostState.likes.push(user?._id);
     }
@@ -316,61 +259,42 @@ const PostCard = ({
     setLiked(true);
 
     // Axios Like Post
-    let type;
-    const currentRoute = router.pathname;
-    if (currentRoute == "/feed") {
-      type = "feed";
-    } else if (
-      currentRoute == "/groups" ||
-      currentRoute == "/groups/[id]/[path]"
-    ) {
-      // type = "post";
-      type = "feed";
-    } else if (currentRoute.includes("profile")) {
-      type = "post";
-    }
 
-    // console.log("Post data:", post);
-    // try {
     if (bool) {
       try {
-        // Like Post
-        const likeNew = await axios.get(
-          `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
+        await axios.get(
+          `${config.serverUrl}/api/likes/?type=${"feed"}&id=${post?._id}`,
           {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           }
         );
-
-        // console.log("likeNew response.data:", likeNew.data);
       } catch (error) {
         // Reverse Like State Because of Axios Error
         let filterNewPostState = newPostState?.likes;
         if (newPostState?.likes.includes(user?._id)) {
-          filterNewPostState = newPostState?.likes.filter((person) => {
+          filterNewPostState = newPostState?.likes.filter(person => {
             return person !== user?._id;
           });
         }
         newPostState.likes = filterNewPostState;
         setPostComingIn(newPostState);
         setLiked(false);
-        // console.error(error);
       }
     }
   };
 
-  const unLikeIt = async (bool) => {
+  const unLikeIt = async bool => {
     // Pre-Set Unlike State B4 Axios
-    let currentPostState = postReFetched
+    const currentPostState = postReFetched
       ? JSON.parse(JSON.stringify(postReFetched))
       : JSON.parse(JSON.stringify(post));
 
-    let newPostState = { ...currentPostState };
+    const newPostState = { ...currentPostState };
     let filterNewPostState = newPostState?.likes;
     if (newPostState?.likes.includes(user?._id)) {
-      filterNewPostState = newPostState?.likes.filter((person) => {
+      filterNewPostState = newPostState?.likes.filter(person => {
         return person !== user?._id;
       });
     }
@@ -379,44 +303,26 @@ const PostCard = ({
     setPostComingIn(newPostState);
     setLiked(false);
 
-    // Axios Unlike Post
-    let type;
-    const currentRoute = router.pathname;
-    if (currentRoute == "/feed") {
-      type = "feed";
-    } else if (
-      currentRoute == "/groups" ||
-      currentRoute == "/groups/[id]/[path]"
-    ) {
-      type = "feed";
-    } else if (currentRoute.includes("profile")) {
-      type = "post";
-    }
-
-    // try {
     if (bool) {
       // Like Post
       try {
-        const unlikePost = await axios.delete(
-          `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
-          // `${config.serverUrl}/api/${type}/${post?._id}`,
+        await axios.delete(
+          `${config.serverUrl}/api/likes/?type=${"feed"}&id=${post?._id}`,
           {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           }
         );
-        // console.log("unlikePost:", unlikePost);
       } catch (error) {
         // Reverse Like Because of Axios Error
-        let newPostState = { ...currentPostState };
+        const newPostState = { ...currentPostState };
         if (!newPostState?.likes.includes(user?._id)) {
           newPostState.likes.push(user?._id);
         }
 
         setPostComingIn(newPostState);
         setLiked(true);
-        // console.error(error);
       }
     }
   };
@@ -426,10 +332,8 @@ const PostCard = ({
      ** This would Auto-Sync Bookmark on both PastCard & ModalCard
      */
 
-    // if (!user?.bookmarks?.includes(post?._id)) {
-    let newBookmarks = [...user?.bookmarks, post?._id];
+    const newBookmarks = [...user?.bookmarks, post?._id];
     dispatch(userAuth({ ...user, bookmarks: newBookmarks }));
-    // }
 
     // Axios Bookmark Post
     try {
@@ -438,21 +342,17 @@ const PostCard = ({
         {},
         {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
     } catch (error) {
-      // if (user?.bookmarks?.includes(post?._id)) {
-      let fitterStateUser = user?.bookmarks.filter((filterUser) => {
+      const fitterStateUser = user?.bookmarks.filter(filterUser => {
         return filterUser !== post?._id;
       });
-      // console.log("fitterStateUser:", fitterStateUser);
-      // }
 
       // Reverse Bookmark State
       dispatch(userAuth({ ...user, bookmarks: fitterStateUser }));
-      // console.log(error);
     }
   };
 
@@ -461,7 +361,7 @@ const PostCard = ({
      ** This would Auto-Sync Bookmark on both PastCard & ModalCard
      */
 
-    let fitterStateUser = user?.bookmarks.filter((filterUser) => {
+    const fitterStateUser = user?.bookmarks.filter(filterUser => {
       return filterUser !== post?._id;
     });
     dispatch(userAuth({ ...user, bookmarks: fitterStateUser }));
@@ -470,18 +370,17 @@ const PostCard = ({
     try {
       await axios.delete(`${config.serverUrl}/api/bookmarks/?id=${post._id}`, {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
       });
     } catch (error) {
       // Reverse Bookmark Auth User State.
-      let reverseBookmarks = [...user?.bookmarks, post?._id];
+      const reverseBookmarks = [...user?.bookmarks, post?._id];
       dispatch(userAuth({ ...user, bookmarks: reverseBookmarks }));
-      // console.log(error.response?.data);
     }
   };
 
-  const changeFollowingStatus = (post) => {
+  const changeFollowingStatus = post => {
     console.log("post:", post);
     if (
       document.getElementById(`followStr-${post?.author?._id}`).innerText ===
@@ -492,28 +391,21 @@ const PostCard = ({
       document.getElementById(`followStr-${post?.author?._id}`).innerText ===
       "Unfollow"
     ) {
-      // let confirmUnFollow = window.confirm(
-      //   `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
-      // );
-      // if (confirmUnFollow) {
       handleUnFollow(post?.author?._id);
-      // }
     }
   };
 
-  const handleFollow = async (id) => {
-    // Preset following
+  const handleFollow = async id => {
     setFollowed(true);
     try {
       await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
-      // Update Auth User State
       (async function () {
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(userAuth(response.data));
         } catch (error) {
@@ -521,25 +413,21 @@ const PostCard = ({
         }
       })();
     } catch (error) {
-      // Revert on axios  failure
       setFollowed(false);
-      // console.error("follow Error:", error);
     }
   };
 
-  const handleUnFollow = async (id) => {
-    // Preset following
+  const handleUnFollow = async id => {
     setFollowed(false);
     try {
       await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
-      // Update Auth User State
       (async function () {
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           dispatch(userAuth(response.data));
         } catch (error) {
@@ -547,9 +435,7 @@ const PostCard = ({
         }
       })();
     } catch (error) {
-      // Revert on axios  failure
       setFollowed(true);
-      // console.error("follow Error:", error);
     }
   };
 
@@ -557,56 +443,47 @@ const PostCard = ({
     <>
       <Card
         id={post?.id}
-        className="container-fluid my-3 cards"
+        className="container-fluid my-3 cards w-100"
         style={{
           border: "1px solid rgba(0, 0, 0, 0.125)",
-          width: "100%",
+          width: "100%"
         }}
       >
         <Card.Title className={`border-bottom ${styles.title}`}>
-          <div className="row">
-            <div className="col-1">
-              <Image
-                src={post?.author?.images?.avatar || "/images/imagePlaceholder.jpg"}
-                width={45}
-                height={45}
-                alt=""
-                roundedCircle
-                style={{ cursor: "pointer" }}
+          <div className="d-flex align-items-center justify-content-start gap-2">
+            <Avatar
+              src={post?.author?.images?.avatar}
+              name={post?.author?.firstName}
+            />
+
+            <div className={styles.div}>
+              <span
+                style={{
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  color: "var(--bs-primary)"
+                }}
                 onClick={redirectPage}
+                dangerouslySetInnerHTML={{
+                  __html: sanitizer(
+                    `${post?.author?.firstName} ${post?.author?.lastName}`
+                  )
+                }}
               />
+              <br />
+              <small
+                style={{
+                  marginTop: "10px",
+                  fontWeight: 400,
+                  fontSize: "0.9rem",
+                  color: "gray"
+                }}
+              >
+                <Age time={post?.createdAt} />
+              </small>
             </div>
 
-            <div className="col-6 col-sm-8 ms-4 me-xl-5">
-              <div className={styles.div}>
-                <span
-                  style={{
-                    fontWeight: 500,
-                    cursor: "pointer",
-                    color: "var(--bs-primary)",
-                  }}
-                  onClick={redirectPage}
-                  dangerouslySetInnerHTML={{
-                    __html: sanitizer(
-                      `${post?.author?.firstName} ${post?.author?.lastName}`
-                    ),
-                  }}
-                />
-                <br />
-                <small
-                  style={{
-                    marginTop: "10px",
-                    fontWeight: 400,
-                    fontSize: "0.9rem",
-                    color: "gray",
-                  }}
-                >
-                  <Age time={post?.createdAt} />
-                </small>
-              </div>
-            </div>
-
-            <div className="col-1" style={{ marginTop: "-.8rem" }}>
+            <div className="ms-auto" style={{ marginTop: "-.8rem" }}>
               <PostCardMenu
                 user={user}
                 post={post}
@@ -618,162 +495,74 @@ const PostCard = ({
                 handleEditPost={handleEditPost}
                 handleDeletePost={handleDeletePost}
               />
-              {/* <NavDropdown
-                drop="start"
-                style={{ color: "white" }}
-                title={
-                  <Button variant="link" size="lg">
-                    <HiDotsVertical size={25} />
-                  </Button>
-                }
-              >
-                <NavDropdown.Item
-                  className={styles.item}
-                  style={{ borderBlock: "1px solid gray" }}
-                  onClick={async () => {
-                    if (postReFetched) {
-                      if (postReFetched?._id === post?._id) {
-                        setSelected(postReFetched);
-                        toggle();
-                      } else {
-                        setSelected(post);
-                        toggle();
-                      }
-                    } else {
-                      setSelected(post);
-                      toggle();
-                    }
-                  }}
-                >
-                  <BsFolderFill /> Open Post
-                </NavDropdown.Item>
-
-                {user?._id !== post?.author?._id ? (
-                  <>
-                    <NavDropdown.Item
-                      className={styles.item}
-                      style={{ borderBottom: "1px solid gray" }}
-                    >
-                      <RiFlagFill /> Report post
-                    </NavDropdown.Item>
-                    <NavDropdown.Item
-                      className={styles.item}
-                      style={{ borderBottom: "1px solid gray" }}
-                      onClick={async () => changeFollowingStatus(post)}
-                    >
-                      {followed ? (
-                        <>
-                          <BsXCircleFill />{" "}
-                          <span id={`followStr-${post?.author?._id}`}>
-                            Unfollow
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <RiUserFollowFill />{" "}
-                          <span id={`followStr-${post?.author?._id}`}>
-                            Follow
-                          </span>
-                        </>
-                      )}{" "}
-                      @{post?.author?.firstName?.split(" ")[0]}
-                      {post?.author?.lastName?.substring(0, 1)}
-                    </NavDropdown.Item>
-                  </>
-                ) : null}
-                {user._id == post.author._id && (
-                  <>
-                    <NavDropdown.Item
-                      className={styles.item}
-                      style={{
-                        borderBottom: "1px solid gray",
-                      }}
-                      onClick={() => handleEditPost(post)}
-                    >
-                      <FiEdit /> Edit Post
-                    </NavDropdown.Item>
-
-                    <NavDropdown.Item
-                      style={{ borderBottom: "1px solid gray" }}
-                      onClick={() => handleDeletePost(post)}
-                    >
-                      <span
-                        style={{
-                          color: "red",
-                        }}
-                      >
-                        <RiDeleteBin5Line /> Delete Post
-                      </span>
-                    </NavDropdown.Item>
-                  </>
-                )}
-              </NavDropdown> */}
             </div>
           </div>
         </Card.Title>
 
         <Card.Body
           style={{
-            cursor: "pointer",
+            // Only Display Cursor Pointer When postLength Is Greater Than truncateLength
+            cursor: postLength > truncateLength && "pointer"
           }}
           onClick={async () => {
-            if (postReFetched) {
-              if (postReFetched?._id === post?._id) {
-                setSelected(postReFetched);
-                toggle();
-              } else {
-                setSelected(post);
-                toggle();
-              }
-            } else {
-              setSelected(post);
-              toggle();
+            // Only Toggle If Post Is Greater Than truncateLength
+            if (postLength > truncateLength) {
+              setSeeMore(!seeMore);
             }
           }}
         >
           <div>
             {post && Object.keys(post).length !== 0 && (
-              <div className="d-flex flex-column">
-                <div
-                  className="post-content"
-                  // No Need for truncate here as it hides some tags like Bold & Underline
-                  dangerouslySetInnerHTML={{
-                    __html: trimmed
-                      ? sanitizer(post?.postBody) || sanitizer(post?.post)
-                      : sanitizer(post?.postBody) || sanitizer(post?.post),
-                  }}
-                />
-
-                <PostIsEdited post={post} />
-
-                {router.asPath === "/feed" ||
-                router?.pathname.includes("profile") ||
-                router?.pathname.includes("groups") ? (
-                  <small
-                    style={{
-                      color: "gray",
-                      fontSize: "11px",
-                      position: "relative",
-                      left: "42%",
+              <>
+                <div className="d-flex flex-column">
+                  <div
+                    className="post-content"
+                    dangerouslySetInnerHTML={{
+                      __html: trimmed
+                        ? sanitizer(
+                            truncate(post?.postBody, seeMore && truncateLength)
+                          ) ||
+                          sanitizer(
+                            truncate(post?.post, seeMore && truncateLength)
+                          )
+                        : sanitizer(
+                            truncate(post?.postBody, seeMore && truncateLength)
+                          ) ||
+                          sanitizer(
+                            truncate(post?.post, seeMore && truncateLength)
+                          )
                     }}
-                  >
-                    {" "}
-                    See more...
-                  </small>
+                  />
+                  <PostIsEdited post={post} />
+                </div>
+
+                {/* Display Media */}
+                {post?.media?.length > 0 && (
+                  <MediaDisplay media={post.media} breakPoint={2} />
+                )}
+
+                {seeMore && postLength > truncateLength ? (
+                  router.asPath === "/feed" ||
+                  router?.pathname.includes("profile") ||
+                  router?.pathname.includes("groups") ? (
+                    <div>
+                      <small
+                        style={{
+                          color: "gray",
+                          fontSize: "11px",
+                          position: "relative",
+                          left: "42%"
+                        }}
+                      >
+                        {" "}
+                        See more...
+                      </small>
+                    </div>
+                  ) : null
                 ) : null}
-              </div>
+              </>
             )}
           </div>
-
-          {!trimmed && (
-            <Image
-              className="d-none d-sm-block d-lg-none"
-              style={{ borderRadius: 0 }}
-              src={"/images/formbg.png"}
-              fluid
-              alt={""}
-            />
-          )}
         </Card.Body>
         {post.likes.length > 0 && (
           <div className="text-muted d-flex align-items-center">
@@ -782,44 +571,30 @@ const PostCard = ({
           </div>
         )}
 
-        {/* <Card.Footer
-          className={`mx-1 d-flex justify-content-between bg-white ${styles.footer}`}
-        > */}
         <Card.Footer className="justify-content-between bg-white px-0">
           <div className="row">
             {postButton.map((item, key) => (
               <div className="col-3" key={key}>
                 <Button
                   variant="none"
-                  // disabled={item.name === "Like" && post?.likes?.includes(user._id)}
-                  // className="d-flex justify-content-center gap-1 align-items-center"
                   className="d-flex justify-content-center align-items-center"
                   onClick={() => {
                     if (item.name === "Like") {
                       if (liked) {
-                        // removeLike();
                         handleUnLike();
                       } else {
-                        // console.log("POST ID Init:", post?._id);
                         handleLike();
                       }
                     }
-                    // if (item.name === "Comment") {
-                    //   setShowComment(!showComment);
-                    // }
 
                     if (item.name === "Share") {
-                      // modalOpen;
                       toggleShare();
                       setSelectedShare(post);
-                      // document.getElementById("dropDownId").click();
                     }
                     if (item.name === "Bookmark") {
                       if (bookmarked) {
-                        // If already bookmarked, then remove bookmark
                         removeBookMark();
                       } else {
-                        // If not already bookmarked, then add bookmark
                         handleBookMark();
                       }
                     }
@@ -908,33 +683,8 @@ const PostCard = ({
           mutate={mutate}
         />
       )}
-      {/* <Modal
-        show={modalOpen}
-        className={`${styles.FeedModal}`}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        size="xl"
-        scrollable={true}
-      >
-        <span className={styles.openBtn}>
-          {" "}
-          <MdOutlineCancel
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggle()}
-          />{" "}
-        </span>
-        <span className={styles.closeBtn}>
-          {" "}
-          <BiArrowBack
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggle()}
-          />{" "}
-        </span>
-        <ModalRow selected={selected} modalToggle={toggle} mutate={mutate} />
-      </Modal> */}
 
+      {/* Open Social Media Modal */}
       {modalOpenShare && (
         <OpenShareModal
           modalOpenShare={modalOpenShare}
@@ -943,32 +693,8 @@ const PostCard = ({
         />
       )}
 
-      {/* <Modal
-        show={modalOpenShare}
-        className={styles.FeedModal}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        size="sm"
-        scrollable={true}
-      >
-        <span className={styles.openBtn}>
-          {" "}
-          <MdOutlineCancel
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggleShare()}
-          />{" "}
-        </span>
-        <span className={styles.closeBtn}>
-          {" "}
-          <BiArrowBack
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggleShare()}
-          />{" "}
-        </span>
-        <ModalRowShare selectedShare={selectedShare} />
-      </Modal> */}
+      {/* Post Image Modal */}
+      {imageModalOpen && <ImageModal />}
     </>
   );
 };

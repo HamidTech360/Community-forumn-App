@@ -1,30 +1,26 @@
-//@ts-nocheck
 import React, { useRef, useState } from "react";
 import Button from "../../common/Button";
 import Icon from "../../common/Icon";
 import { isBlockActive } from "../../utils/SlateUtilityFunctions";
-import { insertEmbed } from "../../utils/embed.js";
 import { Transforms } from "slate";
 import { ReactEditor } from "slate-react";
 
 import styles from "../../../../../styles/SlateEditor/Embed_Slate.module.scss";
 import { Modal, Button as BsBtn, Form } from "react-bootstrap";
-import DragAndDropFiles from "../DropZone/DragAndDropFiles";
+import Uploader2 from "@/components/Organisms/DragAndDrop2/Uploader2";
 
 const Embed = ({ editor, format }) => {
   const urlInputRef = useRef();
-  let embedTitle = useRef();
-  let embedAddress = useRef();
 
   const [editorSelection, setEditorSelection] = useState({
     anchor: {
       path: [0, 0],
-      offset: 0,
+      offset: 0
     },
     focus: {
       path: [0, 0],
-      offset: 0,
-    },
+      offset: 0
+    }
   });
 
   const [show, setShow] = useState(false);
@@ -33,6 +29,8 @@ const Embed = ({ editor, format }) => {
   const handleShow = () => {
     // If editor.selection === null, then replace null with editorSelection
     if (editor.selection) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
       setEditorSelection(Transforms.select(editor, editor.selection));
     } else {
       Transforms.select(editor, editorSelection);
@@ -40,24 +38,24 @@ const Embed = ({ editor, format }) => {
     // Set Focus on Editor. This is to prevent editor.selection Error when Editor isn't in focus
     editorSelection && ReactEditor.focus(editor);
 
-    setShow((prev) => !prev);
+    setShow(prev => !prev);
   };
 
-  const submitEmbed = (e) => {
+  const submitEmbed = e => {
     e.preventDefault();
 
-    let embedTitleValue = embedTitle.current.value;
-    let embedAddressValue = embedAddress.current.value;
+    // let embedTitleValue = embedTitle.current.value;
+    // let embedAddressValue = embedAddress.current.value;
 
-    editor.selection && Transforms.select(editor, editor.selection);
-    editor.selection && ReactEditor.focus(editor);
+    // editor.selection && Transforms.select(editor, editor.selection);
+    // editor.selection && ReactEditor.focus(editor);
 
-    insertEmbed(
-      editor,
-      { alt: embedTitleValue, url: embedAddressValue },
-      format
-    );
-    setShow((prev) => !prev);
+    // insertEmbed(
+    //   editor,
+    //   { alt: embedTitleValue, url: embedAddressValue },
+    //   format
+    // );
+    setShow(prev => !prev);
   };
   // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -67,7 +65,7 @@ const Embed = ({ editor, format }) => {
         <Button
           active={isBlockActive(editor, format)}
           style={{
-            borderBottom: "none",
+            borderBottom: "none"
           }}
           format={format}
           onClick={handleShow}
@@ -81,7 +79,7 @@ const Embed = ({ editor, format }) => {
           style={{
             border: "none",
             backgroundColor: "transparent",
-            marginBottom: "-1rem",
+            marginBottom: "-1rem"
           }}
           closeButton
         >
@@ -94,15 +92,16 @@ const Embed = ({ editor, format }) => {
             <Form.Group className="mb-3" controlId="formBasicAlt">
               <div>
                 {/* <DragAndDropFiles format={format} /> */}
-                <p
+                <Uploader2 />
+                {/* <p
                   style={{ textAlign: "center", opacity: "0.7", width: "100%" }}
                 >
                   OR
-                </p>
+                </p> */}
               </div>
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicAlt">
+            {/* <Form.Group className="mb-3" controlId="formBasicAlt">
               <Form.Label style={{ fontWeight: "600" }}>Alt:</Form.Label>
               <Form.Control
                 ref={embedTitle}
@@ -120,7 +119,7 @@ const Embed = ({ editor, format }) => {
                 placeholder="URL"
                 required
               />
-            </Form.Group>
+            </Form.Group> */}
           </Modal.Body>
 
           <Modal.Footer
@@ -128,6 +127,7 @@ const Embed = ({ editor, format }) => {
               border: "none",
               backgroundColor: "transparent",
               marginTop: "-1rem",
+              marginRight: "2.5rem"
             }}
           >
             <BsBtn variant="secondary" onClick={handleClose}>
