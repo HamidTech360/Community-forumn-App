@@ -64,7 +64,7 @@ export const insertMention = (editor, character) => {
   const mention: MentionElement = {
     type: "mention",
     character,
-    children: [{ text: `${character.userName} ` }]
+    children: [{ text: `${character?.userName} ` }]
   };
   Transforms.insertNodes(editor, mention);
   Transforms.move(editor);

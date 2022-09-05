@@ -75,10 +75,21 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   const target = useSelector(selectTarget);
   const [listMention, setListMention] = useState([]);
   const [mentionedUsersList, setMentionedUsersList] = useState([]);
+  const [showPlaceholder, setShowPlaceholder] = useState(false);
+
+  useEffect(() => {
+    // Display Editor Placeholder
+    if (typeof window === "undefined") return;
+    if (window.innerWidth <= 768) {
+      setShowPlaceholder(false);
+    } else {
+      setShowPlaceholder(true);
+    }
+  }, []);
 
   useEffect(() => {
     // Axios fetch users by search
-    if (search.length > 0) {
+    if (search?.length > 0) {
       const fetchMentionUser = async () => {
         const mentionUser = await MentionUserApiSearch(search);
         setListMention(mentionUser);
@@ -269,7 +280,13 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
                     className={`${
                       !slim ? styles.editable : styles.editableSlim
                     }`}
-                    placeholder={slim ? "" : "Start writing your thoughts"}
+                    placeholder={
+                      slim
+                        ? ""
+                        : showPlaceholder
+                        ? "Start writing your thoughts"
+                        : ""
+                    }
                     renderElement={renderElement}
                     renderLeaf={renderLeaf}
                     spellCheck
