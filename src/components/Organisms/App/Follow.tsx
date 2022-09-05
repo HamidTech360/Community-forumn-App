@@ -26,7 +26,7 @@ const Follow = () => {
   const currentlyFollowing = useSelector(selectFollowing);
   const dispatch = useDispatch();
 
-  // DELETE-CHECK ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 
   useEffect(() => {
     (async function () {
       try {
@@ -44,7 +44,7 @@ const Follow = () => {
       }
     })();
   }, []);
-  // DELETE-CHECK ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 
 
   const handleFollow = async (id: string) => {
     try {
