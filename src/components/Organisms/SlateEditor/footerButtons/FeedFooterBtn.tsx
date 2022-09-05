@@ -94,8 +94,9 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
             `${config.serverUrl}/api/feed`,
 
             {
-              // post: serializedHtml
-              post: editorInnerHtml
+              post: editorInnerHtml,
+              slateState: editorContentValue,
+              mentions: usersToSendNotification
             },
             {
               headers: {
@@ -136,7 +137,9 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
             // { post: serializedHtml, media: [formData] },
             {
               // post: serializedHtml
-              post: editorInnerHtml
+              post: editorInnerHtml,
+              slateState: editorContentValue,
+              mentions: usersToSendNotification
             },
             {
               headers: {
