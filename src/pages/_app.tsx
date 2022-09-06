@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-script-component-in-head */
 import "../styles/bootstrap.css";
 import "../styles/globals.scss";
+import "../styles/mentions/access.css";
+import "../styles/mentions/dynamic.css";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";

@@ -10,7 +10,7 @@ import {
   setSlatePostToEdit,
   selectSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
-import { serialize } from "../utils/serializer";
+// import { serialize } from "../utils/serializer";
 import { setModalCardPostEdited } from "@/reduxFeatures/app/postModalCardSlice";
 import { selectMediaUpload } from "@/reduxFeatures/app/mediaUpload";
 import {
@@ -52,24 +52,25 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       return;
     }
 
-    console.log("editorContentValue:", editorContentValue);
-    console.log("editorInnerHtml:", editorInnerHtml);
+    // console.log("editorContentValue:", editorContentValue);
+    // console.log("editorInnerHtml:", editorInnerHtml);
     if (editorInnerHtml.trim() !== "") {
       setUploading(true);
 
-      // Serialize Html
-      const serializeNode = {
-        children: editorContentValue
-      };
+      // // Serialize Html
+      // const serializeNode = {
+      //   children: editorContentValue
+      // };
 
-      const serializedHtml: string = serialize(serializeNode);
-      console.log("serializedHtml:", serializedHtml);
+      // const serializedHtml: string = serialize(serializeNode);
+      // console.log("serializedHtml:", serializedHtml);
 
       /*
        ** Mentioned Users To Send Notification
        ** Below Map() Is Important To Confirm The Mentioned User Hasn't Been Deleted
        */
-      const usersToSendNotification = [];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const usersToSendNotification: any = [];
       if (mentionedUsers.length > 0) {
         await mentionedUsers.forEach(user => {
           if (editorInnerHtml?.includes(user.userName)) {
@@ -78,14 +79,22 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         });
       }
       console.log("usersToSendNotification:", usersToSendNotification);
+      // console.log("editorContentValue:", editorContentValue);
 
       // Form Data
       const formData = new FormData();
 
+      formData.append("post", editorInnerHtml);
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
-      formData.append("post", serializedHtml.toString());
+      formData.append("slateState", editorContentValue);
+      formData.append("mentions", usersToSendNotification);
+
+      // console.log("formData-post:", formData.getAll("post"));
+      // console.log("formData-media:", formData.getAll("media"));
+      // console.log("formData-slateState:", formData.getAll("slateState"));
+      // console.log("formData-mentions:", formData.getAll("mentions"));
 
       if (!slatePostToEdit) {
         // New Post
@@ -144,7 +153,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           // Auto update & Rerender Feed Post
           dispatch(setNewFeed({ postEdited: Math.random() * 50 }));
           // Auto Update & Rerender modalCard Post While Opened
-          dispatch(setModalCardPostEdited(serializedHtml));
+          dispatch(setModalCardPostEdited(editorInnerHtml));
           setUploading(false);
           dispatch(setShowCreatePostModal(false));
         } catch (error) {

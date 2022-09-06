@@ -1,3 +1,4 @@
+import Avatar from "@/components/Atoms/Avatar";
 import { useDispatch } from "@/redux/store";
 import { setSearch, setTarget } from "@/reduxFeatures/app/mentionsSlice";
 import ReactDOM from "react-dom";
@@ -44,7 +45,8 @@ export const PortalDiv = ({
             padding: "1px 3px",
             borderRadius: "3px",
             background: i === index ? "#B4D5FF" : "transparent",
-            borderBottom: "1px solid black"
+            borderBottom: "1px solid black",
+            cursor: "pointer"
           }}
           onClick={() => {
             Transforms.select(editor, target);
@@ -53,7 +55,16 @@ export const PortalDiv = ({
             dispatch(setSearch(""));
           }}
         >
-          {char?.userName}
+          <div className="d-flex align-items-center justify-content-start gap-2">
+            <Avatar
+              src={char?.avatar || "/logo.png"}
+              width={40}
+              height={40}
+              name={char?.userName}
+            />
+            <span>{char?.userName}</span>
+          </div>
+          {/* {char?.userName} */}
         </div>
       ))}
     </div>
