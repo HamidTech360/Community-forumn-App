@@ -92,12 +92,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         try {
           const response = await axios.post(
             `${config.serverUrl}/api/feed`,
-
-            {
-              post: editorInnerHtml,
-              slateState: editorContentValue,
-              mentions: usersToSendNotification
-            },
+            formData,
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -134,13 +129,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         try {
           await axios.put(
             `${config.serverUrl}/api/feed/${slatePostToEdit?._id}`,
-            // { post: serializedHtml, media: [formData] },
-            {
-              // post: serializedHtml
-              post: editorInnerHtml,
-              slateState: editorContentValue,
-              mentions: usersToSendNotification
-            },
+            formData,
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`

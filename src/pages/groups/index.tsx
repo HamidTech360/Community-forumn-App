@@ -99,7 +99,7 @@ const Groups = () => {
         <Container className={styles.wrapper}>
           <Card
             style={{ maxWidth: "280px", borderRadius: "10px" }}
-            className="d-none d-lg-block p-3 position-fixed left-0"
+            className="d-none d-md-block p-3 position-fixed left-0"
           >
             <div className="d-flex justify-content-between my-2">
               {" "}
@@ -122,13 +122,12 @@ const Groups = () => {
                 (item, i) => (
                   <Link href={`/groups/${item._id}/timeline`} key={i} passHref>
                     <div className={styles.groupCard}>
-                      <div>
-                        <Image
-                          src="/images/groups2.png"
-                          className={styles.groupProfileImg}
-                          alt=""
-                        />
-                      </div>
+                      <Image
+                        src="/images/groups2.png"
+                        className={styles.groupProfileImg}
+                        alt=""
+                      />
+
                       <div>
                         <div>{item.name} </div>
                         <div className={styles.groupAdminName}>
@@ -143,7 +142,7 @@ const Groups = () => {
           </Card>
 
           <div className={styles.posts}>
-            <div className={`d-none d-md-flex gap-3 mb-3 px-4`}>
+            <div className={`d-none d-md-flex gap-3 mb-3 `}>
               {posts.slice(0, 4).map((post, index) => (
                 <Link
                   key={`card-${index}`}
@@ -156,7 +155,7 @@ const Groups = () => {
                       alt=""
                       style={{ height: "60%" }}
                     />
-                    <Card.Body className="d-flex flex-column">
+                    <Card.Body className="d-flex flex-column px-2">
                       <p className="bold">{post.postTitle}</p>
                       <h6>{post.group.name}</h6>
                       <small className="text-muted">
