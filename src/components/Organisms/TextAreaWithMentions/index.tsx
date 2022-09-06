@@ -67,6 +67,12 @@ const TextAreaWithMentions = () => {
       }}
       autoFocus
       autoSize={{ minRows: 6, maxRows: 6 }}
+      onChange={change => {
+        console.log("CHANGED:", change);
+      }}
+      onSelect={select => {
+        console.log("SELECTED:", select);
+      }}
     >
       {loading ? (
         <Option value={search} disabled>
