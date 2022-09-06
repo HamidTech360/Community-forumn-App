@@ -10,7 +10,7 @@ import {
   setSlatePostToEdit,
   selectSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
-import { serialize } from "../utils/serializer";
+// import { serialize } from "../utils/serializer";
 import { setModalCardPostEdited } from "@/reduxFeatures/app/postModalCardSlice";
 import { selectMediaUpload } from "@/reduxFeatures/app/mediaUpload";
 import {
@@ -69,7 +69,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
        ** Mentioned Users To Send Notification
        ** Below Map() Is Important To Confirm The Mentioned User Hasn't Been Deleted
        */
-      // const usersToSendNotification: any = [];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const usersToSendNotification: any = [];
       if (mentionedUsers.length > 0) {
         await mentionedUsers.forEach(user => {
