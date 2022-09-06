@@ -14,8 +14,8 @@ const UserCard = () => {
   }, [data]);
   return (
     <Card
-      className="bg-white radius-10 pt-1 pb-1 px-2 user-card position-relative"
-      style={{ height: "240px" }}
+      className="bg-white radius-10 pt-1  px-2 user-card position-relative"
+      style={{ height: "220px" }}
     >
       <div
         className="d-flex justify-content-center  "
@@ -55,7 +55,7 @@ const UserCard = () => {
           <small>followers</small>
         </div>
       </div>{" "}
-      <div className="d-grid  position-absolute start-0 bottom-0 w-100 px-2">
+      <div className="d-grid mt-2 w-100 px-2">
         {" "}
         <Button
           variant="light"

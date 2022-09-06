@@ -52,24 +52,25 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       return;
     }
 
-    console.log("editorContentValue:", editorContentValue);
-    console.log("editorInnerHtml:", editorInnerHtml);
+    // console.log("editorContentValue:", editorContentValue);
+    // console.log("editorInnerHtml:", editorInnerHtml);
     if (editorInnerHtml.trim() !== "") {
       setUploading(true);
 
-      // Serialize Html
-      const serializeNode = {
-        children: editorContentValue
-      };
+      // // Serialize Html
+      // const serializeNode = {
+      //   children: editorContentValue
+      // };
 
-      const serializedHtml: string = serialize(serializeNode);
-      console.log("serializedHtml:", serializedHtml);
+      // const serializedHtml: string = serialize(serializeNode);
+      // console.log("serializedHtml:", serializedHtml);
 
       /*
        ** Mentioned Users To Send Notification
        ** Below Map() Is Important To Confirm The Mentioned User Hasn't Been Deleted
        */
-      const usersToSendNotification = [];
+      // const usersToSendNotification: any = [];
+      const usersToSendNotification: any = [];
       if (mentionedUsers.length > 0) {
         await mentionedUsers.forEach(user => {
           if (editorInnerHtml?.includes(user.userName)) {
@@ -78,26 +79,29 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         });
       }
       console.log("usersToSendNotification:", usersToSendNotification);
+      // console.log("editorContentValue:", editorContentValue);
 
       // Form Data
       const formData = new FormData();
 
+      formData.append("post", editorInnerHtml);
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
-      formData.append("post", serializedHtml.toString());
+      formData.append("slateState", editorContentValue);
+      formData.append("mentions", usersToSendNotification);
+
+      // console.log("formData-post:", formData.getAll("post"));
+      // console.log("formData-media:", formData.getAll("media"));
+      // console.log("formData-slateState:", formData.getAll("slateState"));
+      // console.log("formData-mentions:", formData.getAll("mentions"));
 
       if (!slatePostToEdit) {
         // New Post
         try {
           const response = await axios.post(
             `${config.serverUrl}/api/feed`,
-
-            {
-              post: editorInnerHtml,
-              slateState: editorContentValue,
-              mentions: usersToSendNotification
-            },
+            formData,
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -134,13 +138,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         try {
           await axios.put(
             `${config.serverUrl}/api/feed/${slatePostToEdit?._id}`,
-            // { post: serializedHtml, media: [formData] },
-            {
-              // post: serializedHtml
-              post: editorInnerHtml,
-              slateState: editorContentValue,
-              mentions: usersToSendNotification
-            },
+            formData,
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`
@@ -155,7 +153,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           // Auto update & Rerender Feed Post
           dispatch(setNewFeed({ postEdited: Math.random() * 50 }));
           // Auto Update & Rerender modalCard Post While Opened
-          dispatch(setModalCardPostEdited(serializedHtml));
+          dispatch(setModalCardPostEdited(editorInnerHtml));
           setUploading(false);
           dispatch(setShowCreatePostModal(false));
         } catch (error) {
