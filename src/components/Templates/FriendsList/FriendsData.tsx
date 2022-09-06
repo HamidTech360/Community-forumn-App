@@ -51,7 +51,7 @@ const FriendsData = ({
                         <Card.Subtitle
                           className={`mb-2 text-muted ${styles.subtitle}`}
                         >
-                          {friend.following?.includes(user._id) &&
+                          {friend.following?.includes(user._id.toString()) &&
                             "Follows you"}
                         </Card.Subtitle>
                       </div>
