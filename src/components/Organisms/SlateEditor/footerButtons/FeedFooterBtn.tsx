@@ -13,17 +13,24 @@ import {
 import { serialize } from "../utils/serializer";
 import { setModalCardPostEdited } from "@/reduxFeatures/app/postModalCardSlice";
 import { selectMediaUpload } from "@/reduxFeatures/app/mediaUpload";
+import {
+  selectMentionedUsers,
+  setMentionedUsers
+} from "@/reduxFeatures/app/mentionsSlice";
 
 function FeedFooterBtn({ editorID, editorContentValue }) {
   const dispatch = useDispatch();
   const [uploading, setUploading] = useState(false);
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
   const mediaUpload = useSelector(selectMediaUpload);
+  const mentionedUsers = useSelector(selectMentionedUsers);
 
   useEffect(() => {
     return () => {
       // Reset Content in SlatePostToEdit State when component unmount
       dispatch(setSlatePostToEdit(null));
+      // Reset Mentioned Users
+      dispatch(setMentionedUsers([]));
     };
   }, [dispatch]);
 
@@ -45,6 +52,8 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       return;
     }
 
+    console.log("editorContentValue:", editorContentValue);
+    console.log("editorInnerHtml:", editorInnerHtml);
     if (editorInnerHtml.trim() !== "") {
       setUploading(true);
 
@@ -54,6 +63,22 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       };
 
       const serializedHtml: string = serialize(serializeNode);
+      console.log("serializedHtml:", serializedHtml);
+
+      /*
+       ** Mentioned Users To Send Notification
+       ** Below Map() Is Important To Confirm The Mentioned User Hasn't Been Deleted
+       */
+      const usersToSendNotification = [];
+      if (mentionedUsers.length > 0) {
+        await mentionedUsers.forEach(user => {
+          if (editorInnerHtml?.includes(user.userName)) {
+            usersToSendNotification.push(user?.userId);
+          }
+        });
+      }
+      console.log("usersToSendNotification:", usersToSendNotification);
+
       // Form Data
       const formData = new FormData();
 
@@ -67,7 +92,6 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         try {
           const response = await axios.post(
             `${config.serverUrl}/api/feed`,
-
             formData,
             {
               headers: {
@@ -105,7 +129,6 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         try {
           await axios.put(
             `${config.serverUrl}/api/feed/${slatePostToEdit?._id}`,
-            // { post: serializedHtml, media: [formData] },
             formData,
             {
               headers: {

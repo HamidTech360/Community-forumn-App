@@ -6,7 +6,7 @@ const resources = {};
 const makeOptimizedRequest = () => {
   let cancel;
 
-  return async (query) => {
+  return async query => {
     if (cancel) {
       // Cancel the previous request before making a new request
       cancel.cancel();
@@ -39,7 +39,7 @@ const makeOptimizedRequest = () => {
 
 export const search = makeOptimizedRequest();
 
-export const PostApiSearch = async (e) => {
+export const PostApiSearch = async e => {
   e.preventDefault();
   if (e.target.value.trim() === "") return [];
   try {
@@ -48,8 +48,8 @@ export const PostApiSearch = async (e) => {
       `${config.serverUrl}/api/search?keyword=${e.target.value}&type=post`,
       {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
       }
     );
 
@@ -59,7 +59,7 @@ export const PostApiSearch = async (e) => {
   }
 };
 
-export const GistApiSearch = async (e) => {
+export const GistApiSearch = async e => {
   e.preventDefault();
   if (e.target.value.trim() === "") return [];
   try {
@@ -68,8 +68,8 @@ export const GistApiSearch = async (e) => {
       `${config.serverUrl}/api/search?keyword=${e.target.value}&type=gist`,
       {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
       }
     );
 
@@ -79,7 +79,7 @@ export const GistApiSearch = async (e) => {
   }
 };
 
-export const UserApiSearch = async (e) => {
+export const UserApiSearch = async e => {
   e.preventDefault();
   if (e.target.value.trim() === "") return [];
   try {
@@ -88,8 +88,8 @@ export const UserApiSearch = async (e) => {
       `${config.serverUrl}/api/search?keyword=${e.target.value}&type=user`,
       {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
       }
     );
 
@@ -99,7 +99,7 @@ export const UserApiSearch = async (e) => {
   }
 };
 
-export const GroupApiSearch = async (e) => {
+export const GroupApiSearch = async e => {
   e.preventDefault();
   if (e.target.value.trim() === "") return [];
   try {
@@ -108,8 +108,8 @@ export const GroupApiSearch = async (e) => {
       `${config.serverUrl}/api/search?keyword=${e.target.value}&type=group`,
       {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
       }
     );
 
@@ -117,6 +117,25 @@ export const GroupApiSearch = async (e) => {
     return response.data;
   } catch (error) {
     // console.error("GROUPS response.data:", error);
+    // console.error("User Search Error:");
+  }
+};
+
+// For @Mention
+export const MentionUserApiSearch = async chars => {
+  try {
+    // const response = await axios.get(
+    const response = await search(
+      `${config.serverUrl}/api/search?keyword=${chars}&type=user`,
+      {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
+      }
+    );
+
+    return response.data;
+  } catch (error) {
     // console.error("User Search Error:");
   }
 };

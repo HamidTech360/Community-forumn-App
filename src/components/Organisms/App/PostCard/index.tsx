@@ -60,11 +60,9 @@ const PostCard = ({
 }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-
   const likeChangedModal = useSelector(selectLikeChangedModal);
   const unLikeChangedModal = useSelector(selectUnLikeChangedModal);
   const newFeed = useSelector(selectNewFeed);
-
   const router = useRouter();
   const [followed, setFollowed] = useState(false);
 
@@ -72,7 +70,6 @@ const PostCard = ({
 
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookMarked] = useState(false);
-
   const sanitizer = DOMPurify.sanitize;
 
   // - comment section

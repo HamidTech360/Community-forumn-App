@@ -1,0 +1,157 @@
+// import Mentions from "rc-mentions";
+
+// const Demo = () => {
+//   const { Option } = Mentions;
+//   return (
+//     <Mentions>
+//       <Option value="light">Light</Option>
+//       <Option value="bamboo">Bamboo</Option>
+//       <Option value="cat">Cat</Option>
+//     </Mentions>
+//   );
+// };
+// // React.render(<Demo />, container);
+
+// export default Demo;
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// /* eslint-disable no-console, no-undef */
+
+// import React from "react";
+// import Mentions from "rc-mentions";
+// // import debounce from 'lodash.debounce';
+// // import '../assets/index.less';
+// // import "./accessIndex.less";
+// import styles from "../../styles/mentions/dynamic.module.scss";
+// import styles2 from "../../styles/mentions/accessIndex.module.scss";
+// // import './dynamic.less';
+// // import "./dynamic.less";
+
+// const { Option } = Mentions;
+
+// class Demo extends React.Component {
+//   constructor(props) {
+//     super(props);
+
+//     // this.loadGithubUsers = debounce(this.loadGithubUsers, 800);
+//   }
+
+//   state = {
+//     search: "",
+//     loading: false,
+//     users: []
+//   };
+
+//   onSearch = search => {
+//     this.setState({ search, loading: !!search, users: [] });
+//     console.log("Search:", search);
+//     // this.loadGithubUsers(search);
+//   };
+
+//   loadGithubUsers(key) {
+//     if (!key) {
+//       this.setState({
+//         users: [],
+//       });
+//       return;
+//     }
+
+//     fetch(`https://api.github.com/search/users?q=${key}`)
+//       .then(res => res.json())
+//       .then(({ items = [] }) => {
+//         const { search } = this.state;
+//         if (search !== key) {
+//           console.log('Out Of Date >', key, items);
+//           return;
+//         }
+
+//         console.log('Fetch Users >', items);
+//         this.setState({
+//           users: items.slice(0, 10),
+//           loading: false,
+//         });
+//       });
+//   }
+
+//   render() {
+//     const { users, loading, search } = this.state;
+
+//     let options;
+//     if (loading) {
+//       options = (
+//         <Option value={search} disabled>
+//           Searching {`'${search}'`}...
+//         </Option>
+//       );
+//     } else {
+//       options = users.map(({ login, avatar_url: avatar }) => (
+//         <Option key={login} value={login} className={styles.dynamic_option}>
+//           <img src={avatar} alt={login} />
+//           <span>{login}</span>
+//         </Option>
+//       ));
+//     }
+
+//     return (
+//       <div>
+//         <Mentions onSearch={this.onSearch} style={{ width: "100%" }} autoFocus>
+//           {options}
+//         </Mentions>
+//         search: <code>{search}</code>
+//       </div>
+//     );
+//   }
+// }
+
+// export default Demo;
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==
+
+/* eslint no-console: 0 */
+
+import React from "react";
+import Mentions from "rc-mentions";
+// import '../assets/index.less';
+import styles from "../../styles/mentions/accessIndex.module.scss";
+
+const Demo = () => {
+  const { Option } = Mentions;
+
+  const onSelect = (option, prefix) => {
+    console.log("Select:", prefix, "-", option.value);
+  };
+
+  const onFocus = () => {
+    console.log("onFocus");
+  };
+
+  const onBlur = () => {
+    console.log("onBlur");
+  };
+
+  return (
+    <div style={{ marginTop: "3rem" }}>
+      <Mentions
+        autoFocus
+        rows={3}
+        defaultValue="Hello World"
+        onSelect={onSelect}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        className={`${styles.rc_mentions} ${styles.rc_mentions_dropdown} ${styles.rc_mentions_dropdown_menu} ${styles.rc_mentions_dropdown_menu_item} ${styles.rc_mentions_dropdown_menu_item_active} 
+        ${styles.rc_mentions_dropdown_menu_item_disabled}
+        
+        `}
+      >
+        <Option value="light" className={`${styles.rc_mentions_measure}`}>
+          Light
+        </Option>
+        <Option value="bamboo">Bamboo</Option>
+        <Option value="cat">Cat</Option>
+      </Mentions>
+    </div>
+  );
+};
+
+export default Demo;

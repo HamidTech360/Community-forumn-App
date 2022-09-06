@@ -3,6 +3,13 @@ import Link from "../Elements/Link/Link";
 import Image from "../Elements/Embed/Image";
 import Video from "../Elements/Embed/Video";
 import styles from "../../../../styles/SlateEditor/SlateUtilityFunctions_Slate.module.scss";
+import { useFocused, useSelected } from "slate-react";
+import { useDispatch, useSelector } from "@/redux/store";
+import { useEffect } from "react";
+import {
+  selectMentionedUsers,
+  setMentionedUsers
+} from "@/reduxFeatures/app/mentionsSlice";
 
 const alignment = ["alignLeft", "alignRight", "alignCenter"];
 const list_types = ["orderedList", "unorderedList"];
@@ -11,7 +18,7 @@ export const toggleBlock = (editor, format) => {
   const isActive = isBlockActive(editor, format);
   const isList = list_types.includes(format);
   const isIndent = alignment.includes(format);
-  const isAligned = alignment.some((alignmentType) =>
+  const isAligned = alignment.some(alignmentType =>
     isBlockActive(editor, alignmentType)
   );
 
@@ -19,11 +26,11 @@ export const toggleBlock = (editor, format) => {
     messy, nested DOM structure and bugs due to that.*/
   if (isAligned && isIndent) {
     Transforms.unwrapNodes(editor, {
-      match: (n) =>
+      match: n =>
         alignment.includes(
           !Editor.isEditor(n) && SlateElement.isElement(n) && n.type
         ),
-      split: true,
+      split: true
     });
   }
 
@@ -31,26 +38,26 @@ export const toggleBlock = (editor, format) => {
   if (isIndent) {
     Transforms.wrapNodes(editor, {
       type: format,
-      children: [],
+      children: []
     });
     return;
   }
   Transforms.unwrapNodes(editor, {
-    match: (n) =>
+    match: n =>
       list_types.includes(
         !Editor.isEditor(n) && SlateElement.isElement(n) && n.type
       ),
-    split: true,
+    split: true
   });
 
   Transforms.setNodes(editor, {
-    type: isActive ? "paragraph" : isList ? "list-item" : format,
+    type: isActive ? "paragraph" : isList ? "list-item" : format
   });
 
   if (isList && !isActive) {
     Transforms.wrapNodes(editor, {
       type: format,
-      children: [],
+      children: []
     });
   }
 };
@@ -68,16 +75,14 @@ export const toggleMark = (editor, format) => {
 };
 export const isMarkActive = (editor, format) => {
   const marks = Editor.marks(editor);
-  // console.log("marks:", marks);
-  // console.log("format:", format);
 
   return marks ? marks[format] === true : false;
 };
 
 export const isBlockActive = (editor, format) => {
   const [match] = Editor.nodes(editor, {
-    match: (n) =>
-      !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format,
+    match: n =>
+      !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format
   });
 
   return !!match;
@@ -110,7 +115,7 @@ export const getMarked = (leaf, children) => {
         style={{
           backgroundColor: "rgb(233, 231, 231)",
           borderRadius: "5px",
-          display: "inline",
+          display: "inline"
         }}
       >
         {children}
@@ -126,7 +131,7 @@ export const getMarked = (leaf, children) => {
   return children;
 };
 
-export const getBlock = (props) => {
+export const getBlock = props => {
   const { element, children, attributes } = props;
 
   switch (element.type) {
@@ -149,7 +154,7 @@ export const getBlock = (props) => {
             display: "flex",
             alignItems: "center",
             listStylePosition: "inside",
-            flexDirection: "column",
+            flexDirection: "column"
           }}
           {...attributes}
         >
@@ -163,7 +168,7 @@ export const getBlock = (props) => {
             display: "flex",
             alignItems: "flex-end",
             listStylePosition: "inside",
-            flexDirection: "column",
+            flexDirection: "column"
           }}
           {...attributes}
         >
@@ -187,7 +192,55 @@ export const getBlock = (props) => {
       return <Image {...props} alt="image" />;
     case "video":
       return <Video {...props} />;
+    case "mention":
+      return <Mention {...props} />;
     default:
       return <div {...attributes}>{children}</div>;
   }
+};
+
+const Mention = ({ attributes, children, element }) => {
+  const selected = useSelected();
+  const focused = useFocused();
+  const dispatch = useDispatch();
+  const mentionedUsers = useSelector(selectMentionedUsers);
+
+  // console.log("attributes:", attributes);
+  // console.log("children:", children);
+  // console.log("element:", element);
+
+  useEffect(() => {
+    // Only add user  to state if not  already among the list
+    let userAlreadyMentioned = false;
+    mentionedUsers.forEach(user => {
+      user?.userName === element?.character?.userName &&
+        (userAlreadyMentioned = true);
+    });
+
+    !userAlreadyMentioned &&
+      dispatch(setMentionedUsers([...mentionedUsers, element?.character]));
+  });
+
+  return (
+    <span
+      {...attributes}
+      contentEditable={false}
+      // data-cy={`mention-${element?.character?.replace(" ", "-")}`}
+      data-cy={`mention-${element?.character?.userName?.replaceAll(" ", "-")}`}
+      style={{
+        padding: "3px 3px 2px",
+        margin: "0 1px",
+        verticalAlign: "baseline",
+        display: "inline-block",
+        borderRadius: "4px",
+        // backgroundColor: "#eee",
+        backgroundColor: "#e8f5fa",
+        fontSize: "0.9em",
+        boxShadow: selected && focused ? "0 0 0 2px #B4D5FF" : "none"
+      }}
+    >
+      {/* {children}@{element?.character} */}
+      {children}@{element?.character?.userName}
+    </span>
+  );
 };
