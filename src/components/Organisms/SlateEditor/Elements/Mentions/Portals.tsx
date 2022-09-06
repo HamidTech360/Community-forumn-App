@@ -57,14 +57,13 @@ export const PortalDiv = ({
         >
           <div className="d-flex align-items-center justify-content-start gap-2">
             <Avatar
-              src={char?.avatar || "/logo.png"}
+              src={char?.avatar || "/images/imagePlaceholder.jpg"}
               width={40}
               height={40}
               name={char?.userName}
             />
             <span>{char?.userName}</span>
           </div>
-          {/* {char?.userName} */}
         </div>
       ))}
     </div>
