@@ -46,7 +46,7 @@ const Card = ({ _id, image, title, author, body, size }: ICard) => {
           src={image}
           alt={title}
           style={{
-            height: size === "small" ? "110px" : "150px",
+            height: "200px",
 
             objectFit: "cover"
           }}

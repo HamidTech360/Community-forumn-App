@@ -25,6 +25,8 @@ import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/router";
+import { useModalWithData } from "@/hooks/useModalWithData";
+import {FeedPostEditorModal_Modal} from '../../components/Organisms/App/ModalPopUp/FeedPostEditorModal'
 
 const Feed = () => {
   const router = useRouter();
@@ -33,7 +35,7 @@ const Feed = () => {
   const stateUser = useSelector(selectUser);
   const newFeed = useSelector(selectNewFeed);
   const [posts, setPosts] = useState([]);
-
+  const { modalOpen, toggle, selected, setSelected } = useModalWithData();
   const {
     paginatedData,
     isReachedEnd,
@@ -42,6 +44,8 @@ const Feed = () => {
     mutate,
     isValidating
   } = usePagination("/api/feed", "feed");
+
+ 
 
   // Update users followers & following in AuthUser because it's a frontend resolved data
   useEffect(() => {
@@ -69,9 +73,7 @@ const Feed = () => {
   useEffect(() => {
     if (Object.entries(newFeed).length !== 0) {
       if (posts?.length > 0) {
-        // Fetch Updated Gist Using useSWRInfinite
         mutate();
-        // Update State
         setPosts(paginatedData);
       }
     }
@@ -88,6 +90,27 @@ const Feed = () => {
       }
     }
   }, [paginatedData]);
+
+  useEffect(()=>{
+    // setSelected(posts[0])
+    // toggle()
+   const query = router.query.active
+   console.log(query)
+   if(query){
+    console.log(query);
+    (async function(){
+      try{
+        const response = await axios.get(`${config.serverUrl}/api/feed/${query}`)
+        console.log(response.data)
+         setSelected(response.data)
+          toggle()
+      }catch(error){
+        console.log(error.response?.data)
+      }
+    })()
+   }
+  },[router.query])
+  
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleDeletePost = async (item: Record<string, any>) => {
@@ -117,6 +140,14 @@ const Feed = () => {
   return (
     <AuthContent>
       <ToastContainer />
+      {modalOpen && (
+        <FeedPostEditorModal_Modal
+          modalOpen={modalOpen}
+          selected={selected}
+          modalToggle={toggle}
+          mutate={mutate}
+        />
+      )}
       <Head>
         <title>Feed</title>
       </Head>
