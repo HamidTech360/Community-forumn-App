@@ -114,7 +114,8 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
         if (user?._id !== authUser?._id) {
           usersList.push({
             userName: firstLastName,
-            userId: user?._id
+            userId: user?._id,
+            avatar: user?.images?.avatar
           });
         }
       });

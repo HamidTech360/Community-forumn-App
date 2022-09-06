@@ -1,0 +1,35 @@
+.dynamic-option {
+  font-size: 20px;
+}
+
+/* .dynamic-option img {
+  height: 20px;
+  width: 20px;
+  vertical-align: middle;
+  margin-right: 4px;
+  transition: all 0.3s;
+} */
+
+.dynamic-option Image {
+  height: 20px;
+  width: 20px;
+  vertical-align: middle;
+  margin-right: 4px;
+  transition: all 0.3s;
+}
+
+.dynamic-option span {
+  vertical-align: middle;
+  display: inline-block;
+  transition: all 0.3s;
+  margin-right: 8px;
+}
+
+.dynamic-option.rc-mentions-dropdown-menu-item-active img {
+  transform: scale(1.8);
+}
+
+.dynamic-option.rc-mentions-dropdown-menu-item-active span {
+  margin-left: 8px;
+  margin-right: 0;
+}

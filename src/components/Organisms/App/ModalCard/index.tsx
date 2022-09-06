@@ -59,6 +59,7 @@ import { selectImageModalOpen } from "@/reduxFeatures/app/postModalCardSlice";
 import ImageModal from "../ModalPopUp/ImageModal";
 import MediaDisplay from "../MediaMasonry";
 import Avatar from "@/components/Atoms/Avatar";
+import TextAreaWithMentions from "../../TextAreaWithMentions";
 
 const ModalCard = ({
   post: postComingIn,
@@ -754,13 +755,15 @@ const ModalCard = ({
                       border: "1px solid rgba(0, 0, 0, 0.125)"
                     }}
                   >
-                    <textarea
+                    {/* <textarea
                       id="articleTextarea"
                       className="form-control"
                       placeholder="."
                       onChange={e => setCommentPost(e.target.value)}
                       style={{ width: "100%" }}
-                    />
+                    /> */}
+
+                    <TextAreaWithMentions />
                   </div>
 
                   <div className="ms-auto">
