@@ -79,8 +79,7 @@ const Followers = () => {
           const { data } = await axios.get(`${config.serverUrl}/api/users/topwriters/all`, {headers:{
             authorization:`Bearer ${localStorage.getItem('accessToken')}`
           }});
-          console.log("topwriters data:", data.users);
-
+          
           const topWritersSlice = data.users.slice(0, 30);
           const followTopWriters = await topWritersSlice.filter(person => {
             // console.log("person?._id", person?._id);

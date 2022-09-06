@@ -37,6 +37,7 @@ import {
   setEditableComment,
   setShowCommentModal
 } from "@/reduxFeatures/app/postModalCardSlice";
+import MediaDisplay from "../../components/Organisms/App/MediaMasonry";
 
 const BlogPost = () => {
   const user = useSelector(selectUser);
@@ -89,7 +90,7 @@ const BlogPost = () => {
         `${config.serverUrl}/api/posts/${router.query.id}`
       );
       setBlogPost(exploreResponse.data.post);
-      // console.log("This is explore response", exploreResponse.data.post);
+      console.log("This is explore response", exploreResponse.data);
     } catch (error) {
       router.replace("/explore");
     }
@@ -288,16 +289,16 @@ const BlogPost = () => {
                 </div>
                 <div className="row justify-content-center">
                   <div className="col-12">
-                    <Image
-                      src={blogPost.blogImage || "/images/formbg.png"}
-                      className="img-fluid shadow-sm mt-2"
-                      alt="Blog Post Image"
-                    ></Image>
+                    <MediaDisplay media={blogPost.media} breakPoint={2} />
+                    
                   </div>
                 </div>
               </div>
               <article
                 className="my-3"
+                style={{
+                  textAlign:'justify'
+                }}
                 dangerouslySetInnerHTML={{ __html: blogPost.postBody }}
               />
 

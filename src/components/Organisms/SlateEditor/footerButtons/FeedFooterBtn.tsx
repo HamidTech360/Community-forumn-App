@@ -68,9 +68,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           const response = await axios.post(
             `${config.serverUrl}/api/feed`,
 
-            {
-              post: serializedHtml
-            },
+            formData,
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -108,9 +106,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           await axios.put(
             `${config.serverUrl}/api/feed/${slatePostToEdit?._id}`,
             // { post: serializedHtml, media: [formData] },
-            {
-              post: serializedHtml
-            },
+            formData,
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`
