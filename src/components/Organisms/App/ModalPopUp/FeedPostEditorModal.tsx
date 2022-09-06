@@ -1,25 +1,19 @@
 import React from "react";
 import Editor from "../../SlateEditor/Editor";
 import { useDispatch, useSelector } from "@/redux/store";
-import {
-  setShowPostModal,
-  selectShowPostModal,
-  setPostTitle,
-} from "@/reduxFeatures/api/postSlice";
 
-import { Form, Modal } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
-import formStyles from "../../../../styles/templates/new-group/formField.module.css";
 import {
   selectCreatePostModal,
-  setShowCreatePostModal,
+  setShowCreatePostModal
 } from "@/reduxFeatures/app/createPost";
 import styles2 from "@/styles/feed.module.scss";
 
 // Open Feed Post Modal Editor
 const FeedPostEditorModal = ({ pageAt }) => {
   const dispatch = useDispatch();
-  const showPostModal = useSelector(selectShowPostModal);
+
   const showModal = useSelector(selectCreatePostModal);
 
   return (
@@ -50,7 +44,7 @@ export default FeedPostEditorModal;
 
 import { MdOutlineCancel } from "react-icons/md";
 import { BiArrowBack } from "react-icons/bi";
-import { ModalRow, useModalWithData } from "@/hooks/useModalWithData";
+import { ModalRow } from "@/hooks/useModalWithData";
 import styles from "@/styles/profile.module.scss";
 
 // Open Feed Post Modal Body For Reading More
@@ -58,7 +52,7 @@ export function FeedPostEditorModal_Modal({
   modalOpen,
   selected,
   modalToggle: toggle,
-  mutate,
+  mutate
 }) {
   return (
     <div>

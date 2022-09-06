@@ -1,10 +1,9 @@
-//@ts-nocheck
 import AuthContent from "@/components/Auth/AuthContent";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import styles from "../styles/notifications.module.css";
-import { dummyData } from "@/components/notifications/dummyData";
-import NotificationRender from "@/components/notifications/notificationRender";
+
+import NotificationRenderer from "@/components/notifications/NotificationRenderer";
 import config from "@/config";
 import axios from "axios";
 import { useDispatch, useSelector } from "@/redux/store";
@@ -21,29 +20,28 @@ import {
   Card,
   OverlayTrigger,
   Popover,
-  ToggleButton,
+  ToggleButton
 } from "react-bootstrap";
 import { useRouter } from "next/router";
 
-import { selectNotifications } from "@/reduxFeatures/api/notifications";
-import { getNotification, updateNumberOfNotifications } from "@/reduxFeatures/api/notifications";
-
-
-import Link from "next/link";
+import {
+  getNotification,
+  updateNumberOfNotifications
+} from "@/reduxFeatures/api/notifications";
 
 const Notifications = () => {
-  
-
   const [radioValue, setRadioValue] = useState("1");
-  const [Notifications, setNotifications] = useState([]);
-  let router = useRouter(null);
-  const allNotifications = useSelector(state=>state.notification.data)
-  const totalNotifications = useSelector(state=>state.notification.noOfNotifications)
+
+  const router = useRouter();
+  const allNotifications = useSelector(state => state.notification.data);
+  const totalNotifications = useSelector(
+    state => state.notification.noOfNotifications
+  );
   const dispatch = useDispatch();
 
   const radios = [
     { name: "All", value: "1" },
-    { name: "Unread", value: "2" },
+    { name: "Unread", value: "2" }
   ];
 
   useEffect(() => {
@@ -54,55 +52,39 @@ const Notifications = () => {
     };
   }, []);
 
-  const navigateToItem = async (item) => {
-    dispatch(updateNumberOfNotifications({total:totalNotifications-1}))
+  const navigateToItem = async item => {
+    dispatch(updateNumberOfNotifications({ total: totalNotifications - 1 }));
     //alert(allNotifications.indexOf(item))
-    const index = allNotifications.indexOf(item)
-    
-    
-   
-    try{
-      const {data} = await axios.delete(`${config.serverUrl}/api/notifications?id=${item._id}`, {headers:{
-        authorization:`Bearer ${localStorage.getItem('accessToken')}`
-      }})
-      console.log(data)
-      let notifications_c= [...allNotifications]
-      notifications_c[index] = {...notifications_c[index], read:true}
-      dispatch(getNotification(notifications_c))
-    
-      
-      
+    const index = allNotifications.indexOf(item);
+
+    try {
+      const { data } = await axios.delete(
+        `${config.serverUrl}/api/notifications?id=${item._id}`,
+        {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
+        }
+      );
+      console.log(data);
+      const notifications_c = [...allNotifications];
+      notifications_c[index] = { ...notifications_c[index], read: true };
+      dispatch(getNotification(notifications_c));
+
       if (item.forItem === "post") {
         router.push(`/explore/${item.itemId}`);
       } else if (item.forItem === "gist") {
         router.push(`/gist/${item.itemId}`);
       } else if (item.forItem === "follow") {
         router.push(`/profile/${item.itemId}`);
+      }else if(item.forItem == "feed"){
+        router.push(`/feed?active=${item.itemId}`);
       }
-    }catch(error){
-      console.log(error.response?.data)
+    } catch (error) {
+      console.log(error.response?.data);
     }
 
     dispatch(notificationsOffcanvas(false));
-  };
-
-  const newAndEarlierStatus = (receivedDate) => {
-    const today = new Date().toGMTString();
-    let todaysDateStr = "";
-    let receivedDateStr = "";
-
-    function convertDate(inputFormat) {
-      function pad(s) {
-        return s < 10 ? "0" + s : s;
-      }
-      var d = new Date(inputFormat);
-      return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join(
-        "/"
-      );
-    }
-
-    todaysDateStr = convertDate(today);
-    receivedDateStr = convertDate(receivedDate);
   };
 
   const closeNotificationOffcanvas = () => {
@@ -159,7 +141,7 @@ const Notifications = () => {
             className={router.asPath === "/notifications" ? "px-4" : "border-0"}
             style={{
               minHeight: "90vh",
-              border: "1px solid rgba(0, 0, 0, 0.125)",
+              border: "1px solid rgba(0, 0, 0, 0.125)"
             }}
           >
             <Card.Body className="p-3">
@@ -188,7 +170,7 @@ const Notifications = () => {
                         className={`${styles.markAsRead} me-3`}
                         style={{
                           borderRadius: "10%",
-                          border: "none",
+                          border: "none"
                         }}
                         id={`radio-${idx}`}
                         type="radio"
@@ -196,7 +178,7 @@ const Notifications = () => {
                         name="radio"
                         value={radio.value}
                         checked={radioValue === radio.value}
-                        onChange={(e) => setRadioValue(e.currentTarget.value)}
+                        onChange={e => setRadioValue(e.currentTarget.value)}
                       >
                         {radio.name}
                       </ToggleButton>
@@ -220,9 +202,12 @@ const Notifications = () => {
                 </div>
 
                 {allNotifications?.map((notification, index) => (
-                  <div style={{backgroundColor:!notification.read?'#4a7277':''}} key={index} onClick={()=>navigateToItem(notification)} >
-                      <NotificationRender notification={notification} />
-
+                  <div
+                    className={notification.read ? "text-muted" : ""}
+                    key={index}
+                    onClick={() => navigateToItem(notification)}
+                  >
+                    <NotificationRenderer notification={notification} />
                   </div>
                 ))}
               </div>

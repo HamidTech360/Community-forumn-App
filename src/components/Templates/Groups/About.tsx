@@ -1,17 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { Container, Card } from "react-bootstrap";
 
-const About = ({ type, data }: any) => {
-  const [activeTab, setActiveTab] = useState("bio");
-  const [interests, setInterests] = useState([
-    "Studying abroad",
-    "Internship abroad",
-    "Postgraduate study abroad",
-    "Housing in Ghana",
-  ]);
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const About = ({ data }: { data?: Record<string, any> }) => {
   console.log("data:", data);
 
   return (
@@ -30,7 +23,7 @@ const About = ({ type, data }: any) => {
                 className="bg-light"
                 style={{
                   height: "100%",
-                  border: "1px solid rgba(0, 0, 0, 0.125)",
+                  border: "1px solid rgba(0, 0, 0, 0.125)"
                 }}
               >
                 <Container>

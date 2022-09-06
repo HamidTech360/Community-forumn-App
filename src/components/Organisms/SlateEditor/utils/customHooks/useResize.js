@@ -1,11 +1,13 @@
 import { useState } from "react";
+import { number } from "yup";
 
 const useResize = ({ format }) => {
-  const [size, setSize] = useState(
-    format === "video"
+  const [size, setSize] =
+    useState <
+    { width: number, height: number } >
+    (format === "video"
       ? { width: 300, height: 220 }
-      : { width: 150, height: 150 }
-  );
+      : { width: 150, height: 150 });
 
   const [resizing, setResizing] = useState(false);
   const onMouseDown = () => {
@@ -18,10 +20,10 @@ const useResize = ({ format }) => {
     document.removeEventListener("mouseup", onMouseUp);
     setResizing(false);
   };
-  const onMouseMove = (e) => {
-    setSize((currentSize) => ({
+  const onMouseMove = e => {
+    setSize(currentSize => ({
       width: currentSize.width + e.movementX,
-      height: currentSize.height + e.movementY,
+      height: currentSize.height + e.movementY
     }));
   };
 

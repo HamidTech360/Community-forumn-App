@@ -5,10 +5,7 @@ import { useSelector } from "@/redux/store";
 
 function ChatBubble({ message }) {
   const user = useSelector(selectUser);
-  const self = `bg-primary text-light mb-3 p-3 ms-auto`;
   const self2 = `ms-auto`;
-  const recipient = `bg-secondary text-light mb-3 p-3`;
-  const messagingStyle = message.sender === "self" ? self : recipient;
   const messagingStyle2 = message.sender === "self" && self2;
   const borderRadiusBubble =
     message.sender === "self" ? "35px 0 15px 35px" : "0 35px 35px 15px";
@@ -22,7 +19,7 @@ function ChatBubble({ message }) {
         style={{
           width: "20%",
           height: "auto",
-          fontSize: "10px",
+          fontSize: "10px"
         }}
         className={`${messagingStyle2} text-secondary`}
       >
@@ -39,10 +36,10 @@ function ChatBubble({ message }) {
             letterSpacing: "1px",
             maxWidth: "80%",
             height: "auto",
-            borderRadius: borderRadiusBubble,
+            borderRadius: borderRadiusBubble
           }}
           dangerouslySetInnerHTML={{
-            __html: sanitizer(message.message),
+            __html: sanitizer(message.message)
           }}
         ></div>
       </div>

@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
-import Loader from "../Organisms/Layout/Loader/Loader";
 import config from "@/config";
 import axios from "axios";
 import { useDispatch, useSelector } from "@/redux/store";
 import {
   user,
   selectUser,
-  selectIsAuthenticated,
+  selectIsAuthenticated
 } from "@/reduxFeatures/authState/authStateSlice";
+import { Spinner } from "react-bootstrap";
 
 export default function AuthContent({ children }: { children: ReactNode }) {
   const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -30,8 +30,8 @@ export default function AuthContent({ children }: { children: ReactNode }) {
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
             headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
           });
           console.log("user from authContent is", response.data);
 
@@ -44,5 +44,15 @@ export default function AuthContent({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  return <>{isAuthenticated && <div>{children}</div>}</>;
+  return (
+    <>
+      {isAuthenticated ? (
+        <div>{children}</div>
+      ) : (
+        <div className="loader-wrapper">
+          <Spinner animation="grow" />
+        </div>
+      )}
+    </>
+  );
 }

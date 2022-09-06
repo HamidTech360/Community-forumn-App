@@ -3,7 +3,7 @@ import { setSearchModal } from "@/reduxFeatures/app/appSlice";
 import { useDispatch } from "@/redux/store";
 
 import DOMPurify from "dompurify";
-import truncate from "trunc-html";
+import truncate from "truncate-html";
 import styles from "@/styles/searchTabs.module.scss";
 
 function GroupRender({ search, index }) {
@@ -28,7 +28,7 @@ function GroupRender({ search, index }) {
         <small
           className="col-8 text-muted"
           dangerouslySetInnerHTML={{
-            __html: sanitizer(truncate(search?.description, 50).html),
+            __html: sanitizer(truncate(search?.description, 50)),
           }}
         />
       </div>

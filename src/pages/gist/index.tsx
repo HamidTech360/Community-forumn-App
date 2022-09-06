@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Head from "next/head";
 import MessageButton from "@/components/Atoms/messageButton";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -12,65 +12,43 @@ import {
   Card as BCard,
   Row,
   Spinner,
-  Modal,
-  Form,
-  Button,
-  Alert,
+  Button
 } from "react-bootstrap";
 import Card from "../../components/Organisms/Gist";
 import EndlessCarousel from "../../components/Molecules/Carousel";
 import GistCard from "../../components/Organisms/Gist/GistCard";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { toast, ToastContainer } from "react-toastify";
-import { FaTimes } from "react-icons/fa";
+import { ToastContainer } from "react-toastify";
 import config from "../../config";
 import usePagination, { Loader } from "@/hooks/usePagination";
 
 //STYLES
 import styles from "../../styles/gist.module.scss";
-import formStyles from "../../styles/templates/new-group/formField.module.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import {
   uploadCleanUp,
-  selectGistData,
-  selectGistIsLoading,
-  selectGistError,
   selectGistIsSuccess,
   setShowGistModal,
   selectShowGistModal,
-  setGistTitle,
-  setIsFetching,
-  selectIsFetching,
+  selectIsFetching
 } from "@/reduxFeatures/api/gistSlice";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 // import Editor from "@/components/Organisms/SlateEditor/Editor";
-import { useRouter } from "next/router";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 import GistPostEditorModal from "@/components/Organisms/App/ModalPopUp/GistPostEditorModal";
 
-const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
-  const router = useRouter();
-  const customId = "toastId";
+const Gist = () => {
   const dispatch = useDispatch();
-  const gistData = useSelector(selectGistData);
-  const gistIsLoading = useSelector(selectGistIsLoading);
-  const gistError = useSelector(selectGistError);
   const gistIsSuccess = useSelector(selectGistIsSuccess);
 
   const showGistModal = useSelector(selectShowGistModal);
-  const user = useSelector(selectUser);
   const isFetching = useSelector(selectIsFetching);
 
   const [allGists, setAllGists] = useState([]);
   const [filteredGists, setFilteredGists] = useState([]);
   const [gistCategories, setGistCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [formData, setFormData] = useState({
-    title: "",
-    post: "",
-  });
+
+  const [activeGist, setActiveGist] = useState("All");
 
   const {
     paginatedData,
@@ -78,7 +56,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
     error,
     fetchNextPage,
     mutate,
-    isValidating,
+    isValidating
   } = usePagination("/api/gists", "gists");
 
   useEffect(() => {
@@ -89,7 +67,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
         const { data } = await axios.get(`${config.serverUrl}/api/category`);
         setGistCategories([
           { name: "All", type: "gist" },
-          ...data.allCategories,
+          ...data.allCategories
         ]);
       } catch (error) {
         console.log(error.response?.data);
@@ -114,24 +92,23 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
   useEffect(() => {
     if (paginatedData) {
       if (JSON.stringify(allGists) !== JSON.stringify(paginatedData)) {
-        // console.log("paginatedData - 1:", paginatedData);
         setAllGists(paginatedData);
       }
     }
   }, [paginatedData]);
 
-  // const handleChange = (e) => {
-  //   dispatch(setGistTitle(e.currentTarget.value));
-  // };
+  const filterCategory = item => {
+    // console.log("item.name", item.name);
+    setActiveGist(item.name);
 
-  const filterCategory = (item) => {
-    // console.log(item);
-
-    const filtered = allGists.filter((gist) => gist.categories === item.name);
-    if (filtered.length <= 0) {
-      alert("No Item in this category");
+    if (item.name === "All") {
+      return setFilteredGists(allGists);
     }
-    // console.log('filtered gists:', filteredGists);
+
+    const filtered = allGists.filter(gist => gist.categories === item.name);
+    if (filtered.length <= 0) {
+      alert(`No Item in ${item.name} category`);
+    }
 
     setFilteredGists(filtered);
   };
@@ -147,16 +124,12 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
       <Container>
         <h2>Popular Gists</h2>
         <div>
-          <EndlessCarousel gap="mx-auto">
+          <EndlessCarousel>
             {allGists?.map((item, key) => (
               <Card
                 key={`article-${key}`}
                 id={item?._id}
-                image={
-                  item?.bbp_media
-                    ? item?.bbp_media[0]!.attachment_data?.thumb
-                    : "/images/formbg.png"
-                }
+                image={item?.media[0] ? item?.media[0] : "/images/formbg.png"}
                 title={item?.title}
                 author={`${item?.author?.firstName} ${item?.author?.lastName}`}
               />
@@ -164,14 +137,13 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
           </EndlessCarousel>
         </div>
         <Row className="mt-5">
-          <Col md={3} className="desktop-only">
+          <Col md={3} className="d-none d-md-inline">
             <BCard
-              // className={`pt-1 px-1 shadow-sm ${styles.wrapper}`}
               className={`pt-1 px-1 ${styles.wrapper}`}
               style={{
                 position: "sticky",
                 top: "5rem",
-                border: "1px solid rgba(0, 0, 0, 0.125)",
+                border: "1px solid rgba(0, 0, 0, 0.125)"
               }}
             >
               <BCard.Header className="shadow-sm border-0">
@@ -184,6 +156,11 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                     <li
                       onClick={() => filterCategory(item)}
                       style={{ marginBottom: "15px", cursor: "pointer" }}
+                      className={
+                        item.name === activeGist
+                          ? "text-primary fs-4"
+                          : "text-dark fs-6"
+                      }
                       key={key}
                     >
                       {item.name}
@@ -209,13 +186,13 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                   style={{
                     marginLeft: "10px",
                     fontSize: "14px",
-                    fontWeight: "700",
+                    fontWeight: "700"
                   }}
                 >
                   Create Gist
                 </span>
               </Button>
-              <select className="outline-primary">
+              <select className="outline-primary me-3">
                 <option>Canada</option>
               </select>
             </div>
@@ -237,7 +214,6 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                 </p>
               }
               dataLength={paginatedData?.length ?? 0}
-              // initialScrollY={0}
             >
               <div className="justify-content-center">
                 {(filteredGists.length > 0 ? filteredGists : allGists).map(
@@ -257,7 +233,7 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
                   style={{
                     textAlign: "center",
                     color: "gray",
-                    marginTop: "1.2rem",
+                    marginTop: "1.2rem"
                   }}
                 >
                   <b>Oops! Something went wrong</b>
@@ -270,80 +246,8 @@ const Gist = ({ gists }: { gists: Record<string, any>[] }) => {
 
       {/* Open Editor Modal */}
       {showGistModal && <GistPostEditorModal pageAt="/gist" />}
-
-      {/* <Modal
-        show={showGistModal}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        size="lg"
-        className="p-3"
-      >
-        <span className={styles.closeBtn}>
-          {" "}
-          <FaTimes
-            color="#207681"
-            style={{ cursor: "pointer" }}
-            size={35}
-            onClick={() => dispatch(setShowGistModal(false))}
-          />{" "}
-        </span>
-
-        <div className="row justify-content-center mx-1">
-          <div
-            className="col-11 col-sm-10 col-xl-11 col-xxl-10"
-            style={{ padding: "12px 0px" }}
-          >
-            <Form>
-              <Form.Group>
-                <Form.Label className={formStyles.formLabel}>
-                  Gist Title
-                </Form.Label>
-                <div
-                  style={{
-                    border: "1px solid rgba(0, 0, 0, 0.125)",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <Form.Control
-                    id="createGistID"
-                    size="lg"
-                    name="title"
-                    type="text"
-                    onChange={(e) => handleChange(e)}
-                    style={{
-                      backgroundColor: "rgb(248, 244, 244)",
-                      borderRadius: "10px",
-                    }}
-                    required
-                  />
-                </div>
-              </Form.Group>
-            </Form>
-          </div>
-          <div className="col-12 mt-2 mb-4 px-lg-4">
-            <Editor slim={false} pageAt="/gist" />
-          </div>
-        </div>
-      </Modal> */}
     </section>
   );
 };
-
-// export async function getStaticProps() {
-//   const gistsFetch = await fetch(
-//     `${process.env.REST}/buddyboss/v1/topics?_embed=user&order=desc&orderby=ID
-//     &per_page=10`,
-//     { method: "GET" }
-//   );
-//   const gists = await gistsFetch.json();
-
-//   return {
-//     props: {
-//       gists,
-
-//       revalidate: 1,
-//     },
-//   };
-// }
 
 export default Gist;

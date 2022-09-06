@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { useSelected, useFocused } from "slate-react";
 import Icon from "../../common/Icon";
 import useResize from "../../utils/customHooks/useResize.js";
@@ -18,7 +17,7 @@ const Image = ({ attributes, element, children }) => {
       className={styles2.embed}
       style={{
         display: "flex",
-        boxShadow: selected && focused && "0 0 3px 3px lightgray",
+        boxShadow: selected && focused && "0 0 3px 3px lightgray"
       }}
       {...element.attr}
     >
@@ -36,7 +35,7 @@ const Image = ({ attributes, element, children }) => {
               width: "15px",
               height: "15px",
               opacity: 1,
-              background: "transparent",
+              background: "transparent"
             }}
           >
             <Icon icon="resize" />

@@ -6,34 +6,34 @@ import styles from "@/styles/profile.module.scss";
 
 function OpenShareModal({ modalOpenShare, toggleShare, selectedShare }) {
   return (
-    <div>
-      <Modal
-        show={modalOpenShare}
-        className={styles.FeedModal}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        size="sm"
-        scrollable={true}
-      >
-        <span className={styles.openBtn}>
-          {" "}
-          <MdOutlineCancel
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggleShare()}
-          />{" "}
-        </span>
-        <span className={styles.closeBtn}>
-          {" "}
-          <BiArrowBack
-            style={{ cursor: "pointer" }}
-            size={30}
-            onClick={() => toggleShare()}
-          />{" "}
-        </span>
-        <ModalRowShare selectedShare={selectedShare} />
-      </Modal>
-    </div>
+    // <div>
+    <Modal
+      show={modalOpenShare}
+      className={styles.FeedModal}
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      size="sm"
+      scrollable={true}
+    >
+      <span className={styles.openBtn}>
+        {" "}
+        <MdOutlineCancel
+          style={{ cursor: "pointer" }}
+          size={30}
+          onClick={() => toggleShare()}
+        />{" "}
+      </span>
+      <span className={styles.closeBtn}>
+        {" "}
+        <BiArrowBack
+          style={{ cursor: "pointer" }}
+          size={30}
+          onClick={() => toggleShare()}
+        />{" "}
+      </span>
+      <ModalRowShare selectedShare={selectedShare} />
+    </Modal>
+    // </div>
   );
 }
 

@@ -48,7 +48,7 @@
 //   }
 // };
 
-const DragAndDropFiles = ({ format }) => {
+const DragAndDropFiles = ({}) => {
   // const dispatch = useDispatch();
   // // const filesAccepted = useSelector(selectFiles);
   // // const filesAcceptedBase64 = useSelector(selectFilesBase64);

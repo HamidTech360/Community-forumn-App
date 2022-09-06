@@ -1,17 +1,14 @@
-import { useRouter } from "next/router";
 import React from "react";
-import { Button, Col, Image, Modal as M, Row } from "react-bootstrap";
-import { useModalWithData } from "../../../../hooks/useModalWithData";
+import { Button, Modal as M } from "react-bootstrap";
 const Modal = ({
   body,
   show,
-  close,
+  close
 }: {
   body: React.ReactNode;
   show: boolean;
   close: () => void;
 }) => {
-  const router = useRouter();
   return (
     <M size="xl" centered show={show} onHide={close}>
       <Button

@@ -1,47 +1,30 @@
-import AuthContent from "@/components/Auth/AuthContent";
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Head from "next/head";
-import React, { useState, useRef } from "react";
-import { Button, Container, Form, Image, InputGroup } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Container, Form, InputGroup } from "react-bootstrap";
 
 const ResetPassword = () => {
   const showPrependStyles = {
     backgroundColor: "whitesmoke",
     border: "0px",
-    cursor: "pointer",
+    cursor: "pointer"
   };
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     password: "",
-    c_password: "",
+    c_password: ""
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
+    setFormData(prevState => ({
       ...prevState,
-      [name]: value,
+      [name]: value
     }));
   };
 
-  // const handleShowPassword = (ref:any)=>{
-  //   ref.current.type="text"
-  //   if(ref.current.name=="password"){
-  //       setShowPassword(true)
-  //   }else if(ref.current.name=="c_password"){
-  //     setShowCPassword(true)
-  //   }
-  // }
-
-  // const handleHidePassword = (ref:any)=>{
-  //   ref.current.type="password"
-  //   if(ref.current.name=="password"){
-  //     setShowPassword(false)
-  //   }else if(ref.current.name=="c_password"){
-  //     setShowCPassword(false)
-  //   }
-  // }
   return (
     <>
       <Head>
@@ -68,7 +51,7 @@ const ResetPassword = () => {
             style={{
               background: "#F5FEFF",
               borderRadius: 10,
-              border: "1px solid rgba(0, 0, 0, 0.125)",
+              border: "1px solid rgba(0, 0, 0, 0.125)"
             }}
           >
             <Form.Group style={{ marginBottom: "30px" }}>
@@ -121,18 +104,6 @@ const ResetPassword = () => {
             </div>
           </Form>
         </div>
-        {/* <Image
-        src="/assets/ellipse-intro-top.png"
-        className="vector-2"
-        alt=""
-        style={{
-          position: "absolute",
-          bottom: 0,
-          right: 0,
-          transform: "rotate(180deg) translate(-50%,20%)",
-        }}
-        fluid
-      /> */}
       </Container>
     </>
   );

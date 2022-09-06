@@ -13,14 +13,13 @@ import AuthHeader from "./AuthHeader";
 import { useSelector } from "@/redux/store";
 
 import { selectIsAuthenticated } from "@/reduxFeatures/authState/authStateSlice";
-import useUser from "@/hooks/useUser";
 
 const links = [
   { name: "Gist", link: "/gist" },
   { name: "Explore", link: "/explore" },
   { name: "About", link: "/about" },
   { name: "Contact Us", link: "/contact" },
-  { name: "FAQ", link: "/faq" },
+  { name: "FAQ", link: "/faq" }
 ];
 
 const Header = () => {
@@ -42,7 +41,7 @@ const Header = () => {
     "/profile/timeline",
     "/profile/about",
     "/profile/media",
-    "/profile/friends",
+    "/profile/friends"
   ];
 
   return (

@@ -4,8 +4,8 @@ import type { RootState } from "../../redux/store";
 // declaring the types for our state
 export type Chat = {
   userToChatTimeline: [object, number];
-  initMessages: [];
-  messages: [];
+  initMessages: Record<string, string>[];
+  messages: Record<string, string>[];
   reFocusChatEditor: boolean;
 };
 
@@ -13,7 +13,7 @@ const initialState: Chat = {
   userToChatTimeline: [{}, 0],
   initMessages: [],
   messages: [],
-  reFocusChatEditor: false,
+  reFocusChatEditor: false
 };
 
 export const chatSlice = createSlice({
@@ -23,23 +23,26 @@ export const chatSlice = createSlice({
     setUserToChatTimeline: (state, action: PayloadAction<[object, number]>) => {
       state.userToChatTimeline = action.payload;
     },
-    setInitMessages: (state, action: PayloadAction<[]>) => {
+    setInitMessages: (
+      state,
+      action: PayloadAction<Record<string, string>[]>
+    ) => {
       state.initMessages = action.payload;
     },
-    setMessages: (state, action: PayloadAction<[]>) => {
+    setMessages: (state, action: PayloadAction<Record<string, string>[]>) => {
       state.messages = action.payload;
     },
-    setReFocusChatEditor: (state) => {
+    setReFocusChatEditor: state => {
       state.reFocusChatEditor = !state.reFocusChatEditor;
-    },
-  },
+    }
+  }
 });
 // Here we are just exporting the actions from this slice, so that we can call them anywhere in our app.
 export const {
   setUserToChatTimeline,
   setInitMessages,
   setMessages,
-  setReFocusChatEditor,
+  setReFocusChatEditor
 } = chatSlice.actions;
 
 // calling the above actions would be useless if we could not access the data in the state. So, we use something called a selector which allows us to select a value from the state.

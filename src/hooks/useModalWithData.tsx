@@ -57,31 +57,28 @@ export const useModalWithShare = () => {
 
 export function ModalRow({ selected, modalToggle, mutate }) {
   return (
-    <>
-      {selected.images ? (
-        <Row>
-          <Col lg={6}></Col>
-          <Col lg={6}>
-            {" "}
-            <ModalCard
-              post={selected}
-              modalToggle={modalToggle}
-              mutate={mutate}
-            />
-          </Col>
-        </Row>
-      ) : (
-        <Row>
-          <Col lg={12} className="px-3 px-lg-4">
-            <ModalCard
-              post={selected}
-              modalToggle={modalToggle}
-              mutate={mutate}
-            />
-          </Col>
-        </Row>
-      )}
-    </>
+    // <>
+    //   {console.log("selected:", selected)}
+    //   {selected.images ? (
+    //     <Row>
+    //       <Col lg={6}></Col>
+    //       <Col lg={6}>
+    //         {" "}
+    //         <ModalCard
+    //           post={selected}
+    //           modalToggle={modalToggle}
+    //           mutate={mutate}
+    //         />
+    //       </Col>
+    //     </Row>
+    //   ) : (
+    <Row>
+      <Col lg={12} className="px-3 px-lg-4">
+        <ModalCard post={selected} modalToggle={modalToggle} mutate={mutate} />
+      </Col>
+    </Row>
+    //   )}
+    // </>
   );
 }
 

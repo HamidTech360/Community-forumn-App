@@ -1,4 +1,3 @@
-//@ts-nocheck
 import NextLink from "next/link";
 import { useFocused, useSelected, useSlateStatic } from "slate-react";
 
@@ -18,7 +17,7 @@ const Link = ({ attributes, element, children }) => {
       className={styles.link}
       style={{
         display: "inline-flex",
-        boxShadow: selected && focused && "0 0 3px 3px lightgray",
+        boxShadow: selected && focused && "0 0 3px 3px lightgray"
       }}
     >
       <OverlayTrigger

@@ -3,7 +3,7 @@ import { setSearchModal } from "@/reduxFeatures/app/appSlice";
 import { useDispatch } from "@/redux/store";
 
 import DOMPurify from "dompurify";
-import truncate from "trunc-html";
+import truncate from "truncate-html";
 import styles from "@/styles/searchTabs.module.scss";
 
 function GistRender({ search, index }) {
@@ -28,7 +28,7 @@ function GistRender({ search, index }) {
         <small
           className="col-8 text-muted"
           dangerouslySetInnerHTML={{
-            __html: sanitizer(truncate(search?.post, 50).html),
+            __html: sanitizer(truncate(search?.post, 50)),
           }}
         />
       </div>

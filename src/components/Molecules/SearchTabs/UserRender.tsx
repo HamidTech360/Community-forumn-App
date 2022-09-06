@@ -3,7 +3,6 @@ import styles from "@/styles/searchTabs.module.scss";
 import { useRouter } from "next/router";
 import { setSearchModal } from "@/reduxFeatures/app/appSlice";
 import { useDispatch } from "@/redux/store";
-import Link from "next/link";
 
 function UserRender({ search, index }) {
   const router = useRouter();
