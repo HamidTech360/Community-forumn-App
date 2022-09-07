@@ -34,6 +34,8 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
 
+    console.log(editorID, editorInnerHtml)
+
     const emptyEditorInnerHtml =
       '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
 

@@ -540,7 +540,7 @@ const PostCard = ({
 
                 {/* Display Media */}
                 {post?.media?.length > 0 && (
-                  <MediaDisplay media={post.media} breakPoint={2} />
+                  <MediaDisplay media={post.media} breakPoint={post?.media.length==1?1:2} />
                 )}
 
                 {seeMore && postLength > truncateLength ? (

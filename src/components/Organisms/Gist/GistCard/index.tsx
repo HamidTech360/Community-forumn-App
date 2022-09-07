@@ -25,6 +25,7 @@ import PostIsEdited from "@/components/Templates/PostIsEdited";
 import { PostMenu } from "../../App/PostMenu";
 
 import Avatar from "@/components/Atoms/Avatar";
+import MediaDisplay from "../../App/MediaMasonry";
 
 // interface IGist {
 //   gist: {
@@ -39,7 +40,7 @@ import Avatar from "@/components/Atoms/Avatar";
 // }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const GistCard = ({ gist, primary, trimmed }: any) => {
-  console.log(gist);
+  
   const sanitizer = DOMPurify.sanitize;
   const router = useRouter();
   const dispatch = useDispatch();
@@ -139,18 +140,17 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
         }
       })();
     } catch (error) {
-      // Revert on axios  failure
-      // console.error("follow Error:", error);
+   
     }
   };
 
   const handleUnFollow = async id => {
-    // Preset following
+    
 
     try {
       await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
-      // Update Auth User State
+     
       (async function () {
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {
@@ -233,7 +233,9 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
           )}
 
           <PostIsEdited post={gist} />
-
+         <div>
+            <MediaDisplay media={gist?.media} breakPoint={gist?.media?.length==1?1:2} />
+         </div>
           {!primary && (
             <div className="d-flex justify-content-end mt-2">
               <Link href={`/gist/${gist?._id}`} passHref>
