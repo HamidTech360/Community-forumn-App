@@ -41,12 +41,13 @@ const MediaDisplay = ({ media: mediaComingIn, breakPoint }) => {
       >
         <Masonry>
           {images?.map((img, index) => (
-            <span key={index}>
+            // <span key={index}>
+            <>
               {populateAcceptedImagesTypes.includes(
-                `.${img.split(".")[img.split(".").length - 1]}`
+                `.${img.split(".")[img.split(".").length - 1].toLowerCase()}`
               ) ? (
                 <Image
-                  // key={index}
+                  key={index}
                   className="p-1"
                   src={img}
                   alt="Uploaded Media"
@@ -64,18 +65,20 @@ const MediaDisplay = ({ media: mediaComingIn, breakPoint }) => {
                   }}
                 />
               ) : populateAcceptedVideosTypes.includes(
-                  `.${img.split(".")[img.split(".").length - 1]}`
+                  `.${img.split(".")[img.split(".").length - 1].toLowerCase()}`
                 ) ? (
                 <video
                   preload="metadata"
-                  //  key={index}
+                  key={index}
                   src={img}
+                  style={{ objectFit: "cover" }}
                   controls
                 >
                   Your browser does not support the video tag.
                 </video>
               ) : null}
-            </span>
+            </>
+            // </span>
           ))}
         </Masonry>
       </ResponsiveMasonry>

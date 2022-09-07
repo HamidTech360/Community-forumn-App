@@ -91,10 +91,10 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       formData.append("slateState", editorContentValue);
       formData.append("mentions", usersToSendNotification);
 
-      console.log("formData-post:", formData.getAll("post"));
-      console.log("formData-media:", formData.getAll("media"));
-      console.log("formData-slateState:", formData.getAll("slateState"));
-      console.log("formData-mentions:", formData.getAll("mentions"));
+      // console.log("formData-post:", formData.getAll("post"));
+      // console.log("formData-media:", formData.getAll("media"));
+      // console.log("formData-slateState:", formData.getAll("slateState"));
+      // console.log("formData-mentions:", formData.getAll("mentions"));
 
       if (!slatePostToEdit) {
         // New Post
@@ -123,7 +123,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           setUploading(false);
           dispatch(setShowCreatePostModal(false));
         } catch (error) {
-          // console.error(error);
+          console.error(error);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
               position: toast.POSITION.TOP_RIGHT,

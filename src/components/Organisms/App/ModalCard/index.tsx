@@ -581,7 +581,8 @@ const ModalCard = ({
               <div
                 className="row"
                 style={{
-                  height: post?.media?.length === 1 ? "auto" : "390px",
+                  // height: post?.media?.length === 1 ? "auto" : "390px",
+                  maxHeight: post?.media?.length === 1 ? "390px" : "390px",
                   overflowY: "auto"
                 }}
               >
