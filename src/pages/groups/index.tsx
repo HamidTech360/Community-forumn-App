@@ -32,7 +32,6 @@ const Groups = () => {
   } = usePagination("/api/feed/groups", "posts");
 
   useEffect(() => {
-    // console.log("paginatedData:", paginatedData);
     if (paginatedData) {
       if (JSON.stringify(posts) !== JSON.stringify(paginatedData)) {
         setPosts(paginatedData);
@@ -83,7 +82,7 @@ const Groups = () => {
 
         setSearchResult(data);
       } catch (error) {
-        console.error(error.response?.data);
+        // console.error(error.response?.data);
       }
     } else {
       setSearchResult([]);

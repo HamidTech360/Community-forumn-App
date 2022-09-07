@@ -59,6 +59,11 @@ import { selectImageModalOpen } from "@/reduxFeatures/app/postModalCardSlice";
 import ImageModal from "../ModalPopUp/ImageModal";
 import MediaDisplay from "../MediaMasonry";
 import Avatar from "@/components/Atoms/Avatar";
+import TextAreaWithMentions from "../../TextAreaWithMentions";
+import {
+  selectMentionedUsers,
+  setMentionedUsers
+} from "@/reduxFeatures/app/mentionsSlice";
 
 const ModalCard = ({
   post: postComingIn,
@@ -102,6 +107,7 @@ const ModalCard = ({
     useModalWithShare();
 
   const imageModalOpen = useSelector(selectImageModalOpen);
+  const mentionedUsers = useSelector(selectMentionedUsers);
 
   // const [imageModalOpen, setImageModalOpen] = useState(false);
   // const [imageModalImg, setImageModalImg] = useState(null);
@@ -114,6 +120,8 @@ const ModalCard = ({
 
     return () => {
       dispatch(setModalCardPostEdited(null));
+      // Reset Mentioned Users
+      dispatch(setMentionedUsers([]));
     };
   }, [modalCardPostEdited]);
 
@@ -328,9 +336,26 @@ const ModalCard = ({
   };
 
   const postComment = async () => {
+    /*
+     ** Mentioned Users To Send Notification
+     ** Below Map() Is Important To Confirm The Mentioned User Hasn't Been Deleted
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const usersToSendNotification: any = [];
+    if (mentionedUsers.length > 0) {
+      await mentionedUsers.forEach(user => {
+        if (commentPost?.includes(user.userName)) {
+          usersToSendNotification.push(user?.userId);
+        }
+      });
+    }
+    // console.log("usersToSendNotification:", usersToSendNotification);
+
     const body = {
-      content: commentPost
+      content: commentPost,
+      mentions: usersToSendNotification
     };
+    // console.log("body:", body);
 
     if (body.content == "") {
       return toast.error("Comment cannot be empty", {
@@ -361,6 +386,8 @@ const ModalCard = ({
       setCommentPost("");
       (document.getElementById("articleTextarea") as HTMLInputElement).value =
         "";
+      // Reset Mentioned Users
+      dispatch(setMentionedUsers([]));
     } catch (error) {
       // console.error(error);
     }
@@ -493,15 +520,11 @@ const ModalCard = ({
     // console.log(post);
     // setPosts(posts.filter((el) => el._id !== post._id));
     try {
-      const { data } = await axios.delete(
-        `${config.serverUrl}/api/feed?id=${post._id}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`
-          }
+      await axios.delete(`${config.serverUrl}/api/feed?id=${post._id}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
-      );
-      console.log(data, post._id);
+      });
 
       // Close Modal
       modalToggle();
@@ -526,24 +549,20 @@ const ModalCard = ({
   };
 
   const handleDeleteComment = async comment => {
-    console.log("DelETE NOW");
+    // console.log("DelETE NOW");
     // const newPosts = comment.filter((el) => el._id !== comment._id);
-    console.log("comment:", comment);
-    console.log("comment._id:", comment?._id);
+    // console.log("comment:", comment);
+    // console.log("comment._id:", comment?._id);
     try {
-      const { data } = await axios.delete(
-        `${config.serverUrl}/api/comments/${comment?._id}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`
-          }
+      await axios.delete(`${config.serverUrl}/api/comments/${comment?._id}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
-      );
+      });
 
-      console.log("Deleted  Comment:", data);
       dispatch(setCommentIsDeleted(comment?._id));
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data);
     }
   };
 
@@ -562,7 +581,8 @@ const ModalCard = ({
               <div
                 className="row"
                 style={{
-                  height: post?.media?.length === 1 ? "auto" : "390px",
+                  // height: post?.media?.length === 1 ? "auto" : "390px",
+                  maxHeight: post?.media?.length === 1 ? "390px" : "390px",
                   overflowY: "auto"
                 }}
               >
@@ -754,18 +774,13 @@ const ModalCard = ({
                       border: "1px solid rgba(0, 0, 0, 0.125)"
                     }}
                   >
-                    <textarea
-                      id="articleTextarea"
-                      className="form-control"
-                      placeholder="."
-                      onChange={e => setCommentPost(e.target.value)}
-                      style={{ width: "100%" }}
-                    />
+                    {/* TextArea */}
+                    <TextAreaWithMentions commentChanging={setCommentPost} />
                   </div>
 
-                  <div className="ms-auto">
+                  <div className="col-5 ms-auto d-md-grid">
                     <Button
-                      className="btn btn-sm btn-primary mt-3 d-inline"
+                      className="btn btn-sm btn-primary mt-3 d-inline-block"
                       onClick={postComment}
                     >
                       Send
