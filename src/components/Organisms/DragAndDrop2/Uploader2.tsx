@@ -6,16 +6,18 @@ import styles from "@/styles/Uploader/uploader.module.scss";
 import { focusedStyle, acceptStyle, rejectStyle } from "./Drag&DropStyles";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import Image from "next/image";
-import { useDispatch } from "@/redux/store";
+import { useDispatch, useSelector } from "@/redux/store";
 import {
   setMediaUpload
   // setAcceptingFiles,
   // selectAcceptingFiles,
 } from "@/reduxFeatures/app/mediaUpload";
+import { selectAcceptedMediaTypes } from "@/reduxFeatures/app/appSlice";
 
 const Uploader2 = () => {
   const dispatch = useDispatch();
   // const acceptingFiles = useSelector(selectAcceptingFiles);
+  const acceptedMediaTypes = useSelector(selectAcceptedMediaTypes);
   const [acceptingFiles, setAcceptingFiles] = useState([]);
   const [acceptingFilesBase64, setAcceptingFilesBase64] = useState([]);
   const [rejectingFiles, setRejectingFiles] = useState([]);
@@ -63,16 +65,17 @@ const Uploader2 = () => {
       onDrop,
       // validator: nameLengthValidator,
       maxFiles: 10,
-      accept: {
-        "image/jpeg": [".jpeg", ".jpg"],
-        "image/png": [".png"],
-        "image/gif": [".gif"],
-        "video/3gpp": [".3gp"],
-        "video/3gpp2": [".3g2"],
-        "video/mp4": [".mp4"],
-        "video/mpeg": [".mpeg"],
-        "video/mov": [".mov"]
-      },
+      accept: acceptedMediaTypes,
+      // accept: {
+      //   "image/jpeg": [".jpeg", ".jpg"],
+      //   "image/png": [".png"],
+      //   "image/gif": [".gif"],
+      //   "video/3gpp": [".3gp"],
+      //   "video/3gpp2": [".3g2"],
+      //   "video/mp4": [".mp4"],
+      //   "video/mpeg": [".mpeg"],
+      //   "video/mov": [".mov"]
+      // },
       maxSize: 3000 * 1024 //3000KB || 3MB
     });
 
