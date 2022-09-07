@@ -378,7 +378,7 @@ const Explore = ({}) => {
                 >
                   <Card
                     _id={post._id}
-                    image={"/images/postPlaceholder.jpg"}
+                    image={post.media[0] ||  "/images/postPlaceholder.jpg"}
                     title={post.postTitle}
                     body={post.postBody}
                     author={post.author}
