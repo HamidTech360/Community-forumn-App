@@ -123,7 +123,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           setUploading(false);
           dispatch(setShowCreatePostModal(false));
         } catch (error) {
-          // console.error(error);
+          console.error(error);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
               position: toast.POSITION.TOP_RIGHT,
