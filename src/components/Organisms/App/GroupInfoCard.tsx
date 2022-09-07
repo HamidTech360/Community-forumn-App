@@ -66,7 +66,7 @@ const GroupInfoCard = ({ data }: any) => {
   const [progress2, setProgress2] = useState(false);
   const fileInput = useRef<HTMLInputElement>();
   const coverFileInpt = useRef<HTMLInputElement>();
-  console.log(user, data);
+  
   useEffect(() => {
     data.images?.avatar && setProfileImg(data?.images?.avatar);
     data.images?.cover && setCoverImg(data?.images?.cover);

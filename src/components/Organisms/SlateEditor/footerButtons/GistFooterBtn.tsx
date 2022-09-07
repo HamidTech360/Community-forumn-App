@@ -17,11 +17,12 @@ import {
   setSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
 import { serialize } from "../utils/serializer";
+import { selectMediaUpload } from "@/reduxFeatures/app/mediaUpload";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function GistFooterBtn({ editorID, editorContentValue }: any) {
-  const gistIsLoading = useSelector(selectGistIsLoading);
-
+  const [gistIsLoading, setGistIsUploading] = useState(false);
+  const mediaUpload = useSelector(selectMediaUpload);
   const dispatch = useDispatch();
   const showGistTitle = useSelector(selectGistTitle);
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
@@ -73,7 +74,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
 
   const createGist = async e => {
     e.preventDefault();
-
+    setGistIsUploading(true)
     const editorInnerHtml = (
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
@@ -108,24 +109,30 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
       };
 
       const serializedHtml = serialize(serializeNode);
+      const formData = new FormData()
+      mediaUpload.map((file: File) => {
+        formData.append("media", file);
+      });
+
+      formData.append("title", showGistTitle)
+      formData.append("post", serializedHtml.toString())
+      formData.append("categories", selectedCategory)
+      formData.append("country", "Nigeria")
 
       if (!slatePostToEdit) {
         // New Post
         try {
           const response = await axios.post(
             `${config.serverUrl}/api/gists`,
-            {
-              title: showGistTitle,
-              post: serializedHtml,
-              categories: selectedCategory,
-              country: "Ghana"
-            },
+            formData,
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`
               }
             }
           );
+          console.log(response.data)
+          setGistIsUploading(false)
           toast.success("Gist uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,
             toastId: "1"
@@ -133,6 +140,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
           dispatch(uploadSuccess(response.data.gist));
           dispatch(setShowGistModal(false));
         } catch (error) {
+          setGistIsUploading(false)
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Gist", {
               position: toast.POSITION.TOP_RIGHT,
