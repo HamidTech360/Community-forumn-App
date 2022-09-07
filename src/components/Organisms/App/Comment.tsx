@@ -2,11 +2,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import React, { useState, useEffect } from "react";
-import { Card, Image } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import Age from "../../Atoms/Age";
 import DOMPurify from "dompurify";
 import Replies from "./Replies";
-import { useSelector } from "@/redux/store";
+import { useDispatch, useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import config from "@/config";
 import axios from "axios";
@@ -19,6 +19,11 @@ import {
 } from "@/reduxFeatures/app/postModalCardSlice";
 import PostIsEdited from "@/components/Templates/PostIsEdited";
 import Avatar from "@/components/Atoms/Avatar";
+import {
+  selectMentionedUsers,
+  setMentionedUsers
+} from "@/reduxFeatures/app/mentionsSlice";
+import TextAreaWithMentions from "../TextAreaWithMentions";
 
 const Comment = ({
   comment: commentComingIn,
@@ -27,6 +32,7 @@ const Comment = ({
   handleDeleteComment,
   changeFollowingStatus
 }: Record<string, any>) => {
+  const dispatch = useDispatch();
   const [liked, setLiked] = useState(false);
   const [comment, setCommentComingIn] = useState(commentComingIn);
   const user = useSelector(selectUser);
@@ -34,11 +40,12 @@ const Comment = ({
   const commentIsDeleted = useSelector(selectCommentIsDeleted);
   const sanitizer = DOMPurify.sanitize;
 
-  const [modalPost, setModalPost] = useState<Record<string, any>>({});
+  // const [modalPost, setModalPost] = useState<Record<string, any>>({});
   const [commentPost, setCommentPost] = useState("");
   const [showComment, setShowComment] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [loading, setLoading] = useState(false);
+  const mentionedUsers = useSelector(selectMentionedUsers);
 
   // Auto Render Comment after new post
   useEffect(() => {
@@ -127,9 +134,25 @@ const Comment = ({
   };
 
   const postComment = async () => {
+    /*
+     ** Mentioned Users To Send Notification
+     ** Below Map() Is Important To Confirm The Mentioned User Hasn't Been Deleted
+     */
+    const usersToSendNotification: any = [];
+    if (mentionedUsers.length > 0) {
+      await mentionedUsers.forEach(user => {
+        if (commentPost?.includes(user.userName)) {
+          usersToSendNotification.push(user?.userId);
+        }
+      });
+    }
+    // console.log("usersToSendNotification:", usersToSendNotification);
+
     const body = {
-      content: commentPost
+      content: commentPost,
+      mentions: usersToSendNotification
     };
+    console.log("body:", body);
 
     if (body.content == "") {
       return toast.error("Comment cannot be empty", {
@@ -153,13 +176,15 @@ const Comment = ({
       const replies = comment?.replies;
       replies?.unshift(res.data);
       // console.log("{ ...comment, replies }:", { ...comment, replies });
-      setModalPost({ ...comment, replies });
+      // setModalPost({ ...comment, replies });
       setCommentComingIn({ ...comment, replies });
       setLoading(false);
       setShowComment(false);
       setCommentPost("");
       (document.getElementById("articleTextarea") as HTMLInputElement).value =
         "";
+      // Reset Mentioned Users
+      dispatch(setMentionedUsers([]));
     } catch (error) {
       // console.error(error);
     }
@@ -170,7 +195,6 @@ const Comment = ({
       className="row px-2"
       style={{ border: "none", background: "none", lineHeight: "1.2" }}
     >
-      {console.log("comment:", comment)}
       <hr className="w-75 mx-auto text-muted" />
       <div className="col-12 d-flex align-items-center justify-content-start gap-2 mt-1">
         <Avatar
@@ -288,11 +312,11 @@ const Comment = ({
         <section>
           <div className="row">
             <div className="col-2 col-md-2">
-              <Image
-                src={modalPost.authorImage || "/images/imagePlaceholder.jpg"}
-                className="img-fluid"
-                roundedCircle={true}
-                alt="Author's Image"
+              <Avatar
+                src={user?.images?.avatar || "/images/imagePlaceholder.jpg"}
+                name={user?.firstName}
+                width={50}
+                height={50}
               />
             </div>
             <div className="col-7 col-md-10">
@@ -300,14 +324,8 @@ const Comment = ({
                 className="form-floating"
                 style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
               >
-                <textarea
-                  id="articleTextarea"
-                  className="form-control"
-                  placeholder="."
-                  onChange={e => setCommentPost(e.target.value)}
-                  style={{ height: "80px" }}
-                ></textarea>
-                {/* <label htmlFor="articleTextarea">Reply here</label> */}
+                {/* TextArea */}
+                <TextAreaWithMentions commentChanging={setCommentPost} />
               </div>
             </div>
             <div className="col-3 col-md-2 ms-auto d-md-grid">

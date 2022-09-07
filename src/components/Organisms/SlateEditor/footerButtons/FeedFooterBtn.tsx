@@ -116,6 +116,10 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
 
           // Auto update & Rerender Feed Post
           dispatch(setNewFeed(response.data.feed));
+          // Reset Content in SlatePostToEdit State
+          dispatch(setSlatePostToEdit(null));
+          // Reset Mentioned Users
+          dispatch(setMentionedUsers([]));
           setUploading(false);
           dispatch(setShowCreatePostModal(false));
         } catch (error) {
@@ -154,6 +158,10 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           dispatch(setNewFeed({ postEdited: Math.random() * 50 }));
           // Auto Update & Rerender modalCard Post While Opened
           dispatch(setModalCardPostEdited(editorInnerHtml));
+          // Reset Content in SlatePostToEdit State
+          dispatch(setSlatePostToEdit(null));
+          // Reset Mentioned Users
+          dispatch(setMentionedUsers([]));
           setUploading(false);
           dispatch(setShowCreatePostModal(false));
         } catch (error) {
