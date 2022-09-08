@@ -86,8 +86,6 @@ const PostCard = ({
   const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
     useModalWithShare();
 
-   
-
   useEffect(() => {
     if (post) {
       const postType = post?.post ? post?.post : post?.postBody;

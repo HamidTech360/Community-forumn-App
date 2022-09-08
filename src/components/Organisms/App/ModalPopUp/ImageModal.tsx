@@ -70,7 +70,7 @@ function ImageModal() {
                   <Image
                     src={postImage}
                     alt={"image"}
-                    objectFit="cover"
+                    objectFit="contain"
                     className="d-block w-100"
                     width={520}
                     height={520}
