@@ -1,9 +1,9 @@
 import { toggleBlock, toggleMark } from "./SlateUtilityFunctions";
 
 export const CtrlShiftCombo = (event, editor) => {
-  if (!event.ctrlKey) {
-    return;
-  }
+  // if (!event.ctrlKey) {
+  //   return;
+  // }
 
   // When the case key is pressed, apply logic.
   if (event.shiftKey) {
