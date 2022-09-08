@@ -50,17 +50,6 @@ const Toolbar = ({ position }) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     ReactEditor.focus(editor);
-
-    // // For good measure, you can reset the history as well
-    // editor.history = { redos: [], undos: [] };
-
-    // // Delete Editor Content
-    // Transforms.delete(editor, {
-    //   at: {
-    //     anchor: Editor?.start(editor, []),
-    //     focus: Editor?.end(editor, []),
-    //   },
-    // });
   }, [editor, reFocusChatEditor]);
 
   const BlockButton = ({ format, toolTip }) => {

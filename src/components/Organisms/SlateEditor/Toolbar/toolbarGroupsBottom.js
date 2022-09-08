@@ -2,25 +2,19 @@ const toolbarGroupsBottom = [
   [
     {
       id: 101,
-      format: "video",
-      type: "embed",
-      toolTip: "",
-    },
-    {
-      id: 102,
       format: "image",
       type: "embed",
-      toolTip: "",
-    },
+      toolTip: ""
+    }
   ],
   [
     {
-      id: 103,
+      id: 102,
       format: "emoji",
       type: "emoji",
-      toolTip: "",
-    },
-  ],
+      toolTip: ""
+    }
+  ]
 ];
 
 export default toolbarGroupsBottom;

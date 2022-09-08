@@ -76,10 +76,17 @@ const Followers = () => {
     if (user && topWriters.length === 0) {
       (async function () {
         try {
-          const { data } = await axios.get(`${config.serverUrl}/api/users/topwriters/all`, {headers:{
-            authorization:`Bearer ${localStorage.getItem('accessToken')}`
-          }});
-          
+          const { data } = await axios.get(
+            `${config.serverUrl}/api/users/topwriters/all`,
+            {
+              headers: {
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`
+              }
+            }
+          );
+
+          console.log("topWriters:::", data);
+
           const topWritersSlice = data.users.slice(0, 30);
           const followTopWriters = await topWritersSlice.filter(person => {
             // console.log("person?._id", person?._id);
