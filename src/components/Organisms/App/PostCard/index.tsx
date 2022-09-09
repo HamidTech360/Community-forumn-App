@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
 
 import { useModalWithData, useModalWithShare } from "@/hooks/useModalWithData";
-// import ModalCard from "@/components/Organisms/App/ModalCard";
 import truncate from "truncate-html";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -30,11 +29,9 @@ import {
   setUnLikeChangedModal,
   selectUnLikeChangedModal
 } from "@/reduxFeatures/app/postModalCardSlice";
-import { selectNewFeed } from "@/reduxFeatures/api/feedSlice";
 
 import { selectImageModalOpen } from "@/reduxFeatures/app/postModalCardSlice";
 import ImageModal from "../ModalPopUp/ImageModal";
-// import { setFollowed, selectFollowed } from "@/reduxFeatures/app/appSlice";
 
 import { useRouter } from "next/router";
 import makeSecuredRequest, {
@@ -49,7 +46,6 @@ import PostCardMenu from "../PostMenu";
 import Avatar from "@/components/Atoms/Avatar";
 
 import MediaDisplay from "../MediaMasonry";
-// import { follow, unFollow } from "../followAndUnFollow";
 
 const PostCard = ({
   post,
@@ -62,7 +58,7 @@ const PostCard = ({
   const user = useSelector(selectUser);
   const likeChangedModal = useSelector(selectLikeChangedModal);
   const unLikeChangedModal = useSelector(selectUnLikeChangedModal);
-  const newFeed = useSelector(selectNewFeed);
+  // const newFeed = useSelector(selectNewFeed);
   const router = useRouter();
   const [followed, setFollowed] = useState(false);
 

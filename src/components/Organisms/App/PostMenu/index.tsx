@@ -1,18 +1,15 @@
 import React from "react";
 import { useSelector } from "@/redux/store";
 import { selectShowCommentModal } from "@/reduxFeatures/app/postModalCardSlice";
-// import { selectShowCommentModal } from "@/reduxFeatures/app/postModalCardSlice";
 import { setShowCreatePostModal } from "@/reduxFeatures/app/createPost";
 import { Button, NavDropdown } from "react-bootstrap";
 import { BsFolderFill, BsXCircleFill } from "react-icons/bs";
 import { FiEdit } from "react-icons/fi";
 import { HiDotsVertical } from "react-icons/hi";
 import { RiDeleteBin5Line, RiFlagFill, RiUserFollowFill } from "react-icons/ri";
-// import ChangeFollowingStatus from "../ChangeFollowingStatus";
 import CommentModal from "../ModalPopUp/CommentModal";
 
 import styles from "@/styles/profile.module.scss";
-import { useRouter } from "next/router";
 
 const PostCardMenu = ({
   user,
@@ -93,7 +90,11 @@ const PostCardMenu = ({
             style={{
               borderBottom: "1px solid gray"
             }}
-            onClick={() => handleEditPost(post)}
+            onClick={() => {
+              // Open & Populate Editor
+              setShowCreatePostModal(true);
+              handleEditPost(post);
+            }}
           >
             <FiEdit /> Edit Post
           </NavDropdown.Item>
@@ -173,7 +174,6 @@ export const PostMenu = ({
       {user?._id == post?.author?._id || user?._id === post?.author ? (
         <>
           <NavDropdown.Item
-            // className={styles.item}
             style={{
               borderBottom: "1px solid gray"
             }}
