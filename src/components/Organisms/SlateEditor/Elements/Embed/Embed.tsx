@@ -96,8 +96,7 @@ const Embed = ({ editor, format }) => {
           closeButton
         >
           <Modal.Title>
-            {/* Add {format} <Icon icon={format} /> */}
-            Add <small> image/video </small> <Icon icon={format} />
+            Upload <small> image/video </small> <Icon icon={format} />
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={submitEmbed}>

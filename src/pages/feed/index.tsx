@@ -78,6 +78,7 @@ const Feed = () => {
   }, [newFeed]);
 
   useEffect(() => {
+    // Refresh On Post delete Or Change
     mutate();
   }, [posts]);
 
@@ -90,12 +91,8 @@ const Feed = () => {
   }, [paginatedData]);
 
   useEffect(() => {
-    // setSelected(posts[0])
-    // toggle()
     const query = router.query.active;
-    console.log(query);
     if (query) {
-      console.log(query);
       (async function () {
         try {
           const response = await axios.get(

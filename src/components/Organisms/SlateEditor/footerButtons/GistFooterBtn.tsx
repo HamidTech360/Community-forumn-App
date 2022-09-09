@@ -15,8 +15,17 @@ import {
   selectSlatePostToEdit,
   setSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
-import { serialize } from "../utils/serializer";
-import { selectMediaUpload } from "@/reduxFeatures/app/mediaUploadSlice";
+// import { serialize } from "../utils/serializer";
+import {
+  selectMediaUpload,
+  setMediaUpload,
+  setProgressBarNum,
+  setProgressVariant
+} from "@/reduxFeatures/app/mediaUploadSlice";
+import {
+  selectMentionedUsers,
+  setMentionedUsers
+} from "@/reduxFeatures/app/mentionsSlice";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function GistFooterBtn({ editorID, editorContentValue }: any) {
@@ -27,14 +36,19 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const mentionedUsers = useSelector(selectMentionedUsers);
 
   useEffect(() => {
     return () => {
       // Reset Content in SlatePostToEdit State when component unmount
       dispatch(setSlatePostToEdit(null));
-
       // Reset Post Title State when component unmount
       dispatch(setGistTitle(""));
+      // Reset Mentioned Users
+      dispatch(setMentionedUsers([]));
+      // Reset ProgressBar
+      dispatch(setProgressVariant("primary"));
+      dispatch(setProgressBarNum(0));
     };
   }, [dispatch]);
 
@@ -102,43 +116,79 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
     }
 
     if (editorInnerHtml.trim() !== "") {
-      // Serialize Html
-      const serializeNode = {
-        children: editorContentValue
-      };
+      /*
+       ** Mentioned Users To Send Notification
+       ** Below Map() Is Important To Confirm The Mentioned User Hasn't Been Deleted
+       */
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const usersToSendNotification: any = [];
+      if (mentionedUsers.length > 0) {
+        await mentionedUsers.forEach(user => {
+          if (editorInnerHtml?.includes(user.userName)) {
+            usersToSendNotification.push(user?.userId);
+          }
+        });
+      }
+      console.log("usersToSendNotification:", usersToSendNotification);
+      console.log("editorContentValue:", editorContentValue);
 
-      const serializedHtml = serialize(serializeNode);
       const formData = new FormData();
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
-
       formData.append("title", showGistTitle);
-      formData.append("post", serializedHtml.toString());
+      formData.append("post", editorInnerHtml);
       formData.append("categories", selectedCategory);
       formData.append("country", "Nigeria");
+      formData.append("slateState", editorContentValue);
+      formData.append("mentions", usersToSendNotification);
 
       if (!slatePostToEdit) {
         // New Post
         try {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("primary"));
+
           const response = await axios.post(
             `${config.serverUrl}/api/gists`,
             formData,
             {
               headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "Content-Type": "multipart/form-data"
+              },
+              // Axios Progress
+              onUploadProgress: function (progressEvent: {
+                loaded: number;
+                total: number;
+              }) {
+                const percentCompleted = Math.round(
+                  (progressEvent.loaded * 100) / progressEvent.total
+                );
+                // Update ProgressBar
+                dispatch(setProgressBarNum(percentCompleted));
               }
             }
           );
-          console.log(response.data);
-          setGistIsUploading(false);
+          // console.log(response.data);
           toast.success("Gist uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,
             toastId: "1"
           });
+
           dispatch(uploadSuccess(response.data.gist));
+          // Reset Content in SlatePostToEdit State
+          dispatch(setSlatePostToEdit(null));
+          // Reset Mentioned Users
+          dispatch(setMentionedUsers([]));
+          // Reset Uploaded Media Data
+          dispatch(setMediaUpload([]));
+          setGistIsUploading(false);
           dispatch(setShowGistModal(false));
         } catch (error) {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("danger"));
+
           setGistIsUploading(false);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Gist", {
@@ -156,17 +206,27 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
       } else {
         // Edit Post
         try {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("primary"));
+
           await axios.put(
             `${config.serverUrl}/api/gists/${slatePostToEdit?._id}`,
-            {
-              title: showGistTitle,
-              post: serializedHtml,
-              categories: selectedCategory,
-              country: "Ghana"
-            },
+            formData,
             {
               headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "Content-Type": "multipart/form-data"
+              },
+              // Axios Progress
+              onUploadProgress: function (progressEvent: {
+                loaded: number;
+                total: number;
+              }) {
+                const percentCompleted = Math.round(
+                  (progressEvent.loaded * 100) / progressEvent.total
+                );
+                // Update ProgressBar
+                dispatch(setProgressBarNum(percentCompleted));
               }
             }
           );
@@ -177,8 +237,15 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
 
           // Auto update & Rerender Groups Post
           dispatch(uploadSuccess({ postEdited: Math.random() * 50 }));
+          // Reset Content in SlatePostToEdit State
+          dispatch(setSlatePostToEdit(null));
+          // Reset Mentioned Users
+          dispatch(setMentionedUsers([]));
           dispatch(setShowGistModal(false));
         } catch (error) {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("danger"));
+
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Gist", {
               position: toast.POSITION.TOP_RIGHT,

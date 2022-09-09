@@ -1,5 +1,5 @@
 import useSWRInfinite from "swr/infinite";
-import React, { useEffect } from "react";
+import React from "react";
 import config from "@/config";
 import axios from "axios";
 import { Spinner } from "react-bootstrap";
@@ -16,8 +16,8 @@ const usePagination = (url: string, dotTitle: string) => {
   const fetcher = async function (url) {
     const response = await axios.get(`${url}`, {
       headers: {
-        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`
+      }
     });
     return response.data;
   };
@@ -28,14 +28,14 @@ const usePagination = (url: string, dotTitle: string) => {
     setSize,
     error,
     mutate,
-    isValidating,
+    isValidating
   } = useSWRInfinite(getKey, fetcher, {
-    persistSize: true,
+    persistSize: true
   });
 
-  const fetchNextPage = () => setSize((size) => size + 1);
+  const fetchNextPage = () => setSize(size => size + 1);
 
-  const paginatedData: any = post?.flatMap((page) => page[dotTitle]) ?? [];
+  const paginatedData: any = post?.flatMap(page => page[dotTitle]) ?? [];
 
   const isReachedEnd =
     post && post[post.length - 1][dotTitle]?.length < pageSize; // got last batch of data
@@ -54,7 +54,7 @@ const usePagination = (url: string, dotTitle: string) => {
     // size,
     // setSize,
     mutate,
-    isValidating,
+    isValidating
     // loadingMore,
   };
 };

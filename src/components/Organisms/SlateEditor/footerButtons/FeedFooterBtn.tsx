@@ -41,8 +41,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       dispatch(setProgressVariant("primary"));
       dispatch(setProgressBarNum(0));
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const createPost = async e => {
     e.preventDefault();
@@ -67,14 +66,6 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
     if (editorInnerHtml.trim() !== "") {
       setUploading(true);
 
-      // // Serialize Html
-      // const serializeNode = {
-      //   children: editorContentValue
-      // };
-
-      // const serializedHtml: string = serialize(serializeNode);
-      // console.log("serializedHtml:", serializedHtml);
-
       /*
        ** Mentioned Users To Send Notification
        ** Below Map() Is Important To Confirm The Mentioned User Hasn't Been Deleted
@@ -89,7 +80,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         });
       }
       console.log("usersToSendNotification:", usersToSendNotification);
-      // console.log("editorContentValue:", editorContentValue);
+      console.log("editorContentValue:", editorContentValue);
 
       // Form Data
       const formData = new FormData();

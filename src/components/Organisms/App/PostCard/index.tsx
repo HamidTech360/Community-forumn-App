@@ -66,7 +66,7 @@ const PostCard = ({
   const router = useRouter();
   const [followed, setFollowed] = useState(false);
 
-  const [postReFetched, setPostComingIn] = useState(undefined);
+  const [postReFetched, setPostComingIn] = useState(post);
 
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookMarked] = useState(false);
@@ -88,6 +88,22 @@ const PostCard = ({
 
   useEffect(() => {
     if (post) {
+      // Set postReFetched value With post
+      setPostComingIn(post);
+
+      if (JSON.stringify(post?.likes)?.includes(user?._id)) {
+        setLiked(true);
+      } else {
+        setLiked(false);
+      }
+
+      if (user?.bookmarks?.includes(post?._id)) {
+        setBookMarked(true);
+      } else {
+        setBookMarked(false);
+      }
+
+      // Monitor for post and not postReFetched
       const postType = post?.post ? post?.post : post?.postBody;
       const postTypeLength = sanitizer(
         truncate(postType, truncateLength, { stripTags: true })
@@ -115,6 +131,7 @@ const PostCard = ({
 
   // Set Following Status
   useEffect(() => {
+    // Monitor for post and not postReFetched
     if (currentlyFollowing.includes(post?.author?._id)) {
       setFollowed(true);
     } else {
@@ -145,23 +162,6 @@ const PostCard = ({
       // dispatch(setBookMarkChangedModal(""));
     };
   }, [modalOpen]);
-
-  /* Don't Integrate with below useEffect. Leave them apart.
-   ** This fixes the bug  of displaying colored icon for both like & bookmark (on making new post) once there was a previous like or bookmark click.
-   */
-  useEffect(() => {
-    if (post?.likes?.includes(user?._id)) {
-      setLiked(true);
-    } else {
-      setLiked(false);
-    }
-
-    if (user?.bookmarks?.includes(post?._id)) {
-      setBookMarked(true);
-    } else {
-      setBookMarked(false);
-    }
-  }, [post, newFeed]);
 
   // Don't Integrate with above useEffect. Leave them apart.
   useEffect(() => {
@@ -243,20 +243,22 @@ const PostCard = ({
   };
 
   const likeIt = async bool => {
-    // Pre-Set Like State B4 Axios
-    const currentPostState = postReFetched
-      ? JSON.parse(JSON.stringify(postReFetched))
-      : JSON.parse(JSON.stringify(post));
+    // Init B4 Change. Copy Object Full Dept
+    const currentPostState = { ...JSON.parse(JSON.stringify(postReFetched)) };
 
-    const newPostState = { ...currentPostState };
-    if (!newPostState?.likes.includes(user?._id)) {
-      newPostState.likes.push(user?._id);
+    // Copy Object Full Dept For manipulation
+    const newPostState = { ...JSON.parse(JSON.stringify(currentPostState)) };
+    if (!JSON.stringify(newPostState?.likes)?.includes(user?._id)) {
+      newPostState.likes.push({
+        _id: user?._id,
+        firstName: user?.firstName,
+        lastName: user?.lastName
+      });
     }
     setPostComingIn(newPostState);
     setLiked(true);
 
     // Axios Like Post
-
     if (bool) {
       try {
         await axios.get(
@@ -269,30 +271,22 @@ const PostCard = ({
         );
       } catch (error) {
         // Reverse Like State Because of Axios Error
-        let filterNewPostState = newPostState?.likes;
-        if (newPostState?.likes.includes(user?._id)) {
-          filterNewPostState = newPostState?.likes.filter(person => {
-            return person !== user?._id;
-          });
-        }
-        newPostState.likes = filterNewPostState;
-        setPostComingIn(newPostState);
+        setPostComingIn(currentPostState);
         setLiked(false);
       }
     }
   };
 
   const unLikeIt = async bool => {
-    // Pre-Set Unlike State B4 Axios
-    const currentPostState = postReFetched
-      ? JSON.parse(JSON.stringify(postReFetched))
-      : JSON.parse(JSON.stringify(post));
+    // Init B4 Change. Copy Object Full Dept
+    const currentPostState = { ...JSON.parse(JSON.stringify(postReFetched)) };
 
-    const newPostState = { ...currentPostState };
+    // Copy Object Full Dept For manipulation
+    const newPostState = { ...JSON.parse(JSON.stringify(currentPostState)) };
     let filterNewPostState = newPostState?.likes;
-    if (newPostState?.likes.includes(user?._id)) {
+    if (JSON.stringify(newPostState?.likes)?.includes(user?._id)) {
       filterNewPostState = newPostState?.likes.filter(person => {
-        return person !== user?._id;
+        return person?._id !== user?._id;
       });
     }
     newPostState.likes = filterNewPostState;
@@ -301,7 +295,7 @@ const PostCard = ({
     setLiked(false);
 
     if (bool) {
-      // Like Post
+      // Axios Like Post
       try {
         await axios.delete(
           `${config.serverUrl}/api/likes/?type=${"feed"}&id=${post?._id}`,
@@ -312,13 +306,8 @@ const PostCard = ({
           }
         );
       } catch (error) {
-        // Reverse Like Because of Axios Error
-        const newPostState = { ...currentPostState };
-        if (!newPostState?.likes.includes(user?._id)) {
-          newPostState.likes.push(user?._id);
-        }
-
-        setPostComingIn(newPostState);
+        // Reverse Like State Because of Axios Error
+        setPostComingIn(currentPostState);
         setLiked(true);
       }
     }
@@ -535,7 +524,10 @@ const PostCard = ({
 
                 {/* Display Media */}
                 {post?.media?.length > 0 && (
-                  <MediaDisplay media={post.media} breakPoint={post?.media.length==1?1:2} />
+                  <MediaDisplay
+                    media={post.media}
+                    breakPoint={post?.media.length == 1 ? 1 : 2}
+                  />
                 )}
 
                 {seeMore && postLength > truncateLength ? (
@@ -561,10 +553,10 @@ const PostCard = ({
             )}
           </div>
         </Card.Body>
-        {post.likes.length > 0 && (
+        {postReFetched.likes.length > 0 && (
           <div className="text-muted d-flex align-items-center">
             <AiFillLike color="#086a6d" className="mx-2" />
-            <span>{likes(post.likes)}</span>
+            <span>{likes(postReFetched.likes)}</span>
           </div>
         )}
 
@@ -583,10 +575,13 @@ const PostCard = ({
                         handleLike();
                       }
                     }
-
                     if (item.name === "Share") {
                       toggleShare();
                       setSelectedShare(post);
+                    }
+                    if (item.name === "Comment") {
+                      setSelected(postReFetched);
+                      toggle();
                     }
                     if (item.name === "Bookmark") {
                       if (bookmarked) {
@@ -603,11 +598,7 @@ const PostCard = ({
                       style={{ marginLeft: "7px" }}
                       className="mx-2 text-secondary"
                     >
-                      {postReFetched
-                        ? postReFetched?._id === post?._id
-                          ? postReFetched?.likes?.length || 0
-                          : post?.likes?.length || 0
-                        : post?.likes?.length || 0}
+                      {postReFetched?.likes?.length}
                     </span>
                   )}
 
@@ -616,40 +607,12 @@ const PostCard = ({
                       <span
                         style={{ marginLeft: "7px" }}
                         className="mx-2 text-secondary"
-                        onClick={async () => {
-                          if (postReFetched) {
-                            if (postReFetched?._id === post?._id) {
-                              setSelected(postReFetched);
-                              toggle();
-                            } else {
-                              setSelected(post);
-                              toggle();
-                            }
-                          } else {
-                            setSelected(post);
-                            toggle();
-                          }
-                        }}
                       >
-                        {post?.comments?.length || 0}
+                        {postReFetched?.comments?.length || 0}
                       </span>
                       <span
                         className="d-none d-xl-block"
                         style={{ marginLeft: "7px" }}
-                        onClick={async () => {
-                          if (postReFetched) {
-                            if (postReFetched?._id === post?._id) {
-                              setSelected(postReFetched);
-                              toggle();
-                            } else {
-                              setSelected(post);
-                              toggle();
-                            }
-                          } else {
-                            setSelected(post);
-                            toggle();
-                          }
-                        }}
                       >
                         {item.name}
                       </span>

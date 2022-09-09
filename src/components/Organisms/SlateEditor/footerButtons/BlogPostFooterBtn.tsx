@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import config from "../../../../config";
 import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
-import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch, useSelector } from "@/redux/store";
@@ -12,32 +11,45 @@ import {
 } from "@/reduxFeatures/api/postSlice";
 import { setNewPost } from "@/reduxFeatures/api/postSlice";
 import {
+  // selectEmptyEditorContentValue,
   selectSlatePostToEdit,
   setSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
-import { serialize } from "../utils/serializer";
-import { selectMediaUpload } from "@/reduxFeatures/app/mediaUploadSlice";
+// import { serialize } from "../utils/serializer";
+import {
+  selectMediaUpload,
+  setMediaUpload,
+  setProgressBarNum,
+  setProgressVariant
+} from "@/reduxFeatures/app/mediaUploadSlice";
+import {
+  selectMentionedUsers,
+  setMentionedUsers
+} from "@/reduxFeatures/app/mentionsSlice";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
-  const router = useRouter();
-
   const [uploading, setUploading] = useState(false);
-  const [groupId, setGroupId] = useState(null);
   const dispatch = useDispatch();
   const showPostTitle = useSelector(selectPostTitle);
   const mediaUpload = useSelector(selectMediaUpload);
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const mentionedUsers = useSelector(selectMentionedUsers);
+  // const emptyEditorContentValue = useSelector(selectEmptyEditorContentValue);
 
   useEffect(() => {
     return () => {
       // Reset Content in SlatePostToEdit State when component unmount
       dispatch(setSlatePostToEdit(null));
-
       // Reset Post Title State when component unmount
       dispatch(setPostTitle(""));
+      // Reset Mentioned Users
+      dispatch(setMentionedUsers([]));
+      // Reset ProgressBar
+      dispatch(setProgressVariant("primary"));
+      dispatch(setProgressBarNum(0));
     };
   }, [dispatch]);
 
@@ -59,12 +71,6 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
       });
     }
   }, [categories, slatePostToEdit]);
-
-  useEffect(() => {
-    if (router.query.path == "timeline") {
-      setGroupId(router.query.id);
-    }
-  }, [router.query.id, router.query.path]);
 
   useEffect(() => {
     // Set Post Title On Load If slatePostToEdit
@@ -121,23 +127,44 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
     if (editorInnerHtml.trim() !== "") {
       setUploading(true);
 
-      const serializeNode = {
-        children: editorContentValue
-      };
-      const formData = new FormData();
-      const serializedHtml = serialize(serializeNode);
+      /*
+       ** Mentioned Users To Send Notification
+       ** Below Map() Is Important To Confirm The Mentioned User Hasn't Been Deleted
+       */
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const usersToSendNotification: any = [];
+      if (mentionedUsers.length > 0) {
+        await mentionedUsers.forEach(user => {
+          if (editorInnerHtml?.includes(user.userName)) {
+            usersToSendNotification.push(user?.userId);
+          }
+        });
+      }
+      console.log("usersToSendNotification:", usersToSendNotification);
+      console.log("editorContentValue:", editorContentValue);
 
+      // const serializeNode = {
+      //   children: editorContentValue
+      // };
+      const formData = new FormData();
+      // const serializedHtml = serialize(serializeNode);
+
+      formData.append("postBody", editorInnerHtml);
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
-      formData.append("postBody", serializedHtml.toString());
       formData.append("category", selectedCategory.tag);
       formData.append("postTitle", showPostTitle);
+      formData.append("slateState", editorContentValue);
+      formData.append("mentions", usersToSendNotification);
       // formData.append('groupId', groupId)
 
       if (!slatePostToEdit) {
         // New Post
         try {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("primary"));
+
           const response = await axios.post(
             `${config.serverUrl}/api/posts`,
             formData,
@@ -145,10 +172,21 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 "Content-Type": "multipart/form-data"
+              },
+              // Axios Progress
+              onUploadProgress: function (progressEvent: {
+                loaded: number;
+                total: number;
+              }) {
+                const percentCompleted = Math.round(
+                  (progressEvent.loaded * 100) / progressEvent.total
+                );
+                // Update ProgressBar
+                dispatch(setProgressBarNum(percentCompleted));
               }
             }
           );
-          console.log(response.data);
+          // console.log(response.data);
 
           toast.success("Post uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,
@@ -157,9 +195,18 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
 
           // Auto update Blog Post in /explore
           dispatch(setNewPost(response.data.post));
+          // Reset Content in SlatePostToEdit State
+          dispatch(setSlatePostToEdit(null));
+          // Reset Mentioned Users
+          dispatch(setMentionedUsers([]));
+          // Reset Uploaded Media Data
+          dispatch(setMediaUpload([]));
           setUploading(false);
           dispatch(setShowPostModal(false));
         } catch (error) {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("danger"));
+
           // console.log(error.response?.data);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a post", {
@@ -177,17 +224,27 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
       } else {
         // Edit Post
         try {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("primary"));
+
           await axios.put(
             `${config.serverUrl}/api/posts/${slatePostToEdit?._id}`,
-            {
-              postTitle: showPostTitle,
-              postBody: serializedHtml,
-              groupId,
-              category: selectedCategory.tag
-            },
+            formData,
             {
               headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "Content-Type": "multipart/form-data"
+              },
+              // Axios Progress
+              onUploadProgress: function (progressEvent: {
+                loaded: number;
+                total: number;
+              }) {
+                const percentCompleted = Math.round(
+                  (progressEvent.loaded * 100) / progressEvent.total
+                );
+                // Update ProgressBar
+                dispatch(setProgressBarNum(percentCompleted));
               }
             }
           );
@@ -200,9 +257,16 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
 
           // Auto update Blog Post in /explore
           dispatch(setNewPost({ postEdited: Math.random() * 50 }));
+          // Reset Content in SlatePostToEdit State
+          dispatch(setSlatePostToEdit(null));
+          // Reset Mentioned Users
+          dispatch(setMentionedUsers([]));
           setUploading(false);
           dispatch(setShowPostModal(false));
         } catch (error) {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("danger"));
+
           // console.log(error.response?.data);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a post", {

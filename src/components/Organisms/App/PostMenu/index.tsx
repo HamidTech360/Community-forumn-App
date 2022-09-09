@@ -126,9 +126,6 @@ export const PostMenu = ({
   handleDeletePost,
   changeFollowingStatus
 }) => {
-  const router = useRouter();
-  console.log("router.asPath", router.asPath);
-  // const showCommentModal = useSelector(selectShowCommentModal);
   return (
     <NavDropdown
       drop="start"
