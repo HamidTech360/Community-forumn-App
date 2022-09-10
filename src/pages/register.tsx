@@ -37,9 +37,9 @@ const Register = () => {
           autoClose: 7000,
           toastId: "2"
         });
-        localStorage.setItem('accessToken',response.data.accessToken )
+       
        setTimeout(()=>{
-        router.push("/interests");
+        router.push("/login");
        }, 7000)
       } catch (error) {
         if (axios.isAxiosError(error)) {

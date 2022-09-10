@@ -92,10 +92,7 @@ const Feed = () => {
   }, [paginatedData]);
 
   useEffect(()=>{
-    // setSelected(posts[0])
-    // toggle()
    const query = router.query.active
-   console.log(query)
    if(query){
     console.log(query);
     (async function(){
