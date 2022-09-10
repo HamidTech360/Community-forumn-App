@@ -41,7 +41,6 @@ const MediaDisplay = ({ media: mediaComingIn, breakPoint }) => {
       >
         <Masonry>
           {images?.map((img, index) => (
-   // <span key={index}>
             <>
               {populateAcceptedImagesTypes.includes(
                 `.${img.split(".")[img.split(".").length - 1].toLowerCase()}`
@@ -53,7 +52,11 @@ const MediaDisplay = ({ media: mediaComingIn, breakPoint }) => {
                   alt="Uploaded Media"
                   width={"100%"}
                   height={"100%"}
-                  style={{ cursor: "pointer", objectFit: "cover", maxHeight:'500px' }}
+                  style={{
+                    cursor: "pointer",
+                    objectFit: "contain",
+                    maxHeight: "500px"
+                  }}
                   onClick={() => {
                     dispatch(
                       setImageModalImg({
@@ -78,8 +81,6 @@ const MediaDisplay = ({ media: mediaComingIn, breakPoint }) => {
                 </video>
               ) : null}
             </>
-            // </span>
-
           ))}
         </Masonry>
       </ResponsiveMasonry>
