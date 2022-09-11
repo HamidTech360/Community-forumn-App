@@ -81,6 +81,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       }
       console.log("usersToSendNotification:", usersToSendNotification);
       console.log("editorContentValue:", editorContentValue);
+      console.log("editorInnerHtml:", editorInnerHtml);
 
       // Form Data
       const formData = new FormData();

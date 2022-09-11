@@ -11,45 +11,88 @@ import {
   // setAcceptingFiles,
   // selectAcceptingFiles,
 } from "@/reduxFeatures/app/mediaUploadSlice";
-import { selectAcceptedMediaTypes } from "@/reduxFeatures/app/appSlice";
+import {
+  selectAcceptedMediaTypes
+  // selectPopulateAcceptedImagesTypes,
+  // selectPopulateAcceptedVideosTypes
+} from "@/reduxFeatures/app/appSlice";
 import ThumbImage from "./ThumbImage";
 const MediaUpload = () => {
   const dispatch = useDispatch();
   const acceptedMediaTypes = useSelector(selectAcceptedMediaTypes);
   const uploadedMedia = useSelector(selectMediaUpload);
-  // const [acceptingFiles, setAcceptingFiles] = useState([]);
+  // const populateAcceptedImagesTypes = useSelector(
+  //   selectPopulateAcceptedImagesTypes
+  // );
+  // const populateAcceptedVideosTypes = useSelector(
+  //   selectPopulateAcceptedVideosTypes
+  // );
   const [rejectingFiles, setRejectingFiles] = useState([]);
+  const maxFilesAccepted = 3;
+  const nameLength = 25;
+  // const [mimeSize, setMimeSize] = useState(0);
 
   const onDrop = useCallback((acceptedFiles, fileRejections) => {
-    dispatch(
-      setMediaUpload([
-        ...uploadedMedia,
-        ...acceptedFiles.map(file =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file)
-            /* NOTE:
-             ** Make sure to revoke the data uri's Wherever you are using this Component to avoid memory leaks Using...
-             ** "uploadedMedia".forEach(file => URL.revokeObjectURL(file.preview));
-             ** Am not revoking it here to prevent broken image in Slate Editor & this component, while moving from Slate to this component to select more media
-             */
-          })
+    const media2Upload = [
+      ...uploadedMedia,
+      ...acceptedFiles.map(file =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file)
+          /* NOTE:
+           ** Make sure to revoke the data uri's Wherever you are using this Component to avoid memory leaks Using...
+           ** "uploadedMedia".forEach(file => URL.revokeObjectURL(file.preview));
+           ** Am not revoking it here to prevent broken image in Slate Editor & this component, while moving from Slate to this component to select more media
+           */
+        })
+      )
+    ];
+
+    if (media2Upload.length <= maxFilesAccepted) {
+      dispatch(setMediaUpload(media2Upload));
+    } else {
+      dispatch(
+        setMediaUpload(
+          media2Upload.slice(media2Upload.length - maxFilesAccepted)
         )
-      ])
-    );
+      );
+    }
 
     setRejectingFiles(pre => [...pre, ...fileRejections]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function nameLengthValidator(file: File) {
+    // const fileSplit = file.name.split(".");
+    // const fileSplitType = fileSplit[fileSplit.length - 1].toLowerCase();
+    // console.log("fileSplitType:", fileSplitType);
+    // // console.log("+++:", populateAcceptedImagesTypes.includes(fileSplitType));
+
+    // if (populateAcceptedImagesTypes.includes(fileSplitType)) {
+    //   setMimeSize(3000 * 1024);
+    // } else if (populateAcceptedVideosTypes.includes(fileSplitType)) {
+    //   setMimeSize(30000 * 1024);
+    //   //
+    // }
+
+    if (file.name.length > nameLength) {
+      return {
+        code: "name-too-large",
+        message: `Name is more than ${nameLength} characters`
+      };
+    }
+
+    return null;
+  }
 
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
     useDropzone({
       onDrop,
-      // validator: nameLengthValidator,
-      maxFiles: 10,
+      validator: nameLengthValidator,
+      maxFiles: maxFilesAccepted,
       accept: acceptedMediaTypes,
-      maxSize: 300000 * 1024 //3000KB || 3MB
+      maxSize: 30000 * 1024 //30000KB || 30MB
+      // maxSize: mimeSize
     });
-  // console.log("isDragAccept:", isDragAccept);
 
   const style = useMemo(
     () => ({
@@ -87,20 +130,25 @@ const MediaUpload = () => {
         </div>
       </div>
       <br />
-      {uploadedMedia.length > 0 && (
-        <aside className={styles.thumbsContainer}>
-          {/* Thumbnails Image */}
-          <ThumbImage uploadedMedia={uploadedMedia} />
-        </aside>
-      )}
-      {fileRejectionItems.length > 0 && (
-        <aside className="mt-3 row col-12">
-          <h6>
-            <u> Rejected files </u>
-          </h6>
-          <ul>{fileRejectionItems}</ul>
-        </aside>
-      )}
+      <div className="container">
+        {uploadedMedia.length > 0 && (
+          <aside className={styles.thumbsContainer}>
+            {/* Thumbnails Image */}
+            <ThumbImage
+              uploadedMedia={uploadedMedia}
+              fromWhere="uploadedMedia"
+            />
+          </aside>
+        )}
+        {fileRejectionItems.length > 0 && (
+          <aside className="mt-3 row col-12">
+            <h6>
+              <u> Rejected files </u>
+            </h6>
+            <ul>{fileRejectionItems}</ul>
+          </aside>
+        )}
+      </div>
     </div>
   );
 };

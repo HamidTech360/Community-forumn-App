@@ -1,6 +1,6 @@
 import { useSelected, useFocused } from "slate-react";
 import Icon from "../../common/Icon";
-import useResize from "../../utils/customHooks/useResize.js";
+import useResize from "../../utils/customHooks/useResize";
 import styles from "../../../../../styles/SlateEditor/Embed_Slate.module.scss";
 import styles2 from "../../../../../styles/SlateEditor/button_Slate.module.scss";
 

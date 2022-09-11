@@ -187,7 +187,6 @@ export const getBlock = props => {
       return <ul {...attributes}>{children}</ul>;
     case "link":
       return <Link {...props} />;
-
     case "image":
       return <Image {...props} alt="image" />;
     case "video":
@@ -205,10 +204,6 @@ const Mention = ({ attributes, children, element }) => {
   const dispatch = useDispatch();
   const mentionedUsers = useSelector(selectMentionedUsers);
 
-  // console.log("attributes:", attributes);
-  // console.log("children:", children);
-  // console.log("element:", element);
-
   useEffect(() => {
     // Only add user  to state if not  already among the list
     let userAlreadyMentioned = false;
@@ -225,7 +220,6 @@ const Mention = ({ attributes, children, element }) => {
     <span
       {...attributes}
       contentEditable={false}
-      // data-cy={`mention-${element?.character?.replace(" ", "-")}`}
       data-cy={`mention-${element?.character?.userName?.replaceAll(" ", "-")}`}
       style={{
         padding: "3px 3px 2px",
@@ -239,7 +233,6 @@ const Mention = ({ attributes, children, element }) => {
         boxShadow: selected && focused ? "0 0 0 2px #B4D5FF" : "none"
       }}
     >
-      {/* {children}@{element?.character} */}
       {children}@{element?.character?.userName}
     </span>
   );

@@ -2,20 +2,29 @@ import React, { useRef, useState } from "react";
 import Button from "../../common/Button";
 import Icon from "../../common/Icon";
 import { isBlockActive } from "../../utils/SlateUtilityFunctions";
+import { insertEmbed } from "../../utils/embed.js";
 import { Transforms } from "slate";
 import { ReactEditor } from "slate-react";
 
 import styles from "../../../../../styles/SlateEditor/Embed_Slate.module.scss";
 import { Modal, Button as BsBtn, Form } from "react-bootstrap";
 import MediaUpload from "@/components/Organisms/MediaUpload";
-import { setMediaUpload } from "@/reduxFeatures/app/mediaUploadSlice";
+import PostImageUpload from "@/components/Organisms/MediaUpload/PostImageUpload";
+import {
+  selectPostImageUpload,
+  setMediaUpload,
+  setPostImageUpload
+} from "@/reduxFeatures/app/mediaUploadSlice";
 import { useDispatch, useSelector } from "@/redux/store";
 import { selectSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 
 const Embed = ({ editor, format }) => {
-  const urlInputRef = useRef();
+  const urlInputRef = useRef<HTMLDivElement>(null);
+  // const embedTitle = useRef<HTMLInputElement>(null);
+  // const embedAddress = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
   const editSlatePost = useSelector(selectSlatePostToEdit);
+  const uploadedPostImage = useSelector(selectPostImageUpload);
 
   const [editorSelection, setEditorSelection] = useState({
     anchor: {
@@ -33,6 +42,7 @@ const Embed = ({ editor, format }) => {
   const handleClose = () => {
     // Clear Uploaded Media
     dispatch(setMediaUpload([]));
+    dispatch(setPostImageUpload([]));
     setShow(false);
   };
 
@@ -54,17 +64,23 @@ const Embed = ({ editor, format }) => {
   const submitEmbed = e => {
     e.preventDefault();
 
-    // let embedTitleValue = embedTitle.current.value;
-    // let embedAddressValue = embedAddress.current.value;
+    uploadedPostImage.forEach((file: File & { preview: string }) => {
+      const embedTitleValue = file.name;
+      const embedAddressValue = file.preview;
 
-    // editor.selection && Transforms.select(editor, editor.selection);
-    // editor.selection && ReactEditor.focus(editor);
+      editor.selection && Transforms.select(editor, editor.selection);
+      editor.selection && ReactEditor.focus(editor);
 
-    // insertEmbed(
-    //   editor,
-    //   { alt: embedTitleValue, url: embedAddressValue },
-    //   format
-    // );
+      insertEmbed(
+        editor,
+        { alt: embedTitleValue, url: embedAddressValue },
+        format
+      );
+    });
+
+    // Clear Post Image
+    dispatch(setPostImageUpload([]));
+    // Close Modal
     setShow(prev => !prev);
   };
   // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -90,48 +106,41 @@ const Embed = ({ editor, format }) => {
         <Modal.Header
           style={{
             border: "none",
-            backgroundColor: "transparent",
-            marginBottom: "-1rem"
+            backgroundColor: "lightgray"
           }}
           closeButton
         >
-          <Modal.Title>
-            Upload <small> image/video </small> <Icon icon={format} />
+          <Modal.Title style={{ fontWeight: "700" }}>
+            Media Upload <Icon icon="media" />
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={submitEmbed}>
           <Modal.Body>
-            <Form.Group className="mb-3" controlId="formBasicAlt">
-              <div>
-                {/* Media Upload */}
-                <MediaUpload />
-                {/* <p
-                  style={{ textAlign: "center", opacity: "0.7", width: "100%" }}
-                >
-                  OR
-                </p> */}
-              </div>
-            </Form.Group>
+            <div style={{ maxHeight: "450px", overflowY: "auto" }}>
+              <Modal.Title style={{ opacity: "0.8" }}>
+                Feature <small> image/video </small> <Icon icon="media" />
+              </Modal.Title>
 
-            {/* <Form.Group className="mb-3" controlId="formBasicAlt">
-              <Form.Label style={{ fontWeight: "600" }}>Alt:</Form.Label>
-              <Form.Control
-                ref={embedTitle}
-                type="text"
-                placeholder="Title"
-                required
-              />
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicAlt">
+                <div>
+                  {/* Media Upload */}
+                  <MediaUpload />
+                </div>
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicLink">
-              <Form.Label style={{ fontWeight: "600" }}>Link:</Form.Label>
-              <Form.Control
-                ref={embedAddress}
-                type="url"
-                placeholder="URL"
-                required
-              />
-            </Form.Group> */}
+              <h4 style={{ textAlign: "center", opacity: "0.8" }}>and/or</h4>
+
+              <Modal.Title style={{ opacity: "0.8", marginBottom: "1rem" }}>
+                Post <small> image </small> <Icon icon={format} />
+              </Modal.Title>
+
+              <Form.Group className="mb-3" controlId="formBasicAlt2">
+                <div>
+                  {/* Post Image Upload */}
+                  <PostImageUpload />
+                </div>
+              </Form.Group>
+            </div>
           </Modal.Body>
 
           <Modal.Footer
