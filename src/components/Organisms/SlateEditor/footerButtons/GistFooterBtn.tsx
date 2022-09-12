@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import {
+  Button,
+  ButtonGroup,
+  Dropdown,
+  DropdownButton,
+  Form
+} from "react-bootstrap";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch, useSelector } from "@/redux/store";
@@ -17,11 +23,12 @@ import {
   setSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
 import { serialize } from "../utils/serializer";
+import countries from "@/data/countries";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function GistFooterBtn({ editorID, editorContentValue }: any) {
   const gistIsLoading = useSelector(selectGistIsLoading);
-
+  const [country, setCountry] = useState("");
   const dispatch = useDispatch();
   const showGistTitle = useSelector(selectGistTitle);
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
@@ -118,7 +125,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
               title: showGistTitle,
               post: serializedHtml,
               categories: selectedCategory,
-              country: "Ghana"
+              country: country
             },
             {
               headers: {
@@ -155,7 +162,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
               title: showGistTitle,
               post: serializedHtml,
               categories: selectedCategory,
-              country: "Ghana"
+              country: country
             },
             {
               headers: {
@@ -211,20 +218,19 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
           ))}
         </DropdownButton>
       </div>
-      <div className="">
-        <DropdownButton
-          as={ButtonGroup}
-          title="Country"
-          id="bg-nested-dropdown-2"
-          variant="outline-secondary"
-          className="m-1"
-        >
-          <Dropdown.Item eventKey="1" variant="outline-secondary">
-            Dropdown link 1
-          </Dropdown.Item>
-          <Dropdown.Item eventKey="2">Dropdown link 2</Dropdown.Item>
-        </DropdownButton>
-      </div>
+
+      <Form.Select
+        style={{ width: 120 }}
+        onChange={e => setCountry(e.target.value)}
+      >
+        {countries.map(country => (
+          <option key={country.name} value={country.name}>
+            {country.emoji}
+            {country.name}
+          </option>
+        ))}
+      </Form.Select>
+
       <div className="col-12 col-md-2 col-lg-2 ms-auto me-2 px-0 d-grid">
         <Button
           variant="outline-primary"

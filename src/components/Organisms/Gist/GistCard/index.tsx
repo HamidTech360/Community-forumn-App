@@ -39,7 +39,6 @@ import Avatar from "@/components/Atoms/Avatar";
 // }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const GistCard = ({ gist, primary, trimmed }: any) => {
-  console.log(gist);
   const sanitizer = DOMPurify.sanitize;
   const router = useRouter();
   const dispatch = useDispatch();
@@ -169,81 +168,78 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
   };
 
   return (
-    <div className="container-fluid">
-      <Card
-        className="row mt-4 p-3 w-100"
-        style={{
-          borderRadius: "10px"
-        }}
-      >
-        <Card.Title>
-          <div className="d-flex g-2">
+    <Card
+      className="mt-4 p-3 w-100"
+      style={{
+        borderRadius: "10px"
+      }}
+    >
+      <Card.Title className="d-flex">
+        <div className="d-flex g-2">
+          <div>
+            <Avatar
+              src={gist?.author?.images?.avatar}
+              name={gist?.author?.firstName}
+            />
+          </div>
+
+          <div className="d-flex flex-column justify-content-center me-auto">
+            <small
+              className={`${styles.title} text-secondary text-capitalize `}
+              onClick={redirectPage}
+              style={{ cursor: "pointer", fontSize: "14px" }}
+            >
+              Started by: {gist?.author?.firstName} {gist?.author?.lastName}
+            </small>
             <div>
-              <Avatar
-                src={gist?.author?.images?.avatar}
-                name={gist?.author?.firstName}
-              />
-            </div>
-
-            <div className="d-flex flex-column justify-content-center me-auto">
-              <small
-                className={`${styles.title} text-secondary text-capitalize `}
-                onClick={redirectPage}
-                style={{ cursor: "pointer", fontSize: "14px" }}
-              >
-                Started by: {gist?.author?.firstName} {gist?.author?.lastName}
-              </small>
-              <div>
-                <h5 className={`text-primary mt-1 ${styles.title}`}>
-                  {gist?.title?.replace("&amp;", "&")}
-                </h5>
-              </div>
-            </div>
-
-            <div className=" ms-auto p-0">
-              {/* Menu Dots */}
-              <PostMenu
-                user={user}
-                currentlyFollowing={currentlyFollowing}
-                post={gist}
-                handleEditPost={handleEditPost}
-                handleDeletePost={handleDeletePost}
-                changeFollowingStatus={changeFollowingStatus}
-              />
+              <h5 className={`text-primary mt-1 ${styles.title}`}>
+                {gist?.title?.replace("&amp;", "&")}
+              </h5>
             </div>
           </div>
-        </Card.Title>
-        <Card.Body
-          className="px-3 py-0 mt-3"
-          // align="justify"
-        >
-          {gist?.post && (
-            <Card.Body
-              dangerouslySetInnerHTML={{
-                __html: sanitizer(
-                  trimmed ? truncate(gist.post, 100) : truncate(gist.post)
-                )
-              }}
-              style={{
-                marginTop: "-1rem",
-                lineHeight: "1.3rem",
-                whiteSpace: "pre-line"
-              }}
-            />
-          )}
+        </div>
+        <div className="ms-auto">
+          {/* Menu Dots */}
+          <PostMenu
+            user={user}
+            currentlyFollowing={currentlyFollowing}
+            post={gist}
+            handleEditPost={handleEditPost}
+            handleDeletePost={handleDeletePost}
+            changeFollowingStatus={changeFollowingStatus}
+          />
+        </div>
+      </Card.Title>
+      <Card.Body
+        className="px-3 py-0 mt-3"
+        // align="justify"
+      >
+        {gist?.post && (
+          <Card.Body
+            dangerouslySetInnerHTML={{
+              __html: sanitizer(
+                trimmed ? truncate(gist.post, 100) : truncate(gist.post)
+              )
+            }}
+            style={{
+              marginTop: "-1rem",
+              lineHeight: "1.3rem",
+              whiteSpace: "pre-line"
+            }}
+          />
+        )}
 
-          <PostIsEdited post={gist} />
+        <PostIsEdited post={gist} />
 
-          {!primary && (
-            <div className="d-flex justify-content-end mt-2">
-              <Link href={`/gist/${gist?._id}`} passHref>
-                <Button variant="primary">Join conversation</Button>
-              </Link>
-            </div>
-          )}
-        </Card.Body>
-      </Card>
-    </div>
+        {!primary && (
+          <div className="d-flex justify-content-end mt-2">
+            <Link href={`/gist/${gist?._id}`} passHref>
+              <Button variant="primary">Join conversation</Button>
+            </Link>
+          </div>
+        )}
+      </Card.Body>
+    </Card>
   );
 };
 
