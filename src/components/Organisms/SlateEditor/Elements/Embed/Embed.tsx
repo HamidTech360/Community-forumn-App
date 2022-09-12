@@ -7,10 +7,15 @@ import { ReactEditor } from "slate-react";
 
 import styles from "../../../../../styles/SlateEditor/Embed_Slate.module.scss";
 import { Modal, Button as BsBtn, Form } from "react-bootstrap";
-import Uploader2 from "@/components/Organisms/DragAndDrop2/Uploader2";
+import MediaUpload from "@/components/Organisms/MediaUpload";
+import { setMediaUpload } from "@/reduxFeatures/app/mediaUploadSlice";
+import { useDispatch, useSelector } from "@/redux/store";
+import { selectSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 
 const Embed = ({ editor, format }) => {
   const urlInputRef = useRef();
+  const dispatch = useDispatch();
+  const editSlatePost = useSelector(selectSlatePostToEdit);
 
   const [editorSelection, setEditorSelection] = useState({
     anchor: {
@@ -25,7 +30,12 @@ const Embed = ({ editor, format }) => {
 
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    // Clear Uploaded Media
+    dispatch(setMediaUpload([]));
+    setShow(false);
+  };
+
   const handleShow = () => {
     // If editor.selection === null, then replace null with editorSelection
     if (editor.selection) {
@@ -69,12 +79,14 @@ const Embed = ({ editor, format }) => {
           }}
           format={format}
           onClick={handleShow}
+          // Disable Media Upload While Editing Post
+          disabled={editSlatePost ? true : false}
         >
           <Icon icon={format} />
         </Button>
       </div>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} backdrop="static">
         <Modal.Header
           style={{
             border: "none",
@@ -84,15 +96,16 @@ const Embed = ({ editor, format }) => {
           closeButton
         >
           <Modal.Title>
-            Add {format} <Icon icon={format} />
+            {/* Add {format} <Icon icon={format} /> */}
+            Add <small> image/video </small> <Icon icon={format} />
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={submitEmbed}>
           <Modal.Body>
             <Form.Group className="mb-3" controlId="formBasicAlt">
               <div>
-                {/* <DragAndDropFiles format={format} /> */}
-                <Uploader2 />
+                {/* Media Upload */}
+                <MediaUpload />
                 {/* <p
                   style={{ textAlign: "center", opacity: "0.7", width: "100%" }}
                 >
@@ -127,11 +140,12 @@ const Embed = ({ editor, format }) => {
               border: "none",
               backgroundColor: "transparent",
               marginTop: "-1rem",
-              marginRight: "2.5rem"
+              marginRight: "2.5rem",
+              marginLeft: "2.5rem"
             }}
           >
-            <BsBtn variant="secondary" onClick={handleClose}>
-              Cancel
+            <BsBtn variant="danger" className="me-auto" onClick={handleClose}>
+              Clear <small>(all)</small>
             </BsBtn>
             <BsBtn variant="primary" type="submit">
               Save

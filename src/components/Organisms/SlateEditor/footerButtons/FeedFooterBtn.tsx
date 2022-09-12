@@ -10,9 +10,15 @@ import {
   setSlatePostToEdit,
   selectSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
-import { serialize } from "../utils/serializer";
+// import { serialize } from "../utils/serializer";
 import { setModalCardPostEdited } from "@/reduxFeatures/app/postModalCardSlice";
-import { selectMediaUpload } from "@/reduxFeatures/app/mediaUpload";
+import {
+  selectMediaUpload,
+  setMediaUpload,
+  setProgressBarNum,
+  setProgressVariant
+  // setProgressBarNum
+} from "@/reduxFeatures/app/mediaUploadSlice";
 import {
   selectMentionedUsers,
   setMentionedUsers
@@ -31,8 +37,12 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       dispatch(setSlatePostToEdit(null));
       // Reset Mentioned Users
       dispatch(setMentionedUsers([]));
+      // Reset ProgressBar
+      dispatch(setProgressVariant("primary"));
+      dispatch(setProgressBarNum(0));
     };
-  }, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const createPost = async e => {
     e.preventDefault();
@@ -52,24 +62,25 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       return;
     }
 
-    console.log("editorContentValue:", editorContentValue);
-    console.log("editorInnerHtml:", editorInnerHtml);
+    // console.log("editorContentValue:", editorContentValue);
+    // console.log("editorInnerHtml:", editorInnerHtml);
     if (editorInnerHtml.trim() !== "") {
       setUploading(true);
 
-      // Serialize Html
-      const serializeNode = {
-        children: editorContentValue
-      };
+      // // Serialize Html
+      // const serializeNode = {
+      //   children: editorContentValue
+      // };
 
-      const serializedHtml: string = serialize(serializeNode);
-      console.log("serializedHtml:", serializedHtml);
+      // const serializedHtml: string = serialize(serializeNode);
+      // console.log("serializedHtml:", serializedHtml);
 
       /*
        ** Mentioned Users To Send Notification
        ** Below Map() Is Important To Confirm The Mentioned User Hasn't Been Deleted
        */
-      const usersToSendNotification = [];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const usersToSendNotification: any = [];
       if (mentionedUsers.length > 0) {
         await mentionedUsers.forEach(user => {
           if (editorInnerHtml?.includes(user.userName)) {
@@ -78,18 +89,24 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         });
       }
       console.log("usersToSendNotification:", usersToSendNotification);
+      // console.log("editorContentValue:", editorContentValue);
 
       // Form Data
       const formData = new FormData();
 
+      formData.append("post", editorInnerHtml);
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
-      formData.append("post", serializedHtml.toString());
+      formData.append("slateState", editorContentValue);
+      formData.append("mentions", usersToSendNotification);
 
       if (!slatePostToEdit) {
         // New Post
         try {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("primary"));
+
           const response = await axios.post(
             `${config.serverUrl}/api/feed`,
             formData,
@@ -97,6 +114,17 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 "Content-Type": "multipart/form-data"
+              },
+              // Axios Progress
+              onUploadProgress: function (progressEvent: {
+                loaded: number;
+                total: number;
+              }) {
+                const percentCompleted = Math.round(
+                  (progressEvent.loaded * 100) / progressEvent.total
+                );
+                // Update ProgressBar
+                dispatch(setProgressBarNum(percentCompleted));
               }
             }
           );
@@ -107,9 +135,18 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
 
           // Auto update & Rerender Feed Post
           dispatch(setNewFeed(response.data.feed));
+          // Reset Content in SlatePostToEdit State
+          dispatch(setSlatePostToEdit(null));
+          // Reset Mentioned Users
+          dispatch(setMentionedUsers([]));
+          // Reset Uploaded Media Data
+          dispatch(setMediaUpload([]));
           setUploading(false);
           dispatch(setShowCreatePostModal(false));
         } catch (error) {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("danger"));
+
           // console.error(error);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
@@ -127,12 +164,26 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       } else {
         // Edit Post
         try {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("primary"));
+
           await axios.put(
             `${config.serverUrl}/api/feed/${slatePostToEdit?._id}`,
             formData,
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`
+              },
+              // Axios Progress
+              onUploadProgress: function (progressEvent: {
+                loaded: number;
+                total: number;
+              }) {
+                const percentCompleted = Math.round(
+                  (progressEvent.loaded * 100) / progressEvent.total
+                );
+                // Update ProgressBar
+                dispatch(setProgressBarNum(percentCompleted));
               }
             }
           );
@@ -144,10 +195,17 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           // Auto update & Rerender Feed Post
           dispatch(setNewFeed({ postEdited: Math.random() * 50 }));
           // Auto Update & Rerender modalCard Post While Opened
-          dispatch(setModalCardPostEdited(serializedHtml));
+          dispatch(setModalCardPostEdited(editorInnerHtml));
+          // Reset Content in SlatePostToEdit State
+          dispatch(setSlatePostToEdit(null));
+          // Reset Mentioned Users
+          dispatch(setMentionedUsers([]));
           setUploading(false);
           dispatch(setShowCreatePostModal(false));
         } catch (error) {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("danger"));
+
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
               position: toast.POSITION.TOP_RIGHT,

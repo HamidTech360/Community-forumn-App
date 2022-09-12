@@ -25,6 +25,7 @@ import PostIsEdited from "@/components/Templates/PostIsEdited";
 import { PostMenu } from "../../App/PostMenu";
 
 import Avatar from "@/components/Atoms/Avatar";
+import MediaDisplay from "../../App/MediaMasonry";
 
 // interface IGist {
 //   gist: {
@@ -137,19 +138,13 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
           localStorage.removeItem("accessToken");
         }
       })();
-    } catch (error) {
-      // Revert on axios  failure
-      // console.error("follow Error:", error);
-    }
+    } catch (error) {}
   };
 
   const handleUnFollow = async id => {
-    // Preset following
-
     try {
       await deleteSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
 
-      // Update Auth User State
       (async function () {
         try {
           const response = await axios.get(`${config.serverUrl}/api/auth`, {

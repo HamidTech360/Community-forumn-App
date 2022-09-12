@@ -16,6 +16,7 @@ import {
   setSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
 import { serialize } from "../utils/serializer";
+import { selectMediaUpload } from "@/reduxFeatures/app/mediaUploadSlice";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
@@ -25,7 +26,7 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
   const [groupId, setGroupId] = useState(null);
   const dispatch = useDispatch();
   const showPostTitle = useSelector(selectPostTitle);
-
+  const mediaUpload = useSelector(selectMediaUpload);
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -120,37 +121,34 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
     if (editorInnerHtml.trim() !== "") {
       setUploading(true);
 
-      // Serialize Html
       const serializeNode = {
         children: editorContentValue
       };
-      // let edited =
-      //   '<span><small style="color: gray; font-size: 12px">(edited)</small><span>';
-
+      const formData = new FormData();
       const serializedHtml = serialize(serializeNode);
 
-      // console.log("editorContentValue:", editorContentValue);
-      // console.log("serializedHtml:", serializedHtml);
-      // console.log("slatePostToEdit:", slatePostToEdit);
+      mediaUpload.map((file: File) => {
+        formData.append("media", file);
+      });
+      formData.append("postBody", serializedHtml.toString());
+      formData.append("category", selectedCategory.tag);
+      formData.append("postTitle", showPostTitle);
+      // formData.append('groupId', groupId)
 
       if (!slatePostToEdit) {
         // New Post
         try {
           const response = await axios.post(
             `${config.serverUrl}/api/posts`,
-            {
-              postTitle: showPostTitle,
-              postBody: serializedHtml,
-              groupId,
-              category: selectedCategory.tag
-            },
+            formData,
             {
               headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "Content-Type": "multipart/form-data"
               }
             }
           );
-          // console.log(response.data.post);
+          console.log(response.data);
 
           toast.success("Post uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,

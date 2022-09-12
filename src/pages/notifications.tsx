@@ -77,6 +77,8 @@ const Notifications = () => {
         router.push(`/gist/${item.itemId}`);
       } else if (item.forItem === "follow") {
         router.push(`/profile/${item.itemId}`);
+      }else if(item.forItem == "feed"){
+        router.push(`/feed?active=${item.itemId}`);
       }
     } catch (error) {
       console.log(error.response?.data);
