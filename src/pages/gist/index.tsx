@@ -36,6 +36,7 @@ import {
 // import Editor from "@/components/Organisms/SlateEditor/Editor";
 import InfiniteScroll from "react-infinite-scroll-component";
 import GistPostEditorModal from "@/components/Organisms/App/ModalPopUp/GistPostEditorModal";
+import countries from "@/data/countries";
 
 const Gist = () => {
   const dispatch = useDispatch();
@@ -98,7 +99,6 @@ const Gist = () => {
   }, [paginatedData]);
 
   const filterCategory = item => {
-    // console.log("item.name", item.name);
     setActiveGist(item.name);
 
     if (item.name === "All") {
@@ -108,6 +108,20 @@ const Gist = () => {
     const filtered = allGists.filter(gist => gist.categories === item.name);
     if (filtered.length <= 0) {
       alert(`No Item in ${item.name} category`);
+    }
+
+    setFilteredGists(filtered);
+  };
+
+  const filterCountry = (country: string) => {
+    if (country === "all") {
+      return setFilteredGists(allGists);
+    }
+
+    const filtered = allGists.filter(gist => gist.country === country);
+    console.log(filtered);
+    if (filtered.length <= 0) {
+      alert(`No Item in ${country}`);
     }
 
     setFilteredGists(filtered);
@@ -192,8 +206,18 @@ const Gist = () => {
                   Create Gist
                 </span>
               </Button>
-              <select className="outline-primary me-3">
-                <option>Canada</option>
+              <select
+                onChange={e => filterCountry(e.target.value)}
+                className="outline-primary me-3"
+                style={{ maxHeight: 200, width: 150, overflowY: "scroll" }}
+              >
+                <option value="all">All countries</option>
+                {countries.map(country => (
+                  <option key={country.name} value={country.name}>
+                    {country.emoji}
+                    {country.name}
+                  </option>
+                ))}
               </select>
             </div>
             {isFetching && (
