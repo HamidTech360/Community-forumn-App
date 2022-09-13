@@ -2,9 +2,8 @@ const toolbarGroupsBottom = [
   [
     {
       id: 100,
-      format: "media",
-      // type: "embed",
-      type: "embedMedia",
+      format: "image",
+      type: "embed",
       toolTip: ""
     }
   ],

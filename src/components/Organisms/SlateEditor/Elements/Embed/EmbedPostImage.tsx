@@ -8,15 +8,15 @@ import { ReactEditor } from "slate-react";
 
 import styles from "../../../../../styles/SlateEditor/Embed_Slate.module.scss";
 import { Modal, Button as BsBtn, Form, ProgressBar } from "react-bootstrap";
-import MediaUpload from "@/components/Organisms/MediaUpload";
 import PostImageUpload from "@/components/Organisms/MediaUpload/PostImageUpload";
 import {
   selectPostImageUpload,
   selectProgressBarNumPost,
   selectProgressVariantPost,
-  setMediaUpload,
   setPostImageUpload,
+  setProgressBarNum,
   setProgressBarNumPost,
+  setProgressVariant,
   setProgressVariantPost
 } from "@/reduxFeatures/app/mediaUploadSlice";
 import { useDispatch, useSelector } from "@/redux/store";
@@ -25,7 +25,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import config from "@/config";
 
-const EmbedMedia = ({ editor, format }) => {
+const EmbedPostImage = ({ editor, format }) => {
   const router = useRouter();
   const urlInputRef = useRef<HTMLDivElement>(null);
   // const embedTitle = useRef<HTMLInputElement>(null);
@@ -50,9 +50,11 @@ const EmbedMedia = ({ editor, format }) => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => {
-    // Clear Uploaded Media
-    dispatch(setMediaUpload([]));
+    // Clear Uploaded Post Image
     dispatch(setPostImageUpload([]));
+    // Reset ProgressBar
+    dispatch(setProgressVariant("primary"));
+    dispatch(setProgressBarNum(0));
     setShow(false);
   };
 
@@ -87,7 +89,7 @@ const EmbedMedia = ({ editor, format }) => {
           dispatch(setProgressVariantPost("primary"));
 
           const response = await axios.post(
-            `${config.serverUrl}/api/upload`,
+            `${config.serverUrl}/api/uploads`,
             formData,
             {
               headers: {
@@ -108,10 +110,10 @@ const EmbedMedia = ({ editor, format }) => {
             }
           );
 
-          console.log("Upload response:", response);
+          console.log("Upload response:", response.data);
 
           const embedTitleValue = file.name;
-          const embedAddressValue = file.preview;
+          const embedAddressValue = response.data;
 
           editor.selection && Transforms.select(editor, editor.selection);
           editor.selection && ReactEditor.focus(editor);
@@ -119,12 +121,12 @@ const EmbedMedia = ({ editor, format }) => {
           insertEmbed(
             editor,
             { alt: embedTitleValue, url: embedAddressValue },
-            // { alt: embedTitleValue, url: response.data.image },
             format
           );
 
           // Clear Post Image
           dispatch(setPostImageUpload([]));
+          dispatch(setProgressBarNum(0));
         } catch (error) {
           // Set Progress Bar Color
           dispatch(setProgressVariantPost("danger"));
@@ -132,7 +134,10 @@ const EmbedMedia = ({ editor, format }) => {
         }
       });
     }
-
+    // // Reset ProgressBar
+    // dispatch(setProgressVariant("primary"));
+    // dispatch(setProgressBarNum(0));
+    setShow(false);
     // Close Modal
     setShow(prev => !prev);
   };
@@ -163,7 +168,7 @@ const EmbedMedia = ({ editor, format }) => {
           closeButton
         >
           <Modal.Title style={{ fontWeight: "700" }}>
-            Media Upload <Icon icon="media" />
+            Post <small> image </small> <Icon icon={format} />
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={submitEmbed}>
@@ -172,12 +177,6 @@ const EmbedMedia = ({ editor, format }) => {
             {router.asPath.includes("/explore") ||
             router.asPath.includes("/gist") ? (
               <>
-                <h4 style={{ textAlign: "center", opacity: "0.8" }}>and/or</h4>
-
-                <Modal.Title style={{ opacity: "0.8", marginBottom: "1rem" }}>
-                  Post <small> image </small> <Icon icon={format} />
-                </Modal.Title>
-
                 <Form.Group className="mb-3" controlId="formBasicAlt2">
                   {/* ProgressBar: Only when there is Post Image upload in progress */}
                   {uploadedPostImage?.length > 0 && progressBarNum > 0 ? (
@@ -219,4 +218,4 @@ const EmbedMedia = ({ editor, format }) => {
   );
 };
 
-export default EmbedMedia;
+export default EmbedPostImage;

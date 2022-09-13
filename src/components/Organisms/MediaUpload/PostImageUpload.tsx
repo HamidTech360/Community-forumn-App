@@ -10,12 +10,13 @@ import {
   setPostImageUpload
 } from "@/reduxFeatures/app/mediaUploadSlice";
 import ThumbImage from "./ThumbImage";
+import { selectPopulateAcceptedImagesTypes } from "@/reduxFeatures/app/appSlice";
 const PostImageUpload = () => {
   const dispatch = useDispatch();
   const uploadedPostImage = useSelector(selectPostImageUpload);
+  const acceptedImagesTypes = useSelector(selectPopulateAcceptedImagesTypes);
   const [rejectingFilesPostImage, setRejectingFilesPostImage] = useState([]);
   const maxFilesAcceptedPostImage = 1;
-  const nameLength = 25;
 
   const onDropPostImage = useCallback((acceptedFiles, fileRejections) => {
     dispatch(
@@ -37,17 +38,6 @@ const PostImageUpload = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function nameLengthValidator(file) {
-    if (file.name.length > nameLength) {
-      return {
-        code: "name-too-large",
-        message: `Name is more than ${nameLength} characters`
-      };
-    }
-
-    return null;
-  }
-
   const {
     getRootProps: getRootPropsPostImage,
     getInputProps: getInputPropsPost,
@@ -56,15 +46,9 @@ const PostImageUpload = () => {
     isDragReject: isDragRejectPostImage
   } = useDropzonePostImage({
     onDrop: onDropPostImage,
-    validator: nameLengthValidator,
     maxFiles: maxFilesAcceptedPostImage,
-    accept: {
-      "image/jpeg": [".jpeg", ".jpg"],
-      "image/png": [".png"],
-      "image/gif": [".gif"],
-      "image/webp": [".webp"]
-    },
-    maxSize: 1500 * 1024 //1500KB || 1.5MB
+    accept: acceptedImagesTypes,
+    maxSize: 3000 * 1024 //3000KB || 3MB
   });
 
   const stylePostImage = useMemo(

@@ -159,7 +159,7 @@ const BlogPost = () => {
     // console.log("comment:", comment);
     // console.log("comment._id:", comment?._id);
     try {
-      const { data } = await axios.delete(
+     await axios.delete(
         `${config.serverUrl}/api/comments/${comment?._id}`,
         {
           headers: {
@@ -168,7 +168,6 @@ const BlogPost = () => {
         }
       );
 
-      // console.log("Deleted  Comment:", data);
       dispatch(setCommentIsDeleted(comment?._id));
     } catch (error) {
       // console.log(error.response?.data);

@@ -1,4 +1,4 @@
-const toolbarGroups = [
+const toolbarGroupsWithPostImage = [
   [
     {
       id: 1,
@@ -57,7 +57,15 @@ const toolbarGroups = [
       type: "link",
       toolTip: ""
     }
+  ],
+  [
+    {
+      id: 16,
+      format: "postImage",
+      type: "embedPostImage",
+      toolTip: ""
+    }
   ]
 ];
 
-export default toolbarGroups;
+export default toolbarGroupsWithPostImage;

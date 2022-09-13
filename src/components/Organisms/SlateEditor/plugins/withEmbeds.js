@@ -4,7 +4,8 @@ const withEmbeds = editor => {
   const { isVoid, insertBreak } = editor;
 
   editor.isVoid = element =>
-    ["video", "image"].includes(element.type) ? true : isVoid(element);
+    // ["video", "image"].includes(element.type) ? true : isVoid(element);
+    ["video", "postImage"].includes(element.type) ? true : isVoid(element);
 
   editor.insertBreak = (...args) => {
     const parentPath = Path.parent(editor.selection.focus.path);

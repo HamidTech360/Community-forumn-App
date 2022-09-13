@@ -7,11 +7,12 @@ import styles from "../../../../../styles/SlateEditor/button_Slate.module.scss";
 import styles2 from "../../../../../styles/SlateEditor/Embed_Slate.module.scss";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
-const Image = ({ attributes, element, children }) => {
+const PostImage = ({ attributes, element, children }) => {
   const { url, alt } = element;
   const selected = useSelected();
   const focused = useFocused();
-  const [size, onMouseDown] = useResize({ format: "image" });
+  // const [size, onMouseDown] = useResize({ format: "image" });
+  const [size, onMouseDown] = useResize({ format: "postImage" });
 
   return (
     <div
@@ -66,4 +67,4 @@ const Image = ({ attributes, element, children }) => {
     </div>
   );
 };
-export default Image;
+export default PostImage;

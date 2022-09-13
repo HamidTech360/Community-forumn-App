@@ -1,6 +1,5 @@
 import { Editor, Transforms, Element as SlateElement } from "slate";
 import Link from "../Elements/Link/Link";
-import Image from "../Elements/Embed/Image";
 import Video from "../Elements/Embed/Video";
 import styles from "../../../../styles/SlateEditor/SlateUtilityFunctions_Slate.module.scss";
 import { useFocused, useSelected } from "slate-react";
@@ -10,6 +9,7 @@ import {
   selectMentionedUsers,
   setMentionedUsers
 } from "@/reduxFeatures/app/mentionsSlice";
+import PostImage from "../Elements/Embed/PostImage";
 
 const alignment = ["alignLeft", "alignRight", "alignCenter"];
 const list_types = ["orderedList", "unorderedList"];
@@ -187,8 +187,8 @@ export const getBlock = props => {
       return <ul {...attributes}>{children}</ul>;
     case "link":
       return <Link {...props} />;
-    case "image":
-      return <Image {...props} alt="image" />;
+    case "postImage":
+      return <PostImage {...props} alt="image" />;
     case "video":
       return <Video {...props} />;
     case "mention":
