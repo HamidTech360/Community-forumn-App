@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Head from "next/head";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Container, Form, InputGroup } from "react-bootstrap";
+import { useRouter } from "next/router";
+import { toast, ToastContainer } from "react-toastify";
+import Spinner from "react-spinner-material";
+import axios from "axios";
+import config from "@/config";
+
+import "react-toastify/dist/ReactToastify.css";
 
 const ResetPassword = () => {
   const showPrependStyles = {
@@ -11,7 +18,8 @@ const ResetPassword = () => {
   };
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
-
+  const [progress, setProgress] = useState(false)
+  const router = useRouter()
   const [formData, setFormData] = useState({
     password: "",
     c_password: ""
@@ -25,11 +33,44 @@ const ResetPassword = () => {
     }));
   };
 
+  const handleSubmit = async (e)=>{
+    e.preventDefault()
+    setProgress(true)
+
+    if(formData.password != formData.c_password) {
+      return toast.warning("Password mismatch", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 2000
+      });
+    }
+    const payload ={
+      password:formData.password,
+      token:router.query.token,
+      email:router.query.user
+    }
+   console.log(payload)
+   
+    try{
+      const response = await axios.put(`${config.serverUrl}/api/auth/resetPassword`,payload )
+      console.log(response.data)
+      router.push('/success-reset')
+    }catch(error){
+      console.log(error.response?.data)
+      toast.error(error.response?.data, {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 2000
+      });
+    }finally{
+      setProgress(false)
+    }
+  }
+
   return (
     <>
       <Head>
         <title>Password reset</title>
       </Head>
+      <ToastContainer/>
       <Container
         style={{ minHeight: "60vh" }}
         className=" d-flex mt-5 flex-column align-items-center justify-content-center"
@@ -98,8 +139,8 @@ const ResetPassword = () => {
             </Form.Group>
 
             <div className="d-flex justify-content-center mt-4">
-              <Button className="px-3" type="submit">
-                Submit
+              <Button onClick={handleSubmit} className="px-3" type="submit">
+                {progress?<Spinner radius={23}  stroke={2} color="white" />:'Submit'}
               </Button>
             </div>
           </Form>

@@ -2,6 +2,7 @@ import Head from "next/head";
 import React from "react";
 import { Image, Button } from "react-bootstrap";
 import styles from "../styles/success-reset.module.scss";
+import Link from "next/link";
 
 const SuccessReset = () => {
   return (
@@ -20,7 +21,9 @@ const SuccessReset = () => {
           <h1>Success!</h1>
           <p>Your new password has been created</p>
 
-          <Button>Back To Login</Button>
+          <Link href={"/login"}>
+          <Button style={{fontSize:'15px'}} >Back To Login</Button>
+          </Link>
         </div>
         <Image
           src="/assets/ellipse-intro-right.png"

@@ -44,7 +44,6 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const mentionedUsers = useSelector(selectMentionedUsers);
-
   const [country, setCountry] = useState("");
   useEffect(() => {
     return () => {

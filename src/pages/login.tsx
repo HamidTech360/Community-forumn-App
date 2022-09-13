@@ -50,7 +50,7 @@ const Login = () => {
       setAccessToken(data.accessToken);
       toast.success("Authentication successful", {
         position: toast.POSITION.TOP_RIGHT,
-        autoClose: 7000
+        autoClose: 2000
       });
 
       const push2Page = JSON.parse(sessionStorage.getItem("pageB4Login"))
@@ -63,6 +63,7 @@ const Login = () => {
       if (axios.isAxiosError(error)) {
         const serverError = error as AxiosError;
         if (serverError.response) {
+          
           if (serverError.response?.data === "Something went wrong") {
             toast.error("Authentication Failed", {
               position: toast.POSITION.TOP_RIGHT,

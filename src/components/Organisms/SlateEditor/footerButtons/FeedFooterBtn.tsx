@@ -82,7 +82,6 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       console.log("usersToSendNotification:", usersToSendNotification);
       console.log("editorContentValue:", editorContentValue);
       console.log("editorInnerHtml:", editorInnerHtml);
-
       // Form Data
       const formData = new FormData();
 
@@ -90,8 +89,11 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
-      formData.append("slateState", editorContentValue);
+      formData.append("editorContent", editorContentValue);
       formData.append("mentions", usersToSendNotification);
+
+      console.log(usersToSendNotification, editorContentValue)
+      
 
       if (!slatePostToEdit) {
         // New Post
@@ -138,7 +140,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         } catch (error) {
           // Set Progress Bar Color
           dispatch(setProgressVariant("danger"));
-
+          console.log('error',error.response?.data)
           // console.error(error);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
@@ -197,7 +199,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         } catch (error) {
           // Set Progress Bar Color
           dispatch(setProgressVariant("danger"));
-
+         
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
               position: toast.POSITION.TOP_RIGHT,
