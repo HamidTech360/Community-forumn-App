@@ -119,10 +119,6 @@ const Explore = ({}) => {
   } = usePaginationBlogPtJobs("/api/posts?category=pt_jobs", pageIndexPtJobs);
 
   useEffect(() => {
-    console.log("showPost:", showPost);
-  }, [showPost]);
-
-  useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
 
     return () => {
@@ -378,7 +374,7 @@ const Explore = ({}) => {
                 >
                   <Card
                     _id={post._id}
-                    image={post.media[0] ||  "/images/postPlaceholder.jpg"}
+                    image={post.media[0] || "/images/postPlaceholder.jpg"}
                     title={post.postTitle}
                     body={post.postBody}
                     author={post.author}

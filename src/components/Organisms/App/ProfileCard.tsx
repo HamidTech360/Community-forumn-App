@@ -261,7 +261,9 @@ const ProfileCard = ({
               key={item}
               style={{ cursor: "pointer" }}
               onClick={() => handlePath(item.toLowerCase())}
-              className={item === active ? "text-primary" : "text-secondary"}
+              className={
+                item === active ? "text-primary fs-5" : "text-secondary fs-6"
+              }
             >
               {item}
             </Nav.Item>

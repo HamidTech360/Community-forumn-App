@@ -1,19 +1,74 @@
-import React from "react";
-import { Container } from "react-bootstrap";
-//import { FriendsDataType } from '../FriendsList/FriendsData';
+import Card from "@/components/Molecules/Card";
+import { Col, Container, Row } from "react-bootstrap";
 
 import styles from "../../../styles/friends.module.scss";
+import usePagination, { Loader } from "@/hooks/usePagination";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Articles = () => {
+  const {
+    paginatedData,
+    isReachedEnd,
+    error,
+    fetchNextPage,
+    mutate,
+    isValidating
+  } = usePagination("/api/posts/user/all", "posts");
+
   return (
-    <>
-      <Container className={styles.friendBody}>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo soluta
-        harum repellendus saepe amet quos. Et aspernatur a ab! Consequuntur
-        natus ratione dicta consectetur aspernatur omnis id nobis possimus
-        molestias?
-      </Container>
-    </>
+    <Container>
+      <Row>
+        <InfiniteScroll
+          next={fetchNextPage}
+          hasMore={!isReachedEnd}
+          loader={<Loader />}
+          endMessage={
+            <p style={{ textAlign: "center", color: "gray" }}>
+              <b>Yay! You have seen it all...</b>
+            </p>
+          }
+          dataLength={paginatedData?.length ?? 0}
+        >
+          {paginatedData.map((post: Record<string, any>, key: number) => (
+            <Col key={`posts_${key}`} md={12} className={`my-4 ${styles.card}`}>
+              <Card
+                _id={post._id}
+                image={post.media[0] || "/images/postPlaceholder.jpg"}
+                title={post.postTitle}
+                body={post.postBody}
+                author={post.author}
+                size="any"
+              />
+            </Col>
+          ))}
+          {isValidating && (
+            <p style={{ textAlign: "center", color: "gray" }}>
+              <b>Fetching Post...</b>
+            </p>
+          )}
+          {!isValidating && !isReachedEnd ? (
+            <p
+              className="text-primary"
+              style={{ textAlign: "center", color: "gray" }}
+              onClick={() => mutate()}
+            >
+              <b>See more...</b>
+            </p>
+          ) : null}
+          {error && (
+            <p
+              style={{
+                textAlign: "center",
+                color: "gray",
+                marginTop: "1.2rem"
+              }}
+            >
+              <b>Oops! Something went wrong</b>
+            </p>
+          )}
+        </InfiniteScroll>
+      </Row>
+    </Container>
   );
 };
 

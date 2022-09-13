@@ -66,7 +66,7 @@ const GroupInfoCard = ({ data }: any) => {
   const [progress2, setProgress2] = useState(false);
   const fileInput = useRef<HTMLInputElement>();
   const coverFileInpt = useRef<HTMLInputElement>();
-  
+
   useEffect(() => {
     data.images?.avatar && setProfileImg(data?.images?.avatar);
     data.images?.cover && setCoverImg(data?.images?.cover);
@@ -309,12 +309,13 @@ const GroupInfoCard = ({ data }: any) => {
         </Row>
       </Card.Body>
       <Card.Footer>
-        {" "}
         <Nav className="d-flex justify-content-around  text-capitalize">
           {Object.keys(Components).map(item => (
             <Nav.Item
               key={item}
-              className={item === path ? "text-primaries" : "textMute"}
+              className={
+                item === path ? "text-primary fs-5" : "text-secondary fs-6"
+              }
             >
               <Link href={`/groups/${id}/${item}`}>{item}</Link>
             </Nav.Item>
