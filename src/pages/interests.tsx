@@ -4,13 +4,16 @@ import { useRouter } from "next/router";
 import styles from "@/styles/interests.module.scss";
 import Spinner from "react-spinner-material";
 import config from "@/config";
+import { user } from "@/reduxFeatures/authState/authStateSlice";
 import axios from "axios";
+import { useDispatch } from "@/redux/store";
 import { Container, Card, Button, Image } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Interests = () => {
   const router = useRouter();
+  const dispatch = useDispatch()
   const [initInterests, setInterests] = useState([
     {
       selected: false,
@@ -84,6 +87,7 @@ const Interests = () => {
         }
       );
       console.log(data);
+      dispatch(user(data?.user))
       setShowProgress(false);
       router.push("/feed");
     } catch (error) {

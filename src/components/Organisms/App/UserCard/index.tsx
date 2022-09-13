@@ -22,7 +22,7 @@ const UserCard = () => {
         style={{ transform: "translateY(-60%)" }}
       >
         <Avatar
-          src={data.images.avatar || "/images/imagePlaceholder.jpg"}
+          src={data?.images?.avatar || "/images/imagePlaceholder.jpg"}
           name={data.firstName}
         />
       </div>

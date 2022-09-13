@@ -33,9 +33,12 @@ export default function AuthContent({ children }: { children: ReactNode }) {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`
             }
           });
-          console.log("user from authContent is", response.data);
+          
 
           dispatch(user(response.data));
+          if(! response.data.interests){
+            router.push('/interests')
+          }
         } catch (error) {
           localStorage.removeItem("accessToken");
           router.push("/login");

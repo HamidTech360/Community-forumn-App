@@ -97,7 +97,7 @@ const ProfileCard = ({
 
     try {
       await axios.put(
-        `${config.serverUrl}/api/users/${data._id}?imageType=${item}`,
+        `${config.serverUrl}/api/users?imageType=${item}`,
         formData,
         {
           headers: {
