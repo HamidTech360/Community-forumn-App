@@ -13,7 +13,7 @@ const AddConnections = ({
 }) => {
   //ts-ignore
   const user = useSelector(s => s.authState.user);
-  console.log("user data from connection is", user);
+  
 
   const [connections, setConnections] = useState([]);
   useEffect(() => {
@@ -26,8 +26,7 @@ const AddConnections = ({
       if (index > -1) {
         addSelectionProps[index].isSelected = true;
       }
-      //console.log(index, 'item is', item);
-      //console.log('data from conn',data);
+    
     });
     setConnections(addSelectionProps);
   }, [data.groupMembers, user.followers, user.following]);
@@ -42,10 +41,9 @@ const AddConnections = ({
     const selectedConnections = connections.filter(
       el => el.isSelected === true
     );
-    const connectionIds = selectedConnections.map(item => item._id);
-    console.log("selected Ids are", connectionIds);
+    const connectionIds = selectedConnections.map(item => item._id); 
     chooseConnections(connectionIds);
-    //console.log(clone, connections);
+    
   };
 
   return (

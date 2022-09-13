@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import config from "@/config";
 import { toast, ToastContainer } from "react-toastify";
-import { useSelector } from "@/redux/store";
-import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import { useSelector, useDispatch } from "@/redux/store";
+import { selectUser, user as userAction } from "@/reduxFeatures/authState/authStateSlice";
 
 import axios from "axios";
 import styles from "../../../styles/settings.module.scss";
@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const General = () => {
   const data = useSelector(selectUser);
-
+  const dispatch = useDispatch()
   useEffect(() => {
     const clone = { ...formData };
     clone["email"] = data?.email;
@@ -59,15 +59,7 @@ const General = () => {
         toastId: "toast1"
       });
     }
-    // if (formData.email == "") {
-    //   setProgress(false);
-    //   return toast.error("Field cannot be empty", {
-    //     position: toast.POSITION.TOP_RIGHT,
-    //     autoClose: 7000,
-    //     toastId: "toast2",
-    //   });
-    // }
-
+    
     const comfirm = window.confirm(
       "Are you sure to continue wuth this action?"
     );
@@ -78,7 +70,7 @@ const General = () => {
 
     try {
       const response = await axios.put(
-        `${config.serverUrl}/api/users/${data._id}`,
+        `${config.serverUrl}/api/users`,
         { ...payload },
         {
           headers: {
@@ -87,18 +79,15 @@ const General = () => {
         }
       );
       console.log(response.data);
-
+      dispatch(userAction(response.data.user))
       toast.success("Update successful", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 7000,
         toastId: "toast3"
       });
       setProgress(false);
-
-      // setTimeout(() => {
-      //   localStorage.removeItem("accessToken");
-      //   router.push("/login");
-      // }, 3000);
+      
+      
     } catch (error) {
       toast.error("Update failed", {
         position: toast.POSITION.TOP_RIGHT,

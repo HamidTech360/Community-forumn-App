@@ -1,16 +1,35 @@
 import UnAuthContent from "@/components/Auth/UnAuthContent";
+import axios from "axios";
+import config from "@/config";
 import Head from "next/head";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Button, Container, Form, Image } from "react-bootstrap";
+import { toast, ToastContainer } from "react-toastify";
+import Spinner from "react-spinner-material";
+
+import "react-toastify/dist/ReactToastify.css";
 
 const ForgotPassword = () => {
-  //to review
-  const [isSent] = useState(false);
 
+  const [isSent, setIsSent] = useState(false);
   const [email, setEmail] = useState("");
+  const [progress, setProgress] = useState(false)
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if(email =="") return
+    setProgress(true)
+    try{
+      const response = await axios.post(`${config.serverUrl}/api/auth/forgotPassword`, {email})
+      console.log(response.data)
+      setProgress(false)
+      setIsSent(true)
+    }catch(error){
+      console.log(error.response?.data)
+      setIsSent(false)
+      setProgress(false)
+    }
   };
 
   if (isSent) {
@@ -38,22 +57,15 @@ const ForgotPassword = () => {
   }
 
   return (
-    <UnAuthContent>
+    <>
       <Head>
         <title>Forgot Password</title>
       </Head>
+      <ToastContainer/>
       <Container
         style={{ minHeight: "60vh" }}
         className=" d-flex mt-5 flex-column align-items-center justify-content-center"
       >
-        {/* <Image
-        src="/assets/ellipse-intro-top.png"
-        className="vector-1"
-        alt=""
-        style={{ position: "absolute", top: 0, left: 0 }}
-        width={350}
-        height={150}
-      /> */}
         <div
           className="p-4  mb-3position-relatived-flex justify-content-center flex-column align-items-center"
           style={{ maxWidth: "663px" }}
@@ -87,25 +99,14 @@ const ForgotPassword = () => {
 
             <div className="d-flex justify-content-center mt-4">
               <Button className="px-3" type="submit">
-                Send Link
+                {progress?<Spinner radius={23} color="white" stroke={2} />:'Send Link'}
               </Button>
             </div>
           </Form>
         </div>
-        {/* <Image
-        src="/assets/ellipse-intro-top.png"
-        className="vector-2"
-        alt=""
-        style={{
-          position: "absolute",
-          bottom: 0,
-          right: 0,
-          transform: "rotate(180deg) translate(-50%,20%)",
-        }}
-        fluid
-      /> */}
+      
       </Container>
-    </UnAuthContent>
+    </>
   );
 };
 
