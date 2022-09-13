@@ -13,17 +13,15 @@ import {
   BsFillPersonFill
 } from "react-icons/bs";
 import { MdCall } from "react-icons/md";
-import { useSelector, useDispatch } from "@/redux/store";
-import { selectUser, user as userAction } from "@/reduxFeatures/authState/authStateSlice";
+import { useDispatch } from "@/redux/store";
+import { user as userAction } from "@/reduxFeatures/authState/authStateSlice";
 import styles from "@/styles/profile.module.scss";
 import "react-toastify/dist/ReactToastify.css";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const About = ({ User }: Record<string, any>) => {
-  const user = useSelector(selectUser);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const router = useRouter();
-  
 
   const formStyle = {
     marginLeft: "20px",
@@ -127,8 +125,7 @@ const About = ({ User }: Record<string, any>) => {
       );
       setProgress(false);
       console.log(data);
-      
-      
+
       setFormValues({
         bio: data.user?.bio,
         interests: data.user?.interests,
@@ -142,7 +139,7 @@ const About = ({ User }: Record<string, any>) => {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1"
       });
-      dispatch(userAction(data.user))
+      dispatch(userAction(data.user));
     } catch (error) {
       console.log(error.response?.data);
       setProgress(false);
