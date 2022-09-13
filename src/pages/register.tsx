@@ -6,6 +6,8 @@ import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import FormWrapper from "../components/Organisms/Layout/FormWrapper";
 import config from "../config";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { useRouter } from "next/router";
 const Register = () => {
@@ -21,6 +23,8 @@ const Register = () => {
   const [termsAndConditionsChecked, setTermsAndConditionsChecked] =
     useState(false);
   const router = useRouter();
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -28,14 +32,15 @@ const Register = () => {
       try {
         setSubmitting(true);
         const response = await axios.post(`${config.serverUrl}/api/auth/register`, formData);
-        console.log(response.data)
-        setMessage({
-          message:
-            "Success! Check your email- an account confirmation link has been sent to you.",
-          variant: "success"
+        toast.success(" Check your email- an account confirmation link has been sent to you. Check the spam or promotion folder if you can't find it", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 7000,
+          toastId: "2"
         });
-        localStorage.setItem('accessToken',response.data.accessToken )
-        router.push("/interests");
+       
+       setTimeout(()=>{
+        router.push("/login");
+       }, 7000)
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const serverError = error as AxiosError;
@@ -75,16 +80,7 @@ const Register = () => {
     setTermsAndConditionsChecked(!termsAndConditionsChecked);
   };
 
-  useEffect(() => {
-    // clear message
-    const messageTimeout =
-      message.message !== "" &&
-      setTimeout(() => setMessage({ message: "", variant: "" }), 3500);
-
-    return () => {
-      clearTimeout(messageTimeout);
-    };
-  }, [message]);
+  
 
   return (
     <UnAuthContent>
@@ -94,15 +90,8 @@ const Register = () => {
       <FormWrapper
         form={
           <div>
-            {/* {wasSignUpSuccessful && (
-            <Alert variant="success">
-              Thanks! Check your email- an account confirmation link has been
-              sent to you.
-            </Alert>
-          )} */}
-            {message.message && (
-              <Alert variant={message.variant}>{message.message}</Alert>
-            )}
+           <ToastContainer style={{fontSize:'14px', fontWeight:'bold'}} />
+           
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={6}>

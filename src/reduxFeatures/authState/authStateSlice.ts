@@ -23,16 +23,14 @@ export const authStateSlice = createSlice({
   name: "authState",
   initialState,
   reducers: {
-    // userAuthenticated: (state, action: PayloadAction<boolean>) => {
-    //   state.isAuthenticated = action.payload;
-    // },
+    
     user: (state, action: PayloadAction<object>) => {
-      //alert('User dispatched');
+      
       state.user = action.payload;
       state.isAuthenticated = true;
     },
     logout: (state) => {
-      // state.data = {};
+      
       state.user = null;
       state.isAuthenticated = false;
       localStorage.removeItem("accessToken");
