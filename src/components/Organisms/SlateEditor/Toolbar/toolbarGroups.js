@@ -57,6 +57,14 @@ const toolbarGroups = [
       type: "link",
       toolTip: ""
     }
+  ],
+  [
+    {
+      id: 16,
+      format: "image",
+      type: "embed",
+      toolTip: "Add Post Image"
+    }
   ]
 ];
 

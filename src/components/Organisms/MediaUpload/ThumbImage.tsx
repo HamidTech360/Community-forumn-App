@@ -5,7 +5,9 @@ import Image from "next/image";
 import { useDispatch } from "@/redux/store";
 import {
   setMediaUpload,
-  setPostImageUpload
+  setPostImageUpload,
+  setProgressBarNumPost,
+  setProgressVariantPost
 } from "@/reduxFeatures/app/mediaUploadSlice";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
@@ -46,10 +48,7 @@ const ThumbImage = ({ uploadedMedia, fromWhere }) => {
                       color="magenta"
                       style={{
                         cursor: "pointer",
-                        // position: "absolute",
                         position: "relative",
-                        // paddingLeft: "1.4rem",
-                        // paddingRight: "9px",
                         zIndex: 1
                       }}
                       onClick={() => {
@@ -65,6 +64,10 @@ const ThumbImage = ({ uploadedMedia, fromWhere }) => {
                           dispatch(setMediaUpload(newlyAccepted));
                         } else if (fromWhere === "postImage") {
                           dispatch(setPostImageUpload(newlyAccepted));
+                          // Update ProgressBar
+                          dispatch(setProgressBarNumPost(0));
+                          // Set Progress Bar Color
+                          dispatch(setProgressVariantPost("primary"));
                         }
                       }}
                     />

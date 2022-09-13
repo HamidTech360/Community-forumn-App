@@ -62,18 +62,6 @@ const MediaUpload = () => {
   }, []);
 
   function nameLengthValidator(file: File) {
-    // const fileSplit = file.name.split(".");
-    // const fileSplitType = fileSplit[fileSplit.length - 1].toLowerCase();
-    // console.log("fileSplitType:", fileSplitType);
-    // // console.log("+++:", populateAcceptedImagesTypes.includes(fileSplitType));
-
-    // if (populateAcceptedImagesTypes.includes(fileSplitType)) {
-    //   setMimeSize(3000 * 1024);
-    // } else if (populateAcceptedVideosTypes.includes(fileSplitType)) {
-    //   setMimeSize(30000 * 1024);
-    //   //
-    // }
-
     if (file.name.length > nameLength) {
       return {
         code: "name-too-large",
@@ -125,7 +113,7 @@ const MediaUpload = () => {
         <div className={styles.dragBox} style={style}>
           <AiOutlineCloudUpload size={30} color="#0B5351" />
           <span className={styles.dragBoxText}>
-            Drag and drop files here, or click to select files
+            Drag and drop Media here, or click to select
           </span>
         </div>
       </div>

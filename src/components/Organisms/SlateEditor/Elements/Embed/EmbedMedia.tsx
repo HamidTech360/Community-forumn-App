@@ -25,7 +25,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import config from "@/config";
 
-const Embed = ({ editor, format }) => {
+const EmbedMedia = ({ editor, format }) => {
   const router = useRouter();
   const urlInputRef = useRef<HTMLDivElement>(null);
   // const embedTitle = useRef<HTMLInputElement>(null);
@@ -168,17 +168,6 @@ const Embed = ({ editor, format }) => {
         </Modal.Header>
         <Form onSubmit={submitEmbed}>
           <Modal.Body style={{ maxHeight: "450px", overflowY: "auto" }}>
-            <Modal.Title style={{ opacity: "0.8" }}>
-              Add Media<small>(s)</small> <Icon icon="media" />
-            </Modal.Title>
-
-            <Form.Group className="mb-3" controlId="formBasicAlt">
-              <div>
-                {/* Media Upload */}
-                <MediaUpload />
-              </div>
-            </Form.Group>
-
             {/* Enable Post Image Upload For Explore & Gist */}
             {router.asPath.includes("/explore") ||
             router.asPath.includes("/gist") ? (
@@ -230,4 +219,4 @@ const Embed = ({ editor, format }) => {
   );
 };
 
-export default Embed;
+export default EmbedMedia;
