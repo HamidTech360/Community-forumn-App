@@ -12,7 +12,13 @@ import {
 } from "@/reduxFeatures/app/editSlatePostSlice";
 // import { serialize } from "../utils/serializer";
 import { setModalCardPostEdited } from "@/reduxFeatures/app/postModalCardSlice";
-import { selectMediaUpload } from "@/reduxFeatures/app/mediaUpload";
+import {
+  selectMediaUpload,
+  setMediaUpload,
+  setProgressBarNum,
+  setProgressVariant
+  // setProgressBarNum
+} from "@/reduxFeatures/app/mediaUploadSlice";
 import {
   selectMentionedUsers,
   setMentionedUsers
@@ -31,8 +37,12 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       dispatch(setSlatePostToEdit(null));
       // Reset Mentioned Users
       dispatch(setMentionedUsers([]));
+      // Reset ProgressBar
+      dispatch(setProgressVariant("primary"));
+      dispatch(setProgressBarNum(0));
     };
-  }, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const createPost = async e => {
     e.preventDefault();
@@ -78,9 +88,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           }
         });
       }
-      console.log("usersToSendNotification:", usersToSendNotification);
-      // console.log("editorContentValue:", editorContentValue);
-
+    
       // Form Data
       const formData = new FormData();
 
@@ -88,17 +96,18 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
-      formData.append("slateState", editorContentValue);
+      formData.append("editorContent", editorContentValue);
       formData.append("mentions", usersToSendNotification);
 
-      // console.log("formData-post:", formData.getAll("post"));
-      // console.log("formData-media:", formData.getAll("media"));
-      // console.log("formData-slateState:", formData.getAll("slateState"));
-      // console.log("formData-mentions:", formData.getAll("mentions"));
+      console.log(usersToSendNotification, editorContentValue)
+      
 
       if (!slatePostToEdit) {
         // New Post
         try {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("primary"));
+
           const response = await axios.post(
             `${config.serverUrl}/api/feed`,
             formData,
@@ -106,6 +115,17 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 "Content-Type": "multipart/form-data"
+              },
+              // Axios Progress
+              onUploadProgress: function (progressEvent: {
+                loaded: number;
+                total: number;
+              }) {
+                const percentCompleted = Math.round(
+                  (progressEvent.loaded * 100) / progressEvent.total
+                );
+                // Update ProgressBar
+                dispatch(setProgressBarNum(percentCompleted));
               }
             }
           );
@@ -120,10 +140,15 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           dispatch(setSlatePostToEdit(null));
           // Reset Mentioned Users
           dispatch(setMentionedUsers([]));
+          // Reset Uploaded Media Data
+          dispatch(setMediaUpload([]));
           setUploading(false);
           dispatch(setShowCreatePostModal(false));
         } catch (error) {
-          console.error(error);
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("danger"));
+          console.log('error',error.response?.data)
+          // console.error(error);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
               position: toast.POSITION.TOP_RIGHT,
@@ -140,12 +165,26 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       } else {
         // Edit Post
         try {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("primary"));
+
           await axios.put(
             `${config.serverUrl}/api/feed/${slatePostToEdit?._id}`,
             formData,
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`
+              },
+              // Axios Progress
+              onUploadProgress: function (progressEvent: {
+                loaded: number;
+                total: number;
+              }) {
+                const percentCompleted = Math.round(
+                  (progressEvent.loaded * 100) / progressEvent.total
+                );
+                // Update ProgressBar
+                dispatch(setProgressBarNum(percentCompleted));
               }
             }
           );
@@ -165,6 +204,9 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           setUploading(false);
           dispatch(setShowCreatePostModal(false));
         } catch (error) {
+          // Set Progress Bar Color
+          dispatch(setProgressVariant("danger"));
+         
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
               position: toast.POSITION.TOP_RIGHT,

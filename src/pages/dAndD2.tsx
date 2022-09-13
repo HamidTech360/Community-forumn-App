@@ -1,8 +1,8 @@
 import React from "react";
-import Uploader2 from "@/components/Organisms/DragAndDrop2/Uploader2";
+import MediaUpload from "@/components/Organisms/MediaUpload";
 
 function dAndD2() {
-  return <Uploader2 />;
+  return <MediaUpload />;
 
   // const Changed = (e) => {
   //   let formData = new FormData();

@@ -16,7 +16,7 @@ import {
   setSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
 import { serialize } from "../utils/serializer";
-import { selectMediaUpload } from "@/reduxFeatures/app/mediaUpload";
+import { selectMediaUpload } from "@/reduxFeatures/app/mediaUploadSlice";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
@@ -131,16 +131,16 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
         formData.append("media", file);
       });
       formData.append("postBody", serializedHtml.toString());
-      formData.append('category', selectedCategory.tag)
-      formData.append('postTitle', showPostTitle)
+      formData.append("category", selectedCategory.tag);
+      formData.append("postTitle", showPostTitle);
       // formData.append('groupId', groupId)
 
       if (!slatePostToEdit) {
         // New Post
         try {
           const response = await axios.post(
-          `${config.serverUrl}/api/posts`,
-           formData,
+            `${config.serverUrl}/api/posts`,
+            formData,
             {
               headers: {
                 authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -148,7 +148,7 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
               }
             }
           );
-           console.log(response.data);
+          console.log(response.data);
 
           toast.success("Post uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,

@@ -13,11 +13,11 @@ import searchReducer from "@/reduxFeatures/api/searchSlice";
 import editSlatePostReducer from "@/reduxFeatures/app/editSlatePostSlice";
 import postModalCardReducer from "@/reduxFeatures/app/postModalCardSlice";
 import notificationReducer from "@/reduxFeatures/api/notifications";
-import mediaUploadReducer from "@/reduxFeatures/app/mediaUpload";
+import mediaUploadReducer from "@/reduxFeatures/app/mediaUploadSlice";
 
 import {
   useDispatch as useDispatchBase,
-  useSelector as useSelectorBase,
+  useSelector as useSelectorBase
 } from "react-redux";
 
 /**
@@ -39,14 +39,14 @@ export const store = configureStore({
     editSlatePost: editSlatePostReducer,
     postModalCard: postModalCardReducer,
     notification: notificationReducer,
-    mediaUpload: mediaUploadReducer,
+    mediaUpload: mediaUploadReducer
   },
 
   // Prevent Age (dateTime) from returning unSterilized error
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
-      serializableCheck: false,
-    }),
+      serializableCheck: false
+    })
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

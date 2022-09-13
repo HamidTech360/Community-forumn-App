@@ -43,6 +43,16 @@ import { useDispatch } from "react-redux";
 import { MentionUserApiSearch } from "../App/ApiSearch/globalApiSearch";
 import { CustomEditor, CustomElement } from "./utils/slateTypes";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
+import ThumbImage from "../MediaUpload/ThumbImage";
+import {
+  selectMediaUpload,
+  selectProgressBarNum,
+  selectProgressVariant,
+  setMediaUpload,
+  setProgressBarNum,
+  setProgressVariant
+} from "@/reduxFeatures/app/mediaUploadSlice";
+import ProgressBar from "react-bootstrap/ProgressBar";
 
 declare module "slate" {
   interface CustomTypes {
@@ -73,6 +83,9 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   const index = useSelector(selectIndex);
   const search = useSelector(selectSearch);
   const target = useSelector(selectTarget);
+  const uploadedMedia = useSelector(selectMediaUpload);
+  const progressBarNum = useSelector(selectProgressBarNum);
+  const progressVariant = useSelector(selectProgressVariant);
   const [listMention, setListMention] = useState([]);
   const [mentionedUsersList, setMentionedUsersList] = useState([]);
   const [showPlaceholder, setShowPlaceholder] = useState(false);
@@ -85,6 +98,17 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
     } else {
       setShowPlaceholder(true);
     }
+
+    return () => {
+      // Reset Uploaded Media While Unmounting
+      dispatch(setMediaUpload([]));
+      // Make sure to revoke the data uri's to avoid memory leaks. Will run on unmount
+      uploadedMedia.forEach(file => URL.revokeObjectURL(file.preview));
+      // Reset ProgressBar
+      dispatch(setProgressVariant("primary"));
+      dispatch(setProgressBarNum(0));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -100,7 +124,8 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
     return () => {
       dispatch(setSearch(""));
     };
-  }, [search, dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
   useEffect(() => {
     if (listMention?.length > 0) {
@@ -124,7 +149,9 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
     } else {
       setMentionedUsersList([]);
     }
-  }, [listMention, search, authUser?._id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listMention]);
+  // }, [listMention, search, authUser?._id]);
 
   const renderElement = useCallback(props => <Element {...props} />, []);
   const renderLeaf = useCallback(props => {
@@ -182,16 +209,6 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
     });
   }
 
-  // const initialState: Descendant[] = editSlatePost?.post
-  //   ? deserializeFromHtml(editSlatePost?.post)
-  //   : editSlatePost?.postBody
-  //   ? deserializeFromHtml(editSlatePost?.postBody)
-  //   : [
-  //       {
-  //         type: "paragraph",
-  //         children: [{ text: "" }]
-  //       }
-  //     ];
   const initialState: Descendant[] = editSlatePost?.post
     ? deserializeFromHtml(`<p>${editSlatePost?.post}</p>`)
     : editSlatePost?.postBody
@@ -244,10 +261,29 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
       el.style.top = `${rect.top + window.pageYOffset + 24}px`;
       el.style.left = `${rect.left + window.pageXOffset}px`;
     }
-  }, [mentionedUsersList?.length, editor, index, search, target]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mentionedUsersList, target]);
 
   return (
     <div className={slim ? "container-fluid px-0 mx-0" : "container"}>
+      {/* Display Selected Media Preview */}
+      {uploadedMedia?.length > 0 ? (
+        // New Post Media Display
+        <ThumbImage uploadedMedia={uploadedMedia} />
+      ) : editSlatePost?.media?.length > 0 ? (
+        // Editing Post Media Display
+        <ThumbImage uploadedMedia={editSlatePost.media} />
+      ) : null}
+
+      {/* ProgressBar */}
+      {progressBarNum > 0 && (
+        <ProgressBar
+          variant={progressVariant}
+          className="my-1"
+          now={progressBarNum}
+          label={`${progressBarNum}%`}
+        />
+      )}
       <div className={`row justify-content-center ${slim && "px-0 mx-0"}`}>
         <div
           className={`${slim ? "col-10 col-md-11 px-0 me-0" : "col-12"} ${

@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import {
+  Button,
+  ButtonGroup,
+  Dropdown,
+  DropdownButton,
+  Form
+} from "react-bootstrap";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch, useSelector } from "@/redux/store";
 import {
   uploadFailed,
   uploadSuccess,
-  selectGistIsLoading,
   setShowGistModal,
   setGistTitle,
   selectGistTitle
@@ -17,7 +22,8 @@ import {
   setSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
 import { serialize } from "../utils/serializer";
-import { selectMediaUpload } from "@/reduxFeatures/app/mediaUpload";
+import { selectMediaUpload } from "@/reduxFeatures/app/mediaUploadSlice";
+import countries from "@/data/countries";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function GistFooterBtn({ editorID, editorContentValue }: any) {
@@ -28,7 +34,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-
+  const [country, setCountry] = useState("");
   useEffect(() => {
     return () => {
       // Reset Content in SlatePostToEdit State when component unmount
@@ -74,7 +80,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
 
   const createGist = async e => {
     e.preventDefault();
-    setGistIsUploading(true)
+    setGistIsUploading(true);
     const editorInnerHtml = (
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
@@ -109,15 +115,15 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
       };
 
       const serializedHtml = serialize(serializeNode);
-      const formData = new FormData()
+      const formData = new FormData();
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
 
-      formData.append("title", showGistTitle)
-      formData.append("post", serializedHtml.toString())
-      formData.append("categories", selectedCategory)
-      formData.append("country", "Nigeria")
+      formData.append("title", showGistTitle);
+      formData.append("post", serializedHtml.toString());
+      formData.append("categories", selectedCategory);
+      formData.append("country", country);
 
       if (!slatePostToEdit) {
         // New Post
@@ -131,8 +137,8 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
               }
             }
           );
-          console.log(response.data)
-          setGistIsUploading(false)
+          console.log(response.data);
+          setGistIsUploading(false);
           toast.success("Gist uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,
             toastId: "1"
@@ -140,7 +146,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
           dispatch(uploadSuccess(response.data.gist));
           dispatch(setShowGistModal(false));
         } catch (error) {
-          setGistIsUploading(false)
+          setGistIsUploading(false);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Gist", {
               position: toast.POSITION.TOP_RIGHT,
@@ -163,7 +169,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
               title: showGistTitle,
               post: serializedHtml,
               categories: selectedCategory,
-              country: "Ghana"
+              country: country
             },
             {
               headers: {
@@ -219,20 +225,19 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
           ))}
         </DropdownButton>
       </div>
-      <div className="">
-        <DropdownButton
-          as={ButtonGroup}
-          title="Country"
-          id="bg-nested-dropdown-2"
-          variant="outline-secondary"
-          className="m-1"
-        >
-          <Dropdown.Item eventKey="1" variant="outline-secondary">
-            Dropdown link 1
-          </Dropdown.Item>
-          <Dropdown.Item eventKey="2">Dropdown link 2</Dropdown.Item>
-        </DropdownButton>
-      </div>
+
+      <Form.Select
+        style={{ width: 120 }}
+        onChange={e => setCountry(e.target.value)}
+      >
+        {countries.map(country => (
+          <option key={country.name} value={country.name}>
+            {country.emoji}
+            {country.name}
+          </option>
+        ))}
+      </Form.Select>
+
       <div className="col-12 col-md-2 col-lg-2 ms-auto me-2 px-0 d-grid">
         <Button
           variant="outline-primary"

@@ -26,7 +26,7 @@ import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/router";
 import { useModalWithData } from "@/hooks/useModalWithData";
-import {FeedPostEditorModal_Modal} from '../../components/Organisms/App/ModalPopUp/FeedPostEditorModal'
+import { FeedPostEditorModal_Modal } from "../../components/Organisms/App/ModalPopUp/FeedPostEditorModal";
 
 const Feed = () => {
   const router = useRouter();
@@ -44,8 +44,6 @@ const Feed = () => {
     mutate,
     isValidating
   } = usePagination("/api/feed", "feed");
-
- 
 
   // Update users followers & following in AuthUser because it's a frontend resolved data
   useEffect(() => {
@@ -91,23 +89,27 @@ const Feed = () => {
     }
   }, [paginatedData]);
 
-  useEffect(()=>{
-   const query = router.query.active
-   if(query){
+  useEffect(() => {
+    // setSelected(posts[0])
+    // toggle()
+    const query = router.query.active;
     console.log(query);
-    (async function(){
-      try{
-        const response = await axios.get(`${config.serverUrl}/api/feed/${query}`)
-        console.log(response.data)
-         setSelected(response.data)
-          toggle()
-      }catch(error){
-        console.log(error.response?.data)
-      }
-    })()
-   }
-  },[router.query])
-  
+    if (query) {
+      console.log(query);
+      (async function () {
+        try {
+          const response = await axios.get(
+            `${config.serverUrl}/api/feed/${query}`
+          );
+          console.log(response.data);
+          setSelected(response.data);
+          toggle();
+        } catch (error) {
+          console.log(error.response?.data);
+        }
+      })();
+    }
+  }, [router.query]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleDeletePost = async (item: Record<string, any>) => {
