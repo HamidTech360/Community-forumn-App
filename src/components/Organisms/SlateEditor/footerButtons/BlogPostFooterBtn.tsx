@@ -155,7 +155,7 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
       });
       formData.append("category", selectedCategory.tag);
       formData.append("postTitle", showPostTitle);
-      formData.append("slateState", editorContentValue);
+      formData.append("SlateContentValue", JSON.stringify(editorContentValue));
       formData.append("mentions", usersToSendNotification);
       // formData.append('groupId', groupId)
 

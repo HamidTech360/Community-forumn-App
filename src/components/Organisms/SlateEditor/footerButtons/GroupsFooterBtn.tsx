@@ -106,7 +106,7 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
         formData.append("media", file);
       });
       formData.append("group", groupId);
-      formData.append("slateState", editorContentValue);
+      formData.append("SlateContentValue", JSON.stringify(editorContentValue));
       formData.append("mentions", usersToSendNotification);
 
       if (!slatePostToEdit) {
