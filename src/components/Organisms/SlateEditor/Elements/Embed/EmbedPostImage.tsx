@@ -110,7 +110,7 @@ const EmbedPostImage = ({ editor, format }) => {
             }
           );
 
-          console.log("Upload response:", response.data);
+          // console.log("Upload response:", response.data);
 
           const embedTitleValue = file.name;
           const embedAddressValue = response.data;
@@ -127,19 +127,18 @@ const EmbedPostImage = ({ editor, format }) => {
           // Clear Post Image
           dispatch(setPostImageUpload([]));
           dispatch(setProgressBarNum(0));
+          // Close Modal
+          setShow(prev => !prev);
         } catch (error) {
           // Set Progress Bar Color
           dispatch(setProgressVariantPost("danger"));
           console.log("error:", error);
         }
       });
+    } else {
+      // Close Modal
+      setShow(prev => !prev);
     }
-    // // Reset ProgressBar
-    // dispatch(setProgressVariant("primary"));
-    // dispatch(setProgressBarNum(0));
-    setShow(false);
-    // Close Modal
-    setShow(prev => !prev);
   };
 
   return (
