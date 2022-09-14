@@ -17,20 +17,20 @@ const Articles = () => {
 
   return (
     <Container>
-      <Row>
-        <InfiniteScroll
-          next={fetchNextPage}
-          hasMore={!isReachedEnd}
-          loader={<Loader />}
-          endMessage={
-            <p style={{ textAlign: "center", color: "gray" }}>
-              <b>Yay! You have seen it all...</b>
-            </p>
-          }
-          dataLength={paginatedData?.length ?? 0}
-        >
+      <InfiniteScroll
+        next={fetchNextPage}
+        hasMore={!isReachedEnd}
+        loader={<Loader />}
+        endMessage={
+          <p style={{ textAlign: "center", color: "gray" }}>
+            <b>Yay! You have seen it all...</b>
+          </p>
+        }
+        dataLength={paginatedData?.length ?? 0}
+      >
+        <Row>
           {paginatedData.map((post: Record<string, any>, key: number) => (
-            <Col key={`posts_${key}`} md={12} className={`my-4 ${styles.card}`}>
+            <Col key={`posts_${key}`} md={6} className={`my-4 ${styles.card}`}>
               <Card
                 _id={post._id}
                 image={post.media[0] || "/images/postPlaceholder.jpg"}
@@ -66,8 +66,8 @@ const Articles = () => {
               <b>Oops! Something went wrong</b>
             </p>
           )}
-        </InfiniteScroll>
-      </Row>
+        </Row>
+      </InfiniteScroll>
     </Container>
   );
 };

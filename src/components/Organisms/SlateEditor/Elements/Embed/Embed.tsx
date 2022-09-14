@@ -66,12 +66,12 @@ const Embed = ({ editor, format }) => {
             router.asPath.includes("/profile") ? (
               // Media Upload <Icon icon="media" />
               <>
-                Add <small>Feature Image(s)</small> <Icon icon="image" />
+                Add <small>Image(s)</small> <Icon icon="image" />
               </>
             ) : router.asPath.includes("/explore") ||
               router.asPath.includes("/gist") ? (
               <>
-                Add <small>Media</small> <Icon icon="image" />
+                Add <small>Feature Image</small> <Icon icon="image" />
               </>
             ) : null}
           </Modal.Title>

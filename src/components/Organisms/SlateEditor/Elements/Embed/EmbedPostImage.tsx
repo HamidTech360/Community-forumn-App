@@ -168,7 +168,7 @@ const EmbedPostImage = ({ editor, format }) => {
           closeButton
         >
           <Modal.Title style={{ fontWeight: "700" }}>
-            Post <small> image </small> <Icon icon={format} />
+            Add <small> media </small> <Icon icon={format} />
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={submitEmbed}>
