@@ -138,8 +138,6 @@ const AuthHeader = () => {
             }
           }
         );
-        console.log(response.data);
-
         dispatch(getNotification(response.data.notifications));
         const unRead = response.data.notifications.filter(item => !item.read);
         dispatch(updateNumberOfNotifications({ total: unRead.length }));

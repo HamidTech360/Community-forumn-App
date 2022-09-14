@@ -126,7 +126,7 @@ const ModalCard = ({
   }, [modalCardPostEdited]);
 
   useEffect(() => {
-    if (post?.likes?.includes(user._id)) {
+    if (JSON.stringify(post?.likes)?.includes(user?._id)) {
       setLiked(true);
     } else {
       setLiked(false);
@@ -134,16 +134,14 @@ const ModalCard = ({
   }, [post]);
 
   useEffect(() => {
-    if (post?.likes?.includes(user._id)) {
+    if (JSON.stringify(post?.likes)?.includes(user?._id)) {
       setLiked(true);
-      // dispatch(setLiked(true));
     }
+
     if (user.bookmarks?.includes(post?._id)) {
       setBookMarked(true);
-      // dispatch(setBookMarked(true));
     } else {
       setBookMarked(false);
-      // dispatch(setBookMarked(false));
     }
   }, [user]);
 
@@ -201,40 +199,28 @@ const ModalCard = ({
 
   const likeIt = async bool => {
     // Pre-Set Like State B4 Axios
-    const currentPostState = JSON.parse(JSON.stringify(post));
+    const currentPostState = { ...JSON.parse(JSON.stringify(post)) };
 
-    const newPostState = { ...currentPostState };
-    if (!newPostState?.likes.includes(user?._id)) {
-      newPostState.likes.push(user?._id);
+    // Copy Object Full Dept For manipulation
+    const newPostState = { ...JSON.parse(JSON.stringify(currentPostState)) };
+    if (!JSON.stringify(newPostState?.likes)?.includes(user?._id)) {
+      newPostState.likes.push({
+        _id: user?._id,
+        firstName: user?.firstName,
+        lastName: user?.lastName
+      });
     }
     setPostComingIn(newPostState);
     setLiked(true);
     // Notify the PostCard of Changes in the ModalCard
     dispatch(setLikeChangedModal(post?._id));
 
-    let type: string;
-    const currentRoute = router.pathname;
-    // console.log("currentRoute:", currentRoute);
-    if (currentRoute == "/feed") {
-      type = "feed";
-    } else if (
-      currentRoute == "/groups" ||
-      currentRoute == "/groups/[id]/[path]"
-    ) {
-      // type = "post";
-      type = "feed";
-    } else if (currentRoute.includes("profile")) {
-      type = "post";
-    }
-
-    // console.log(type, currentRoute);
-
     // try {
     if (bool) {
       try {
         // Like Post
         await axios.get(
-          `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
+          `${config.serverUrl}/api/likes/?type=${"feed"}&id=${post?._id}`,
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`
@@ -243,14 +229,7 @@ const ModalCard = ({
         );
       } catch (error) {
         // Reverse Like State Because of Axios Error
-        let filterNewPostState = newPostState?.likes;
-        if (newPostState?.likes.includes(user?._id)) {
-          filterNewPostState = newPostState?.likes.filter(person => {
-            return person !== user?._id;
-          });
-        }
-        newPostState.likes = filterNewPostState;
-        setPostComingIn(newPostState);
+        setPostComingIn(currentPostState);
         setLiked(false);
         // REVERSE Notify the PostCard of Changes in the ModalCard
         if (likeChangedModal.includes(post?._id)) {
@@ -259,27 +238,23 @@ const ModalCard = ({
         }
         //  Main Render
         dispatch(setUnLikeChangedModal(post?._id));
-        // console.error(error);
       }
     }
   };
 
   const unLikeIt = async bool => {
     // Pre-Set Unlike State B4 Axios
-    const currentPostState = JSON.parse(JSON.stringify(post));
+    const currentPostState = { ...JSON.parse(JSON.stringify(post)) };
 
-    const newPostState = { ...currentPostState };
+    // Copy Object Full Dept For manipulation
+    const newPostState = { ...JSON.parse(JSON.stringify(currentPostState)) };
     let filterNewPostState = newPostState?.likes;
-    if (newPostState?.likes.includes(user?._id)) {
-      // newPostState.likes.push(user?._id);
-
+    if (JSON.stringify(newPostState?.likes)?.includes(user?._id)) {
       filterNewPostState = newPostState?.likes.filter(person => {
-        return person !== user?._id;
+        return person?._id !== user?._id;
       });
     }
     newPostState.likes = filterNewPostState;
-    // console.log("filterNewPostState:", filterNewPostState);
-    // console.log("newPostState:", newPostState);
 
     setPostComingIn(newPostState);
     setLiked(false);
@@ -288,25 +263,11 @@ const ModalCard = ({
       dispatch(setUnLikeChangedModal(post?._id));
     }
 
-    let type;
-    const currentRoute = router.pathname;
-    if (currentRoute == "/feed") {
-      type = "feed";
-    } else if (
-      currentRoute == "/groups" ||
-      currentRoute == "/groups/[id]/[path]"
-    ) {
-      type = "feed";
-    } else if (currentRoute.includes("profile")) {
-      type = "post";
-    }
-
     if (bool) {
       // Axios Like Post
       try {
         await axios.delete(
-          `${config.serverUrl}/api/likes/?type=${type}&id=${post?._id}`,
-          // `${config.serverUrl}/api/${type}/${post?._id}`,
+          `${config.serverUrl}/api/likes/?type=${"feed"}&id=${post?._id}`,
           {
             headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`
@@ -315,12 +276,7 @@ const ModalCard = ({
         );
       } catch (error) {
         // Reverse Like Because of Axios Error
-        const newPostState = { ...currentPostState };
-        if (!newPostState?.likes.includes(user?._id)) {
-          newPostState.likes.push(user?._id);
-        }
-
-        setPostComingIn(newPostState);
+        setPostComingIn(currentPostState);
         setLiked(true);
 
         // REVERSE Notify the PostCard of Changes in the ModalCard

@@ -37,6 +37,11 @@ function FooterButtons({
           editorID={editorID}
           editorContentValue={editorContentValue}
         />
+      ) : pageAt === "/profile" || pageAt.includes("/profile") ? (
+        <FeedFooterBtn
+          editorID={editorID}
+          editorContentValue={editorContentValue}
+        />
       ) : (
         <BlogPostFooterBtn
           editorID={editorID}

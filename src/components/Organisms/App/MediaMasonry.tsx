@@ -40,48 +40,46 @@ const MediaDisplay = ({ media: mediaComingIn, breakPoint }) => {
         }}
       >
         <Masonry>
-          {images?.map((img, index) => (
-            <>
-              {populateAcceptedImagesTypes.includes(
+          {images?.map((img, index) =>
+            populateAcceptedImagesTypes.includes(
+              `.${img.split(".")[img.split(".").length - 1].toLowerCase()}`
+            ) ? (
+              <Image
+                key={index}
+                className="p-1"
+                src={img}
+                alt="Uploaded Media"
+                width={"100%"}
+                height={"100%"}
+                style={{
+                  cursor: "pointer",
+                  objectFit: "contain",
+                  maxHeight: "500px"
+                }}
+                onClick={() => {
+                  dispatch(
+                    setImageModalImg({
+                      media: images,
+                      activeIndex: index
+                    })
+                  );
+                  dispatch(setImageModalOpen(true));
+                }}
+              />
+            ) : populateAcceptedVideosTypes.includes(
                 `.${img.split(".")[img.split(".").length - 1].toLowerCase()}`
               ) ? (
-                <Image
-                  key={index}
-                  className="p-1"
-                  src={img}
-                  alt="Uploaded Media"
-                  width={"100%"}
-                  height={"100%"}
-                  style={{
-                    cursor: "pointer",
-                    objectFit: "contain",
-                    maxHeight: "500px"
-                  }}
-                  onClick={() => {
-                    dispatch(
-                      setImageModalImg({
-                        media: images,
-                        activeIndex: index
-                      })
-                    );
-                    dispatch(setImageModalOpen(true));
-                  }}
-                />
-              ) : populateAcceptedVideosTypes.includes(
-                  `.${img.split(".")[img.split(".").length - 1].toLowerCase()}`
-                ) ? (
-                <video
-                  preload="metadata"
-                  key={index}
-                  src={img}
-                  style={{ objectFit: "cover" }}
-                  controls
-                >
-                  Your browser does not support the video tag.
-                </video>
-              ) : null}
-            </>
-          ))}
+              <video
+                preload="metadata"
+                key={index}
+                src={img}
+                style={{ objectFit: "cover" }}
+                controls
+              >
+                Your browser does not support the video tag.
+              </video>
+            ) : null
+          )}
         </Masonry>
       </ResponsiveMasonry>
     </>

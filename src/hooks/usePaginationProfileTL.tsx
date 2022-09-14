@@ -9,7 +9,7 @@ const usePaginationProfileTL = (
   dotTitle: string,
   isAuthUserTimeline: boolean
 ) => {
-  const pageSize = 4;
+  const pageSize = 25;
 
   const getKey = (pageIndex: number, previousPageData: any) => {
     if (previousPageData && !previousPageData[dotTitle].length) return null; // reached the end
@@ -24,8 +24,8 @@ const usePaginationProfileTL = (
   const fetcher = async function (url) {
     const response = await axios.get(`${url}`, {
       headers: {
-        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`
+      }
     });
 
     return response.data;
@@ -37,15 +37,15 @@ const usePaginationProfileTL = (
     setSize,
     error,
     mutate,
-    isValidating,
+    isValidating
   } = useSWRInfinite(getKey, fetcher, {
-    persistSize: true,
+    persistSize: true
   });
 
-  const fetchNextPageProfileTL = () => setSize((size) => size + 1);
+  const fetchNextPageProfileTL = () => setSize(size => size + 1);
 
   const paginatedDataProfileTL: any =
-    post?.flatMap((page) => page[dotTitle]) ?? [];
+    post?.flatMap(page => page[dotTitle]) ?? [];
 
   const isReachedEndProfileTL =
     post && post[post.length - 1][dotTitle]?.length < pageSize; // got last batch of data
@@ -58,7 +58,7 @@ const usePaginationProfileTL = (
     errorProfileTL: error,
     fetchNextPageProfileTL,
     mutateProfileTL: mutate,
-    isValidatingProfileTL: isValidating,
+    isValidatingProfileTL: isValidating
   };
 };
 

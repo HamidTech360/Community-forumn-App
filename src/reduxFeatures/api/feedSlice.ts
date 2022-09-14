@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { KeyedMutator } from "swr";
 import type { RootState } from "../../redux/store";
 
 // declaring the types for our state
@@ -10,7 +9,7 @@ export type FeedState = {
 
 const initialState: FeedState = {
   // modal: false,
-  newFeed: {},
+  newFeed: {}
 };
 
 export const feedSlice = createSlice({
@@ -22,8 +21,8 @@ export const feedSlice = createSlice({
     // },
     setNewFeed: (state, action: PayloadAction<object>) => {
       state.newFeed = action.payload;
-    },
-  },
+    }
+  }
 });
 // Here we are just exporting the actions from this slice, so that we can call them anywhere in our app.
 export const { setNewFeed } = feedSlice.actions;

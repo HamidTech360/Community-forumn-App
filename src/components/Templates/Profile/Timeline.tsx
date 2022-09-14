@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import { usePagination } from "../../../hooks/usePagination-old";
 import PostCard from "../../Organisms/App/PostCard";
 import styles from "@/styles/profile.module.scss";
 import axios from "axios";
@@ -9,7 +8,6 @@ import { useRouter } from "next/router";
 import { setSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
 import { useDispatch, useSelector } from "@/redux/store";
 import { setShowPostModal } from "@/reduxFeatures/api/postSlice";
-// import ExplorePostEditorModal from "@/components/Organisms/App/ModalPopUp/ExplorePostEditorModal";
 import {
   setShowCreatePostModal,
   selectCreatePostModal
@@ -32,7 +30,6 @@ const Timeline = ({
 
   const [Posts, setPostComingIn] = useState(postComingIn);
   const showModal = useSelector(selectCreatePostModal);
-  // const intersection = useRef();
 
   useEffect(() => {
     if (postComingIn) {
@@ -51,7 +48,6 @@ const Timeline = ({
       setPostComingIn(newPosts);
     } catch (error) {
       setPostComingIn(Posts);
-      // console.log(error.response?.data);
     }
   };
 

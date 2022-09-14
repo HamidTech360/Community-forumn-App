@@ -17,6 +17,9 @@ import Articles from "@/components/Templates/Profile/Articles";
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import usePaginationProfileTL from "@/hooks/usePaginationProfileTL";
+import FeedPostEditorModal from "@/components/Organisms/App/ModalPopUp/FeedPostEditorModal";
+import { selectCreatePostModal } from "@/reduxFeatures/app/createPost";
+import { useRouter } from "next/router";
 
 interface IComponents {
   about: ReactNode;
@@ -28,9 +31,11 @@ interface IComponents {
 }
 
 const Profile = () => {
+  const router = useRouter();
   const [path, setPath] = useState("timeline");
   const [data, setData] = useState([]);
   const user = useSelector(selectUser);
+  const showModal = useSelector(selectCreatePostModal);
 
   const isAuthUserTimeline = true;
   const {
@@ -45,7 +50,6 @@ const Profile = () => {
   useEffect(() => {
     if (paginatedDataProfileTL) {
       if (JSON.stringify(data) !== JSON.stringify(paginatedDataProfileTL)) {
-        console.log("paginatedDataProfileTL-USER:", paginatedDataProfileTL);
         setData(paginatedDataProfileTL);
       }
     }
@@ -86,8 +90,6 @@ const Profile = () => {
         <div className={`padding-top mt-3 ${styles.profileWrapper}`}>
           <div className="d-none d-lg-flex col-lg-3 col-xl-2 me-xl-4">
             <div
-              // style={{ width: 230 }}
-              // className="position-fixed d-none d-lg-flex flex-column vh-100"
               className={`${styles.userCardDiscussion} position-fixed d-flex flex-column vh-100`}
             >
               <div className="col-xs-12">
@@ -103,6 +105,9 @@ const Profile = () => {
           </main>
         </div>
       </Container>
+
+      {/* Open Editor Modal */}
+      {showModal && <FeedPostEditorModal pageAt={router.asPath} />}
     </AuthContent>
   );
 };

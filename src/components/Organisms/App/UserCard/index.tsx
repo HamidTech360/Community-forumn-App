@@ -5,8 +5,10 @@ import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import { useSelector } from "@/redux/store";
 
 import Avatar from "@/components/Atoms/Avatar";
+import { useRouter } from "next/router";
 
 const UserCard = () => {
+  const router = useRouter();
   const data = useSelector(selectUser);
 
   useEffect(() => {
@@ -46,21 +48,22 @@ const UserCard = () => {
         className="d-flex justify-content-between"
         style={{ fontSize: "12px" }}
       >
-        <div className="d-flex flex-column align-items-center">
-          <span>{data?.following?.length}</span>
-          <small>following</small>
-        </div>
         <div className="d-flex flex-column align-items-center ">
           <span>{data?.followers?.length}</span>
           <small>followers</small>
         </div>
-      </div>{" "}
+        <div className="d-flex flex-column align-items-center">
+          <span>{data?.following?.length}</span>
+          <small>following</small>
+        </div>
+      </div>
       <div className="d-grid mt-2 w-100 px-2">
         {" "}
         <Button
           variant="light"
           className="text-center "
           style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
+          onClick={() => router.push("/profile")}
         >
           <Link href={`/profile`}>View Profile</Link>
         </Button>
