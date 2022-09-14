@@ -92,8 +92,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       formData.append("editorContent", editorContentValue);
       formData.append("mentions", usersToSendNotification);
 
-      console.log(usersToSendNotification, editorContentValue)
-      
+      console.log(usersToSendNotification, editorContentValue);
 
       if (!slatePostToEdit) {
         // New Post
@@ -140,7 +139,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         } catch (error) {
           // Set Progress Bar Color
           dispatch(setProgressVariant("danger"));
-          console.log('error',error.response?.data)
+          console.log("error", error.response?.data);
           // console.error(error);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
@@ -199,7 +198,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         } catch (error) {
           // Set Progress Bar Color
           dispatch(setProgressVariant("danger"));
-         
+
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
               position: toast.POSITION.TOP_RIGHT,
