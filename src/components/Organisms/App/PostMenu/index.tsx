@@ -78,8 +78,10 @@ const PostCardMenu = ({
                 <span id={`followStr-${post?.author?._id}`}>Follow</span>
               </>
             )}{" "}
-            @{post?.author?.firstName?.split(" ")[0]}
-            {post?.author?.lastName?.substring(0, 1)}
+            @
+            {post?.author?.username
+              ? post?.author?.username
+              : post?.author?.firstName?.split(" ")[0]}
           </NavDropdown.Item>
         </>
       ) : null}
@@ -166,8 +168,10 @@ export const PostMenu = ({
                 </span>
               </>
             )}{" "}
-            @{post?.author?.firstName?.split(" ")[0]}
-            {post?.author?.lastName?.substring(0, 1)}
+            @
+            {post?.author?.username
+              ? post?.author?.username
+              : post?.author?.firstName?.split(" ")[0]}
           </NavDropdown.Item>
         </>
       ) : null}
@@ -252,8 +256,10 @@ export const PostMenuModal = ({
                 </span>
               </>
             )}{" "}
-            @{comment?.author?.firstName?.split(" ")[0]}
-            {comment?.author?.lastName?.substring(0, 1)}
+            @
+            {comment?.author?.username
+              ? comment?.author?.username
+              : comment?.author?.firstName?.split(" ")[0]}
           </NavDropdown.Item>
         </>
       ) : null}

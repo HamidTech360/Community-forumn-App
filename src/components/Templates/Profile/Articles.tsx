@@ -29,6 +29,7 @@ const Articles = () => {
         dataLength={paginatedData?.length ?? 0}
       >
         <Row>
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {paginatedData.map((post: Record<string, any>, key: number) => (
             <Col key={`posts_${key}`} md={6} className={`my-4 ${styles.card}`}>
               <Card

@@ -64,7 +64,6 @@ const ProfileCard = ({
     e.preventDefault();
     const reader = new FileReader();
     const file = e.target.files[0];
-    console.log(e.target.name);
 
     reader.onloadend = () => {
       if (e.target.name == "image") {
@@ -74,7 +73,6 @@ const ProfileCard = ({
         setSelectedImg(selectedImg_c);
         setProfileImg(reader.result);
         setShowUpdateImgBtn(true);
-        console.log(file);
       } else if (e.target.name == "cover") {
         const selectedImg_c = { ...selectedCoverImage };
         selectedImg_c["file"] = file;
@@ -107,7 +105,6 @@ const ProfileCard = ({
         }
       );
 
-      // console.log(response.data);
       toast.success("Image uploaded", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 5000
@@ -239,6 +236,7 @@ const ProfileCard = ({
         >
           <div
             className="d-flex flex-column align-items-center"
+            style={{ cursor: "pointer" }}
             onClick={() => handlePath("connections")}
           >
             <span>{data.followers?.length}</span>
@@ -246,6 +244,7 @@ const ProfileCard = ({
           </div>
           <div
             className="d-flex flex-column align-items-center"
+            style={{ cursor: "pointer" }}
             onClick={() => handlePath("connections")}
           >
             <span>{data.following?.length}</span>
@@ -255,7 +254,7 @@ const ProfileCard = ({
       </Card.Body>
       <Card.Footer>
         {" "}
-        <Nav className="d-flex justify-content-around  text-capitalize">
+        <Nav className="d-flex justify-content-around text-capitalize">
           {Object.keys(Components).map(item => (
             <Nav.Item
               key={item}

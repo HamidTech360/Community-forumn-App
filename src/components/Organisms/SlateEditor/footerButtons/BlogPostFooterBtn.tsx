@@ -285,6 +285,43 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
     }
   };
 
+  const saveAsDraft = async () => {
+    const editorInnerHtml = (
+      document.getElementById(editorID) as HTMLInputElement
+    ).innerHTML;
+
+    // /*
+    //  ** Mentioned Users To Send Notification
+    //  ** Below Map() Is Important To Confirm The Mentioned User Hasn't Been Deleted
+    //  */
+    // // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // const usersToSendNotification: any = [];
+    // if (mentionedUsers.length > 0) {
+    //   await mentionedUsers.forEach(user => {
+    //     if (editorInnerHtml?.includes(user.userName)) {
+    //       usersToSendNotification.push(user?.userId);
+    //     }
+    //   });
+    // }
+
+    const formData = new FormData();
+
+    formData.append("postBody", editorInnerHtml);
+    // mediaUpload.map((file: File) => {
+    //   formData.append("media", file);
+    // });
+    formData.append("category", selectedCategory.tag);
+    formData.append("postTitle", showPostTitle);
+    formData.append("SlateContentValue", JSON.stringify(editorContentValue));
+    // formData.append("mentions", usersToSendNotification);
+
+    // const exploreSaveAsDraft = {
+    //   post: formData
+    // };
+
+    localStorage.setItem("exploreSaveAsDraft", JSON.stringify(formData));
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
       <div className="">
@@ -308,27 +345,13 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
           ))}
         </DropdownButton>
       </div>
-      <div className="">
-        <DropdownButton
-          as={ButtonGroup}
-          title="Tags"
-          id="bg-nested-dropdown-2"
-          variant="outline-secondary"
-          size="sm"
-          className="m-1"
-        >
-          <Dropdown.Item eventKey="1" variant="outline-secondary">
-            Dropdown link 1
-          </Dropdown.Item>
-          <Dropdown.Item eventKey="2">Dropdown link 2</Dropdown.Item>
-        </DropdownButton>
-      </div>
       <div className="col-12 col-md-3 col-lg-3 mx-0 px-0 d-grid">
         <Button
           variant="outline-primary"
           size="sm"
           style={{ borderRadius: "5px" }}
           className="m-1"
+          onClick={saveAsDraft}
         >
           Save as draft
         </Button>

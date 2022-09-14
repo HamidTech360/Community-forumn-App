@@ -70,7 +70,7 @@ const GroupInfoCard = ({ data }: any) => {
   useEffect(() => {
     data.images?.avatar && setProfileImg(data?.images?.avatar);
     data.images?.cover && setCoverImg(data?.images?.cover);
-    console.log(data.groupMembers?.find(e => e._id === user._id))
+    // console.log(data.groupMembers?.find(e => e._id === user._id))
   }, [data?.images]);
 
   const [selectedImg, setSelectedImg] = useState({
