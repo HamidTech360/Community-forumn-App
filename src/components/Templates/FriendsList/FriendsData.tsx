@@ -4,7 +4,6 @@ import { Card, Col, Image, ListGroup, Row } from "react-bootstrap";
 import styles from "../../../styles/friends.module.scss";
 import FriendListDotMenu from "./FriendListDotMenu";
 import { useSelector } from "@/redux/store";
-import { useRouter } from "next/router";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 const FriendsData = ({
   friendsList
@@ -22,6 +21,7 @@ const FriendsData = ({
       <Row xs={1} md={2}>
         {friendsList?.map(friend => (
           <Col key={friend._id}>
+          
             <Card key={friend.id} className="mb-3">
               <Card.Body>
                 <ListGroup variant="flush">
@@ -50,13 +50,13 @@ const FriendsData = ({
                           {friend.firstName} {friend.lastName}
                         </Card.Title>
                       </div>
-
+                    </div>
                       {/* <FiMoreVertical className="ms-auto " /> */}
                     </ListGroup.Item>
                   </ListGroup>
                 </Card.Body>
               </Card>
-            </Link>
+          
 
           </Col>
         ))}
