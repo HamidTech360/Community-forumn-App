@@ -130,7 +130,7 @@ const BlogPost = () => {
           authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
       });
-      router.push("/explore");
+      router.back();
     } catch (error) {
       // console.log(error.response?.data);
     }
@@ -159,14 +159,11 @@ const BlogPost = () => {
     // console.log("comment:", comment);
     // console.log("comment._id:", comment?._id);
     try {
-     await axios.delete(
-        `${config.serverUrl}/api/comments/${comment?._id}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`
-          }
+      await axios.delete(`${config.serverUrl}/api/comments/${comment?._id}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
-      );
+      });
 
       dispatch(setCommentIsDeleted(comment?._id));
     } catch (error) {
@@ -248,7 +245,7 @@ const BlogPost = () => {
           <div
             className="col-12 col-md-1 justify-content-left align-items-top"
             style={{ cursor: "pointer" }}
-            onClick={() => router.push("/explore")}
+            onClick={() => router.back()}
           >
             <HiOutlineArrowLeft className="h3" />
           </div>
@@ -286,7 +283,7 @@ const BlogPost = () => {
                     </small>
                   </div>
                 </div>
-                 {/* Display Feature Image */}
+                {/* Display Feature Image */}
                 <div className="row justify-content-center">
                   <div className="col-12">
                     <MediaDisplay media={blogPost.media} breakPoint={2} />

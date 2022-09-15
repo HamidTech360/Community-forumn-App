@@ -79,9 +79,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           }
         });
       }
-      console.log("usersToSendNotification:", usersToSendNotification);
-      console.log("editorContentValue:", editorContentValue);
-      console.log("editorInnerHtml:", editorInnerHtml);
+
       // Form Data
       const formData = new FormData();
 
@@ -89,10 +87,8 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
-      formData.append("editorContent", editorContentValue);
+      formData.append("SlateContentValue", JSON.stringify(editorContentValue));
       formData.append("mentions", usersToSendNotification);
-
-      console.log(usersToSendNotification, editorContentValue);
 
       if (!slatePostToEdit) {
         // New Post

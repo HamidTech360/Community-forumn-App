@@ -80,8 +80,6 @@ const EmbedPostImage = ({ editor, format }) => {
       // Form Data
       const formData = new FormData();
       uploadedPostImage.forEach(async (file: File & { preview: string }) => {
-        console.log("file:", file);
-
         formData.append("image", file);
 
         try {
@@ -110,8 +108,6 @@ const EmbedPostImage = ({ editor, format }) => {
             }
           );
 
-          console.log("Upload response:", response.data);
-
           const embedTitleValue = file.name;
           const embedAddressValue = response.data;
 
@@ -127,19 +123,18 @@ const EmbedPostImage = ({ editor, format }) => {
           // Clear Post Image
           dispatch(setPostImageUpload([]));
           dispatch(setProgressBarNum(0));
+          // Close Modal
+          setShow(prev => !prev);
         } catch (error) {
           // Set Progress Bar Color
           dispatch(setProgressVariantPost("danger"));
-          console.log("error:", error);
+          // console.log("error:", error);
         }
       });
+    } else {
+      // Close Modal
+      setShow(prev => !prev);
     }
-    // // Reset ProgressBar
-    // dispatch(setProgressVariant("primary"));
-    // dispatch(setProgressBarNum(0));
-    setShow(false);
-    // Close Modal
-    setShow(prev => !prev);
   };
 
   return (
@@ -168,7 +163,7 @@ const EmbedPostImage = ({ editor, format }) => {
           closeButton
         >
           <Modal.Title style={{ fontWeight: "700" }}>
-            Post <small> image </small> <Icon icon={format} />
+            Add <small> media </small> <Icon icon={format} />
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={submitEmbed}>
