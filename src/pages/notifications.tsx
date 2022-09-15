@@ -27,9 +27,9 @@ import { useRouter } from "next/router";
 import {
   selectNotifications,
   selectNotificationsCount,
-  setNotificationsCount,
   setNotificationsData
 } from "@/reduxFeatures/api/notifications";
+import { setActiveTab } from "@/reduxFeatures/app/settingsSlice";
 
 const Notifications = () => {
   const router = useRouter();
@@ -40,7 +40,7 @@ const Notifications = () => {
   const totalNotificationsState = useSelector(selectNotificationsCount);
 
   const [allNotifications, setAllNotifications] = useState([]);
-  const [totalNotifications, setTotalNotifications] = useState(0);
+  const [, setTotalNotifications] = useState(0);
   const [unReadNotifications, setUnReadNotifications] = useState(undefined);
 
   const radios = [
@@ -77,8 +77,8 @@ const Notifications = () => {
   }, []);
 
   const navigateToItem = async item => {
-    // Update Unread Notification Count
-    dispatch(setNotificationsCount(totalNotifications - 1));
+    // // Update Unread Notification Count
+    // dispatch(setNotificationsCount(totalNotifications - 1));
 
     const index = allNotifications.indexOf(item);
 
@@ -128,7 +128,10 @@ const Notifications = () => {
             variant="outline-primary"
             style={{ textAlign: "start" }}
             onClick={() => {
+              // Set Settings Page Active Tab
+              dispatch(setActiveTab("notifications"));
               router.push("/settings");
+              // Close Notification Canvas
               dispatch(notificationsOffcanvas(false));
             }}
           >
@@ -235,7 +238,7 @@ const Notifications = () => {
 
                 {allNotifications?.map((notification, index) => (
                   <div
-                    className={notification.read ? "text-muted fw-normal" : ""}
+                    className={notification.read ? "text-muted" : ""}
                     key={index}
                     onClick={() => navigateToItem(notification)}
                   >
