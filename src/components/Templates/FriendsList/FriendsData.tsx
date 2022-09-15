@@ -3,19 +3,25 @@ import React from "react";
 import { Card, Col, Image, ListGroup, Row } from "react-bootstrap";
 import styles from "../../../styles/friends.module.scss";
 import FriendListDotMenu from "./FriendListDotMenu";
-
+import { useSelector } from "@/redux/store";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 const FriendsData = ({
   friendsList
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   friendsList: Record<string, any>[];
 }) => {
-  const router = useRouter();
+
+  // const { friends } = props.friendsList;
+  console.log(friendsList)
+  const user = useSelector(selectUser);
+  const router = useRouter()
   return (
     <>
       <Row xs={1} md={2}>
         {friendsList?.map(friend => (
           <Col key={friend._id}>
+          
             <Card key={friend.id} className="mb-3">
               <Card.Body>
                 <ListGroup variant="flush">
@@ -44,14 +50,14 @@ const FriendsData = ({
                           {friend.firstName} {friend.lastName}
                         </Card.Title>
                       </div>
-                      <div className="col-2">
-                        <FriendListDotMenu friend={friend} />
-                      </div>
                     </div>
-                  </ListGroup.Item>
-                </ListGroup>
-              </Card.Body>
-            </Card>
+                      {/* <FiMoreVertical className="ms-auto " /> */}
+                    </ListGroup.Item>
+                  </ListGroup>
+                </Card.Body>
+              </Card>
+          
+
           </Col>
         ))}
       </Row>

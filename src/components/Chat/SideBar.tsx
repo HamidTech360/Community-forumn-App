@@ -13,7 +13,7 @@ import axios from "axios";
 import config from "@/config";
 import Avatar from "../Atoms/Avatar";
 
-const SideBar = ({ conversations, selectChat }) => {
+const SideBar = ({ conversations, selectChat }:any) => {
   const [open, setOpen] = useState(true);
   const user = useSelector(selectUser);
   const [allUsers, setAllUsers] = useState([]);
@@ -117,17 +117,20 @@ const SideBar = ({ conversations, selectChat }) => {
                       >
                         <div className={styles.imageBox}>
                           <Avatar
-                            src={message.sender?.images?.avatar}
+                            src={ message.sender._id == user?._id
+                              ? message.receiver.images?.avatar
+                              : message.sender.images?.avatar
+                            }
                             name={message.sender.firstName}
                             width={60}
                             height={60}
                           />
                         </div>
                         <div className={styles.messageTexts}>
-                          <div>
+                          <div style={{fontWeight:'600'}}>
                             {message.sender._id == user._id
-                              ? message.receiver.firstName
-                              : message.sender.firstName}{" "}
+                              ? `${message.receiver.firstName} ${message.receiver.lastName}`
+                              : `${message.sender.firstName} ${message.sender.lastName}`}{" "}
                           </div>
                           <div>
                             <p

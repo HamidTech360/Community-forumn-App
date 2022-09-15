@@ -9,8 +9,10 @@ import Settings from "@/components/Templates/new-group/settings";
 import AddConnections from "@/components/Templates/new-group/connections";
 import AuthContent from "@/components/Auth/AuthContent";
 import { toast, ToastContainer } from "react-toastify";
+import config from "@/config";
 import { useRouter } from "next/router";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const CreateNewGroup = () => {
   const router = useRouter();
@@ -88,10 +90,13 @@ const CreateNewGroup = () => {
 
     setIsLoading(true);
 
-    // console.log("Final group data is ", data);
-
+    console.log("Final group data is ", data);
+   
     try {
-      // console.log(response.data);
+      const response = await axios.post(`${config.serverUrl}/api/groups`, data, {headers:{
+        authorization:`Bearer ${localStorage.getItem('accessToken')}`
+      }})
+      console.log(response.data);
       setIsLoading(false);
       toast.success("Group created successfully", {
         position: toast.POSITION.TOP_RIGHT,

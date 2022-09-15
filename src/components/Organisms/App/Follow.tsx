@@ -8,8 +8,6 @@ import {
   selectUser,
   selectFollowing
 } from "@/reduxFeatures/authState/authStateSlice";
-// import { useSelector } from "react-redux";
-import makeSecuredRequest from "@/utils/makeSecuredRequest";
 import { useDispatch, useSelector } from "@/redux/store";
 import { useRouter } from "next/router";
 import Avatar from "@/components/Atoms/Avatar";
@@ -17,6 +15,8 @@ import Avatar from "@/components/Atoms/Avatar";
 const Follow = () => {
   const router = useRouter();
   const [users, setUsers] = useState([]);
+  const [connections, setConnections] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
   const user = useSelector(selectUser);
 
   const currentlyFollowing = useSelector(selectFollowing);
@@ -25,15 +25,13 @@ const Follow = () => {
   useEffect(() => {
     (async function () {
       try {
-        const response = await axios.get(
-          `${config.serverUrl}/api/users/connections/all`,
-          {
-            headers: {
+        const response = await axios.get(`${config.serverUrl}/api/users/connections/all`, {headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`
             }
           }
         );
         console.log("All connections+++++:", response.data);
+        setConnections(response.data.connections)
       } catch (error) {
         console.log("ERROR:", error);
       }
@@ -42,88 +40,20 @@ const Follow = () => {
 
   const handleFollow = async (id: string) => {
     try {
-      await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
-      // Update Auth User State
-      (async function () {
-        try {
-          const response = await axios.get(`${config.serverUrl}/api/auth`, {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`
-            }
-          });
-          dispatch(userAuth(response.data));
-        } catch (error) {
-          localStorage.removeItem("accessToken");
-        }
-        // document.getElementById(`followBtn-${id}`).style.display = "none";
-      })();
-      // console.log("done");
+      const response = await axios.get(`${config.serverUrl}/api/users/${id}/follow`, {headers:{
+        authorization:`Bearer ${localStorage.getItem('accessToken')}`
+      }});
+      const remainingConnections = connections.filter(item=>item._id!=id)
+      setConnections(remainingConnections);
+      dispatch(userAuth(response.data.user));
     } catch (error) {
       // console.error("follow Error:", error);
     }
   };
 
-  useEffect(() => {
-    (async function () {
-      try {
-        // users.length === undefined || users.length === 0
-        // console.log("users.length", users.length);
-        // if (users.length === undefined) {
-        //   console.log("users.length is undefined");
-        // }
-        const { data } = await axios.get(`${config.serverUrl}/api/users`);
-        // console.log("data:", data);
 
-        let sliceNum = 0;
-        if (window.innerHeight >= 1024) {
-          sliceNum = 10;
-        } else if (window.innerHeight >= 888) {
-          sliceNum = 8;
-        } else if (window.innerHeight >= 777) {
-          sliceNum = 7;
-        } else {
-          sliceNum = 5;
-        }
-
-        await data.users.sort(function () {
-          return 0.5 - Math.random();
-        });
-
-        // setUsers(
-        //   data.users
-        //     .filter((person) => {
-        //       return (
-        //         // !person.followers.includes(user._id) ||
-        //         person._id.toString() !== user._id.toString()
-        //       );
-        //     })
-        //     // .slice(0, 10)
-        //     .slice(0, sliceNum)
-        // );
-
-        const notFollowing = data.users.filter(person => {
-          if (
-            person?._id.toString() !== user?._id.toString() &&
-            !currentlyFollowing.includes(person?._id)
-          ) {
-            return person;
-          }
-        });
-
-        if (
-          JSON.stringify(currentlyFollowing) !== JSON.stringify(notFollowing)
-        ) {
-          setUsers(notFollowing.slice(0, sliceNum));
-        }
-      } catch (error) {
-        // console.log(error.response?.data);
-      }
-    })();
-    // }, [window.innerHeight]);
-  }, [currentlyFollowing]);
   return (
     <ListGroup
-      // className="container-fluid p-0 p-xl-2 radius-10 shadow"
       className="container-fluid p-0 p-xl-2 radius-10"
       as={Card}
       variant="flush"
@@ -134,11 +64,9 @@ const Follow = () => {
     >
       <h6 className="text-center">Suggested connections</h6>
 
-      {users.map((user, key) => (
+      {connections.map((user, key) => (
         <div className="row align-items-center border-0" key={`author-${key}`}>
           <ListGroup.Item
-            // key={`author-${key}`}
-            // style={{ boxSizing: "border-box" }}
             className="d-flex align-items-center gap-0 gap-xl-2 gap-xxl-3 w-100 justify-content-start border-0 bg-transparent"
           >
             {/* <div className="d-flex gap-2 py-1 align-items-center justify-content-center w-100"> */}

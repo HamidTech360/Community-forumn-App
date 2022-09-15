@@ -55,6 +55,7 @@ const Groups = () => {
             }
           }
         );
+        
         setGroups(response.data.groups);
 
         const randomPosts = await axios.get(
@@ -62,6 +63,7 @@ const Groups = () => {
         );
 
         setPosts(randomPosts.data.posts);
+        console.log(randomPosts.data)
       } catch (error) {
         // console.error(error.response?.data);
       }
@@ -104,7 +106,7 @@ const Groups = () => {
             <div className="d-flex justify-content-between my-2">
               {" "}
               <p className="bold">Your groups</p>
-              <p className="text-primary">See more</p>
+              {/* <p className="text-primary">See more</p> */}
             </div>
             <div
               style={{
@@ -123,7 +125,7 @@ const Groups = () => {
                   <Link href={`/groups/${item._id}/timeline`} key={i} passHref>
                     <div className={styles.groupCard}>
                       <Image
-                        src="/images/groups2.png"
+                        src={item.images?.cover || "/images/groups2.png"}
                         className={styles.groupProfileImg}
                         alt=""
                       />
@@ -131,7 +133,7 @@ const Groups = () => {
                       <div>
                         <div>{item.name} </div>
                         <div className={styles.groupAdminName}>
-                          Admin: {item.admin?.firstName}{" "}
+                          Admin: {item.admin?.lastName}{" "}
                         </div>
                       </div>
                     </div>
@@ -151,9 +153,9 @@ const Groups = () => {
                 >
                   <Card style={{ height: "280px", borderRadius: "10px" }}>
                     <CardImg
-                      src={"/images/article.png"}
+                      src={post.group.images?.avatar || "/images/article.png"}
                       alt=""
-                      style={{ height: "60%" }}
+                      style={{ height: "60%", objectFit:'cover' }}
                     />
                     <Card.Body className="d-flex flex-column px-2">
                       <p className="bold">{post.postTitle}</p>
