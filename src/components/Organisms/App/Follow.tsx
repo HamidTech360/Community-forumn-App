@@ -8,8 +8,6 @@ import {
   selectUser,
   selectFollowing
 } from "@/reduxFeatures/authState/authStateSlice";
-// import { useSelector } from "react-redux";
-import makeSecuredRequest from "@/utils/makeSecuredRequest";
 import { useDispatch, useSelector } from "@/redux/store";
 import { useRouter } from "next/router";
 import Avatar from "@/components/Atoms/Avatar";
@@ -18,6 +16,7 @@ const Follow = () => {
   const router = useRouter();
   const [users, setUsers] = useState([]);
   const [connections, setConnections] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
   const user = useSelector(selectUser);
 
   const currentlyFollowing = useSelector(selectFollowing);
@@ -27,10 +26,7 @@ const Follow = () => {
   useEffect(() => {
     (async function () {
       try {
-        const response = await axios.get(
-          `${config.serverUrl}/api/users/connections/all`,
-          {
-            headers: {
+        const response = await axios.get(`${config.serverUrl}/api/users/connections/all`, {headers: {
               authorization: `Bearer ${localStorage.getItem("accessToken")}`
             }
           }
@@ -46,70 +42,18 @@ const Follow = () => {
 
   const handleFollow = async (id: string) => {
     try {
-      await makeSecuredRequest(`${config.serverUrl}/api/users/${id}/follow`);
-      // Update Auth User State
-      (async function () {
-        try {
-          const response = await axios.get(`${config.serverUrl}/api/auth`, {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`
-            }
-          });
-          dispatch(userAuth(response.data));
-        } catch (error) {
-          localStorage.removeItem("accessToken");
-        }
-        // document.getElementById(`followBtn-${id}`).style.display = "none";
-      })();
-      // console.log("done");
+      const response = await axios.get(`${config.serverUrl}/api/users/${id}/follow`, {headers:{
+        authorization:`Bearer ${localStorage.getItem('accessToken')}`
+      }});
+      const remainingConnections = connections.filter(item=>item._id!=id)
+      setConnections(remainingConnections);
+      dispatch(userAuth(response.data.user));
     } catch (error) {
       // console.error("follow Error:", error);
     }
   };
 
-  useEffect(() => {
-    (async function () {
-      try {
-       
-        const { data } = await axios.get(`${config.serverUrl}/api/users`);
- 
 
-        let sliceNum = 0;
-        if (window.innerHeight >= 1024) {
-          sliceNum = 10;
-        } else if (window.innerHeight >= 888) {
-          sliceNum = 8;
-        } else if (window.innerHeight >= 777) {
-          sliceNum = 7;
-        } else {
-          sliceNum = 5;
-        }
-
-        await data.users.sort(function () {
-          return 0.5 - Math.random();
-        });
-
-
-        const notFollowing = data.users.filter(person => {
-          if (
-            person?._id.toString() !== user?._id.toString() &&
-            !currentlyFollowing.includes(person?._id)
-          ) {
-            return person;
-          }
-        });
-
-        if (
-          JSON.stringify(currentlyFollowing) !== JSON.stringify(notFollowing)
-        ) {
-          setUsers(notFollowing.slice(0, sliceNum));
-        }
-      } catch (error) {
-        // console.log(error.response?.data);
-      }
-    })();
-    // }, [window.innerHeight]);
-  }, [currentlyFollowing]);
   return (
     <ListGroup
       className="container-fluid p-0 p-xl-2 radius-10"
