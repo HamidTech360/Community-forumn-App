@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import config from "@/config";
 import axios from "axios";
 import Link from "next/link";
@@ -41,8 +41,9 @@ import {
   MdOutlineNotificationsActive
 } from "react-icons/md";
 import {
-  getNotification,
-  updateNumberOfNotifications
+  selectNotificationsCount,
+  setNotificationsCount,
+  setNotificationsData
 } from "@/reduxFeatures/api/notifications";
 import Head from "next/head";
 import styles from "@/styles/utils.module.scss";
@@ -50,11 +51,55 @@ import SearchTabs from "@/components/Molecules/SearchTabs";
 import Avatar from "@/components/Atoms/Avatar";
 
 const AuthHeader = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
+  const totalNotifications = useSelector(selectNotificationsCount);
   const showing = useSelector(selectSearchModal);
-
   const handleClosing = () => dispatch(setSearchModal(false));
   const handleShowing = () => dispatch(setSearchModal(true));
+  const show = useSelector(selectNotificationOffcanvas);
+  const data = useSelector(selectUser);
+  const [latestNotificationTime, setLatestNotificationTime] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get(
+          `${config.serverUrl}/api/notifications`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("accessToken")}`
+            }
+          }
+        );
+
+        const notificationsCountClearedAt = localStorage.getItem(
+          "notificationsCountClearedAt"
+        );
+
+        dispatch(setNotificationsData(response.data.notifications));
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let badgeCount: string | any[];
+        if (notificationsCountClearedAt) {
+          badgeCount = response.data.notifications.filter(
+            item => item.createdAt > notificationsCountClearedAt
+          );
+        } else {
+          badgeCount = response.data.notifications.filter(item => !item.read);
+        }
+
+        dispatch(setNotificationsCount(badgeCount.length));
+
+        setLatestNotificationTime(
+          response.data.notifications[0].updatedAt ||
+            response.data.notifications[0].createdAt
+        );
+      } catch (error) {
+        // console.log(error.response?.data);
+      }
+    })();
+  }, [dispatch]);
 
   const links = [
     { icon: "feed", name: "Home" },
@@ -63,17 +108,26 @@ const AuthHeader = () => {
     { icon: "groups", name: "Groups" }
   ];
 
-  // const [showModal, setShowModal] = useState(false);
-  const router = useRouter();
-
-  const show = useSelector(selectNotificationOffcanvas);
-  const data = useSelector(selectUser);
-
   // Set notificationsOffcanvas in redux state to true
   const handleClose = () => dispatch(notificationsOffcanvas(false));
   const handleShow = () => dispatch(notificationsOffcanvas(true));
 
   const notificationsDisplay = () => {
+    // Set latestNotificationTime to last notification time if any or to current date
+    const notificationsCountClearedAt = localStorage.getItem(
+      "notificationsCountClearedAt"
+    )
+      ? latestNotificationTime
+      : new Date().toISOString();
+
+    localStorage.setItem(
+      "notificationsCountClearedAt",
+      notificationsCountClearedAt
+    );
+
+    // Clear UI Notification Badge
+    dispatch(setNotificationsCount(0));
+
     if (window.innerWidth >= 992) {
       // Display Offcanvas
       handleShow();
@@ -127,32 +181,6 @@ const AuthHeader = () => {
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await axios.get(
-          `${config.serverUrl}/api/notifications`,
-          {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem("accessToken")}`
-            }
-          }
-        );
-        dispatch(getNotification(response.data.notifications));
-        const unRead = response.data.notifications.filter(item => !item.read);
-        dispatch(updateNumberOfNotifications({ total: unRead.length }));
-      } catch (error) {
-        console.log(error.response?.data);
-      }
-    })();
-  }, [dispatch]);
-
-  //const notifications = useSelector(state=>state.notification.data?.notifications)
-  const totalNotifications = useSelector(
-    state => state.notification.noOfNotifications
-  );
-  // console.log('lenght of notifications is ', notifications?.length);
-
   return (
     <>
       <Head>
@@ -160,7 +188,6 @@ const AuthHeader = () => {
       </Head>
       <Navbar
         className={`bg-white  ${styles.navBar}`}
-        // style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
         style={{ borderBottom: "1.5px solid rgba(0, 0, 0, 0.125)" }}
         fixed="top"
       >
@@ -218,7 +245,6 @@ const AuthHeader = () => {
                 ) : (
                   <BsEnvelope />
                 )}
-                {/* <Badge className={styles.badge}>0</Badge> */}
               </Button>
             </Link>
 
@@ -249,9 +275,11 @@ const AuthHeader = () => {
                 <MdOutlineNotificationsActive />
               )}
 
-              <Badge className={styles.badge}>
-                {totalNotifications > 99 ? `${99}+` : totalNotifications}
-              </Badge>
+              {totalNotifications > 0 && (
+                <Badge className={styles.badge}>
+                  {totalNotifications > 99 ? `${99}+` : totalNotifications}
+                </Badge>
+              )}
             </Button>
           </div>
           <NavDropdown
@@ -319,13 +347,10 @@ const AuthHeader = () => {
       {router.asPath !== "/chat" && (
         <Navbar
           className="mobi-nav bg-white rounded"
-          // style={{ boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.04)" }}
           style={{ borderTop: "1.5px solid rgba(0, 0, 0, 0.125)" }}
           fixed="bottom"
         >
-          {/* <Container className="d-flex justify-content-start"> */}
           <Container>
-            {/* <Nav className="row d-flex justify-content-around gap-4 w-100"> */}
             <Nav className="row w-100">
               {links.map((link, key) => (
                 <div className="col-3" key={key}>
@@ -350,12 +375,7 @@ const AuthHeader = () => {
         </Navbar>
       )}
 
-      <Modal
-        show={showing}
-        onHide={handleClosing}
-        scrollable
-        // className="mt-lg-3 pt-lg-3 mt-lg-0 pt-lg-0"
-      >
+      <Modal show={showing} onHide={handleClosing} scrollable>
         <Modal.Body>
           <SearchTabs />
         </Modal.Body>

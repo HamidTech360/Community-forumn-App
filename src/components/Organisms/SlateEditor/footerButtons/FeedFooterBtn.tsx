@@ -8,7 +8,8 @@ import { setNewFeed } from "@/reduxFeatures/api/feedSlice";
 import { setShowCreatePostModal } from "@/reduxFeatures/app/createPost";
 import {
   setSlatePostToEdit,
-  selectSlatePostToEdit
+  selectSlatePostToEdit,
+  selectEmptyEditorContentValue
 } from "@/reduxFeatures/app/editSlatePostSlice";
 // import { serialize } from "../utils/serializer";
 import { setModalCardPostEdited } from "@/reduxFeatures/app/postModalCardSlice";
@@ -28,6 +29,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
   const dispatch = useDispatch();
   const [uploading, setUploading] = useState(false);
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
+  const emptyEditorContentValue = useSelector(selectEmptyEditorContentValue);
   const mediaUpload = useSelector(selectMediaUpload);
   const mentionedUsers = useSelector(selectMentionedUsers);
 
@@ -50,20 +52,10 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
 
-    const emptyEditorInnerHtml =
-      '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
-
-    if (editorInnerHtml === emptyEditorInnerHtml) {
-      toast.warn("Type your message to proceed", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: "1"
-      });
-      return;
-    }
-
-    // console.log("editorContentValue:", editorContentValue);
-    // console.log("editorInnerHtml:", editorInnerHtml);
-    if (editorInnerHtml.trim() !== "") {
+    if (
+      JSON.stringify(emptyEditorContentValue) !==
+      JSON.stringify(editorContentValue)
+    ) {
       setUploading(true);
 
       /*
@@ -79,9 +71,6 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           }
         });
       }
-      // console.log("usersToSendNotification:", usersToSendNotification);
-      // console.log("editorContentValue:", editorContentValue);
-      // console.log("editorInnerHtml:", editorInnerHtml);
 
       // Form Data
       const formData = new FormData();
@@ -92,8 +81,6 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       });
       formData.append("SlateContentValue", JSON.stringify(editorContentValue));
       formData.append("mentions", usersToSendNotification);
-
-      // console.log(usersToSendNotification, editorContentValue);
 
       if (!slatePostToEdit) {
         // New Post
@@ -140,8 +127,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
         } catch (error) {
           // Set Progress Bar Color
           dispatch(setProgressVariant("danger"));
-          console.log("error", error.response?.data);
-          // console.error(error);
+
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a Blog Post", {
               position: toast.POSITION.TOP_RIGHT,
@@ -166,7 +152,8 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
             formData,
             {
               headers: {
-                authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "Content-Type": "multipart/form-data"
               },
               // Axios Progress
               onUploadProgress: function (progressEvent: {
@@ -214,6 +201,11 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
           setUploading(false);
         }
       }
+    } else {
+      toast.warn("Type your message to proceed...", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1"
+      });
     }
   };
 

@@ -36,7 +36,10 @@ import FooterButtons from "./footerButtons/FooterButtons";
 import { useRouter } from "next/router";
 import deserializeFromHtml from "./utils/serializer";
 
-import { selectSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
+import {
+  selectEmptyEditorContentValue,
+  selectSlatePostToEdit
+} from "@/reduxFeatures/app/editSlatePostSlice";
 import { useSelector } from "@/redux/store";
 import Portal, { insertMention, PortalDiv } from "./Elements/Mentions/Portals";
 import { useDispatch } from "react-redux";
@@ -91,6 +94,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   const [listMention, setListMention] = useState([]);
   const [mentionedUsersList, setMentionedUsersList] = useState([]);
   const [showPlaceholder, setShowPlaceholder] = useState(false);
+  const emptyEditorContentValue = useSelector(selectEmptyEditorContentValue);
 
   useEffect(() => {
     // Display Editor Placeholder
@@ -206,22 +210,14 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
 
   // Below ifelse would prevent "cannot find a descendant path [0] error"
   if (editor.children.length === 0) {
-    editor.children.push({
-      type: "paragraph",
-      children: [{ text: "" }]
-    });
+    editor.children.push(emptyEditorContentValue[0]);
   }
 
   const initialState: Descendant[] = editSlatePost?.post
     ? deserializeFromHtml(`<p>${editSlatePost?.post}</p>`)
     : editSlatePost?.postBody
     ? deserializeFromHtml(`<p>${editSlatePost?.postBody}</p>`)
-    : [
-        {
-          type: "paragraph",
-          children: [{ text: "" }]
-        }
-      ];
+    : emptyEditorContentValue;
 
   const [value, setValue] = useState(initialState);
 

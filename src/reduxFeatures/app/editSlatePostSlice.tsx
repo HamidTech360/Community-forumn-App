@@ -33,7 +33,7 @@ export const { setSlatePostToEdit } = editSlatePostSlice.actions;
 export const selectSlatePostToEdit = (state: RootState) =>
   state.editSlatePost.slatePost;
 export const selectEmptyEditorContentValue = (state: RootState) =>
-  state.editSlatePost.slatePost;
+  state.editSlatePost.emptyEditorContentValue;
 
 // exporting the reducer here, as we need to add this to the store
 export default editSlatePostSlice.reducer;
