@@ -1,18 +1,9 @@
 .friendBody {
-  padding: 2rem 0.5rem 1rem;
-
-  background: #ffffff;
-  border-right: 1px solid rgb(216, 213, 213);
-
   @media all and (max-width: 1000px) {
-    border-right: none;
-    margin-bottom: 4rem !important;
     height: auto;
   }
 
   .card {
-    padding: 0 1rem;
-
     .title {
       margin-top: 1rem;
       margin-left: -3rem;
@@ -36,36 +27,33 @@
           font-size: large;
         }
 
-        
         @media all and (max-width: 1000px) {
           font-size: 1.35rem;
           margin-bottom: 0.7rem;
         }
 
-        @media screen and (max-width:300px){
+        @media screen and (max-width: 300px) {
           font-size: 1rem;
           margin-bottom: 0.4rem;
         }
       }
     }
 
-    .subtitle{
-      @media screen and (max-width:1100px){
+    .subtitle {
+      @media screen and (max-width: 1100px) {
         font-size: small;
       }
 
-      @media screen and (max-width:1000px){
+      @media screen and (max-width: 1000px) {
         font-size: medium;
       }
 
-      
-      @media screen and (max-width:300px){
+      @media screen and (max-width: 300px) {
         font-size: x-small;
       }
     }
 
     .dot {
-
       @media screen and (max-width: 1200px) {
         width: 8px;
       }
@@ -78,8 +66,7 @@
         width: 6px;
       }
     }
-    .img{
-      
+    .img {
       width: 70px !important;
       width: 70px !important;
 

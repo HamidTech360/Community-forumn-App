@@ -2,6 +2,7 @@
 import React from "react";
 
 import { Container, Card } from "react-bootstrap";
+import { BsPencilSquare } from "react-icons/bs";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const About = ({ data }: { data?: Record<string, any> }) => {
@@ -30,7 +31,7 @@ const About = ({ data }: { data?: Record<string, any> }) => {
                   <div className="row">
                     <h5 className="col-10">Group description</h5>
                     <h5 className="col-2 btn" style={{ marginTop: "-.5rem" }}>
-                      <i className="bi bi-pencil-square"></i>
+                      <BsPencilSquare />
                     </h5>
                   </div>
                   <div className="row">

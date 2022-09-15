@@ -2,8 +2,6 @@ import React, { useRef, useState } from "react";
 import Button from "../../common/Button";
 import Icon from "../../common/Icon";
 import { isBlockActive } from "../../utils/SlateUtilityFunctions";
-import { Transforms } from "slate";
-import { ReactEditor } from "slate-react";
 
 import styles from "../../../../../styles/SlateEditor/Embed_Slate.module.scss";
 import { Modal, Button as BsBtn, Form } from "react-bootstrap";
@@ -11,22 +9,14 @@ import MediaUpload from "@/components/Organisms/MediaUpload";
 import { setMediaUpload } from "@/reduxFeatures/app/mediaUploadSlice";
 import { useDispatch, useSelector } from "@/redux/store";
 import { selectSlatePostToEdit } from "@/reduxFeatures/app/editSlatePostSlice";
+import { useRouter } from "next/router";
+import FeatureMediaUpload from "@/components/Organisms/MediaUpload/FeatureMediaUpload";
 
 const Embed = ({ editor, format }) => {
-  const urlInputRef = useRef();
+  const router = useRouter();
+  const urlInputRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
   const editSlatePost = useSelector(selectSlatePostToEdit);
-
-  const [editorSelection, setEditorSelection] = useState({
-    anchor: {
-      path: [0, 0],
-      offset: 0
-    },
-    focus: {
-      path: [0, 0],
-      offset: 0
-    }
-  });
 
   const [show, setShow] = useState(false);
 
@@ -36,38 +26,14 @@ const Embed = ({ editor, format }) => {
     setShow(false);
   };
 
-  const handleShow = () => {
-    // If editor.selection === null, then replace null with editorSelection
-    if (editor.selection) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
-      setEditorSelection(Transforms.select(editor, editor.selection));
-    } else {
-      Transforms.select(editor, editorSelection);
-    }
-    // Set Focus on Editor. This is to prevent editor.selection Error when Editor isn't in focus
-    editorSelection && ReactEditor.focus(editor);
-
-    setShow(prev => !prev);
-  };
+  const handleShow = () => setShow(prev => !prev);
 
   const submitEmbed = e => {
     e.preventDefault();
 
-    // let embedTitleValue = embedTitle.current.value;
-    // let embedAddressValue = embedAddress.current.value;
-
-    // editor.selection && Transforms.select(editor, editor.selection);
-    // editor.selection && ReactEditor.focus(editor);
-
-    // insertEmbed(
-    //   editor,
-    //   { alt: embedTitleValue, url: embedAddressValue },
-    //   format
-    // );
+    // Close Modal
     setShow(prev => !prev);
   };
-  // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   return (
     <>
@@ -90,48 +56,40 @@ const Embed = ({ editor, format }) => {
         <Modal.Header
           style={{
             border: "none",
-            backgroundColor: "transparent",
-            marginBottom: "-1rem"
+            backgroundColor: "lightgray"
           }}
           closeButton
         >
-          <Modal.Title>
-            Upload <small> image/video </small> <Icon icon={format} />
+          <Modal.Title style={{ fontWeight: "700" }}>
+            {router.asPath.includes("/feed") ||
+            router.asPath.includes("/groups") ||
+            router.asPath.includes("/profile") ? (
+              // Media Upload <Icon icon="media" />
+              <>
+                Add <small>Image(s)</small> <Icon icon="image" />
+              </>
+            ) : router.asPath.includes("/explore") ||
+              router.asPath.includes("/gist") ? (
+              <>
+                Add <small>Feature Image</small> <Icon icon="image" />
+              </>
+            ) : null}
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={submitEmbed}>
-          <Modal.Body>
+          <Modal.Body style={{ maxHeight: "450px", overflowY: "auto" }}>
             <Form.Group className="mb-3" controlId="formBasicAlt">
-              <div>
-                {/* Media Upload */}
+              {router.asPath.includes("/feed") ||
+              router.asPath.includes("/groups") ||
+              router.asPath.includes("/profile") ? (
+                //   Media Upload
+                <FeatureMediaUpload />
+              ) : router.asPath.includes("/explore") ||
+                router.asPath.includes("/gist") ? (
+                //   Media Upload
                 <MediaUpload />
-                {/* <p
-                  style={{ textAlign: "center", opacity: "0.7", width: "100%" }}
-                >
-                  OR
-                </p> */}
-              </div>
+              ) : null}
             </Form.Group>
-
-            {/* <Form.Group className="mb-3" controlId="formBasicAlt">
-              <Form.Label style={{ fontWeight: "600" }}>Alt:</Form.Label>
-              <Form.Control
-                ref={embedTitle}
-                type="text"
-                placeholder="Title"
-                required
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicLink">
-              <Form.Label style={{ fontWeight: "600" }}>Link:</Form.Label>
-              <Form.Control
-                ref={embedAddress}
-                type="url"
-                placeholder="URL"
-                required
-              />
-            </Form.Group> */}
           </Modal.Body>
 
           <Modal.Footer

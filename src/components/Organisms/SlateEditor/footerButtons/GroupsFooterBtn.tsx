@@ -78,7 +78,9 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
       JSON.stringify(editorContentValue) ===
       JSON.stringify(emptyEditorContentValue)
     ) {
-      toast.warn("Type your message to proceed", {
+      console.log("editorContentValue:", editorContentValue);
+      console.log("emptyEditorContentValue:", emptyEditorContentValue);
+      toast.warn("Type your message to proceed...", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1"
       });
@@ -106,7 +108,7 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
         formData.append("media", file);
       });
       formData.append("group", groupId);
-      formData.append("slateState", editorContentValue);
+      formData.append("SlateContentValue", JSON.stringify(editorContentValue));
       formData.append("mentions", usersToSendNotification);
 
       if (!slatePostToEdit) {

@@ -189,7 +189,8 @@ const AuthHeader = () => {
               <Link key={key} href={`/${link.icon}`} passHref>
                 <div
                   className={`${
-                    router.asPath.substring(1) === link.icon
+                    router.asPath.substring(1) === link.icon ||
+                    router.asPath.substring(1).split("/")[0].includes(link.icon)
                       ? "text-primary auth-name"
                       : "text-muted auth-name"
                   } d-flex flex-column align-items-center gap-1 auth-gap btn`}

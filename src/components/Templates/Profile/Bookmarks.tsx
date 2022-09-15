@@ -10,11 +10,13 @@ const Bookmarks = () => {
       try {
         const { data } = await axios.get(`${config.serverUrl}/api/bookmarks`, {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         });
+
         // console.log("bookmarks:", data);
         setPosts(data.posts.bookmarks.reverse());
+
       } catch (error) {
         // console.log(error.response.data);
       }

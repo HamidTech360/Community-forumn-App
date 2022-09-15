@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { Card as BCard } from "react-bootstrap";
 import DOMPurify from "dompurify";
+import { BiChevronsRight } from "react-icons/bi";
 
 interface ICard {
   _id: string;
@@ -29,15 +30,8 @@ const Card = ({ _id, image, title, author, body, size }: ICard) => {
   return (
     <>
       <BCard
-        // className="shadow-sm"
         style={{
-          // boxShadow:
-          //   size === "small"
-          //     ? "0"
-          //     : "0px 8.21687px 8.21687px rgba(0, 0, 0, 0.1)",
-
           border: size === "small" ? "none" : "1px solid rgba(0, 0, 0, 0.125)",
-
           width: "100%",
           minHeight: "380px"
         }}
@@ -50,7 +44,7 @@ const Card = ({ _id, image, title, author, body, size }: ICard) => {
 
             objectFit: "cover"
           }}
-          onClick={redirectPage}
+          // onClick={redirectPage}
         />
         <BCard.Body>
           <div className="text p-3">
@@ -89,7 +83,7 @@ const Card = ({ _id, image, title, author, body, size }: ICard) => {
               className="d-flex justify-content-end text-primary absolute-bottom"
               style={{ cursor: "pointer" }}
             >
-              Read More &nbsp;<i className="bi bi-chevron-double-right"></i>
+              Read More &nbsp; <BiChevronsRight className="mt-1" size={20} />
             </span>
           </Link>
         </BCard.Body>

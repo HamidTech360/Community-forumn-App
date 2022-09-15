@@ -8,17 +8,21 @@ import { useDispatch, useSelector } from "@/redux/store";
 import {
   selectMediaUpload,
   setMediaUpload
-  // setAcceptingFiles,
-  // selectAcceptingFiles,
 } from "@/reduxFeatures/app/mediaUploadSlice";
+import { selectAcceptedMediaTypes } from "@/reduxFeatures/app/appSlice";
 import ThumbImage from "./ThumbImage";
-import { selectPopulateAcceptedImagesTypes } from "@/reduxFeatures/app/appSlice";
-const MediaUpload = () => {
+const FeatureMediaUpload = () => {
   const dispatch = useDispatch();
+  const acceptedMediaTypes = useSelector(selectAcceptedMediaTypes);
   const uploadedMedia = useSelector(selectMediaUpload);
-  const acceptedImagesTypes = useSelector(selectPopulateAcceptedImagesTypes);
+  // const populateAcceptedImagesTypes = useSelector(
+  //   selectPopulateAcceptedImagesTypes
+  // );
+  // const populateAcceptedVideosTypes = useSelector(
+  //   selectPopulateAcceptedVideosTypes
+  // );
   const [rejectingFiles, setRejectingFiles] = useState([]);
-  const maxFilesAccepted = 1;
+  const maxFilesAccepted = 3;
 
   const onDrop = useCallback((acceptedFiles, fileRejections) => {
     const media2Upload = [
@@ -53,8 +57,8 @@ const MediaUpload = () => {
     useDropzone({
       onDrop,
       maxFiles: maxFilesAccepted,
-      accept: acceptedImagesTypes,
-      maxSize: 3000 * 1024 //3000KB || 3MB
+      accept: acceptedMediaTypes,
+      maxSize: 30000 * 1024 //30000KB || 30MB
       // maxSize: mimeSize
     });
 
@@ -116,4 +120,4 @@ const MediaUpload = () => {
     </div>
   );
 };
-export default MediaUpload;
+export default FeatureMediaUpload;

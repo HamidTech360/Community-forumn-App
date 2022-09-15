@@ -46,6 +46,7 @@ import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import ThumbImage from "../MediaUpload/ThumbImage";
 import {
   selectMediaUpload,
+  selectPostImageUpload,
   selectProgressBarNum,
   selectProgressVariant,
   setMediaUpload,
@@ -84,6 +85,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   const search = useSelector(selectSearch);
   const target = useSelector(selectTarget);
   const uploadedMedia = useSelector(selectMediaUpload);
+  const uploadedPostImage = useSelector(selectPostImageUpload);
   const progressBarNum = useSelector(selectProgressBarNum);
   const progressVariant = useSelector(selectProgressVariant);
   const [listMention, setListMention] = useState([]);
@@ -104,6 +106,7 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
       dispatch(setMediaUpload([]));
       // Make sure to revoke the data uri's to avoid memory leaks. Will run on unmount
       uploadedMedia.forEach(file => URL.revokeObjectURL(file.preview));
+      uploadedPostImage.forEach(file => URL.revokeObjectURL(file.preview));
       // Reset ProgressBar
       dispatch(setProgressVariant("primary"));
       dispatch(setProgressBarNum(0));
@@ -269,21 +272,24 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
       {/* Display Selected Media Preview */}
       {uploadedMedia?.length > 0 ? (
         // New Post Media Display
-        <ThumbImage uploadedMedia={uploadedMedia} />
+        <ThumbImage uploadedMedia={uploadedMedia} fromWhere="uploadedMedia" />
       ) : editSlatePost?.media?.length > 0 ? (
         // Editing Post Media Display
-        <ThumbImage uploadedMedia={editSlatePost.media} />
+        <ThumbImage
+          uploadedMedia={editSlatePost.media}
+          fromWhere="uploadedMedia"
+        />
       ) : null}
 
-      {/* ProgressBar */}
-      {progressBarNum > 0 && (
+      {/* ProgressBar: Only when there is media & upload is in progress */}
+      {uploadedMedia?.length > 0 && progressBarNum > 0 ? (
         <ProgressBar
           variant={progressVariant}
           className="my-1"
           now={progressBarNum}
           label={`${progressBarNum}%`}
         />
-      )}
+      ) : null}
       <div className={`row justify-content-center ${slim && "px-0 mx-0"}`}>
         <div
           className={`${slim ? "col-10 col-md-11 px-0 me-0" : "col-12"} ${

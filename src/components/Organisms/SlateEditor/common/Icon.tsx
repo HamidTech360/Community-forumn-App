@@ -9,7 +9,8 @@ import {
   MdFormatAlignRight,
   MdFormatListNumbered,
   MdFormatListBulleted,
-  MdAdd
+  MdAdd,
+  MdPermMedia
 } from "react-icons/md";
 import { BsCameraVideoFill } from "react-icons/bs";
 import { FaSuperscript, FaSubscript, FaVideo } from "react-icons/fa";
@@ -37,7 +38,8 @@ const iconList = {
   orderedList: <MdFormatListNumbered size={20} />,
   unorderedList: <MdFormatListBulleted size={20} />,
   link: <FiLink size={20} />,
-  image: <BsFillImageFill size={20} />,
+  image: <MdPermMedia size={20} />,
+  postImage: <BsFillImageFill size={20} />,
   video: <FaVideo size={20} />,
   add: <MdAdd size={20} />,
   upload: <AiOutlineUpload size={20} />,

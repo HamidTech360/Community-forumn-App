@@ -15,6 +15,7 @@ import axios from "axios";
 import styles from "@/styles/utils.module.scss";
 import { PostMenuModal } from "./PostMenu";
 import Avatar from "@/components/Atoms/Avatar";
+import PostIsEdited from "@/components/Templates/PostIsEdited";
 
 const Replies = ({
   reply: replyComingIn,
@@ -164,6 +165,10 @@ Record<string, any>) => {
           __html: sanitizer(reply?.content)
         }}
       />
+
+      <div className="px-md-5 mx-4">
+        <PostIsEdited post={reply} />
+      </div>
 
       <div className="buttons d-flex gap-2 justify-content-end mr-4">
         <small

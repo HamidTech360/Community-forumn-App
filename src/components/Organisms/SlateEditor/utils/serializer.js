@@ -38,7 +38,11 @@ export const serialize = node => {
       return `<p><ul>${children}</ul></p>`;
     case "emoji":
       return `<p>${children}</p>`;
-    case "image":
+    // case "image":
+    //   return `<img src="${
+    //     node?.url ? node?.url : node?.href
+    //   }" height="150" width="150" alt="${node.alt}">${children}</img>`;
+    case "postImage":
       return `<img src="${
         node?.url ? node?.url : node?.href
       }" height="150" width="150" alt="${node.alt}">${children}</img>`;
@@ -77,8 +81,15 @@ const ELEMENT_TAGS = {
   }),
   BLOCKQUOTE: () => ({ type: "blockquote" }),
   EMOJI: () => ({ type: "emoji" }),
+  // IMG: el => ({
+  //   type: "image",
+  //   url: el.getAttribute("src"),
+  //   height: "150",
+  //   width: "150",
+  //   alt: ""
+  // }),
   IMG: el => ({
-    type: "image",
+    type: "postImage",
     url: el.getAttribute("src"),
     height: "150",
     width: "150",

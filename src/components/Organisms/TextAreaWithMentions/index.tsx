@@ -11,7 +11,7 @@ import {
 } from "@/reduxFeatures/app/mentionsSlice";
 import { useDispatch } from "@/redux/store";
 
-const TextAreaWithMentions = ({ commentChanging }) => {
+const TextAreaWithMentions = ({ commentChanging, resetTextAreaValue }) => {
   const dispatch = useDispatch();
   const authUser = useSelector(selectUser);
   const { Option } = Mentions;
@@ -21,6 +21,12 @@ const TextAreaWithMentions = ({ commentChanging }) => {
   const [listMention, setListMention] = useState([]);
   const [mentionedUsersList, setMentionedUsersList] = useState([]);
   const mentionedUsers = useSelector(selectMentionedUsers);
+  const [textAreaValue, setTextAreaValue] = useState("");
+
+  useEffect(() => {
+    // Reset TextArea Value After Sending Comment & Reply
+    setTextAreaValue("");
+  }, [resetTextAreaValue]);
 
   useEffect(() => {
     if (listMention?.length > 0) {
@@ -50,7 +56,6 @@ const TextAreaWithMentions = ({ commentChanging }) => {
   }, [listMention, search, authUser]);
 
   const onSearch = async searching => {
-    console.log("searching:", searching);
     setSearch(searching);
     setLoading(!!searching);
 
@@ -65,6 +70,7 @@ const TextAreaWithMentions = ({ commentChanging }) => {
 
   const onChange = change => {
     commentChanging(change);
+    setTextAreaValue(change);
   };
 
   const onSelect = select => {
@@ -96,6 +102,7 @@ const TextAreaWithMentions = ({ commentChanging }) => {
       autoSize={{ minRows: 6, maxRows: 6 }}
       onChange={onChange}
       onSelect={onSelect}
+      value={textAreaValue}
     >
       {loading ? (
         <Option value={search} disabled>

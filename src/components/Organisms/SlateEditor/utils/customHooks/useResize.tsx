@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { number } from "yup";
 
 const useResize = ({ format }) => {
-  const [size, setSize] =
-    useState <
-    { width: number, height: number } >
-    (format === "video"
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [size, setSize] = useState<any>(
+    format === "video"
       ? { width: 300, height: 220 }
-      : { width: 150, height: 150 });
+      : { width: 200, height: 200 }
+  );
 
   const [resizing, setResizing] = useState(false);
   const onMouseDown = () => {

@@ -10,6 +10,7 @@ import {
   isBlockActive
 } from "../utils/SlateUtilityFunctions.js";
 import defaultToolbarGroups from "./toolbarGroups.js";
+import defaultToolbarGroupsWithPostImage from "./toolbarGroupsWithPostImage.js";
 import defaultToolbarGroupsBottom from "./toolbarGroupsBottom";
 import defaultToolbarGroupsSlim from "./toolbarGroupsSlim";
 import LinkButton from "../Elements/Link/LinkButton";
@@ -20,13 +21,22 @@ import { useSelector } from "@/redux/store";
 import { selectReFocusChatEditor } from "@/reduxFeatures/app/chatSlice";
 
 import styles from "../../../../styles/SlateEditor/toolbar.module.scss";
+import EmbedPostImage from "../Elements/Embed/EmbedPostImage";
+import { useRouter } from "next/router";
 const Toolbar = ({ position }) => {
+  const router = useRouter();
   const reFocusChatEditor = useSelector(selectReFocusChatEditor);
 
   const editor = useSlate();
   const [toolbarGroups] = useState(
     position === "top"
-      ? defaultToolbarGroups
+      ? router.asPath.includes("/feed") ||
+        router.asPath.includes("/groups") ||
+        router.asPath.includes("/profile")
+        ? defaultToolbarGroups
+        : router.asPath.includes("/explore") || router.asPath.includes("/gist")
+        ? defaultToolbarGroupsWithPostImage
+        : null
       : position === "bottom"
       ? defaultToolbarGroupsBottom
       : position === "slim"
@@ -95,7 +105,7 @@ const Toolbar = ({ position }) => {
     <div className={styles.toolbar}>
       {toolbarGroups.map((group, index) => (
         <span key={index} className={styles.toolbarGrp}>
-          {group.map(element => {
+          {group?.map(element => {
             switch (element.type) {
               case "block":
                 return <BlockButton key={element.id} {...element} />;
@@ -112,6 +122,14 @@ const Toolbar = ({ position }) => {
               case "embed":
                 return (
                   <Embed
+                    key={element.id}
+                    format={element.format}
+                    editor={editor}
+                  />
+                );
+              case "embedPostImage":
+                return (
+                  <EmbedPostImage
                     key={element.id}
                     format={element.format}
                     editor={editor}

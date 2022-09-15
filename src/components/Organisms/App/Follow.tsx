@@ -22,7 +22,6 @@ const Follow = () => {
   const currentlyFollowing = useSelector(selectFollowing);
   const dispatch = useDispatch();
 
- 
   useEffect(() => {
     (async function () {
       try {
@@ -38,7 +37,6 @@ const Follow = () => {
       }
     })();
   }, []);
- 
 
   const handleFollow = async (id: string) => {
     try {
