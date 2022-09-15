@@ -13,7 +13,7 @@ const FriendsData = ({
   friendsList: Record<string, any>[];
 }) => {
   // const { friends } = props.friendsList;
-  console.log("friend lists are ", friendsList);
+  console.log(friendsList)
   const user = useSelector(selectUser);
   return (
     <>
@@ -55,7 +55,7 @@ const FriendsData = ({
                             "Follows you"}
                         </Card.Subtitle>
                       </div>
-                      <FiMoreVertical className="ms-auto " />
+                      {/* <FiMoreVertical className="ms-auto " /> */}
                     </ListGroup.Item>
                   </ListGroup>
                 </Card.Body>

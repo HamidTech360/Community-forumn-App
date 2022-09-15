@@ -14,7 +14,7 @@ const Bookmarks = () => {
           },
         });
         // console.log("bookmarks:", data);
-        setPosts(data.posts.bookmarks);
+        setPosts(data.posts.bookmarks.reverse());
       } catch (error) {
         // console.log(error.response.data);
       }

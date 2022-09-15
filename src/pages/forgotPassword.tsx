@@ -5,7 +5,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Button, Container, Form, Image } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
+import {  ToastContainer } from "react-toastify";
 import Spinner from "react-spinner-material";
 
 import "react-toastify/dist/ReactToastify.css";

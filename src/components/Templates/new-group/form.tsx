@@ -52,15 +52,15 @@ const FormField = ({ handleChange, data, moveToNewTab }) => {
           />
         </Form.Group>
 
-        <Form.Group className={styles.formGroup}>
+        {/* <Form.Group className={styles.formGroup}>
           <Form.Label className={styles.formLabel}> Group Photo</Form.Label>
           <div className={`${styles.dragBox}`}>
             <AiOutlineCloudUpload size={30} color="#0B5351" />
             <span className={styles.dragBoxText}>Drag and drop files here</span>
           </div>
-        </Form.Group>
+        </Form.Group> */}
 
-        <Button variant="primary" className="d-flex mx-auto" type="submit">
+        <Button style={{marginTop:'20px'}} variant="primary" className="d-flex mx-auto" type="submit">
           Continue
         </Button>
       </Form>

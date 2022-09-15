@@ -17,6 +17,7 @@ import Avatar from "@/components/Atoms/Avatar";
 const Follow = () => {
   const router = useRouter();
   const [users, setUsers] = useState([]);
+  const [connections, setConnections] = useState([]);
   const user = useSelector(selectUser);
 
   const currentlyFollowing = useSelector(selectFollowing);
@@ -35,6 +36,7 @@ const Follow = () => {
           }
         );
         console.log("All connections+++++:", response.data);
+        setConnections(response.data.connections)
       } catch (error) {
         console.log("ERROR:", error);
       }
@@ -68,13 +70,9 @@ const Follow = () => {
   useEffect(() => {
     (async function () {
       try {
-        // users.length === undefined || users.length === 0
-        // console.log("users.length", users.length);
-        // if (users.length === undefined) {
-        //   console.log("users.length is undefined");
-        // }
+       
         const { data } = await axios.get(`${config.serverUrl}/api/users`);
-        // console.log("data:", data);
+ 
 
         let sliceNum = 0;
         if (window.innerHeight >= 1024) {
@@ -91,17 +89,6 @@ const Follow = () => {
           return 0.5 - Math.random();
         });
 
-        // setUsers(
-        //   data.users
-        //     .filter((person) => {
-        //       return (
-        //         // !person.followers.includes(user._id) ||
-        //         person._id.toString() !== user._id.toString()
-        //       );
-        //     })
-        //     // .slice(0, 10)
-        //     .slice(0, sliceNum)
-        // );
 
         const notFollowing = data.users.filter(person => {
           if (
@@ -125,7 +112,6 @@ const Follow = () => {
   }, [currentlyFollowing]);
   return (
     <ListGroup
-      // className="container-fluid p-0 p-xl-2 radius-10 shadow"
       className="container-fluid p-0 p-xl-2 radius-10"
       as={Card}
       variant="flush"
@@ -136,11 +122,9 @@ const Follow = () => {
     >
       <h6 className="text-center">Suggested connections</h6>
 
-      {users.map((user, key) => (
+      {connections.map((user, key) => (
         <div className="row align-items-center border-0" key={`author-${key}`}>
           <ListGroup.Item
-            // key={`author-${key}`}
-            // style={{ boxSizing: "border-box" }}
             className="d-flex align-items-center gap-0 gap-xl-2 gap-xxl-3 w-100 justify-content-start border-0 bg-transparent"
           >
             {/* <div className="d-flex gap-2 py-1 align-items-center justify-content-center w-100"> */}
