@@ -269,8 +269,6 @@ const Explore = ({}) => {
   ]);
 
   const handlePageChange = page => {
-    console.log("Page Clicked:", page.selected);
-
     if (paginateCategory === "paginatedBlogAll") {
       if (pageIndexAll !== page.selected) router.replace("#explore");
       setPageIndexAll(page.selected);

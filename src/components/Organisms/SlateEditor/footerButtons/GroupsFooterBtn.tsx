@@ -78,7 +78,9 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
       JSON.stringify(editorContentValue) ===
       JSON.stringify(emptyEditorContentValue)
     ) {
-      toast.warn("Type your message to proceed", {
+      console.log("editorContentValue:", editorContentValue);
+      console.log("emptyEditorContentValue:", emptyEditorContentValue);
+      toast.warn("Type your message to proceed...", {
         position: toast.POSITION.TOP_RIGHT,
         toastId: "1"
       });

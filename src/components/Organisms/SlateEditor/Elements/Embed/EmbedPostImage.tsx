@@ -80,8 +80,6 @@ const EmbedPostImage = ({ editor, format }) => {
       // Form Data
       const formData = new FormData();
       uploadedPostImage.forEach(async (file: File & { preview: string }) => {
-        console.log("file:", file);
-
         formData.append("image", file);
 
         try {
@@ -110,8 +108,6 @@ const EmbedPostImage = ({ editor, format }) => {
             }
           );
 
-          // console.log("Upload response:", response.data);
-
           const embedTitleValue = file.name;
           const embedAddressValue = response.data;
 
@@ -132,7 +128,7 @@ const EmbedPostImage = ({ editor, format }) => {
         } catch (error) {
           // Set Progress Bar Color
           dispatch(setProgressVariantPost("danger"));
-          console.log("error:", error);
+          // console.log("error:", error);
         }
       });
     } else {

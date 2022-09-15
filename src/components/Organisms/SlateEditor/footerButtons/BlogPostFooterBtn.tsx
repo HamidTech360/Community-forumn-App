@@ -290,36 +290,17 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
 
-    // /*
-    //  ** Mentioned Users To Send Notification
-    //  ** Below Map() Is Important To Confirm The Mentioned User Hasn't Been Deleted
-    //  */
-    // // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    // const usersToSendNotification: any = [];
-    // if (mentionedUsers.length > 0) {
-    //   await mentionedUsers.forEach(user => {
-    //     if (editorInnerHtml?.includes(user.userName)) {
-    //       usersToSendNotification.push(user?.userId);
-    //     }
-    //   });
-    // }
+    const exploreSaveAsDraft = {
+      postTitle: showPostTitle,
+      postBody: editorInnerHtml,
+      SlateContentValue: editorContentValue,
+      category: selectedCategory.tag
+    };
 
-    const formData = new FormData();
-
-    formData.append("postBody", editorInnerHtml);
-    // mediaUpload.map((file: File) => {
-    //   formData.append("media", file);
-    // });
-    formData.append("category", selectedCategory.tag);
-    formData.append("postTitle", showPostTitle);
-    formData.append("SlateContentValue", JSON.stringify(editorContentValue));
-    // formData.append("mentions", usersToSendNotification);
-
-    // const exploreSaveAsDraft = {
-    //   post: formData
-    // };
-
-    localStorage.setItem("exploreSaveAsDraft", JSON.stringify(formData));
+    localStorage.setItem(
+      "exploreSaveAsDraft",
+      JSON.stringify(exploreSaveAsDraft)
+    );
   };
 
   return (
