@@ -1,8 +1,8 @@
 import UnAuthContent from "@/components/Auth/UnAuthContent";
 import axios, { AxiosError } from "axios";
 import Head from "next/head";
-import React, { useEffect, useState } from "react";
-import { Alert, Button, Col, Form, Row } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import FormWrapper from "../components/Organisms/Layout/FormWrapper";
 import config from "../config";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
@@ -24,23 +24,25 @@ const Register = () => {
     useState(false);
   const router = useRouter();
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (termsAndConditionsChecked) {
       try {
         setSubmitting(true);
-        const response = await axios.post(`${config.serverUrl}/api/auth/register`, formData);
-        toast.success(" Check your email- an account confirmation link has been sent to you. Check the spam or promotion folder if you can't find it", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 7000,
-          toastId: "2"
-        });
-       
-       setTimeout(()=>{
-        router.push("/login");
-       }, 7000)
+        await axios.post(`${config.serverUrl}/api/auth/register`, formData);
+        toast.success(
+          " Check your email- an account confirmation link has been sent to you. Check the spam or promotion folder if you can't find it",
+          {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 7000,
+            toastId: "2"
+          }
+        );
+
+        setTimeout(() => {
+          router.push("/login");
+        }, 7000);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const serverError = error as AxiosError;
@@ -80,8 +82,6 @@ const Register = () => {
     setTermsAndConditionsChecked(!termsAndConditionsChecked);
   };
 
-  
-
   return (
     <UnAuthContent>
       <Head>
@@ -90,8 +90,8 @@ const Register = () => {
       <FormWrapper
         form={
           <div>
-           <ToastContainer style={{fontSize:'14px', fontWeight:'bold'}} />
-           
+            <ToastContainer style={{ fontSize: "14px", fontWeight: "bold" }} />
+
             <Form onSubmit={handleSubmit}>
               <Row>
                 <Col md={6}>

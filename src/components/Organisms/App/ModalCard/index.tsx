@@ -24,10 +24,6 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "@/redux/store";
 import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 import {
-  // setLikeChanged,
-  // selectLikeChanged,
-  // setBookMarkChanged,
-  // selectBookMarkChanged,
   setLikeChangedModal,
   selectLikeChangedModal,
   setUnLikeChangedModal,
@@ -37,8 +33,6 @@ import {
   setShowCommentModal,
   setEditableComment,
   setCommentIsDeleted
-  // setBookMarkChangedModal,
-  // selectBookMarkChangedModal,
 } from "@/reduxFeatures/app/postModalCardSlice";
 import { useRouter } from "next/router";
 import Comment from "@/components/Organisms/App/Comment";
@@ -79,13 +73,10 @@ const ModalCard = ({
 }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  // const posts = useSelector(selectPost);
-  // const likeChanged = useSelector(selectLikeChanged);
-  // const bookmarkChanged = useSelector(selectBookMarkChanged);
+  const [resetTextAreaValue, setResetTextAreaValue] = useState(0);
   const likeChangedModal = useSelector(selectLikeChangedModal);
   const unLikeChangedModal = useSelector(selectUnLikeChangedModal);
   const modalCardPostEdited = useSelector(selectModalCardPostEdited);
-  // const bookmarkChangedModal = useSelector(selectBookMarkChangedModal);
   const router = useRouter();
 
   const [post, setPostComingIn] = useState(postComingIn);
@@ -95,22 +86,17 @@ const ModalCard = ({
   const sanitizer = DOMPurify.sanitize;
 
   // - comment section
-
   const [commentPost, setCommentPost] = useState("");
 
   const [loading, setLoading] = useState(false);
   const currentlyFollowing = useSelector(selectFollowing);
   const showModal = useSelector(selectCreatePostModal);
-  // const showCommentModal = useSelector(selectShowCommentModal);
 
   const { modalOpenShare, toggleShare, selectedShare, setSelectedShare } =
     useModalWithShare();
 
   const imageModalOpen = useSelector(selectImageModalOpen);
   const mentionedUsers = useSelector(selectMentionedUsers);
-
-  // const [imageModalOpen, setImageModalOpen] = useState(false);
-  // const [imageModalImg, setImageModalImg] = useState(null);
 
   useEffect(() => {
     // Update modalPost when post has been edited
@@ -215,7 +201,6 @@ const ModalCard = ({
     // Notify the PostCard of Changes in the ModalCard
     dispatch(setLikeChangedModal(post?._id));
 
-    // try {
     if (bool) {
       try {
         // Like Post
@@ -305,13 +290,11 @@ const ModalCard = ({
         }
       });
     }
-    // console.log("usersToSendNotification:", usersToSendNotification);
 
     const body = {
       content: commentPost,
       mentions: usersToSendNotification
     };
-    // console.log("body:", body);
 
     if (body.content == "") {
       return toast.error("Comment cannot be empty", {
@@ -331,17 +314,12 @@ const ModalCard = ({
           }
         }
       );
-      // console.log(res);
       const comments = post?.comments;
       comments?.unshift(res.data);
-      // console.log("{ ...post, comments }:", { ...post, comments });
-
       setPostComingIn({ ...post, comments });
       setLoading(false);
-
-      setCommentPost("");
-      (document.getElementById("articleTextarea") as HTMLInputElement).value =
-        "";
+      // Reset TextAreaWithMentions value
+      setResetTextAreaValue(Math.random() * 10);
       // Reset Mentioned Users
       dispatch(setMentionedUsers([]));
     } catch (error) {
@@ -371,15 +349,12 @@ const ModalCard = ({
         }
       );
     } catch (error) {
-      // if (user?.bookmarks?.includes(post?._id)) {
       const fitterStateUser = user?.bookmarks.filter(filterUser => {
         return filterUser !== post?._id;
       });
-      // }
 
       // Reverse Bookmark State
       dispatch(userAuth({ ...user, bookmarks: fitterStateUser }));
-      // console.log(error);
     }
   };
 
@@ -404,7 +379,6 @@ const ModalCard = ({
       // Reverse Bookmark Auth User State.
       const reverseBookmarks = [...user?.bookmarks, post?._id];
       dispatch(userAuth({ ...user, bookmarks: reverseBookmarks }));
-      // console.log(error.response?.data);
     }
   };
 
@@ -418,12 +392,7 @@ const ModalCard = ({
       document.getElementById(`followStr-modal-${post?.author?._id}`)
         .innerText === "Unfollow"
     ) {
-      // let confirmUnFollow = window.confirm(
-      //   `Un-Follow ${post?.author?.firstName} ${post?.author?.lastName}`
-      // );
-      // if (confirmUnFollow) {
       handleUnFollow(post?.author?._id);
-      // }
     }
   };
 
@@ -472,9 +441,6 @@ const ModalCard = ({
   };
 
   const handleDeletePost = async post => {
-    // const newPosts = post.filter((el) => el._id !== post._id);
-    // console.log(post);
-    // setPosts(posts.filter((el) => el._id !== post._id));
     try {
       await axios.delete(`${config.serverUrl}/api/feed?id=${post._id}`, {
         headers: {
@@ -505,10 +471,6 @@ const ModalCard = ({
   };
 
   const handleDeleteComment = async comment => {
-    // console.log("DelETE NOW");
-    // const newPosts = comment.filter((el) => el._id !== comment._id);
-    // console.log("comment:", comment);
-    // console.log("comment._id:", comment?._id);
     try {
       await axios.delete(`${config.serverUrl}/api/comments/${comment?._id}`, {
         headers: {
@@ -537,7 +499,6 @@ const ModalCard = ({
               <div
                 className="row"
                 style={{
-                  // height: post?.media?.length === 1 ? "auto" : "390px",
                   maxHeight: post?.media?.length === 1 ? "390px" : "390px",
                   overflowY: "auto"
                 }}
@@ -640,7 +601,7 @@ const ModalCard = ({
               )}
 
               <div className={`${styles.trimmed} row justify-content-center`}>
-                {/* Display Media */}
+                {/* Display Feature Image */}
                 {post?.media?.length > 0 && (
                   <MediaDisplay media={post.media} breakPoint={2} />
                 )}
@@ -731,7 +692,10 @@ const ModalCard = ({
                     }}
                   >
                     {/* TextArea */}
-                    <TextAreaWithMentions commentChanging={setCommentPost} />
+                    <TextAreaWithMentions
+                      commentChanging={setCommentPost}
+                      resetTextAreaValue={resetTextAreaValue}
+                    />
                   </div>
 
                   <div className="col-5 ms-auto d-md-grid">
@@ -759,7 +723,6 @@ const ModalCard = ({
                 <div className="col-12 mt-4">
                   {post?.comments?.length > 0 &&
                     post?.comments?.map((comment, index) => {
-                      // console.log("comment:", comment);
                       return (
                         <Comment
                           key={`post_${index}`}

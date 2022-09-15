@@ -205,10 +205,14 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
           />
         </div>
       </Card.Title>
-      <Card.Body
-        className="px-3 py-0 mt-3"
-        // align="justify"
-      >
+      <Card.Body className="px-3 py-0 mt-3">
+         {/* Display Feature Image */}
+        <div className="row justify-content-center pb-4">
+          <div className="col-12">
+            <MediaDisplay media={gist.media} breakPoint={2} />
+          </div>
+        </div>
+
         {gist?.post && (
           <Card.Body
             dangerouslySetInnerHTML={{

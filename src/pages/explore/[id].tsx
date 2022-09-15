@@ -90,7 +90,7 @@ const BlogPost = () => {
         `${config.serverUrl}/api/posts/${router.query.id}`
       );
       setBlogPost(exploreResponse.data.post);
-      console.log("This is explore response", exploreResponse.data);
+      // console.log("This is explore response", exploreResponse.data);
     } catch (error) {
       router.replace("/explore");
     }
@@ -111,7 +111,7 @@ const BlogPost = () => {
         }
       }
     );
-    console.log(res);
+    // console.log(res);
     const comments = blogPost?.comments;
     comments.unshift(res.data);
     setBlogPost({ ...blogPost, comments });
@@ -130,7 +130,7 @@ const BlogPost = () => {
           authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
       });
-      router.push("/explore");
+      router.back();
     } catch (error) {
       // console.log(error.response?.data);
     }
@@ -154,24 +154,20 @@ const BlogPost = () => {
   };
 
   const handleDeleteComment = async comment => {
-    console.log("DelETE NOW");
+    // console.log("DelETE NOW");
 
-    console.log("comment:", comment);
-    console.log("comment._id:", comment?._id);
+    // console.log("comment:", comment);
+    // console.log("comment._id:", comment?._id);
     try {
-      const { data } = await axios.delete(
-        `${config.serverUrl}/api/comments/${comment?._id}`,
-        {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("accessToken")}`
-          }
+      await axios.delete(`${config.serverUrl}/api/comments/${comment?._id}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
-      );
+      });
 
-      console.log("Deleted  Comment:", data);
       dispatch(setCommentIsDeleted(comment?._id));
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data);
     }
   };
 
@@ -249,7 +245,7 @@ const BlogPost = () => {
           <div
             className="col-12 col-md-1 justify-content-left align-items-top"
             style={{ cursor: "pointer" }}
-            onClick={() => router.push("/explore")}
+            onClick={() => router.back()}
           >
             <HiOutlineArrowLeft className="h3" />
           </div>
@@ -287,17 +283,17 @@ const BlogPost = () => {
                     </small>
                   </div>
                 </div>
+                {/* Display Feature Image */}
                 <div className="row justify-content-center">
                   <div className="col-12">
                     <MediaDisplay media={blogPost.media} breakPoint={2} />
-                    
                   </div>
                 </div>
               </div>
               <article
                 className="my-3"
                 style={{
-                  textAlign:'justify'
+                  textAlign: "justify"
                 }}
                 dangerouslySetInnerHTML={{ __html: blogPost.postBody }}
               />

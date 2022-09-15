@@ -1,10 +1,11 @@
 import { Transforms, Path, Node } from "slate";
 
-const withEmbeds = (editor) => {
+const withEmbeds = editor => {
   const { isVoid, insertBreak } = editor;
 
-  editor.isVoid = (element) =>
-    ["video", "image"].includes(element.type) ? true : isVoid(element);
+  editor.isVoid = element =>
+    // ["video", "image"].includes(element.type) ? true : isVoid(element);
+    ["video", "postImage"].includes(element.type) ? true : isVoid(element);
 
   editor.insertBreak = (...args) => {
     const parentPath = Path.parent(editor.selection.focus.path);
@@ -16,11 +17,11 @@ const withEmbeds = (editor) => {
         editor,
         {
           type: "paragraph",
-          children: [{ text: "" }],
+          children: [{ text: "" }]
         },
         {
           at: nextPath,
-          select: true, // Focus on this node once inserted
+          select: true // Focus on this node once inserted
         }
       );
     } else {

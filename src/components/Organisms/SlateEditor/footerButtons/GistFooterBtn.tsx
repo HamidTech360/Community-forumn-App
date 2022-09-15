@@ -136,8 +136,8 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
           }
         });
       }
-      console.log("usersToSendNotification:", usersToSendNotification);
-      console.log("editorContentValue:", editorContentValue);
+      // console.log("usersToSendNotification:", usersToSendNotification);
+      // console.log("editorContentValue:", editorContentValue);
 
       const formData = new FormData();
       mediaUpload.map((file: File) => {
@@ -146,7 +146,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
       formData.append("title", showGistTitle);
       formData.append("post", editorInnerHtml);
       formData.append("categories", selectedCategory);
-      formData.append("slateState", editorContentValue);
+      formData.append("SlateContentValue", JSON.stringify(editorContentValue));
       formData.append("mentions", usersToSendNotification);
       formData.append("country", country);
 

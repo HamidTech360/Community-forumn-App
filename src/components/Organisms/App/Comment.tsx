@@ -35,12 +35,12 @@ const Comment = ({
   const dispatch = useDispatch();
   const [liked, setLiked] = useState(false);
   const [comment, setCommentComingIn] = useState(commentComingIn);
+  const [resetTextAreaValue, setResetTextAreaValue] = useState(0);
   const user = useSelector(selectUser);
   const commentIsEdited = useSelector(selectCommentIsEdited);
   const commentIsDeleted = useSelector(selectCommentIsDeleted);
   const sanitizer = DOMPurify.sanitize;
 
-  // const [modalPost, setModalPost] = useState<Record<string, any>>({});
   const [commentPost, setCommentPost] = useState("");
   const [showComment, setShowComment] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
@@ -75,9 +75,6 @@ const Comment = ({
     }
   }, [comment]);
 
-  // console.log("comment", comment);
-  // console.log("commentComingIn:", commentComingIn);
-
   const handleLike = async () => {
     try {
       await axios.get(
@@ -90,7 +87,6 @@ const Comment = ({
       );
 
       if (!comment?.likes.includes(user?._id)) {
-        // console.log("Not Included");
         const newComment = { ...comment };
         newComment?.likes.push(user?._id);
 
@@ -114,17 +110,13 @@ const Comment = ({
       );
 
       if (comment?.likes.includes(user?._id)) {
-        // console.log("Included");
         const newComment = { ...comment };
-        // newComment?.likes.push(user?._id);
         const newLikesArr = newComment?.likes.filter(newC => {
-          // console.log("newC:", newC);
           return newC !== user?._id;
         });
 
         newComment.likes = newLikesArr;
 
-        // console.log("newComment:", newComment);
         setLiked(false);
         setCommentComingIn(newComment);
       }
@@ -146,7 +138,6 @@ const Comment = ({
         }
       });
     }
-    // console.log("usersToSendNotification:", usersToSendNotification);
 
     const body = {
       content: commentPost,
@@ -172,17 +163,13 @@ const Comment = ({
           }
         }
       );
-      // console.log("res:", res);
       const replies = comment?.replies;
       replies?.unshift(res.data);
-      // console.log("{ ...comment, replies }:", { ...comment, replies });
-      // setModalPost({ ...comment, replies });
       setCommentComingIn({ ...comment, replies });
       setLoading(false);
       setShowComment(false);
-      setCommentPost("");
-      (document.getElementById("articleTextarea") as HTMLInputElement).value =
-        "";
+      // Reset TextAreaWithMentions value
+      setResetTextAreaValue(Math.random() * 10);
       // Reset Mentioned Users
       dispatch(setMentionedUsers([]));
     } catch (error) {
@@ -225,7 +212,7 @@ const Comment = ({
           />
         </div>
       </div>
-      {/* {console.log("comment?.content", comment?.content)} */}
+
       <Card.Body
         className="container px-md-5"
         dangerouslySetInnerHTML={{
@@ -294,7 +281,6 @@ const Comment = ({
         <div>
           {comment.replies?.length > 0 &&
             comment.replies?.map((reply, index) => {
-              // console.log("Comment Reply:", reply);
               return (
                 <Replies
                   key={`comment_${index}`}
@@ -325,7 +311,10 @@ const Comment = ({
                 style={{ border: "1px solid rgba(0, 0, 0, 0.125)" }}
               >
                 {/* TextArea */}
-                <TextAreaWithMentions commentChanging={setCommentPost} />
+                <TextAreaWithMentions
+                  commentChanging={setCommentPost}
+                  resetTextAreaValue={resetTextAreaValue}
+                />
               </div>
             </div>
             <div className="col-3 col-md-2 ms-auto d-md-grid">

@@ -1,34 +1,35 @@
-import UnAuthContent from "@/components/Auth/UnAuthContent";
 import axios from "axios";
 import config from "@/config";
 import Head from "next/head";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Button, Container, Form, Image } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
+import {  ToastContainer } from "react-toastify";
 import Spinner from "react-spinner-material";
 
 import "react-toastify/dist/ReactToastify.css";
 
 const ForgotPassword = () => {
-
   const [isSent, setIsSent] = useState(false);
   const [email, setEmail] = useState("");
-  const [progress, setProgress] = useState(false)
+  const [progress, setProgress] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if(email =="") return
-    setProgress(true)
-    try{
-      const response = await axios.post(`${config.serverUrl}/api/auth/forgotPassword`, {email})
-      console.log(response.data)
-      setProgress(false)
-      setIsSent(true)
-    }catch(error){
-      console.log(error.response?.data)
-      setIsSent(false)
-      setProgress(false)
+    if (email == "") return;
+    setProgress(true);
+    try {
+      const response = await axios.post(
+        `${config.serverUrl}/api/auth/forgotPassword`,
+        { email }
+      );
+      console.log(response.data);
+      setProgress(false);
+      setIsSent(true);
+    } catch (error) {
+      console.log(error.response?.data);
+      setIsSent(false);
+      setProgress(false);
     }
   };
 
@@ -61,7 +62,7 @@ const ForgotPassword = () => {
       <Head>
         <title>Forgot Password</title>
       </Head>
-      <ToastContainer/>
+      <ToastContainer />
       <Container
         style={{ minHeight: "60vh" }}
         className=" d-flex mt-5 flex-column align-items-center justify-content-center"
@@ -99,12 +100,15 @@ const ForgotPassword = () => {
 
             <div className="d-flex justify-content-center mt-4">
               <Button className="px-3" type="submit">
-                {progress?<Spinner radius={23} color="white" stroke={2} />:'Send Link'}
+                {progress ? (
+                  <Spinner radius={23} color="white" stroke={2} />
+                ) : (
+                  "Send Link"
+                )}
               </Button>
             </div>
           </Form>
         </div>
-      
       </Container>
     </>
   );

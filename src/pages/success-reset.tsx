@@ -21,8 +21,8 @@ const SuccessReset = () => {
           <h1>Success!</h1>
           <p>Your new password has been created</p>
 
-          <Link href={"/login"}>
-          <Button style={{fontSize:'15px'}} >Back To Login</Button>
+          <Link href={"/login"} passHref>
+            <Button style={{ fontSize: "15px" }}>Back To Login</Button>
           </Link>
         </div>
         <Image

@@ -83,6 +83,7 @@ const Feed = () => {
   }, [posts]);
 
   useEffect(() => {
+    // console.log("paginatedData:", paginatedData);
     if (paginatedData) {
       if (JSON.stringify(posts) !== JSON.stringify(paginatedData)) {
         setPosts(paginatedData);

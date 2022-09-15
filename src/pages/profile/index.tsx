@@ -98,7 +98,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <main className={`${styles.profile} col-12 col-lg-7 col-xl-7 `}>
+          <main className={`${styles.profile} col-12 col-lg-9 col-xl-10 `}>
             <ProfileCard active={path} handlePath={setPath} />
 
             {Components[path as unknown as string]}

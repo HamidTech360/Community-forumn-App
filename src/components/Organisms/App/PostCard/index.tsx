@@ -363,7 +363,7 @@ const PostCard = ({
   };
 
   const changeFollowingStatus = post => {
-    console.log("post:", post);
+    // console.log("post:", post);
     if (
       document.getElementById(`followStr-${post?.author?._id}`).innerText ===
       "Follow"
