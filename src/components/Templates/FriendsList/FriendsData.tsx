@@ -3,7 +3,9 @@ import React from "react";
 import { Card, Col, Image, ListGroup, Row } from "react-bootstrap";
 import styles from "../../../styles/friends.module.scss";
 import FriendListDotMenu from "./FriendListDotMenu";
-
+import { useSelector } from "@/redux/store";
+import { useRouter } from "next/router";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 const FriendsData = ({
   friendsList
 }: {
@@ -14,7 +16,7 @@ const FriendsData = ({
   // const { friends } = props.friendsList;
   console.log(friendsList)
   const user = useSelector(selectUser);
-
+  const router = useRouter()
   return (
     <>
       <Row xs={1} md={2}>
