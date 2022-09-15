@@ -18,30 +18,40 @@ const AddConnections = ({
   const [connections, setConnections] = useState([]);
   useEffect(() => {
     window.scrollTo(0, 0);
-    const addSelectionProps = [...user.followers, ...user.following].map(
+    const connectionList =  [...user.followers]
+    user?.following?.map(item=>{
+     const index = connectionList.find(el=>el._id==item._id)
+     if(!index){
+      connectionList.push(item)
+     }
+    })
+    
+    const addSelectionProps = connectionList.map(
       el => ({ ...el, isSelected: false })
     );
-    addSelectionProps.map(item => {
-      const index = data.groupMembers.indexOf(item._id);
-      if (index > -1) {
-        addSelectionProps[index].isSelected = true;
+     
+    data.groupMembers.map(item=>{
+      const findItem = addSelectionProps.find(el=>el._id==item)
+      const index = addSelectionProps.indexOf(findItem)
+      if(index>-1){
+        addSelectionProps[index].isSelected=true
       }
-    
-    });
+    })
     setConnections(addSelectionProps);
-  }, [data.groupMembers, user.followers, user.following]);
+  }, [ user.followers, user.following]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSelection = (item: any, i: any) => {
+    console.log(i)
     const clone = [...connections];
-    clone[i].isSelected
-      ? (clone[i].isSelected = false)
-      : (clone[i].isSelected = true);
+    clone[i].isSelected = !clone[i].isSelected
     setConnections(clone);
     const selectedConnections = connections.filter(
-      el => el.isSelected === true
+      el => el.isSelected
     );
+    
     const connectionIds = selectedConnections.map(item => item._id); 
+   
     chooseConnections(connectionIds);
     
   };
@@ -61,17 +71,13 @@ const AddConnections = ({
       <Row className={styles.connectionLists}>
         {connections.map((item, i) => (
           <Col
-            key={i}
-            lg="3"
-            md="3"
-            sm="5"
-            xs="5"
+            key={i} lg="3" md="3" sm="5" xs="5"
             className={styles.connectionItem}
             onClick={() => handleSelection(item, i)}
           >
             <div>
               <Image
-                src={`/images/friends${i + 1}.png`}
+                src={item.images.avatar || `/images/imagePlaceholder.jpg`}
                 alt="profile"
                 className={styles.profilePics}
                 width={60}

@@ -13,8 +13,10 @@ const Bookmarks = () => {
             authorization: `Bearer ${localStorage.getItem("accessToken")}`
           }
         });
-        console.log("bookmarks:", data);
-        setPosts(data.posts.bookmarks);
+
+        // console.log("bookmarks:", data);
+        setPosts(data.posts.bookmarks.reverse());
+
       } catch (error) {
         // console.log(error.response.data);
       }
