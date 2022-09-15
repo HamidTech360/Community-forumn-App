@@ -18,6 +18,7 @@ import {
 } from "@/reduxFeatures/api/gistSlice";
 import config from "../../../../config";
 import {
+  selectEmptyEditorContentValue,
   selectSlatePostToEdit,
   setSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
@@ -41,6 +42,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
   const dispatch = useDispatch();
   const showGistTitle = useSelector(selectGistTitle);
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
+  const emptyEditorContentValue = useSelector(selectEmptyEditorContentValue);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const mentionedUsers = useSelector(selectMentionedUsers);
@@ -94,25 +96,10 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
 
   const createGist = async e => {
     e.preventDefault();
-    setGistIsUploading(true);
+
     const editorInnerHtml = (
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
-
-    const emptyEditorInnerHtml =
-      '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
-
-    // console.log("showGistTitle:", showGistTitle);
-    if (
-      showGistTitle.trim() === "" ||
-      editorInnerHtml === emptyEditorInnerHtml
-    ) {
-      toast.warn("Type your Message Title and Message to proceed", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: "1"
-      });
-      return;
-    }
 
     if (!selectedCategory) {
       toast.warn("Select A Post Category To Proceed", {
@@ -122,7 +109,13 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
       return;
     }
 
-    if (editorInnerHtml.trim() !== "") {
+    if (
+      showGistTitle.trim() !== "" &&
+      JSON.stringify(emptyEditorContentValue) !==
+        JSON.stringify(editorContentValue)
+    ) {
+      setGistIsUploading(true);
+
       /*
        ** Mentioned Users To Send Notification
        ** Below Map() Is Important To Confirm The Mentioned User Hasn't Been Deleted
@@ -136,15 +129,14 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
           }
         });
       }
-      // console.log("usersToSendNotification:", usersToSendNotification);
-      // console.log("editorContentValue:", editorContentValue);
 
       const formData = new FormData();
+
+      formData.append("post", editorInnerHtml);
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
       formData.append("title", showGistTitle);
-      formData.append("post", editorInnerHtml);
       formData.append("categories", selectedCategory);
       formData.append("SlateContentValue", JSON.stringify(editorContentValue));
       formData.append("mentions", usersToSendNotification);
@@ -177,7 +169,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
               }
             }
           );
-          // console.log(response.data);
+
           toast.success("Gist uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,
             toastId: "1"
@@ -237,6 +229,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
               }
             }
           );
+
           toast.success("Gist uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,
             toastId: "1"
@@ -267,6 +260,11 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
           dispatch(uploadFailed(error.response?.data));
         }
       }
+    } else {
+      toast.warn("Type your Gist Title and Gist to proceed", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1"
+      });
     }
   };
 

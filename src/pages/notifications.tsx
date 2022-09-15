@@ -25,24 +25,48 @@ import {
 import { useRouter } from "next/router";
 
 import {
-  getNotification,
-  updateNumberOfNotifications
+  selectNotifications,
+  selectNotificationsCount,
+  setNotificationsCount,
+  setNotificationsData
 } from "@/reduxFeatures/api/notifications";
 
 const Notifications = () => {
+  const router = useRouter();
+  const dispatch = useDispatch();
   const [radioValue, setRadioValue] = useState("1");
 
-  const router = useRouter();
-  const allNotifications = useSelector(state => state.notification.data);
-  const totalNotifications = useSelector(
-    state => state.notification.noOfNotifications
-  );
-  const dispatch = useDispatch();
+  const allNotificationsState = useSelector(selectNotifications);
+  const totalNotificationsState = useSelector(selectNotificationsCount);
+
+  const [allNotifications, setAllNotifications] = useState([]);
+  const [totalNotifications, setTotalNotifications] = useState(0);
+  const [unReadNotifications, setUnReadNotifications] = useState(undefined);
 
   const radios = [
     { name: "All", value: "1" },
     { name: "Unread", value: "2" }
   ];
+
+  // Manage All & Unread Radio Button
+  useEffect(() => {
+    if (radioValue === "1") {
+      setAllNotifications(allNotificationsState);
+      setTotalNotifications(totalNotificationsState);
+    } else if (radioValue === "2") {
+      // Filter Unread Notifications Once
+      if (!unReadNotifications) {
+        const unRead = allNotificationsState.filter(item => !item.read);
+        setAllNotifications(unRead);
+        setUnReadNotifications(unRead);
+        setTotalNotifications(unRead.length);
+      } else {
+        setAllNotifications(unReadNotifications);
+        setTotalNotifications(unReadNotifications.length);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [radioValue]);
 
   useEffect(() => {
     document.body.style.backgroundColor = "#f6f6f6";
@@ -53,12 +77,13 @@ const Notifications = () => {
   }, []);
 
   const navigateToItem = async item => {
-    dispatch(updateNumberOfNotifications({ total: totalNotifications - 1 }));
-    //alert(allNotifications.indexOf(item))
+    // Update Unread Notification Count
+    dispatch(setNotificationsCount(totalNotifications - 1));
+
     const index = allNotifications.indexOf(item);
 
     try {
-      const { data } = await axios.delete(
+      await axios.delete(
         `${config.serverUrl}/api/notifications?id=${item._id}`,
         {
           headers: {
@@ -66,10 +91,10 @@ const Notifications = () => {
           }
         }
       );
-      console.log(data);
+
       const notifications_c = [...allNotifications];
       notifications_c[index] = { ...notifications_c[index], read: true };
-      dispatch(getNotification(notifications_c));
+      dispatch(setNotificationsData(notifications_c));
 
       if (item.forItem === "post") {
         router.push(`/explore/${item.itemId}`);
@@ -77,11 +102,11 @@ const Notifications = () => {
         router.push(`/gist/${item.itemId}`);
       } else if (item.forItem === "follow") {
         router.push(`/profile/${item.itemId}`);
-      }else if(item.forItem == "feed"){
+      } else if (item.forItem == "feed") {
         router.push(`/feed?active=${item.itemId}`);
       }
     } catch (error) {
-      console.log(error.response?.data);
+      // console.log(error.response?.data);
     }
 
     dispatch(notificationsOffcanvas(false));
@@ -99,7 +124,14 @@ const Notifications = () => {
           <Button variant="outline-primary" style={{ textAlign: "start" }}>
             <GiCheckMark /> Mark all as read
           </Button>
-          <Button variant="outline-primary" style={{ textAlign: "start" }}>
+          <Button
+            variant="outline-primary"
+            style={{ textAlign: "start" }}
+            onClick={() => {
+              router.push("/settings");
+              dispatch(notificationsOffcanvas(false));
+            }}
+          >
             <FiSettings /> Notification settings
           </Button>
           {router.asPath !== "/notifications" && (
@@ -203,7 +235,7 @@ const Notifications = () => {
 
                 {allNotifications?.map((notification, index) => (
                   <div
-                    className={notification.read ? "text-muted" : ""}
+                    className={notification.read ? "text-muted fw-normal" : ""}
                     key={index}
                     onClick={() => navigateToItem(notification)}
                   >

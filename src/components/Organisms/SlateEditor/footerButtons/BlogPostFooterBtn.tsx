@@ -11,11 +11,11 @@ import {
 } from "@/reduxFeatures/api/postSlice";
 import { setNewPost } from "@/reduxFeatures/api/postSlice";
 import {
+  selectEmptyEditorContentValue,
   // selectEmptyEditorContentValue,
   selectSlatePostToEdit,
   setSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
-// import { serialize } from "../utils/serializer";
 import {
   selectMediaUpload,
   setMediaUpload,
@@ -34,6 +34,7 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
   const showPostTitle = useSelector(selectPostTitle);
   const mediaUpload = useSelector(selectMediaUpload);
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
+  const emptyEditorContentValue = useSelector(selectEmptyEditorContentValue);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const mentionedUsers = useSelector(selectMentionedUsers);
@@ -58,7 +59,6 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
     const getCategories = categories.map(category => {
       let categoryName;
       if (category?.tag === slatePostToEdit?.category) {
-        // console.log("category.name:", category.name);
         categoryName = category.name;
       }
       return categoryName;
@@ -86,7 +86,6 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
     (async () => {
       try {
         const { data } = await axios.get(`${config.serverUrl}/api/category`);
-        // console.log(data);
         setCategories(data.allCategories);
       } catch (error) {
         // console.log(error.response?.data);
@@ -96,25 +95,10 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
 
   const createPost = async e => {
     e.preventDefault();
-    //console.log(selectedCategory);
 
     const editorInnerHtml = (
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
-
-    const emptyEditorInnerHtml =
-      '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
-
-    if (
-      showPostTitle.trim() === "" ||
-      editorInnerHtml === emptyEditorInnerHtml
-    ) {
-      toast.warn("Type your Message Title and Message to proceed", {
-        position: toast.POSITION.TOP_RIGHT,
-        toastId: "1"
-      });
-      return;
-    }
 
     if (!selectedCategory) {
       toast.warn("Select A Post Category To Proceed", {
@@ -124,7 +108,11 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
       return;
     }
 
-    if (editorInnerHtml.trim() !== "") {
+    if (
+      showPostTitle.trim() !== "" &&
+      JSON.stringify(emptyEditorContentValue) !==
+        JSON.stringify(editorContentValue)
+    ) {
       setUploading(true);
 
       /*
@@ -140,24 +128,17 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
           }
         });
       }
-      console.log("usersToSendNotification:", usersToSendNotification);
-      console.log("editorContentValue:", editorContentValue);
 
-      // const serializeNode = {
-      //   children: editorContentValue
-      // };
       const formData = new FormData();
-      // const serializedHtml = serialize(serializeNode);
 
       formData.append("postBody", editorInnerHtml);
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
-      formData.append("category", selectedCategory.tag);
       formData.append("postTitle", showPostTitle);
+      formData.append("category", selectedCategory.tag);
       formData.append("SlateContentValue", JSON.stringify(editorContentValue));
       formData.append("mentions", usersToSendNotification);
-      // formData.append('groupId', groupId)
 
       if (!slatePostToEdit) {
         // New Post
@@ -186,7 +167,6 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
               }
             }
           );
-          // console.log(response.data);
 
           toast.success("Post uploaded successfully", {
             position: toast.POSITION.TOP_RIGHT,
@@ -207,7 +187,6 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
           // Set Progress Bar Color
           dispatch(setProgressVariant("danger"));
 
-          // console.log(error.response?.data);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a post", {
               position: toast.POSITION.TOP_RIGHT,
@@ -248,7 +227,6 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
               }
             }
           );
-          // console.log(response.data.post);
 
           toast.success("Post edited successfully", {
             position: toast.POSITION.TOP_RIGHT,
@@ -267,7 +245,6 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
           // Set Progress Bar Color
           dispatch(setProgressVariant("danger"));
 
-          // console.log(error.response?.data);
           if (!localStorage.getItem("accessToken")) {
             toast.error("You must login to create a post", {
               position: toast.POSITION.TOP_RIGHT,
@@ -282,6 +259,11 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
           setUploading(false);
         }
       }
+    } else {
+      toast.warn("Enter your Post Title and Post to proceed", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1"
+      });
     }
   };
 
