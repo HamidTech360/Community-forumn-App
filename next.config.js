@@ -4,9 +4,10 @@ const nextConfig = {
   images: {
     domains: [
       "setlinn.s3.us-east-1.amazonaws.com",
-      "lh3.googleusercontent.com",
+      "lh3.googleusercontent.com"
     ],
-  },
+    output: "standalone"
+  }
 };
 
 module.exports = nextConfig;
