@@ -10,6 +10,7 @@ import createPostReducer from "@/reduxFeatures/app/createPost";
 import mentionsReducer from "@/reduxFeatures/app/mentionsSlice";
 // import dragAndDropReducer from "@/reduxFeatures/app/dragAndDropSlice";
 import searchReducer from "@/reduxFeatures/api/searchSlice";
+import settingsReducer from "@/reduxFeatures/app/settingsSlice";
 import editSlatePostReducer from "@/reduxFeatures/app/editSlatePostSlice";
 import postModalCardReducer from "@/reduxFeatures/app/postModalCardSlice";
 import notificationReducer from "@/reduxFeatures/api/notifications";
@@ -36,6 +37,7 @@ export const store = configureStore({
     authState: authStateReducer,
     // dragAndDrop: dragAndDropReducer,
     search: searchReducer,
+    settings: settingsReducer,
     editSlatePost: editSlatePostReducer,
     postModalCard: postModalCardReducer,
     notification: notificationReducer,

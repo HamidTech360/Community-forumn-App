@@ -18,7 +18,6 @@ const NotificationRenderer = ({
     setAuthor(strings.slice(0, 2));
     setOtherStrings(strings.slice(2, strings.length));
   }, [notification]);
-  //  console.log(otherStrings);
 
   return (
     <div className="row">
@@ -28,11 +27,12 @@ const NotificationRenderer = ({
           className={!notification.read ? "text-primary" : "text-muted"}
         />{" "}
       </div>
-      <div className="col-10 col-sm-11 pe-0">
-        <div
-          className={`${styles.notificationMessages}`}
-          style={{ cursor: "pointer", ...style }}
-        >
+      <div
+        className={`col-10 col-sm-11 pe-0 ${
+          !notification.read ? "fs-1" : "text-muted fw-normal"
+        }`}
+      >
+        <div style={{ cursor: "pointer", ...style }}>
           <Card.Text className={styles.notificationMessages}>
             <span
               className={styles.authorName}
