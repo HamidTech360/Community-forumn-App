@@ -26,6 +26,7 @@ import { PostMenu } from "../../App/PostMenu";
 
 import Avatar from "@/components/Atoms/Avatar";
 import MediaDisplay from "../../App/MediaMasonry";
+import Age from "@/components/Atoms/Age";
 
 // interface IGist {
 //   gist: {
@@ -191,6 +192,11 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
                 {gist?.title?.replace("&amp;", "&")}
               </h5>
             </div>
+            <small
+              style={{ color: "gray", fontSize: "12px", fontWeight: "400" }}
+            >
+              <Age time={gist?.createdAt} />
+            </small>
           </div>
         </div>
         <div className="ms-auto">
@@ -206,7 +212,7 @@ const GistCard = ({ gist, primary, trimmed }: any) => {
         </div>
       </Card.Title>
       <Card.Body className="px-3 py-0 mt-3">
-         {/* Display Feature Image */}
+        {/* Display Feature Image */}
         <div className="row justify-content-center pb-4">
           <div className="col-12">
             <MediaDisplay media={gist.media} breakPoint={2} />
