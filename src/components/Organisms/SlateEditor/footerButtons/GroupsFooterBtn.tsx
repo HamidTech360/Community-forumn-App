@@ -23,6 +23,7 @@ import {
   selectMentionedUsers,
   setMentionedUsers
 } from "@/reduxFeatures/app/mentionsSlice";
+import { serialize } from "../utils/serializer";
 
 function GroupsFooterBtn({ editorID, editorContentValue }) {
   const router = useRouter();
@@ -57,6 +58,9 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
 
+    const emptyEditorInnerHtml =
+      '<div data-slate-node="element"><span data-slate-node="text"><span data-slate-leaf="true"><span data-slate-placeholder="true" contenteditable="false" style="position: absolute; pointer-events: none; width: 100%; max-width: 100%; display: block; opacity: 0.333; user-select: none; text-decoration: none;">Start writing your thoughts</span><span data-slate-zero-width="n" data-slate-length="0">﻿<br></span></span></span></div>';
+
     if (
       JSON.stringify(emptyEditorContentValue) !==
       JSON.stringify(editorContentValue)
@@ -71,21 +75,34 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
       const usersToSendNotification: any = [];
       if (mentionedUsers.length > 0) {
         await mentionedUsers.forEach(user => {
-          if (editorInnerHtml?.includes(user.userName)) {
+          if (editorInnerHtml?.includes(user?.userName)) {
             usersToSendNotification.push(user?.userId);
           }
         });
       }
 
+      // Serialize editorContentValue incase editorInnerHtml fails
+      const serializeNode = {
+        children: editorContentValue
+      };
+
+      const serializedHtml = serialize(serializeNode);
+
       // Form Data
       const formData = new FormData();
 
-      formData.append("post", editorInnerHtml);
+      // Use serializedHtml If editorInnerHtml is showing Empty Even though it isn't empty
+      formData.append(
+        "post",
+        editorInnerHtml === emptyEditorInnerHtml
+          ? serializedHtml
+          : editorInnerHtml
+      );
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
       formData.append("group", groupId);
-      formData.append("SlateContentValue", JSON.stringify(editorContentValue));
+      formData.append("slateContentValue", JSON.stringify(editorContentValue));
       formData.append("mentions", usersToSendNotification);
 
       if (!slatePostToEdit) {
