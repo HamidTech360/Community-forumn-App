@@ -37,5 +37,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-Dockerfile
+#Dockerfile - I added the recommended Dockerfile from Nextjs
 .gitignore
