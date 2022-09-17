@@ -11,7 +11,7 @@ import { Modal, Button as BsBtn, Form } from "react-bootstrap";
 import { ReactEditor } from "slate-react";
 
 const LinkButton = props => {
-  const urlTitle = useRef(null);
+  // const urlTitle = useRef(null);
   const urlAddress = useRef(null);
 
   const [editorSelection, setEditorSelection] = useState({
@@ -48,7 +48,7 @@ const LinkButton = props => {
   const submitUrl = e => {
     e.preventDefault();
 
-    const urlTitleValue = urlTitle.current.value;
+    const urlTitleValue = urlAddress.current.value;
     const urlAddressValue = urlAddress.current.value;
 
     editor.selection && Transforms.select(editor, editor.selection);
@@ -65,6 +65,7 @@ const LinkButton = props => {
 
   return (
     <>
+      {/* Link Toolbar */}
       <div className={styles.popupWrapper}>
         <Button
           id="linkBtn"
@@ -77,33 +78,28 @@ const LinkButton = props => {
           <Icon icon="link" />
         </Button>
       </div>
+
       <Modal show={show} onHide={handleClose}>
         <Modal.Header
           style={{
             border: "none",
-            backgroundColor: "transparent",
+            backgroundColor: "lightgray",
+            fontWeight: "900",
             marginBottom: "-1rem"
           }}
           closeButton
         >
           <Modal.Title>
-            Add Link <Icon icon="link" />
+            Add{" "}
+            <small>
+              {" "}
+              Link <Icon icon="link" />{" "}
+            </small>
           </Modal.Title>
         </Modal.Header>
         <Form onSubmit={submitUrl}>
           <Modal.Body>
-            <Form.Group className="mb-3" controlId="formBasicText">
-              <Form.Label style={{ fontWeight: "600" }}>Text</Form.Label>
-              <Form.Control
-                ref={urlTitle}
-                type="text"
-                placeholder="Title"
-                required
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicLink">
-              <Form.Label style={{ fontWeight: "600" }}>Link</Form.Label>
+            <Form.Group className="my-3" controlId="formBasicLink">
               <Form.Control
                 ref={urlAddress}
                 type="url"
@@ -120,7 +116,7 @@ const LinkButton = props => {
               marginTop: "-1rem"
             }}
           >
-            <BsBtn variant="secondary" onClick={handleClose}>
+            <BsBtn variant="danger" className="me-auto" onClick={handleClose}>
               Cancel
             </BsBtn>
             <BsBtn variant="primary" type="submit">
