@@ -1,33 +1,34 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import config from "@/config";
-import axios from "axios";
 import { RootState } from "@/redux/store";
 
 // declaring the types for our state
 export type App = {
-  data: any;
+  notificationsData: any;
+  notificationsCount: number;
 };
 
 export const notificationSlice = createSlice({
-    name:'notifications',
-    initialState:{
-        data:[],
-        noOfNotifications:0
+  name: "notifications",
+  initialState: {
+    notificationsData: [],
+    notificationsCount: 0
+  },
+  reducers: {
+    setNotificationsData: (state, action: PayloadAction<any>) => {
+      state.notificationsData = action.payload;
     },
-    reducers:{
-        getNotification:  (state, action: PayloadAction<any>) => {
-            state.data=action.payload
-        },
-        updateNumberOfNotifications: (state, action: PayloadAction<any>) => {
-            state.noOfNotifications = action.payload.total
-        }
+    setNotificationsCount: (state, action: PayloadAction<any>) => {
+      state.notificationsCount = action.payload;
     }
-})
+  }
+});
 
+export const { setNotificationsData, setNotificationsCount } =
+  notificationSlice.actions;
 
+export const selectNotifications = (state: RootState) =>
+  state.notification.notificationsData;
+export const selectNotificationsCount = (state: RootState) =>
+  state.notification.notificationsCount;
 
-
-export const {getNotification, updateNumberOfNotifications} = notificationSlice.actions
-export const selectNotifications = (state: RootState) => state.notification.data;
-export default notificationSlice.reducer
-
+export default notificationSlice.reducer;

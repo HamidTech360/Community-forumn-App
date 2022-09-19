@@ -55,7 +55,7 @@ const Groups = () => {
             }
           }
         );
-        
+
         setGroups(response.data.groups);
 
         const randomPosts = await axios.get(
@@ -63,7 +63,7 @@ const Groups = () => {
         );
 
         setPosts(randomPosts.data.posts);
-        console.log(randomPosts.data)
+        console.log(randomPosts.data);
       } catch (error) {
         // console.error(error.response?.data);
       }
@@ -106,7 +106,6 @@ const Groups = () => {
             <div className="d-flex justify-content-between my-2">
               {" "}
               <p className="bold">Your groups</p>
-              {/* <p className="text-primary">See more</p> */}
             </div>
             <div
               style={{
@@ -155,7 +154,7 @@ const Groups = () => {
                     <CardImg
                       src={post.group.images?.avatar || "/images/article.png"}
                       alt=""
-                      style={{ height: "60%", objectFit:'cover' }}
+                      style={{ height: "60%", objectFit: "cover" }}
                     />
                     <Card.Body className="d-flex flex-column px-2">
                       <p className="bold">{post.postTitle}</p>

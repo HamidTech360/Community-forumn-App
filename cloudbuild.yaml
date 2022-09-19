@@ -1,0 +1,35 @@
+steps:
+  # LINT
+  - id: lint
+    name: node:18.9.0-alpine
+    entrypoint: sh
+    args:
+      - "-c"
+      - |
+        npm install -g eslint eslint-config-google
+        eslint .
+
+  # BUILD AND PUSH IMAGE
+  - id: build-image
+    name: gcr.io/cloud-builders/gcloud
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        gcloud builds submit --region=${_REGION} --tag ${_IMAGE}:$COMMIT_SHA .
+
+  # DEPLOY TO KUBERNETES
+  - id: deploy-image
+    name: gcr.io/cloud-builders/kubectl
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        gcloud container clusters get-credentials --project=$PROJECT_ID --region=${_REGION} ${_CLUSTER}
+        kubectl patch deployment ${_CONTAINER} -p '{"spec":{"template":{"spec":{"containers":[{"name":"${_CONTAINER}","image":"${_IMAGE}:$COMMIT_SHA"}]}}}}'
+
+substitutions:
+  _IMAGE: us-central1-docker.pkg.dev/setlinn-prod/setlinn-docker/frontend
+  _REGION: us-central1
+  _CLUSTER: setlinn-cluster
+  _CONTAINER: frontend

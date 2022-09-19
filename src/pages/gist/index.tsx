@@ -37,8 +37,10 @@ import {
 import InfiniteScroll from "react-infinite-scroll-component";
 import GistPostEditorModal from "@/components/Organisms/App/ModalPopUp/GistPostEditorModal";
 import countries from "@/data/countries";
+import { selectUser } from "@/reduxFeatures/authState/authStateSlice";
 
 const Gist = () => {
+  const stateUser = useSelector(selectUser);
   const dispatch = useDispatch();
   const gistIsSuccess = useSelector(selectGistIsSuccess);
 
@@ -186,26 +188,28 @@ const Gist = () => {
           </Col>
           <Col md={9}>
             <div className="d-flex justify-content-between">
-              <Button
-                variant="none"
-                onClick={() => dispatch(setShowGistModal(true))}
-              >
-                <AiOutlinePlusCircle
-                  color="#207681"
-                  size={35}
-                  className={styles.create}
-                />
-                <span
-                  className="newGistText"
-                  style={{
-                    marginLeft: "10px",
-                    fontSize: "14px",
-                    fontWeight: "700"
-                  }}
+              {stateUser && (
+                <Button
+                  variant="none"
+                  onClick={() => dispatch(setShowGistModal(true))}
                 >
-                  Create Gist
-                </span>
-              </Button>
+                  <AiOutlinePlusCircle
+                    color="#207681"
+                    size={35}
+                    className={styles.create}
+                  />
+                  <span
+                    className="newGistText"
+                    style={{
+                      marginLeft: "10px",
+                      fontSize: "14px",
+                      fontWeight: "700"
+                    }}
+                  >
+                    Create Gist
+                  </span>
+                </Button>
+              )}
               <select
                 onChange={e => filterCountry(e.target.value)}
                 className="outline-primary me-3"

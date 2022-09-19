@@ -2,11 +2,10 @@
 
 import React, { ReactNode, useCallback, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import { Button, Col, Container, Row } from "react-bootstrap";
-import Image from "next/image";
+import { Col, Container, Row } from "react-bootstrap";
 
 import styles from "../../../../styles/form.module.scss";
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
+
 import { useRouter } from "next/router";
 import Link from "next/link";
 
@@ -75,32 +74,6 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
     );
   }, [responseGoogle]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const responseFacebook = async (response: Record<string, any>) => {
-    console.log(response);
-    if (response.accessToken) {
-      const { profileObj } = response;
-      try {
-        const { data } = await axios.post(
-          `${config.serverUrl}/api/auth/oauth?provider=facebook`,
-          profileObj
-        );
-        if (data.accessToken) {
-          localStorage.setItem("token", data.accessToken);
-        }
-
-        setAccessToken(data.accessToken);
-      } catch (error) {
-        if (axios.isAxiosError(error) && error.response) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          toast.error((error.response.data as Record<string, any>).message, {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 7000
-          });
-        }
-      }
-    }
-  };
   return (
     <>
       <Container>
@@ -139,51 +112,7 @@ const FormWrapper = ({ form }: { form: ReactNode }) => {
               <div
                 className={`${styles.buttons} buttons d-flex gap-3 justify-content-center`}
               >
-                <FacebookLogin
-                  appId="620307832639763"
-                  callback={responseFacebook}
-                  scope="email public_profile"
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  render={(renderProps: Record<string, any>) => (
-                    <Button
-                      onClick={renderProps.onClick}
-                      style={{ backgroundColor: "#3b5998" }}
-                    >
-                      <Image
-                        width={25}
-                        height={25}
-                        src="/images/facebook.png"
-                        alt="facebook"
-                        quality={100}
-                      />
-                      <span className="ms-2 py-3">Sign in</span>
-                    </Button>
-                  )}
-                />
-
-                {/* <Button variant="outline-primary" size="sm">
-                  <Image
-                    width={25}
-                    height={25}
-                    src="/images/facebook.png"
-                    alt="facebook"
-                    quality={100}
-                  />
-                </Button> */}
                 <div id="google-button"></div>
-                {/* <Button
-                  variant="outline-primary"
-                  color="error"
-                  onClick={handleButton}
-                >
-                  <Image
-                    width={25}
-                    height={25}
-                    src="/images/google.png"
-                    alt="google"
-                    quality={100}
-                  />
-                </Button> */}
               </div>
               <div className="mt-4">
                 {pathname === "/login" ? (

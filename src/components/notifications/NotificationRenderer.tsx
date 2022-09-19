@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { GoPrimitiveDot } from "react-icons/go";
 import { useRouter } from "next/router";
 import styles from "../../styles/notifications.module.css";
+import { Loader } from "@/hooks/usePagination";
 
 const NotificationRenderer = ({
   notification,
@@ -56,7 +57,7 @@ const NotificationRenderer = ({
           </Card.Text>
           <hr />
         </div>
-      </div>
+     </div>
     </div>
   );
 };
