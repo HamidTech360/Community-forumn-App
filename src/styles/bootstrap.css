@@ -3133,8 +3133,6 @@ fieldset:disabled .btn {
   border-color: #069197;
 }
 
-
-
 @media screen and (max-width: 900px) {
   .mt-2 > .btn-primary {
     font-size: medium;
@@ -4372,8 +4370,8 @@ fieldset:disabled .btn {
     margin-right: 2rem;
   }
 }
-@media screen and (max-width: 600px){
-  .navbar{
+@media screen and (max-width: 600px) {
+  .navbar {
     margin-left: 0;
   }
 }
@@ -5878,7 +5876,7 @@ fieldset:disabled .btn {
   transform: translate(0, -50px);
 }
 @media (prefers-reduced-motion: reduce) {
-  ..fade .modal-dialog {
+  .fade .modal-dialog {
     transition: none;
   }
 }

@@ -50,6 +50,8 @@ import styles from "@/styles/utils.module.scss";
 import SearchTabs from "@/components/Molecules/SearchTabs";
 import Avatar from "@/components/Atoms/Avatar";
 
+import DarkModeSwitch from "../../../Molecules/DarkMode/DarkModeSwitch";
+
 const AuthHeader = () => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -341,6 +343,7 @@ const AuthHeader = () => {
               </NavDropdown.Item>
             </div>
           </NavDropdown>
+          {/* <DarkModeSwitch /> */}
         </Container>
       </Navbar>
 
