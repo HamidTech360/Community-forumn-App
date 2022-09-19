@@ -297,15 +297,18 @@ const GroupInfoCard = ({ data }: any) => {
                 ) : (
                   "Join"
                 )}
-              </Button>{" "}
-              <Button variant="outline-primary" className="mb-btns">
-                Invite{" "}
-                <Image
-                  src="/images/invite.png"
-                  alt="invite"
-                  className="image2"
-                />
-              </Button>
+              </Button >{" "}
+
+              <Link href={`/groups/invite?name=${data.name}&group=${data._id}`}>
+                <Button variant="outline-primary" className="mb-btns">
+                  Invite{" "}
+                  <Image
+                    src="/images/invite.png"
+                    alt="invite"
+                    className="image2"
+                  />
+                </Button>
+              </Link>
             </div>
           </Col>
         </Row>
