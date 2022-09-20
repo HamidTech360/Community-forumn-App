@@ -81,23 +81,22 @@ function GroupsFooterBtn({ editorID, editorContentValue }) {
         });
       }
 
-      // Serialize editorContentValue incase editorInnerHtml fails
-      const serializeNode = {
-        children: editorContentValue
-      };
+      let serializedHtml;
+      if (editorInnerHtml === emptyEditorInnerHtml) {
+        // Serialize editorContentValue only if editorInnerHtml is showing Empty Even though it isn't empty
+        const serializeNode = {
+          children: editorContentValue
+        };
 
-      const serializedHtml = serialize(serializeNode);
+        serializedHtml = await serialize(serializeNode);
+      } else {
+        serializedHtml = editorInnerHtml;
+      }
 
       // Form Data
       const formData = new FormData();
 
-      // Use serializedHtml If editorInnerHtml is showing Empty Even though it isn't empty
-      formData.append(
-        "post",
-        editorInnerHtml === emptyEditorInnerHtml
-          ? serializedHtml
-          : editorInnerHtml
-      );
+      formData.append("post", serializedHtml);
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });

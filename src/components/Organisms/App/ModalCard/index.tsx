@@ -124,7 +124,7 @@ const ModalCard = ({
       setLiked(true);
     }
 
-    if (user.bookmarks?.includes(post?._id)) {
+    if (user?.bookmarks?.includes(post?._id)) {
       setBookMarked(true);
     } else {
       setBookMarked(false);
@@ -632,7 +632,7 @@ const ModalCard = ({
                         if (item.name === "Share") {
                           // modalOpen;
                           toggleShare();
-                          setSelectedShare(postButton);
+                          setSelectedShare(post);
                         }
                         if (item.name === "Bookmark") {
                           if (bookmarked) {

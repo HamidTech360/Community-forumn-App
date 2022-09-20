@@ -1,27 +1,22 @@
 import ModalCard from "@/components/Organisms/App/ModalCard";
-import React, { useState } from "react";
-import { Col, Modal, Row } from "react-bootstrap";
-import { BiArrowBack } from "react-icons/bi";
-import { MdOutlineCancel } from "react-icons/md";
-import { useModal } from "./useModal";
-
-import styles from "@/styles/profile.module.scss";
-import { useRouter } from "next/router";
-
+import React, { useEffect, useState } from "react";
+import { Col, Row } from "react-bootstrap";
 import {
   FacebookShareButton,
   TwitterShareButton,
-  WhatsappShareButton,
+  WhatsappShareButton
 } from "react-share";
 import { FacebookIcon, TwitterIcon, WhatsappIcon } from "react-share";
 import { FacebookShareCount } from "react-share";
-import config from "@/config";
+// import config from "@/config";
 
 export const useModalWithData = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const toggle = () => setModalOpen(!modalOpen);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selected, setSelected] = useState<Record<string, any>>({});
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   const setModalState = (state: any) => {
     setModalOpen(state);
     if (state === false) {
@@ -32,7 +27,7 @@ export const useModalWithData = () => {
     modalOpen,
     toggle,
     selected,
-    setSelected,
+    setSelected
   };
 };
 
@@ -40,7 +35,9 @@ export const useModalWithShare = () => {
   const [modalOpenShare, setModalOpenShare] = useState<boolean>(false);
   const toggleShare = () => setModalOpenShare(!modalOpenShare);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedShare, setSelectedShare] = useState<Record<string, any>>({});
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   const setModalStateShare = (state: any) => {
     setModalOpenShare(state);
     if (state === false) {
@@ -51,54 +48,41 @@ export const useModalWithShare = () => {
     modalOpenShare,
     toggleShare,
     selectedShare,
-    setSelectedShare,
+    setSelectedShare
   };
 };
 
 export function ModalRow({ selected, modalToggle, mutate }) {
   return (
-    // <>
-    //   {console.log("selected:", selected)}
-    //   {selected.images ? (
-    //     <Row>
-    //       <Col lg={6}></Col>
-    //       <Col lg={6}>
-    //         {" "}
-    //         <ModalCard
-    //           post={selected}
-    //           modalToggle={modalToggle}
-    //           mutate={mutate}
-    //         />
-    //       </Col>
-    //     </Row>
-    //   ) : (
     <Row>
       <Col lg={12} className="px-3 px-lg-4">
         <ModalCard post={selected} modalToggle={modalToggle} mutate={mutate} />
       </Col>
     </Row>
-    //   )}
-    // </>
   );
 }
 
 export function ModalRowShare({ selectedShare }) {
-  // console.log("selectedShare++:", selectedShare);
-  const router = useRouter();
+  const [shareUrl, setShareUrl] = useState(undefined);
 
-  // const shareUrl = `${config.serverUrl}/feed/${selectedShare?._id}`
-  const shareUrl = `https://settlin.vercel.app/feed/${selectedShare?._id}`;
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const href = window.location.href;
+      if (
+        window.location.href.includes("/feed/") ||
+        window.location.href.includes("/explore/") ||
+        window.location.href.includes("/gist/") ||
+        window.location.href.includes("/groups/")
+      ) {
+        // ID Included
+        setShareUrl(href);
+      } else {
+        // NO ID Included
+        setShareUrl(`${href}/${selectedShare?._id}`);
+      }
+    }
+  }, [selectedShare?._id]);
 
-  // router.push({
-  //   pathname: `/profile/[id]`,
-  //   query: {
-  //     id: blogPost?.author?._id,
-  //   },
-  // });
-
-  const changeRoute = () => {
-    router.push(`/feed/${selectedShare?._id}`);
-  };
   return (
     <>
       <div className="container">
@@ -109,12 +93,6 @@ export function ModalRowShare({ selectedShare }) {
           :
         </h6>
         <div className="row justify-content-between align-items-center m-3">
-          {/* <div className="col-3">
-            <button className="btm" onClick={changeRoute}>
-              hi
-            </button>
-          </div> */}
-
           <div className="col-3 mb-3">
             <FacebookShareButton
               url={shareUrl}
@@ -123,7 +101,7 @@ export function ModalRowShare({ selectedShare }) {
               // description={"Connect, Explore & Share"}
             >
               <FacebookShareCount url={shareUrl}>
-                {(shareCount) => (
+                {shareCount => (
                   <span className="myShareCountWrapper">{shareCount}</span>
                 )}
               </FacebookShareCount>

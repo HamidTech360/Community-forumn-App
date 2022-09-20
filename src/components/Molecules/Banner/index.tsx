@@ -3,12 +3,25 @@ import React from "react";
 interface IBannerProps {
   title: string;
   image: string;
+  effective?: string;
+  revised?: string;
 }
-const Banner = ({ title, image }: IBannerProps) => {
+const Banner = ({ title, image, effective, revised }: IBannerProps) => {
   return (
     <>
       <div className={`banner`}>
-        <h1>{title}</h1>
+        <h1 style={{ marginBottom: "-7rem" }}>{title}</h1>
+
+        {effective && revised ? (
+          <aside className="text-light">
+            <p style={{ marginBottom: "-.1rem" }}>
+              <span className="lead">Effective:</span> {effective}{" "}
+            </p>
+            <p>
+              <span className="lead">Revised:</span> {revised}{" "}
+            </p>
+          </aside>
+        ) : null}
       </div>
       <style jsx>
         {`

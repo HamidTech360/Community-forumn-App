@@ -12,7 +12,6 @@ import {
 import { setNewPost } from "@/reduxFeatures/api/postSlice";
 import {
   selectEmptyEditorContentValue,
-  // selectEmptyEditorContentValue,
   selectSlatePostToEdit,
   setSlatePostToEdit
 } from "@/reduxFeatures/app/editSlatePostSlice";
@@ -27,6 +26,8 @@ import {
   setMentionedUsers
 } from "@/reduxFeatures/app/mentionsSlice";
 import { serialize } from "../utils/serializer";
+import { Transforms, Editor } from "slate";
+import { ReactEditor, useSlate } from "slate-react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
@@ -37,8 +38,12 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
   const slatePostToEdit = useSelector(selectSlatePostToEdit);
   const emptyEditorContentValue = useSelector(selectEmptyEditorContentValue);
   const [categories, setCategories] = useState([]);
+  const [saveDraft] = useState(["Save draft", "Pull Draft", "Delete Draft"]);
+  const [displaySaveAsDraft, setDisplaySaveAsDraft] = useState(false);
+  const [selectedDraft, setSelectedDraft] = useState("Save as draft");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const mentionedUsers = useSelector(selectMentionedUsers);
+  const editor = useSlate();
   // const emptyEditorContentValue = useSelector(selectEmptyEditorContentValue);
 
   useEffect(() => {
@@ -54,6 +59,15 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
       dispatch(setProgressBarNum(0));
     };
   }, [dispatch]);
+
+  useEffect(() => {
+    // Manage Items display based on "if thee is a saved draft"
+    if (!localStorage.getItem("exploreSaveAsDraft")) {
+      setDisplaySaveAsDraft(false);
+    } else {
+      setDisplaySaveAsDraft(true);
+    }
+  }, []);
 
   useEffect(() => {
     // Get Post Category Name
@@ -133,22 +147,21 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
         });
       }
 
-      // Serialize editorContentValue incase editorInnerHtml faills
-      const serializeNode = {
-        children: editorContentValue
-      };
+      let serializedHtml;
+      if (editorInnerHtml === emptyEditorInnerHtml) {
+        // Serialize editorContentValue only if editorInnerHtml is showing Empty Even though it isn't empty
+        const serializeNode = {
+          children: editorContentValue
+        };
 
-      const serializedHtml = serialize(serializeNode);
+        serializedHtml = await serialize(serializeNode);
+      } else {
+        serializedHtml = editorInnerHtml;
+      }
 
       const formData = new FormData();
 
-      // Use serializedHtml If editorInnerHtml is showing Empty Even though it isn't empty
-      formData.append(
-        "postBody",
-        editorInnerHtml === emptyEditorInnerHtml
-          ? serializedHtml
-          : editorInnerHtml
-      );
+      formData.append("postBody", serializedHtml);
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
@@ -198,6 +211,8 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
           dispatch(setMentionedUsers([]));
           // Reset Uploaded Media Data
           dispatch(setMediaUpload([]));
+          // // Reset Editor to display Editors initialState and not draft on next mount
+          // dispatch(setDisplayDraft(0));
           setUploading(false);
           dispatch(setShowPostModal(false));
         } catch (error) {
@@ -256,6 +271,8 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
           dispatch(setSlatePostToEdit(null));
           // Reset Mentioned Users
           dispatch(setMentionedUsers([]));
+          // // Reset Editor to display Editors initialState and not draft on next mount
+          // dispatch(setDisplayDraft(0));
           setUploading(false);
           dispatch(setShowPostModal(false));
         } catch (error) {
@@ -285,47 +302,150 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
   };
 
   const saveAsDraft = async () => {
+    // Return if Editor is empty
+    if (
+      JSON.stringify(emptyEditorContentValue) ===
+      JSON.stringify(editorContentValue)
+    ) {
+      toast.error("No Post To Save", {
+        position: toast.POSITION.TOP_RIGHT,
+        toastId: "1"
+      });
+      return;
+    }
+
+    // Display Draft Selector Title
+    setSelectedDraft(saveDraft[0]);
+
     const editorInnerHtml = (
       document.getElementById(editorID) as HTMLInputElement
     ).innerHTML;
 
     const exploreSaveAsDraft = {
-      postTitle: showPostTitle,
+      postTitle: (document.getElementById("createPostID") as HTMLInputElement)
+        .value,
       postBody: editorInnerHtml,
-      SlateContentValue: editorContentValue,
-      category: selectedCategory.tag
+      slateContentValue: editorContentValue,
+      category: selectedCategory?.name
     };
 
     localStorage.setItem(
       "exploreSaveAsDraft",
       JSON.stringify(exploreSaveAsDraft)
     );
+
+    toast.success("Draft successfully Saved", {
+      position: toast.POSITION.TOP_RIGHT,
+      toastId: "1"
+    });
+
+    // Show Save as draft selector
+    setDisplaySaveAsDraft(true);
+  };
+
+  const pullFromDraft = async () => {
+    // Display Draft Selector Title
+    setSelectedDraft(saveDraft[1]);
+
+    const draft = await JSON.parse(localStorage.getItem("exploreSaveAsDraft"));
+
+    if (!draft) return;
+
+    // Populate Post Title
+    (document.getElementById("createPostID") as HTMLInputElement).value =
+      draft.postTitle;
+
+    setSelectedCategory({ name: draft.category });
+
+    // Delete Editor Content
+    Transforms.delete(editor, {
+      at: {
+        anchor: Editor?.start(editor, []),
+        focus: Editor?.end(editor, [])
+      }
+    });
+
+    Transforms.insertFragment(editor, draft.slateContentValue);
+
+    // Set Focus on Editor. This is to prevent editor.selection Error when Editor isn't in focus
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    ReactEditor.focus(editor);
+  };
+
+  const deleteDraft = () => {
+    // Display Draft Selector Title
+    setSelectedDraft(saveDraft[2]);
+
+    localStorage.removeItem("exploreSaveAsDraft");
+
+    toast.warn("Draft deleted", {
+      position: toast.POSITION.TOP_RIGHT,
+      toastId: "1"
+    });
+
+    // Hide Save as draft selector
+    setDisplaySaveAsDraft(false);
   };
 
   return (
     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-      <div className="">
-        <DropdownButton
-          as={ButtonGroup}
-          title={selectedCategory ? selectedCategory.name : "Category"}
-          id="bg-nested-dropdown-1"
-          variant="outline-secondary"
-          size="sm"
-          className="m-1"
-        >
-          {categories.map((item, i) => (
-            <Dropdown.Item
-              onClick={() => setSelectedCategory(item)}
-              key={i}
-              eventKey="1"
-              variant="outline-secondary"
-            >
-              {item.name}
-            </Dropdown.Item>
-          ))}
-        </DropdownButton>
-      </div>
-      <div className="col-12 col-md-3 col-lg-3 mx-0 px-0 d-grid">
+      <DropdownButton
+        as={ButtonGroup}
+        title={selectedCategory ? selectedCategory.name : "Category"}
+        id="bg-nested-dropdown-1"
+        variant="secondary"
+        size="sm"
+        className="m-1"
+      >
+        {categories.map((item, i) => (
+          <Dropdown.Item
+            onClick={() => setSelectedCategory(item)}
+            key={i}
+            eventKey="1"
+            variant="outline-secondary"
+          >
+            {item.name}
+          </Dropdown.Item>
+        ))}
+      </DropdownButton>
+      <DropdownButton
+        as={ButtonGroup}
+        title={selectedDraft}
+        id="bg-nested-dropdown-1"
+        variant="outline-primary"
+        size="sm"
+        className="m-1"
+      >
+        {saveDraft.map((item, i) => (
+          <Dropdown.Item
+            key={i}
+            eventKey="1"
+            variant="outline-secondary"
+            className={item === "Delete Draft" && "text-danger"}
+            onClick={() => {
+              // Only enable pull & delete functionalities if there is a saved draft
+              if (item === saveDraft[0]) {
+                saveAsDraft();
+              } else if (displaySaveAsDraft && item === saveDraft[1]) {
+                pullFromDraft();
+              } else if (displaySaveAsDraft && item === saveDraft[2]) {
+                deleteDraft();
+              }
+            }}
+          >
+            {/* Only display the pull & delete option if there is a saved draft */}
+            {!displaySaveAsDraft &&
+            item !== saveDraft[1] &&
+            item !== saveDraft[2]
+              ? item
+              : displaySaveAsDraft
+              ? item
+              : null}
+          </Dropdown.Item>
+        ))}
+      </DropdownButton>
+      {/* <div className="col-12 col-md-3 col-lg-3 mx-0 px-0 d-grid">
         <Button
           variant="outline-primary"
           size="sm"
@@ -335,7 +455,7 @@ function BlogPostFooterBtn({ editorID, editorContentValue }: any) {
         >
           Save as draft
         </Button>
-      </div>
+      </div> */}
       <div className="">
         <Button
           variant="primary"
