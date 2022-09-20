@@ -77,7 +77,7 @@ const AddConnections = ({
           >
             <div>
               <Image
-                src={item.images.avatar || `/images/imagePlaceholder.jpg`}
+                src={item.images?.avatar || `/images/imagePlaceholder.jpg`}
                 alt="profile"
                 className={styles.profilePics}
                 width={60}
