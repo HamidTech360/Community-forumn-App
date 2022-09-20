@@ -95,7 +95,7 @@ function FeedFooterBtn({ editorID, editorContentValue }) {
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });
-      formData.append("slateContentValue", JSON.stringify(editorContentValue));
+      formData.append("editorContent", JSON.stringify(editorContentValue));
       formData.append("mentions", usersToSendNotification);
 
       if (!slatePostToEdit) {

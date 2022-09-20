@@ -154,7 +154,7 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
       });
       formData.append("title", showGistTitle);
       formData.append("categories", selectedCategory);
-      formData.append("slateContentValue", JSON.stringify(editorContentValue));
+      formData.append("editorContent", JSON.stringify(editorContentValue));
       formData.append("mentions", usersToSendNotification);
       formData.append("country", country);
 
