@@ -11,7 +11,7 @@ const Home = ({ articles }: { articles: Record<string, any>[] }) => {
   return (
     <UnAuthContent>
       <Head>
-        <title>Settlin - Study and work abroad</title>
+        <title>Setlinn - Study and work abroad</title>
         <meta
           name="description"
           content="Connect and interact with people in the study, work and live abroad community and get all the information that you need."

@@ -1,21 +1,66 @@
+import { useDispatch } from "@/redux/store";
+import { setActiveTab } from "@/reduxFeatures/app/settingsSlice";
 import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { Accordion, Container } from "react-bootstrap";
 import Banner from "../components/Molecules/Banner";
 
-const privacy = () => {
+const Privacy = () => {
+  const router = useRouter();
+  const dispatch = useDispatch();
   return (
     <>
       <Head>
-        <title>Privacy Policy</title>
+        <title>Setlinn Privacy Policy</title>
       </Head>
-      <Banner title="Privacy" image="/images/faq.png" />
+      <Banner
+        title="Setlinn Privacy Policy"
+        effective="October 1, 2022"
+        revised="October 1, 2022"
+        image="/images/faq.png"
+      />
       <Container className="mt-5">
+        <main className="row m-5 lead justify-content-center">
+          <blockquote>
+            <em>
+              Your personal information is important. At{" "}
+              <span className="text-primary">Setlinn</span>, we recognize the
+              huge responsibility of handling your information as well as the
+              trust you place in us, and we work hard to put your mind at ease.
+            </em>
+          </blockquote>
+          <blockquote>
+            <em>
+              We want you to understand how Setlinn collects, uses, and manages
+              information about you when you use our site. We also want to be
+              upfront about how you can access, update, and delete your
+              information.
+            </em>
+          </blockquote>
+          <blockquote>
+            <em>
+              This is why we&apos;ve written this Privacy Policy in an “easy to
+              read” fashion that is blissfully free of the legalese that often
+              clouds these documents.
+            </em>
+          </blockquote>
+          <blockquote>
+            <em>
+              If you still have any questions after reading, you&apos;re free to{" "}
+              <Link href="/contact" passHref>
+                contact us
+              </Link>
+              .
+            </em>
+          </blockquote>
+        </main>
         <Accordion defaultActiveKey={["0"]} alwaysOpen flush>
           <Accordion.Item eventKey="0">
             <Accordion.Header>Preamble</Accordion.Header>
             <Accordion.Body>
               Please read this document carefully (hereinafter, the Privacy
-              Policy). If you have any questionsabout this document and, in
+              Policy). If you have any questions about this document and, in
               general, about the collection and processing of your personal
               information, please send an email to info@ojirasoft.com SETLINN, a
               subdivision of OJIRA Soft Ltd. and OJIRA Soft UG, hereafter
@@ -101,10 +146,195 @@ const privacy = () => {
               and possibly legal action.
             </Accordion.Body>
           </Accordion.Item>
+          <Accordion.Item eventKey="7">
+            <Accordion.Header>
+              What happens to my data, really?
+            </Accordion.Header>
+            <Accordion.Body>???.</Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="8">
+            <Accordion.Header>
+              What data does Setlinn collect and how?
+            </Accordion.Header>
+            <Accordion.Body>
+              <h3>Information we collect</h3>
+              <ol>
+                <li>
+                  <b>Information you provide:</b> We collect information that
+                  you provide to us when you interact with our services. Our
+                  services require you to create an account, so we may need to
+                  collect some personal information from you, such as your name,
+                  username, password, email address, phone number, and date of
+                  birth.
+                </li>
+                When you contact customer service or communicate with us in any
+                other way, we will collect any information that we need to
+                answer your question.
+                <li>
+                  <b>Information we receive when you use our services:</b> When
+                  you use our services, we collect information about which of
+                  those services you&apos;ve used and how you&apos;ve used them.
+                  We might know, for instance:
+                  <ul>
+                    <li>The content you post.</li>
+                    <li>
+                      Your interactions on Setlinn with others on the platform,
+                      such as people you follow and people who follow you, as
+                      well as your connections.
+                    </li>
+                    <li>
+                      Your interactions with other users&apos; content, such as
+                      likes, shares, replies, if other users mention or tag you
+                      in content, or if you mention or tag them.
+                    </li>
+                    <li>
+                      The information contained in emails, when you communicate
+                      with us.
+                    </li>
+                    <li>
+                      Information about your approximate location in order to
+                      serve you better.
+                    </li>
+                    <li>
+                      Information from and about the devices you use to access
+                      Setlinn.
+                    </li>
+                  </ul>
+                </li>
+              </ol>
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="9">
+            <Accordion.Header>
+              What do you do with my information?
+            </Accordion.Header>
+            <Accordion.Body>
+              We use your data to provide you with an incredible set of products
+              and services that we are constantly improving. Here are some other
+              reasons why your data is necessary to optimize your Setlinn
+              experience:
+              <ul>
+                <li>It helps us to better understand your needs.</li>
+                <li>
+                  We improve our services and output with the information you
+                  provide.
+                </li>
+                <li>
+                  We want to send you emails containing information that we
+                  think you would find interesting.
+                </li>
+                <li>
+                  Furthermore, we want our website to be customized to suit your
+                  online behavior and your personal preferences.
+                </li>
+                <li>
+                  We also verify your identity and prevent fraud or other
+                  unauthorized or illegal activity.
+                </li>
+              </ul>
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="10">
+            <Accordion.Header>
+              Does my information stay with Setlinn forever?
+            </Accordion.Header>
+            <Accordion.Body>
+              We store your basic account information — like your name, phone
+              number, and email address — and list of friends until you delete
+              them, ask us to delete them for you, or until your account itself
+              is deleted.{" "}
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="11">
+            <Accordion.Header>
+              How can I take control of my information?
+            </Accordion.Header>
+            <Accordion.Body>
+              <b>By Editing Your Account Data</b>: You can access and edit most
+              of your basic account information{" "}
+              <Link href="/settings" passHref>
+                here
+              </Link>
+              <br />
+              <b> By Deleting your account</b>: While we hope you&apos;ll remain
+              on Setlinn forever if for some reason you ever want to delete your
+              account, Go{" "}
+              <span
+                className="text-primary"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  dispatch(setActiveTab("security"));
+                  router.push("/settings");
+                }}
+              >
+                here{" "}
+              </span>
+              to learn how.
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="12">
+            <Accordion.Header>Can Children use Setlinn?</Accordion.Header>
+            <Accordion.Body>
+              Setlinn is available for anyone over 14 years of age.
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="13">
+            <Accordion.Header>Does Setlinn sell my data?</Accordion.Header>
+            <Accordion.Body>
+              <b>No</b>. We do not sell personal information about our users.
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="14">
+            <Accordion.Header>When this policy applies</Accordion.Header>
+            <Accordion.Body>
+              This Privacy Policy applies to all the services offered by Setlinn
+              only. This Privacy Policy doesn&apos;t apply to services that have
+              separate privacy policies that do not incorporate this Privacy
+              Policy.
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="15">
+            <Accordion.Header>What does this mean for me?</Accordion.Header>
+            <Accordion.Body>
+              On most articles and posts on Setlinn, you would see links to
+              other websites. Some of these websites may be operated by third
+              parties. <br />
+              On Setlinn, we provide the links for your convenience, but we do
+              not review, control, or monitor the privacy practices of websites
+              operated by others.
+              <br />
+              We recommend that you review each website&apos;s privacy practices
+              and make your conclusions whenever you leave Setlinn.
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="16">
+            <Accordion.Header>Opting Out</Accordion.Header>
+            <Accordion.Body>
+              From time to time, we may email you electronic newsletters,
+              announcements, surveys, or other information. If you prefer not to
+              receive any or all of these communications, you may opt-out by
+              following the directions provided within the electronic
+              newsletters and announcements.
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="17">
+            <Accordion.Header>What if I have more questions?</Accordion.Header>
+            <Accordion.Body>
+              Please{" "}
+              <Link href="/contact" passHref>
+                Contact us
+              </Link>{" "}
+              for more information. <br />
+              You can also email us at{" "}
+              <Link href="mailto:contact@setlinn.com" passHref>
+                contact@setlinn.com
+              </Link>
+            </Accordion.Body>
+          </Accordion.Item>
         </Accordion>
       </Container>
     </>
   );
 };
 
-export default privacy;
+export default Privacy;
