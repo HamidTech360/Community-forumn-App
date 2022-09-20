@@ -134,21 +134,21 @@ function GistFooterBtn({ editorID, editorContentValue }: any) {
         });
       }
 
-      // Serialize editorContentValue incase editorInnerHtml fails
-      const serializeNode = {
-        children: editorContentValue
-      };
+      let serializedHtml;
+      if (editorInnerHtml === emptyEditorInnerHtml) {
+        // Serialize editorContentValue only if editorInnerHtml is showing Empty Even though it isn't empty
+        const serializeNode = {
+          children: editorContentValue
+        };
 
-      const serializedHtml = serialize(serializeNode);
+        serializedHtml = await serialize(serializeNode);
+      } else {
+        serializedHtml = editorInnerHtml;
+      }
 
       const formData = new FormData();
 
-      formData.append(
-        "post",
-        editorInnerHtml === emptyEditorInnerHtml
-          ? serializedHtml
-          : editorInnerHtml
-      );
+      formData.append("post", serializedHtml);
       mediaUpload.map((file: File) => {
         formData.append("media", file);
       });

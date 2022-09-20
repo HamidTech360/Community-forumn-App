@@ -91,10 +91,10 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
   const uploadedPostImage = useSelector(selectPostImageUpload);
   const progressBarNum = useSelector(selectProgressBarNum);
   const progressVariant = useSelector(selectProgressVariant);
+  const emptyEditorContentValue = useSelector(selectEmptyEditorContentValue);
   const [listMention, setListMention] = useState([]);
   const [mentionedUsersList, setMentionedUsersList] = useState([]);
   const [showPlaceholder, setShowPlaceholder] = useState(false);
-  const emptyEditorContentValue = useSelector(selectEmptyEditorContentValue);
 
   useEffect(() => {
     // Display Editor Placeholder
@@ -158,7 +158,6 @@ const Editor = ({ slim, pageAt }: { slim: boolean; pageAt: string }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listMention]);
-  // }, [listMention, search, authUser?._id]);
 
   const renderElement = useCallback(props => <Element {...props} />, []);
   const renderLeaf = useCallback(props => {
