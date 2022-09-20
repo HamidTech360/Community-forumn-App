@@ -499,6 +499,7 @@ const PostCard = ({
                 <div className="d-flex flex-column">
                   <div
                     className="post-content"
+                    style={{textAlign:'justify'}}
                     dangerouslySetInnerHTML={{
                       __html: trimmed
                         ? sanitizer(
