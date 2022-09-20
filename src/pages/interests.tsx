@@ -13,7 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Interests = () => {
   const router = useRouter();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [initInterests, setInterests] = useState([
     {
       selected: false,
@@ -87,7 +87,7 @@ const Interests = () => {
         }
       );
       console.log(data);
-      dispatch(user(data?.user))
+      dispatch(user(data?.user));
       setShowProgress(false);
       router.push("/feed");
     } catch (error) {
@@ -122,7 +122,7 @@ const Interests = () => {
               />
               Select interests
               <p className="fs-6 text-secondary d-block mt-3">
-                Select a minimum of three things that you plan to use Settlin to
+                Select a minimum of three things that you plan to use Setlinn to
                 achieve
               </p>
             </Card.Header>

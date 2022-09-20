@@ -17,7 +17,7 @@ const Intro = () => {
           <Col md={6} className={styles.text}>
             <Container>
               <p className={styles.text_primary}>
-                Welcome to <span>Settlin</span>
+                Welcome to <span>Setlinn</span>
               </p>
               <p>
                 Connect and interact with people in the study, work and live

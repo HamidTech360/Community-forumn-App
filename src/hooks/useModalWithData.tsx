@@ -1,5 +1,5 @@
 import ModalCard from "@/components/Organisms/App/ModalCard";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import {
   FacebookShareButton,
@@ -14,7 +14,9 @@ export const useModalWithData = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const toggle = () => setModalOpen(!modalOpen);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selected, setSelected] = useState<Record<string, any>>({});
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   const setModalState = (state: any) => {
     setModalOpen(state);
     if (state === false) {
@@ -33,7 +35,9 @@ export const useModalWithShare = () => {
   const [modalOpenShare, setModalOpenShare] = useState<boolean>(false);
   const toggleShare = () => setModalOpenShare(!modalOpenShare);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [selectedShare, setSelectedShare] = useState<Record<string, any>>({});
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   const setModalStateShare = (state: any) => {
     setModalOpenShare(state);
     if (state === false) {
@@ -59,8 +63,25 @@ export function ModalRow({ selected, modalToggle, mutate }) {
 }
 
 export function ModalRowShare({ selectedShare }) {
-  // const shareUrl = `${config.serverUrl}/feed/${selectedShare?._id}`;
-  const shareUrl = `https://settlin.vercel.app/feed/${selectedShare?._id}`;
+  const [shareUrl, setShareUrl] = useState(undefined);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const href = window.location.href;
+      if (
+        window.location.href.includes("/feed/") ||
+        window.location.href.includes("/explore/") ||
+        window.location.href.includes("/gist/") ||
+        window.location.href.includes("/groups/")
+      ) {
+        // ID Included
+        setShareUrl(href);
+      } else {
+        // NO ID Included
+        setShareUrl(`${href}/${selectedShare?._id}`);
+      }
+    }
+  }, [selectedShare?._id]);
 
   return (
     <>
